@@ -28,6 +28,7 @@ cask "visual-studio-code"
 # Command Line Utilities
 # Enhancements and utilities for better terminal experience
 brew "ack"
+brew "atuin"
 brew "bat"
 brew "bpytop"
 brew "binutils"
