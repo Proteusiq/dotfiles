@@ -39,8 +39,6 @@ source "$HOME/.rye/env"
 # pixi auto completion
 eval "$(pixi completion --shell zsh)"
 
-# better history
-eval "$(atuin init zsh)"
 
 # start tmux on open
 [[ $- != *i* ]] && return
@@ -65,3 +63,5 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+# better history
+# eval "$(atuin init zsh)"

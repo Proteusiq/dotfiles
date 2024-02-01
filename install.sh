@@ -148,7 +148,7 @@ setup_utils(){
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
 
     # better history locally
-    bash <(curl https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh)
+    zsh <(curl https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh)
     
     atuin import auto
 
