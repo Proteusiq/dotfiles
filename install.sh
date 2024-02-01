@@ -128,6 +128,12 @@ install_vim_plug() {
     echo "👽  Installing vim-plug for Neovim..."
     curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+    # required
+    mv ~/.config/nvim{,.bak}
+    git clone https://github.com/LazyVim/starter ~/.config/nvim
+    rm -rf ~/.config/nvim/.git
+
 }
 
 # Extra Setups
@@ -140,6 +146,11 @@ setup_utils(){
 
     # productive laziness
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
+
+    # better history locally
+    bash <(curl https://raw.githubusercontent.com/atuinsh/atuin/main/install.sh)
+    
+    atuin import auto
 
 }
 

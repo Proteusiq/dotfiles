@@ -61,6 +61,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "aldente" # Battery life 
 "applesimutils" # Apple Simulator Utilities
 "alttab" # Better preview app switcher 
+"atuin" # Better history using SQL search
 "autoenv" # Automatically source environment variable
 "azure-cli" # Microsoft Azure Command Line Interface
 "bat" # A cat clone with syntax highlighting and Git integration
