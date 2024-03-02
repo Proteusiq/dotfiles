@@ -11,7 +11,7 @@ install_brew() {
 
     printf "Installling mas ..."
     brew install mas
-    
+
     printf "Installing homebrew packages..."
     brew bundle
 
@@ -26,7 +26,7 @@ create_dirs() {
     )
 
     for i in "${dirs[@]}"; do
-        mkdir "$i"
+        mkdir -p "$i"
     done
 }
 
