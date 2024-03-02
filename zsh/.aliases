@@ -392,3 +392,7 @@ rename-branch() {
     # reset the upstream branch for the new_name local branch
     git push origin -u $new_name
 }
+
+# aliases
+alias top="bytop"
+alias du="ncdu"
