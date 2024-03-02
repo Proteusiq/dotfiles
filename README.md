@@ -29,7 +29,6 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 -   Configs for the following tools:
     -   git
     -   [Alacritty](./alacritty)
-    -   [colorls](./colorls)
     -   [fzf](./fzf)
     -   [neovim](./nvim)
     -   [skhd](./skhd)

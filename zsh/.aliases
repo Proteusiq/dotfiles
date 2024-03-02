@@ -91,7 +91,7 @@ alias gbi="git browse -- issues"
 alias gpr="git pull-request"
 
 # better ls
-alias ls="echo; colorls -A --group-directories-first"
+# alias ls="echo; colorls -A --group-directories-first"
 
 ###
 # coreutils

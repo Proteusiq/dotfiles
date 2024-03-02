@@ -62,18 +62,6 @@ install_brew
 printf "💻  Set macOS preferences\n"
 ./macos/.macos
 
-printf "🌈  Configure Ruby\n"
-ruby-install ruby-2.7.4 1>/dev/null
-source /opt/homebrew/opt/chruby/share/chruby.sh
-source /opt/homebrew/opt/chruby/share/auto.sh
-chruby ruby-2.7.4 1>/dev/null
-# disable downloading documentation
-echo "gem: --no-document" >> ~/.gemrc
-gem update --system 1>/dev/null
-gem install bundler 1>/dev/null
-# install colorls
-gem install clocale colorls 1>/dev/null
-
 printf "📦  Configure Node\n"
 # install n for version management
 npm install -g n 1>/dev/null
@@ -97,6 +85,6 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 printf "🐗  Stow dotfiles\n"
-stow alacritty colorls fzf git nvim skhd starship tmux vim yabai zsh
+stow alacritty fzf git nvim skhd starship tmux vim yabai zsh
 
 printf "✨  Done!\n"
