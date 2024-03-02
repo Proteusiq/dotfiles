@@ -95,7 +95,7 @@ cask "visual-studio-code"
 brew "gradle"
 
 # initialize yabai and skhd
-yabai --install-service
-yabai --start-service
-skhd --install-service
-skhd --start-service
+# yabai --install-service
+# yabai --start-service
+# skhd --install-service
+# skhd --start-service
