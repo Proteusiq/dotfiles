@@ -17,7 +17,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A Spin-Off [Sara Pope's](http
 
 To install:
 
-`curl -L https://git.io/JeA7g | sh`
+`curl -L https://bit.ly/42YwVdi | sh`
 
 This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.sh) which will fetch this repo and run the install script.
 
