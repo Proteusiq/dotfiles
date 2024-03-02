@@ -10,7 +10,7 @@ install_brew() {
     fi
 
     printf "Installling mas ..."
-    brew install mas
+    /bin/bash -c "brew install mas"
 
     printf "Installing homebrew packages..."
     brew bundle
