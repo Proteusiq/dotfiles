@@ -66,6 +66,9 @@ Configure SSH [Configure](https://docs.github.com/en/authentication/connecting-t
 Change dotfile remote url to use ssh: 
 `git remote set-url origin git@github.com:Proteusiq/dotfiles.git`
 
+# TODO
+Add wirefuard
+Add your vscode extension installation
 
 ## Acknowledgements
 
