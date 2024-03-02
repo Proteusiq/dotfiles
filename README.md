@@ -16,7 +16,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A Spin-Off [Sara Pope's](http
 **Before you get started** make sure you give full disk access permission to your terminal (for writing macos defaults). `System Preferences -> Privacy -> Full Disk Access`.
 
 Add [+] Utilities > Terminal
-Enable Developer Tools: `xcode-select --install`
+
 
 To install:
 
