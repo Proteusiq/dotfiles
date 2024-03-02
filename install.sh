@@ -93,8 +93,6 @@ printf "🐍  Configure Python\n"
 # setup pyenv / global python to latest # TODO make it take latest python
 pyenv install 3.12 1>/dev/null
 pyenv global 3.12 1>/dev/null
-# dont set conda clutter in zshrc
-conda config --set auto_activate_base false
 
 printf "👽  Installing vim-plug\n"
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
