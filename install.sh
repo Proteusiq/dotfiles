@@ -4,13 +4,18 @@ install_brew() {
     if ! command -v "brew" &> /dev/null; then
         printf "Homebrew not found, installing."
         # install homebrew
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
         # set path
         eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 
+    printf "Installling mas ..."
+    brew install mas
+    
     printf "Installing homebrew packages..."
     brew bundle
+
+    
 }
 
 create_dirs() {
