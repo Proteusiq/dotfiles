@@ -97,6 +97,6 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 printf "🐗  Stow dotfiles\n"
-stow alacritty colorls fzf git nvim skhd starship tmux vim yabai z zsh
+stow alacritty colorls fzf git nvim skhd starship tmux vim yabai zsh
 
 printf "✨  Done!\n"
