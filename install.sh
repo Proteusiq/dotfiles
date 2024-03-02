@@ -5,12 +5,17 @@ install_brew() {
         printf "Homebrew not found, installing."
         # install homebrew
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-        # set path
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+
     fi
 
-    printf "Installling mas ..."
-    /bin/bash -c "brew install mas"
+    
+    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> ~/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    
+    printf "Homebrew version"
+    brew --version
+    
+
 
     printf "Installing homebrew packages..."
     brew bundle
@@ -44,13 +49,6 @@ build_xcode() {
     fi
 }
 
-install_app_store_apps() {
-    mas install 497799835 # Xcode
-    mas install 1509590766 # Mutekey
-    mas install 1545870783 # System Color Picker
-    mas install 1450874784 # Transporter
-    mas install 1351639930 # Gifski
-}
 
 printf "🗄  Creating directories\n"
 create_dirs
