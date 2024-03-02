@@ -24,9 +24,7 @@ install_brew() {
 
 create_dirs() {
     declare -a dirs=(
-        "$HOME/Downloads/torrents"
-        "$HOME/Desktop/screenshots"
-        "$HOME/dev"
+        "$HOME/Codes"
     )
 
     for i in "${dirs[@]}"; do
