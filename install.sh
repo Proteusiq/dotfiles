@@ -63,15 +63,6 @@ printf "💻  Set macOS preferences\n"
 printf "📦  Configure Node\n"
 # install n for version management
 npm install -g n 1>/dev/null
-# make cache folder (if missing) and take ownership
-sudo mkdir -p /usr/local/n
-sudo chown -R $(whoami) /usr/local/n
-# take ownership of Node.js install destination folders
-sudo chown -R $(whoami) /usr/local/bin /usr/local/lib /usr/local/include /usr/local/share
-# install and use node lts
-n lts
-# install pnpm
-npm install -g pnpm
 
 printf "🐍  Configure Python\n"
 # setup pyenv / global python to latest # TODO make it take latest python
