@@ -19,7 +19,7 @@ if (( $+commands[lesspipe.sh] )); then
 fi
 
 # common dirs
-dev="$HOME/dev"
+dev="$HOME/Codes"
 
 # set the list of dirs that zsh searches for programs
 path=(

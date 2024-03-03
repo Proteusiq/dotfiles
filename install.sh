@@ -69,6 +69,14 @@ printf "🐍  Configure Python\n"
 pyenv install 3.12 1>/dev/null
 pyenv global 3.12 1>/dev/null
 
+printf "🐍  Configure Jupyter Lab\n"
+# setup reusable jupyter lab
+pyenv virtualenv 3.12 jupyter 1>/dev/null
+pyenv activate jupyter && python -m pip install --upgrade pip && pip install jupyterlab 1>/dev/null
+# order the priority
+pyenv global jupyter 1>/dev/null
+
+
 printf "👽  Installing vim-plug\n"
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
