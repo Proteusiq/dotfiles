@@ -30,6 +30,11 @@ eval "$(starship init zsh)"
 source $HOME/dotfiles/zsh/.exports
 source $HOME/dotfiles/zsh/.aliases
 
+# set pyenv
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+pyenv shell 3.12
+
 # start tmux on open
 [[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux

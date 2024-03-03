@@ -69,6 +69,12 @@ printf "🐍  Configure Python\n"
 pyenv install 3.12 1>/dev/null
 pyenv global 3.12 1>/dev/null
 
+# get the virtualenv plugin
+/bin/bash -c "git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv" 1>/dev/null
+eval "$(pyenv init -)" 1>/dev/null
+eval "$(pyenv virtualenv-init -)" 1>/dev/null
+
+
 printf "🐍  Configure Jupyter Lab\n"
 # setup reusable jupyter lab
 pyenv virtualenv 3.12 jupyter 1>/dev/null

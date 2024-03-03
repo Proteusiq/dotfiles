@@ -54,7 +54,7 @@ export PYENV_SHELL=zsh
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 command pyenv rehash 2>/dev/null
-eval "$(pyenv init -)"
+
 
 # GOLANG
 export GOROOT=/usr/local/go
