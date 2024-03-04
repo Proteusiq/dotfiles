@@ -1518,45 +1518,45 @@
         }
       },
       "pixi": {
-        "version": "0.15.1",
+        "version": "0.15.2",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_sonoma": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:0c34b3e7d851833cf1a3c02f4676e9f25a746252703bff6ebb2c74e1d0247208",
-              "sha256": "0c34b3e7d851833cf1a3c02f4676e9f25a746252703bff6ebb2c74e1d0247208"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:3fd8dde9d3d9a929ff034da5f768c48d0b477665cd8b4575a766d88911d972fd",
+              "sha256": "3fd8dde9d3d9a929ff034da5f768c48d0b477665cd8b4575a766d88911d972fd"
             },
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:778a415aaeb02da52864caa8b7c43833561fb9a7b70a8a95c067cee1b869c23f",
-              "sha256": "778a415aaeb02da52864caa8b7c43833561fb9a7b70a8a95c067cee1b869c23f"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:aef60403fcb1716003f89d86447a604fba169690778a7691757bd399e365eaaa",
+              "sha256": "aef60403fcb1716003f89d86447a604fba169690778a7691757bd399e365eaaa"
             },
             "arm64_monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:f58094e5dcaf59c46a89e42e9bf7cc440cf49342119afa21e6f67a55e9210c7b",
-              "sha256": "f58094e5dcaf59c46a89e42e9bf7cc440cf49342119afa21e6f67a55e9210c7b"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:088a11ce71da1e2cb59460b7e5d1fed69e8253f9fab757615b9547317b16c46d",
+              "sha256": "088a11ce71da1e2cb59460b7e5d1fed69e8253f9fab757615b9547317b16c46d"
             },
             "sonoma": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:a5b7e2a4aa3419bee62165f79f2fcd876b6e4c6eadc822a7906c8f58fef3fd4c",
-              "sha256": "a5b7e2a4aa3419bee62165f79f2fcd876b6e4c6eadc822a7906c8f58fef3fd4c"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:535b0ed0eee6eb82f4b8ca23bf436d7ef955cd75575fd2903119e502642e0cfc",
+              "sha256": "535b0ed0eee6eb82f4b8ca23bf436d7ef955cd75575fd2903119e502642e0cfc"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:f89a9210f6c9ac385823b46ea20ad39b2c2fef16f602a3e3618dbf9f16e2ce91",
-              "sha256": "f89a9210f6c9ac385823b46ea20ad39b2c2fef16f602a3e3618dbf9f16e2ce91"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:cd9acc0e3a7aa94f4aae75667876ed53388fbeddc53bf9ce072fd69f91fefdf2",
+              "sha256": "cd9acc0e3a7aa94f4aae75667876ed53388fbeddc53bf9ce072fd69f91fefdf2"
             },
             "monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:ecca340a0083a05e9fe7d12a3639633062cb29d45deb970d5e63d23ea2e15fd8",
-              "sha256": "ecca340a0083a05e9fe7d12a3639633062cb29d45deb970d5e63d23ea2e15fd8"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:83528dccceb491d68db3a6a4a75c6abda710eac5b3d7c51014dee2df0866425c",
+              "sha256": "83528dccceb491d68db3a6a4a75c6abda710eac5b3d7c51014dee2df0866425c"
             },
             "x86_64_linux": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:8e2c35149cb2f7f639af5317434135aaacdd78a02764c203703b218852b0b2f4",
-              "sha256": "8e2c35149cb2f7f639af5317434135aaacdd78a02764c203703b218852b0b2f4"
+              "url": "https://ghcr.io/v2/homebrew/core/pixi/blobs/sha256:954df11db7d88894168199777078250b06d06f22c6ca9b359f1951868ac89ecb",
+              "sha256": "954df11db7d88894168199777078250b06d06f22c6ca9b359f1951868ac89ecb"
             }
           }
         }
