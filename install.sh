@@ -1,5 +1,12 @@
 #!/bin/bash
 
+printf "Steps: 🗄  Creating directories\n🛠  Installing Xcode Command Line Tools\n"
+printf "🍺  Installing Homebrew packages\n 💻  Set macOS preferences\n"
+printf "📦  Configure Node\n 🐍  Configure Python & Jupyter Lab\n"
+
+# Ask the user if they would like to set macOS preferences
+read -p "Would you like to set macOS preferences? (y/N): " response
+
 install_brew() {
     if ! command -v "brew" &> /dev/null; then
         printf "Homebrew not found, installing."
@@ -59,8 +66,24 @@ printf "🍺  Installing Homebrew packages\n"
 install_brew
 
 
-printf "💻  Set macOS preferences\n"
-./macos/.macos
+# Define a function to set macOS preferences
+set_macos_preferences() {
+    printf "💻  Set macOS preferences\n"
+    ./macos/.macos
+}
+
+case "$response" in
+    [yY][eE][sS]|[yY]) 
+        set_macos_preferences
+        ;;
+    *)
+        echo "Skipping macOS preferences setup."
+        ;;
+esac
+
+
+
+
 
 printf "📦  Configure Node\n"
 # install n for version management

@@ -35,6 +35,10 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 pyenv shell 3.12
 
+# set poetry
+fpath+=~/.zfunc
+autoload -Uz compinit && compinit
+
 # start tmux on open
 [[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux
