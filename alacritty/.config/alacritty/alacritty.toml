@@ -593,6 +593,11 @@ key = "F12"
 mods = "Command"
 
 [[keyboard.bindings]]
+action = "CreateNewWindow"
+key = "S"
+mods = "Command"
+
+[[keyboard.bindings]]
 chars = """
 
 """
