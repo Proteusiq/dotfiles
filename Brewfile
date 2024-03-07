@@ -14,11 +14,8 @@ cask_args appdir: "/Applications"
 # CLI Tools for software development
 brew "azure-cli"
 brew "git"
-brew "neovim"
 brew "terraform"
-brew "vim"
-brew "wget"
-brew "yarn"
+
 
 # UI Tools for software development
 cask "docker"
@@ -55,14 +52,20 @@ brew "rsync"
 brew "screen"
 brew "stow"
 brew "tree"
+brew "wget"
+brew "yarn"
 brew "zlib"
 brew "zplug"
 brew "zsh"
 brew "zoxide"
+brew "wget"
+brew "yarn"
 
 
 
-# Terminal Emulator
+# Terminal Editors and Emulator
+brew "vim"
+brew "neovim"
 brew "tmux"
 brew "starship"
 cask "alacritty"
