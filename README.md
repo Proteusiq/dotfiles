@@ -2,8 +2,8 @@
 
 Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A Spin-Off [Sara Pope's](https://github.com/gretzky/dotfiles).
 
-![zsh with starship prompt and colorls](https://user-images.githubusercontent.com/15176096/71632895-ff0d0980-2bde-11ea-966f-65e5d564361f.png)
-![vim and tmux](https://user-images.githubusercontent.com/15176096/71633424-2f09dc00-2be2-11ea-9c15-a4f492b7ea68.png)
+<img width="1333" alt="image" src="https://github.com/Proteusiq/dotfiles/assets/14926709/9046ac0a-33d1-4d03-948f-dc6e293e06b8">
+
 
 -   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/) and [eza](https://github.com/eza-community/eza)
 -   Window management: [yabai](https://github.com/koekeishiya/yabai)
@@ -48,7 +48,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 
 The install script will also setup Python and Node versions/environments:
 
--   [pyenv](https://github.com/pyenv/pyenv) sets the global Python version to 3.12
+-   [pyenv](https://github.com/pyenv/pyenv) sets the global Python version to latest stable version
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
 
 <details><summary>Tools Definitions</summary>
