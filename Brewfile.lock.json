@@ -2,19 +2,19 @@
   "entries": {
     "tap": {
       "homebrew/cask-fonts": {
-        "revision": "efea18553eba669ce65b52074f27f472d2fd2c16"
+        "revision": "f1f6f638d84ab6a02fd747033e8c323920124b00"
       },
       "homebrew/bundle": {
-        "revision": "f1f866389d27c0459d17d7703864936f2fdf26ab"
+        "revision": "addd839e968fc667fb083a43fb350a8535697d0d"
       },
       "homebrew/cask": {
-        "revision": "df596870641a6732fdd8fd2c18c3fe8d51a872c5"
+        "revision": "6e4309e9f7dc4607c5a496b77e6c3840853ecf48"
       },
       "homebrew/core": {
-        "revision": "35aecf358b13b67ce1037a32e9cdc2bf76d5ceea"
+        "revision": "7efeb1f0e7b289acf7cf5be688eb01364aed522e"
       },
       "homebrew/services": {
-        "revision": "c25f33517d85a5c03efa711065436f00f7f48fc1"
+        "revision": "672cb6c833ed1087a9da0c2c60dfbad66b66e4af"
       },
       "koekeishiya/formulae": {
         "revision": "e9768e2d68ee5e154bf3701b76a0ab93f7296a40"
@@ -2536,7 +2536,7 @@
         }
       },
       "expo-orbit": {
-        "version": "1.0.4",
+        "version": "1.1.0",
         "options": {
           "full_name": "expo-orbit",
           "args": {
@@ -2608,7 +2608,7 @@
         }
       },
       "lulu": {
-        "version": "2.6.2",
+        "version": "2.6.3",
         "options": {
           "full_name": "lulu",
           "args": {
@@ -2662,7 +2662,7 @@
         }
       },
       "syncthing": {
-        "version": "1.27.3-1",
+        "version": "1.27.4-1",
         "options": {
           "full_name": "syncthing",
           "args": {

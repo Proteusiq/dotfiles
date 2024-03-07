@@ -1,47 +1,27 @@
 #!/bin/bash
 
-printf "Steps: 🗄  Creating directories\n🛠  Installing Xcode Command Line Tools\n"
-printf "🍺  Installing Homebrew packages\n 💻  Set macOS preferences\n"
-printf "📦  Configure Node\n 🐍  Configure Python & Jupyter Lab\n"
+# A utility script to set up a new macOS environment
 
-# Ask the user if they would like to set macOS preferences
-read -p "Would you like to set macOS preferences? (y/N): " response
+echo -e "\nInitializing macOS setup...\n"
 
-install_brew() {
-    if ! command -v "brew" &> /dev/null; then
-        printf "Homebrew not found, installing."
-        # install homebrew
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-
-    fi
-
-    
-    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> ~/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-    
-    printf "Homebrew version"
-    brew --version
-    
-
-    printf "Installing homebrew packages..."
-    brew bundle
-
-    
-}
-
+# Function to create directories
 create_dirs() {
+    echo "🗄  Creating directories..."
     declare -a dirs=(
         "$HOME/Codes"
         "$HOME/Documents/Screenshots"
         "$HOME/Downloads/Torrents"
     )
 
-    for i in "${dirs[@]}"; do
-        mkdir -p "$i"
+    for dir in "${dirs[@]}"; do
+        mkdir -p "$dir"
+        echo "Created $dir"
     done
 }
 
-build_xcode() {
+# Function to install Xcode Command Line Tools
+install_xcode_tools() {
+    echo "🛠  Installing Xcode Command Line Tools..."
     if ! xcode-select --print-path &> /dev/null; then
         xcode-select --install &> /dev/null
 
@@ -50,69 +30,99 @@ build_xcode() {
         done
 
         sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
-
-        sudo xcodebuild -license
+        sudo xcodebuild -license accept
+    else
+        echo "Xcode Command Line Tools already installed."
     fi
 }
 
+# Function to install Homebrew and packages
+install_brew() {
+    echo "🍺  Installing Homebrew and packages..."
+    if ! command -v brew &> /dev/null; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
 
-printf "🗄  Creating directories\n"
-create_dirs
+    echo "🍺 Updating Homebrew..."
+    brew update
+    echo "🍺 Installing packages..."
+    brew bundle
+}
 
-printf "🛠  Installing Xcode Command Line Tools\n"
-build_xcode
-
-printf "🍺  Installing Homebrew packages\n"
-install_brew
-
-
-# Define a function to set macOS preferences
+# Function to set macOS preferences
 set_macos_preferences() {
-    printf "💻  Set macOS preferences\n"
+    echo "💻  Setting macOS preferences..."
     ./macos/.macos
 }
 
-case "$response" in
-    [yY][eE][sS]|[yY]) 
-        set_macos_preferences
-        ;;
-    *)
-        echo "Skipping macOS preferences setup."
-        ;;
-esac
+# Function to configure Node
+configure_node() {
+    echo "📦  Configuring Node..."
+    npm install -g n 1>/dev/null
+}
 
 
+# Function to configure Python and Jupyter Lab
+configure_python() {
+    echo "🐍  Configuring Python and Jupyter Lab..."
+    
+    # Fetch the latest Python version information from the API
+    echo "Fetching the latest Python version info from endoflife.date..."
+    python_version_info=$(curl -s "https://endoflife.date/api/python.json" | jq -r '[.[] | select(.lts==false)] | max_by(.releaseDate) | .latest')
 
+    if [[ -n "$python_version_info" && "$python_version_info" != "null" ]]; then
+        echo "Latest Python version is $python_version_info. Starting installation..."   
+    else
+        echo "Failed to fetch the latest Python version information. Defaulting to latest 3.12"
+        python_version_info="3.12"
+        
+    fi
 
+    pyenv install $python_version_info
+    pyenv global $python_version_info
+    echo "Python $python_version_info installed successfully."
 
-printf "📦  Configure Node\n"
-# install n for version management
-npm install -g n 1>/dev/null
+    # Install virtualenv plugin for managing Python virtual environments
+    git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv 1>/dev/null
+    eval "$(pyenv init -)" 1>/dev/null
+    eval "$(pyenv virtualenv-init -)" 1>/dev/null
 
-printf "🐍  Configure Python\n"
-# setup pyenv / global python to latest # TODO make it take latest python
-pyenv install 3.12 1>/dev/null
-pyenv global 3.12 1>/dev/null
+    # Create a Python virtual environment named 'jupyter' and install Jupyter Lab
+    pyenv virtualenv $python_version_info jupyter 1>/dev/null
+    pyenv activate jupyter && python -m pip install --upgrade pip && pip install jupyterlab 1>/dev/null
+    pyenv global $python_version_info jupyter 1>/dev/null
+}
 
-# get the virtualenv plugin
-/bin/bash -c "git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv" 1>/dev/null
-eval "$(pyenv init -)" 1>/dev/null
-eval "$(pyenv virtualenv-init -)" 1>/dev/null
+# Function to install vim-plug for Neovim
+install_vim_plug() {
+    echo "👽  Installing vim-plug for Neovim..."
+    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+}
 
+# Function to use GNU Stow to manage dotfiles
+stow_dotfiles() {
+    echo "🐗  Stowing dotfiles..."
+    stow alacritty fzf git nvim skhd starship tmux vim yabai zsh
+}
 
-printf "🐍  Configure Jupyter Lab\n"
-# setup reusable jupyter lab
-pyenv virtualenv 3.12 jupyter 1>/dev/null
-pyenv activate jupyter && python -m pip install --upgrade pip && pip install jupyterlab 1>/dev/null
-# order the priority
-pyenv global jupyter 1>/dev/null
+# Main setup sequence
+create_dirs
+install_xcode_tools
+install_brew
+configure_node
+configure_python
+install_vim_plug
+stow_dotfiles
 
+# Optional macOS preferences setup
+read -p "Would you like to set macOS preferences now? (y/N): " response
+if [[ "$response" =~ ^[yY](es)?$ ]]; then
+    set_macos_preferences
+else
+    echo "Skipping macOS preferences setup."
+fi
 
-printf "👽  Installing vim-plug\n"
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-    	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-printf "🐗  Stow dotfiles\n"
-stow alacritty fzf git nvim skhd starship tmux vim yabai zsh
-
-printf "✨  Done!\n"
+echo "✨  Setup completed successfully!"
