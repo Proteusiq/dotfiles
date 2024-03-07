@@ -48,7 +48,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 
 The install script will also setup Python and Node versions/environments:
 
--   [pyenv](https://github.com/pyenv/pyenv) sets the global Python version to 3.12
+-   [pyenv](https://github.com/pyenv/pyenv) sets the global Python version to latest stable version
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
 
 ### Customization
