@@ -51,7 +51,7 @@ The install script will also setup Python and Node versions/environments:
 -   [pyenv](https://github.com/pyenv/pyenv) sets the global Python version to latest stable version
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
 
-<details><summary>Tools Definitions</summary>
+<details><summary>Brewfile Tools Definitions</summary>
 
 ```sh
 # Command Line Tools
@@ -134,11 +134,12 @@ The install script will also setup Python and Node versions/environments:
 - Alacritty color scheme is [Snazzy](https://github.com/sindresorhus/terminal-snazzy)
 - VSCode/Vim color scheme is [Ayu](https://github.com/dempfi/ayu)
 
-### After Connect and Sync
-Configure SSH [Configure](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) + [Setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+### After First Installation, Sync dotfile with GitHub
+Configure GitHub to usee SSH [Configure](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) + [Setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
 Change dotfile remote url to use ssh: 
 `git remote set-url origin git@github.com:Proteusiq/dotfiles.git`
+
 
 # TODO
 Add wirefuard
