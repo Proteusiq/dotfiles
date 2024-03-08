@@ -397,3 +397,4 @@ rename-branch() {
 alias top="bpytop"
 alias du="ncdu"
 alias ls="eza"
+alias tree="eza --tree"

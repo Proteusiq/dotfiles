@@ -99,7 +99,6 @@ The install script will also setup Python and Node versions/environments:
 "stow" # Manage installation of multiple softwares in the same directory structure
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently
 "tmux" # Terminal multiplexer
-"tree" # Display directories as trees (with optional color/HTML output)
 "vim" # Highly configurable text editor built to enable efficient text editing
 "watchman" # Watch files and take action when they change
 "wget" # Internet file retriever
