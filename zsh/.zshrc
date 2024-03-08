@@ -19,7 +19,6 @@ antigen bundles <<EOBUNDLES
     zsh-users/zsh-completions
     djui/alias-tips
     zsh-users/zsh-syntax-highlighting
-    proteusiq/auto-color-ls
 EOBUNDLES
 antigen apply
 
@@ -43,3 +42,11 @@ autoload -Uz compinit && compinit
 [[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux
 
+# az autocompletion
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
