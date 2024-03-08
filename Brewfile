@@ -69,6 +69,7 @@ brew "neovim"
 brew "tmux"
 brew "starship"
 cask "alacritty"
+cask "kitty"
 
 
 
@@ -88,13 +89,6 @@ brew "go"
 
 # 🦀 Rustlang Development
 brew "rust"
-
-# 💎 Ruby Development
-# Tools specifically for Ruby programming
-brew "chruby"
-brew "cocoapods"
-
-
 
 # Productivity Applications
 # Applications to enhance productivity
