@@ -127,7 +127,7 @@ cask "qgis"
 # Tools for managing application windows
 brew "koekeishiya/formulae/skhd" # Simple hotkey daemon for macOS
 brew "koekeishiya/formulae/yabai" # A tiling window manager for macOS
-cask "expo-orbit"
+
 
 # Misc Tools
 # Miscellaneous tools and utilities
