@@ -96,17 +96,17 @@ configure_python() {
     # add Python latest version to .zshrc
     # The file to be searched and updated
     FILE=$HOME/dotfiles/zsh/.zshrc
-    # Construct the export statement
-    EXPORT_STATEMENT="pyenv shell ${python_version_info}"
-    # Check if the environment variable assignment exists in the file
+    # pyenv default python to latest statement
+    PYENV_STATEMENT="pyenv shell ${python_version_info}"
+    # Check if exists in the file
     if grep -q "^pyenv shell " "$FILE"; then
         # If it exists, update its value
-        sed -i '' "s/^pyenv shell .*/${EXPORT_STATEMENT}/" "$FILE"
+        sed -i '' "s/^pyenv shell .*/${PYENV_STATEMENT}/" "$FILE"
         echo "Updated pyenv shell to ${python_version_info} in ${FILE}."
     else
         # If it does not exist, append it to the file
-        echo "$EXPORT_STATEMENT" >> "$FILE"
-        echo "Added ${EXPORT_STATEMENT} to ${FILE}."
+        echo "$PYENV_STATEMENT" >> "$FILE"
+        echo "Added ${PYENV_STATEMENT} to ${FILE}."
     fi
 }
 
