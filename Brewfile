@@ -102,6 +102,8 @@ brew "ollama" # Running Large Language Model Locally
 
 # Utilities
 # General utilities for everyday use
+
+brew "wireguard-tools"
 cask "flux"
 cask "kap"
 cask "lulu"

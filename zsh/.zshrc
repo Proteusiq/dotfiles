@@ -41,7 +41,7 @@ source $HOME/dotfiles/zsh/.aliases
 # set pyenv
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
-pyenv shell 3.12
+pyenv shell 3.12.2
 
 # set poetry
 fpath+=~/.zfunc

@@ -81,7 +81,6 @@ configure_python() {
     fi
 
     pyenv install $python_version_info
-    pyenv global $python_version_info
     echo "Python $python_version_info installed successfully."
 
     # Install virtualenv plugin for managing Python virtual environments
@@ -91,8 +90,24 @@ configure_python() {
 
     # Create a Python virtual environment named 'jupyter' and install Jupyter Lab
     pyenv virtualenv $python_version_info jupyter 1>/dev/null
-    pyenv activate jupyter && python -m pip install --upgrade pip && pip install jupyterlab 1>/dev/null
+    pyenv activate jupyter && python -m pip install --upgrade pip && pip install jupyterlab jupyter-dash 1>/dev/null
     pyenv global $python_version_info jupyter 1>/dev/null
+
+    # add Python latest version to .zshrc
+    # The file to be searched and updated
+    FILE=$HOME/dotfiles/zsh/.zshrc
+    # Construct the export statement
+    EXPORT_STATEMENT="pyenv shell ${python_version_info}"
+    # Check if the environment variable assignment exists in the file
+    if grep -q "^pyenv shell " "$FILE"; then
+        # If it exists, update its value
+        sed -i '' "s/^pyenv shell .*/${EXPORT_STATEMENT}/" "$FILE"
+        echo "Updated pyenv shell to ${python_version_info} in ${FILE}."
+    else
+        # If it does not exist, append it to the file
+        echo "$EXPORT_STATEMENT" >> "$FILE"
+        echo "Added ${EXPORT_STATEMENT} to ${FILE}."
+    fi
 }
 
 # Function to install vim-plug for Neovim
