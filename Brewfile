@@ -103,7 +103,6 @@ brew "ollama" # Running Large Language Model Locally
 # Utilities
 # General utilities for everyday use
 cask "flux"
-cask "istat-menus"
 cask "kap"
 cask "lulu"
 cask "syncthing"
