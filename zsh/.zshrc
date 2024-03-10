@@ -10,6 +10,15 @@ SAVEHIST=10000
 
 source ~/antigen.zsh
 
+# az autocompletion
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+  autoload -Uz compinit
+  compinit
+fi
+
 antigen bundles <<EOBUNDLES
     tmux
     command-not-found
@@ -42,11 +51,3 @@ autoload -Uz compinit && compinit
 [[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux
 
-# az autocompletion
-if type brew &>/dev/null
-then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
-  autoload -Uz compinit
-  compinit
-fi

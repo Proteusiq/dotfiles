@@ -32,6 +32,7 @@ brew "binutils"
 brew "coreutils"
 brew "diffutils"
 brew "direnv"
+brew "eza"
 brew "ffmpeg"
 brew "findutils"
 brew "fzf"
@@ -92,7 +93,6 @@ brew "rust"
 # Productivity Applications
 # Applications to enhance productivity
 cask "1password"
-cask "alfred"
 cask "obsidian"
 cask "sketch"
 
