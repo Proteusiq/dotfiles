@@ -102,7 +102,6 @@ brew "ollama" # Running Large Language Model Locally
 
 # Utilities
 # General utilities for everyday use
-cask "dozer"
 cask "flux"
 cask "istat-menus"
 cask "kap"
