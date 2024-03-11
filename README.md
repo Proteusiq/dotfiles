@@ -66,7 +66,7 @@ The install script will also setup Python and Node versions/environments:
 "coreutils" # GNU File, Shell, and Text utilities
 "diffutils" # File comparison utilities
 "direnv" # Environment switcher for the shell
-"eza" # Command line utility (placeholder, as not a standard tool)
+"eza" # A better ls and tree
 "ffmpeg" # A complete, cross-platform solution to record, convert and stream audio and video
 "findutils" # GNU `find`, `locate`, `updatedb`, and `xargs` commands
 "fzf" # Command-line fuzzy finder
@@ -115,11 +115,8 @@ The install script will also setup Python and Node versions/environments:
 # GUI Applications (Casks)
 # Various applications installed through Homebrew Cask
 "1password" # Password manager
-"airpass" # Defeat time-restricted WiFi networks
 "alacritty" # GPU-accelerated terminal emulator
-"alfred" # Productivity application for macOS
 "docker" # Platform to develop, ship, and run applications
-"dozer" # Hide status bar icons to give your
 ````
 
 </details>

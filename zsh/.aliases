@@ -393,8 +393,22 @@ rename-branch() {
     git push origin -u $new_name
 }
 
+# - clone and cd
+git() {
+  if [ $1 = "clone" ]; then
+    command git $@ && cd "$(basename "$_" .git)"
+  else
+    command git $@
+  fi
+}
+
 # aliases
 alias top="bpytop"
 alias du="ncdu"
 alias ls="eza"
 alias tree="eza --tree"
+
+# jupyter lab
+alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
+alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") & rm /tmp/lab.log' alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
+alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") & rm /tmp/lab.log'
