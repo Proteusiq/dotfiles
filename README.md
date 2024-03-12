@@ -137,9 +137,6 @@ Change dotfile remote url to use ssh:
 `git remote set-url origin git@github.com:Proteusiq/dotfiles.git`
 
 
-# TODO
-Add wirefuard
-
 ## Acknowledgements
 
--   [Sara Pope's](https://github.com/gretzky/dotfiles)
+-   [Sara Pope's](https://github.com/gretzky/dotfiles) and all before her.
