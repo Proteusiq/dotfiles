@@ -120,10 +120,6 @@ cask "font-hack-nerd-font"
 # Browsers
 cask "google-chrome"
 
-# Design and Development Tools
-cask "kicad"
-cask "qgis"
-
 # Window Management
 # Tools for managing application windows
 brew "koekeishiya/formulae/skhd" # Simple hotkey daemon for macOS
