@@ -93,7 +93,7 @@ brew "rust"
 # Productivity Applications
 # Applications to enhance productivity
 cask "1password"
-cask "obsidian"ß
+cask "obsidian"
 
 # LLM Development
 brew "ollama" # Running Large Language Model Locally
@@ -109,7 +109,6 @@ cask "lulu"
 cask "syncthing"
 cask "the-unarchiver"
 cask "transmission"
-cask "ultimaker-cura"
 
 # Fonts
 # Font installations for design and development
