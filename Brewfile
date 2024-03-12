@@ -93,8 +93,7 @@ brew "rust"
 # Productivity Applications
 # Applications to enhance productivity
 cask "1password"
-cask "obsidian"
-cask "sketch"
+cask "obsidian"ß
 
 # LLM Development
 brew "ollama" # Running Large Language Model Locally
