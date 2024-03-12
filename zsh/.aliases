@@ -410,5 +410,4 @@ alias tree="eza --tree"
 
 # jupyter lab
 alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
-alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") & rm /tmp/lab.log' alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
-alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") & rm /tmp/lab.log'
+alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") && source deactivate & rm /tmp/lab.log'
