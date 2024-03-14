@@ -43,6 +43,9 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 pyenv shell 3.12.2
 
+# pixi auto completion
+eval "$(pixi completion --shell zsh)"
+
 # set poetry
 fpath+=~/.zfunc
 autoload -Uz compinit && compinit
