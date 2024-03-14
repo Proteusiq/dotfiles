@@ -71,3 +71,6 @@ eval "$(direnv hook zsh)"
 
 # zoxide
 eval "$(zoxide init zsh)"
+
+# pixi
+export PIXI_BETA_WARRNING_OFF=true
