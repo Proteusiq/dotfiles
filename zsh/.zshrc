@@ -47,6 +47,7 @@ pyenv shell 3.12.2
 fpath+=~/.zfunc
 autoload -Uz compinit && compinit
 
+
 # start tmux on open
 [[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux

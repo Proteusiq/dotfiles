@@ -4,6 +4,8 @@
 
 echo -e "\nInitializing macOS setup...\n"
 
+ZSHHOME=$HOME/dotfiles/zsh
+
 # Function to create directories
 create_dirs() {
     echo "🗄  Creating directories..."
@@ -41,7 +43,7 @@ install_brew() {
     echo "🍺  Installing Homebrew and packages..."
     if ! command -v brew &> /dev/null; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' > ~/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 
@@ -95,7 +97,7 @@ configure_python() {
 
     # add Python latest version to .zshrc
     # The file to be searched and updated
-    FILE=$HOME/dotfiles/zsh/.zshrc
+    FILE=$ZSHHOME/.zshrc
     # pyenv default python to latest statement
     PYENV_STATEMENT="pyenv shell ${python_version_info}"
     # Check if exists in the file
@@ -117,6 +119,11 @@ install_vim_plug() {
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 }
 
+# Extra Setups
+setup_utils(){
+    echo "source $(brew --prefix autoenv)/activate.sh" >> ~/.zprofile
+}
+
 # Function to use GNU Stow to manage dotfiles
 stow_dotfiles() {
     echo "🐗  Stowing dotfiles..."
@@ -130,6 +137,7 @@ install_brew
 configure_node
 configure_python
 install_vim_plug
+setup_utils
 stow_dotfiles
 
 # Optional macOS preferences setup

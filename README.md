@@ -58,6 +58,7 @@ The install script will also setup Python and Node versions/environments:
 # Utilities and tools to enhance the command line interface experience
 "ack" # A tool like grep, optimized for programmers
 "applesimutils" # Apple Simulator Utilities
+"autoenv" # Automatically source environment variable
 "azure-cli" # Microsoft Azure Command Line Interface
 "bat" # A cat clone with syntax highlighting and Git integration
 "bpytop" # Resource monitor that shows usage and stats
