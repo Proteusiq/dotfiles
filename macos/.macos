@@ -918,12 +918,18 @@ defaults write com.twitter.twitter-mac HideInBackground -bool true
 # Bypass the annoyingly slow t.co URL shortener
 defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
 
-# Prayson Preferences Dock
+###############################################################################
+# Prayson's Preferences                                                       #
+###############################################################################
+# Clock
 defaults write com.apple.menuextra.clock IsAnalog -int 0
 defaults write com.apple.menuextra.clock ShowAMPM  -int 1
 defaults write com.apple.menuextra.clock ShowDate -int 0
 defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
 defaults write com.apple.menuextra.clock ShowSeconds  -int 0
+
+# clean desktop
+defaults write com.apple.WindowManager StandardHideDesktopIcons -int 1
 
 
 ###############################################################################
