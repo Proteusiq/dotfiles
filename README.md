@@ -137,6 +137,29 @@ Configure GitHub to usee SSH [Configure](https://docs.github.com/en/authenticati
 Change dotfile remote url to use ssh: 
 `git remote set-url origin git@github.com:Proteusiq/dotfiles.git`
 
+# MacOS settings
+> Steps of updating or changing  `macos/.macos` to fit your preferences
+Example changing Clock to Analog:
+```sh
+# step 1: generate before change default settings
+defaults read > before
+# step 2: make changes on the UI. For example change clock appearance settings and go back to terminal
+defaults read > after
+# step 3: used `diff before after` or VSCode to change the difference. On VSCode right click `before` > Select for Compare, right click `after`> Compare with Selected
+# find the changes that highlights the UI chnages
+```
+![changes](diff.png)
+
+Translate the changes to .macos
+```sh
+# Prayson's Clock Preferences Dock
+defaults write com.apple.menuextra.clock IsAnalog -int 0
+defaults write com.apple.menuextra.clock ShowAMPM  -int 1
+defaults write com.apple.menuextra.clock ShowDate -int 0
+defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
+defaults write com.apple.menuextra.clock ShowSeconds  -int 0
+```
+
 
 ## Acknowledgements
 
