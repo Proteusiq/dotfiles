@@ -368,7 +368,7 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
 defaults write com.apple.dock mouse-over-hilite-stack -bool true
 
 # Set the icon size of Dock items to 36 pixels
-# defaults write com.apple.dock tilesize -int 36
+defaults write com.apple.dock tilesize -int 26
 
 # Change minimize/maximize window effect
 defaults write com.apple.dock mineffect -string "scale"
@@ -930,7 +930,13 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 
 # clean desktop
 defaults write com.apple.WindowManager StandardHideDesktopIcons -int 1
+defaults write com.apple.WindowManager AutoHide -int 1
+defaults write com.apple.WindowManager StageManagerHideWidgets -int 1
+defaults write com.apple.WindowManager StandardHideWidgets -int 1
+defaults write com.apple.WindowManager HideDesktop -int 1
 
+defaults write com.apple.chronod effectiveRemoteWidgetsEnabled -int 0
+defaults write com.apple.chronod remoteWidgetsEnabled -int 0
 
 ###############################################################################
 # Kill affected applications                                                  #
