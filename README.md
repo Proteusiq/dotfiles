@@ -58,6 +58,7 @@ The install script will also setup Python and Node versions/environments:
 # Utilities and tools to enhance the command line interface experience
 "ack" # A tool like grep, optimized for programmers
 "applesimutils" # Apple Simulator Utilities
+"alttab" # Better preview app switcher 
 "autoenv" # Automatically source environment variable
 "azure-cli" # Microsoft Azure Command Line Interface
 "bat" # A cat clone with syntax highlighting and Git integration
@@ -81,6 +82,7 @@ The install script will also setup Python and Node versions/environments:
 "go" # The Go programming language
 "grep" # GNU grep, egrep and fgrep
 "gzip" # GNU compression utility
+"hiddenbar" # Hides unpopular tab icons
 "hyperfine" # A command-line benchmarking tool
 "jq" # Lightweight and flexible command-line JSON processor
 "moreutils" # Collection of tools that nobody wrote when UNIX was young
@@ -92,6 +94,8 @@ The install script will also setup Python and Node versions/environments:
 "poetry" # Python package management and dependency resolution
 "python" # Interpreted, interactive, object-oriented programming language
 "pyenv" # Python version management
+"raycast" # A better spotlight
+"rectange" # Arrange windows keyboardly
 "rename" # Perl-powered file rename script with many helpful built-ins
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language

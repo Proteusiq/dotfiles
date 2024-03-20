@@ -63,7 +63,6 @@ brew "wget"
 brew "yarn"
 
 
-
 # Terminal Editors and Emulator
 brew "vim"
 brew "neovim"
@@ -94,7 +93,12 @@ brew "rust"
 # Productivity Applications
 # Applications to enhance productivity
 cask "1password"
+cask "alt-tab"
+cask "hiddenbar"
 cask "obsidian"
+cask "raycast"
+cask "rectangle"
+
 
 # LLM Development
 brew "ollama" # Running Large Language Model Locally
@@ -110,6 +114,7 @@ cask "lulu"
 cask "syncthing"
 cask "the-unarchiver"
 cask "transmission"
+
 
 # Fonts
 # Font installations for design and development

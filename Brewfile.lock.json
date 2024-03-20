@@ -8,10 +8,10 @@
         "revision": "faf12b3096f5e05aba220c380cfff6a223572917"
       },
       "homebrew/cask": {
-        "revision": "8166f6d33303cf75a0105c44bc46dce96729987a"
+        "revision": "feb1c7f9c53b968b0c1d4bdeeb67085f02e42e01"
       },
       "homebrew/core": {
-        "revision": "020ab7042eb004c8d402bb09e0ae80b5e4e287eb"
+        "revision": "10d610484a4ab54bea88455ac9e646865527f105"
       },
       "homebrew/services": {
         "revision": "89ba81ef193cb4d623b0b1385bdefa4460f1e97a"
@@ -2584,7 +2584,7 @@
     },
     "cask": {
       "1password": {
-        "version": "8.10.27",
+        "version": "8.10.28",
         "options": {
           "full_name": "1password",
           "args": {
@@ -2674,7 +2674,7 @@
         }
       },
       "google-chrome": {
-        "version": "122.0.6261.129",
+        "version": "123.0.6312.59",
         "options": {
           "full_name": "google-chrome",
           "args": {
@@ -2719,7 +2719,7 @@
         }
       },
       "obsidian": {
-        "version": "1.5.8",
+        "version": "1.5.11",
         "options": {
           "full_name": "obsidian",
           "args": {
@@ -2816,13 +2816,49 @@
             "appdir": "/Applications"
           }
         }
+      },
+      "raycast": {
+        "version": "1.69.3",
+        "options": {
+          "full_name": "raycast",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "alt-tab": {
+        "version": "6.67.0",
+        "options": {
+          "full_name": "alt-tab",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "hiddenbar": {
+        "version": "1.9",
+        "options": {
+          "full_name": "hiddenbar",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "rectangle": {
+        "version": "0.76",
+        "options": {
+          "full_name": "rectangle",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
       }
     }
   },
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.2.12",
+        "HOMEBREW_VERSION": "4.2.14",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.3.0.0.1.1708646388",
