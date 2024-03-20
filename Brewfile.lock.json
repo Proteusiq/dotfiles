@@ -8,10 +8,10 @@
         "revision": "faf12b3096f5e05aba220c380cfff6a223572917"
       },
       "homebrew/cask": {
-        "revision": "feb1c7f9c53b968b0c1d4bdeeb67085f02e42e01"
+        "revision": "ca7335089e629e4cc39462092752a7473bf872fb"
       },
       "homebrew/core": {
-        "revision": "10d610484a4ab54bea88455ac9e646865527f105"
+        "revision": "c8da15049d719f43a783dc6db2fa5edf2c15fac6"
       },
       "homebrew/services": {
         "revision": "89ba81ef193cb4d623b0b1385bdefa4460f1e97a"
@@ -2848,6 +2848,15 @@
         "version": "0.76",
         "options": {
           "full_name": "rectangle",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "cleanshot": {
+        "version": "4.6.2",
+        "options": {
+          "full_name": "cleanshot",
           "args": {
             "appdir": "/Applications"
           }

@@ -94,6 +94,7 @@ brew "rust"
 # Applications to enhance productivity
 cask "1password"
 cask "alt-tab"
+cask "cleanshot"
 cask "hiddenbar"
 cask "obsidian"
 cask "raycast"

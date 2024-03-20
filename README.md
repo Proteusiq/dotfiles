@@ -65,6 +65,7 @@ The install script will also setup Python and Node versions/environments:
 "bpytop" # Resource monitor that shows usage and stats
 "binutils" # GNU binary tools for native development
 "chruby" # Changes the current Ruby
+"cleanshot" # Better screen capture
 "coreutils" # GNU File, Shell, and Text utilities
 "diffutils" # File comparison utilities
 "direnv" # Environment switcher for the shell

@@ -938,6 +938,9 @@ defaults write com.apple.WindowManager HideDesktop -int 1
 defaults write com.apple.chronod effectiveRemoteWidgetsEnabled -int 0
 defaults write com.apple.chronod remoteWidgetsEnabled -int 0
 
+# Spotlig => RayCast
+defaults write com.apple.Spotlight engagementCount-com.apple.Spotlight -int 0
+
 ###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
