@@ -48,7 +48,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 
 The install script will also setup Python and Node versions/environments:
 
--   [pyenv](https://github.com/pyenv/pyenv) sets the global Python version to latest stable version
+-   [rye](https://github.com/astral-sh/rye) sets the global Python version to latest stable version
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
 
 <details><summary>Brewfile Tools Definitions</summary>
@@ -91,20 +91,20 @@ The install script will also setup Python and Node versions/environments:
 "neovim" # Ambitious Vim-fork focused on extensibility and agility
 "node" # Platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 "ollama" # Running Large Language Models offline
-"pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry
-"poetry" # Python package management and dependency resolution
+"pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
 "python" # Interpreted, interactive, object-oriented programming language
-"pyenv" # Python version management
 "raycast" # A better spotlight
 "rectange" # Arrange windows keyboardly
 "rename" # Perl-powered file rename script with many helpful built-ins
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language
+"rye" # Python's Cargo
 "screen" # GNU screen, terminal multiplexer
 "starship" # Cross-shell prompt for astronauts
 "stow" # Manage installation of multiple softwares in the same directory structure
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently
 "tmux" # Terminal multiplexer
+"uv" # Better drop in pip replacer alias pip='uv pip'
 "vim" # Highly configurable text editor built to enable efficient text editing
 "watchman" # Watch files and take action when they change
 "wget" # Internet file retriever
