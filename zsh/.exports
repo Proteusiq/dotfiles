@@ -49,12 +49,6 @@ export RIPGREP_CONFIG_PATH=$HOME/.rgrc
 export PATH="/usr/local/opt/util-linux/bin:$PATH"
 export PATH="/usr/local/opt/util-linux/sbin:$PATH"
 
-# pyenv
-export PYENV_SHELL=zsh
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-command pyenv rehash 2>/dev/null
-
 
 # GOLANG
 export GOROOT=/usr/local/go
@@ -71,6 +65,9 @@ eval "$(direnv hook zsh)"
 
 # zoxide
 eval "$(zoxide init zsh)"
+
+# rye
+export RYE_NO_AUTO_INSTALL=1
 
 # pixi
 export PIXI_BETA_WARNING_OFF=true

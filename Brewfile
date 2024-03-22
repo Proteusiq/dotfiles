@@ -78,8 +78,7 @@ cask "kitty"
 # 🐍 Python Development
 # Tools specifically for Python programming
 brew "pixi" # Faster Pyenv+Poetry/mamba. Conda world  written in Rust
-brew "poetry" # Package Manager
-brew "pyenv" # Python installer + Environments
+brew "uv" # Faster none conda package manager
 
 # 🕸️ Node Development
 brew "node"
@@ -103,7 +102,7 @@ cask "rectangle"
 
 # LLM Development
 brew "ollama" # Running Large Language Model Locally
-
+brew "portaudio" # Needed of pyaudio
 
 # Utilities
 # General utilities for everyday use

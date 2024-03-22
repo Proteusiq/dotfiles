@@ -68,49 +68,23 @@ configure_node() {
 
 # Function to configure Python and Jupyter Lab
 configure_python() {
-    echo "🐍  Configuring Python and Jupyter Lab..."
+    echo "🐍  Configuring Rye: Cargo for Python"
+    if ! command -v rye &> /dev/null; then
+        echo "Installing Rye"
+        curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes"  bash
+        source "$HOME/.rye/env"
+        rye self completion -s zsh >> ~/.zfunc/_rye
+        rye config --set-bool behavior.global-python=true
+
+    else
+
+        echo "🍺 Updating Rye..."
+        rye self update
+    fi
     
-    # Fetch the latest Python version information from the API
-    echo "Fetching the latest Python version info from endoflife.date..."
-    python_version_info=$(curl -s "https://endoflife.date/api/python.json" | jq -r '[.[] | select(.lts==false)] | max_by(.releaseDate) | .latest')
+    }
+    
 
-    if [[ -n "$python_version_info" && "$python_version_info" != "null" ]]; then
-        echo "Latest Python version is $python_version_info. Starting installation..."   
-    else
-        echo "Failed to fetch the latest Python version information. Defaulting to latest 3.12"
-        python_version_info="3.12"
-        
-    fi
-
-    pyenv install $python_version_info
-    echo "Python $python_version_info installed successfully."
-
-    # Install virtualenv plugin for managing Python virtual environments
-    git clone https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv 1>/dev/null
-    eval "$(pyenv init -)" 1>/dev/null
-    eval "$(pyenv virtualenv-init -)" 1>/dev/null
-
-    # Create a Python virtual environment named 'jupyter' and install Jupyter Lab
-    pyenv virtualenv $python_version_info jupyter 1>/dev/null
-    pyenv activate jupyter && python -m pip install --upgrade pip && pip install jupyterlab jupyter-dash 1>/dev/null
-    pyenv global $python_version_info jupyter 1>/dev/null
-
-    # add Python latest version to .zshrc
-    # The file to be searched and updated
-    FILE=$ZSHHOME/.zshrc
-    # pyenv default python to latest statement
-    PYENV_STATEMENT="pyenv shell ${python_version_info}"
-    # Check if exists in the file
-    if grep -q "^pyenv shell " "$FILE"; then
-        # If it exists, update its value
-        sed -i '' "s/^pyenv shell .*/${PYENV_STATEMENT}/" "$FILE"
-        echo "Updated pyenv shell to ${python_version_info} in ${FILE}."
-    else
-        # If it does not exist, append it to the file
-        echo "$PYENV_STATEMENT" >> "$FILE"
-        echo "Added ${PYENV_STATEMENT} to ${FILE}."
-    fi
-}
 
 # Function to install vim-plug for Neovim
 install_vim_plug() {

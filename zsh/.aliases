@@ -364,22 +364,6 @@ emptytrash() {
 
 }
 
-pyenv() {
-  local command
-  command="${1:-}"
-  if [ "$#" -gt 0 ]; then
-    shift
-  fi
-
-  case "$command" in
-  rehash|shell)
-    eval "$(pyenv "sh-$command" "$@")"
-    ;;
-  *)
-    command pyenv "$command" "$@"
-    ;;
-  esac
-}
 
 # rename a remote git branch and update it
 rename-branch() {
@@ -409,5 +393,5 @@ alias ls="eza"
 alias tree="eza --tree"
 
 # jupyter lab
-alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
-alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") && source deactivate & rm /tmp/lab.log'
+# alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
+# alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") && source deactivate & rm /tmp/lab.log'

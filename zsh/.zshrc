@@ -10,14 +10,9 @@ SAVEHIST=10000
 
 source ~/antigen.zsh
 
-# az autocompletion
-if type brew &>/dev/null
-then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
-  autoload -Uz compinit
-  compinit
-fi
+# rye completetion
+fpath=(~/.zfunc $fpath)
+autoload -Uz compinit && compinit
 
 antigen bundles <<EOBUNDLES
     tmux
@@ -38,20 +33,13 @@ eval "$(starship init zsh)"
 source $HOME/dotfiles/zsh/.exports
 source $HOME/dotfiles/zsh/.aliases
 
-# set pyenv
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-pyenv shell 3.12.2
+# Rye
+source "$HOME/.rye/env"
 
 # pixi auto completion
 eval "$(pixi completion --shell zsh)"
-
-# set poetry
-fpath+=~/.zfunc
-autoload -Uz compinit && compinit
 
 
 # start tmux on open
 [[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux
-
