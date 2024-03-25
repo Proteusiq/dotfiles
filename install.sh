@@ -95,7 +95,12 @@ install_vim_plug() {
 
 # Extra Setups
 setup_utils(){
+    # auto source .envs
     echo "source $(brew --prefix autoenv)/activate.sh" >> ~/.zprofile
+
+    # install git large files
+    git lfs install
+
 }
 
 # Function to use GNU Stow to manage dotfiles

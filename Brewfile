@@ -15,6 +15,7 @@ cask_args appdir: "/Applications"
 brew "autoenv"
 brew "azure-cli"
 brew "git"
+brew "git-lfs"
 brew "terraform"
 
 
@@ -101,6 +102,7 @@ cask "rectangle"
 
 
 # LLM Development
+brew "llm" # Running LLM as CLI
 brew "ollama" # Running Large Language Model Locally
 brew "portaudio" # Needed of pyaudio
 

@@ -75,6 +75,7 @@ The install script will also setup Python and Node versions/environments:
 "fzf" # Command-line fuzzy finder
 "gawk" # GNU awk utility
 "git" # Distributed revision control system
+"git-lfs" # Git Large Files Storage
 "gnu-sed" # GNU implementation of the famous stream editor
 "gnu-tar" # GNU version of the tar archiving utility
 "gnu-time" # GNU implementation of the time utility
@@ -86,6 +87,7 @@ The install script will also setup Python and Node versions/environments:
 "hiddenbar" # Hides unpopular tab icons
 "hyperfine" # A command-line benchmarking tool
 "jq" # Lightweight and flexible command-line JSON processor
+"llm" # Running LLM as CLI
 "moreutils" # Collection of tools that nobody wrote when UNIX was young
 "ncdu" # NCurses Disk Usage
 "neovim" # Ambitious Vim-fork focused on extensibility and agility
