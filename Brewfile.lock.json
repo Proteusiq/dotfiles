@@ -2,16 +2,16 @@
   "entries": {
     "tap": {
       "homebrew/cask-fonts": {
-        "revision": "8bb913bbbc55fedefab047342b6d9bd31bdb10be"
+        "revision": "9af4c36630e5e6d06be83fefa4d0a84310c1e8e2"
       },
       "homebrew/bundle": {
         "revision": "faf12b3096f5e05aba220c380cfff6a223572917"
       },
       "homebrew/cask": {
-        "revision": "8aab3ab4d4654d580e5ea3ae457db4f09365c8d4"
+        "revision": "f7e8b6a1df1967065c72d3e52782c89779307e94"
       },
       "homebrew/core": {
-        "revision": "049b52e138e5ca65bc36f5b951355f8270024e79"
+        "revision": "e5de4ba483591a216772662d47800bee85346b6f"
       },
       "homebrew/services": {
         "revision": "89ba81ef193cb4d623b0b1385bdefa4460f1e97a"
@@ -2798,7 +2798,7 @@
         }
       },
       "alacritty": {
-        "version": "0.13.1",
+        "version": "0.13.2",
         "options": {
           "full_name": "alacritty",
           "args": {
@@ -3063,7 +3063,7 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.2.14",
+        "HOMEBREW_VERSION": "4.2.15",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.3.0.0.1.1708646388",
