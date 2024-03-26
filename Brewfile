@@ -98,7 +98,6 @@ cask "cleanshot"
 cask "hiddenbar"
 cask "obsidian"
 cask "raycast"
-cask "rectangle"
 
 
 # LLM Development

@@ -96,7 +96,6 @@ The install script will also setup Python and Node versions/environments:
 "pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
 "python" # Interpreted, interactive, object-oriented programming language
 "raycast" # A better spotlight
-"rectange" # Arrange windows keyboardly
 "rename" # Perl-powered file rename script with many helpful built-ins
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language
