@@ -75,6 +75,7 @@ configure_python() {
         source "$HOME/.rye/env"
         rye self completion -s zsh >> ~/.zfunc/_rye
         rye config --set-bool behavior.global-python=true
+        rye config --set-bool behavior.use-uv=true
 
     else
 
