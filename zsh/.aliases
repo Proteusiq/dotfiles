@@ -392,6 +392,32 @@ alias du="ncdu"
 alias ls="eza"
 alias tree="eza --tree"
 
+# activate venv or .venv projects similar to deactivate
+activate_venv() {
+    local dir=$PWD
+    local found=0
+
+    while [[ "$dir" != "/" && $found -eq 0 ]]; do
+        if [[ -f "$dir/venv/bin/activate" ]]; then
+            source "$dir/venv/bin/activate"
+            found=1
+            break
+        elif [[ -f "$dir/.venv/bin/activate" ]]; then
+            source "$dir/.venv/bin/activate"
+            found=1
+            break
+        else
+            dir=$(dirname "$dir")
+        fi
+    done
+
+    if [[ $found -eq 0 ]]; then
+        echo "No Python virtual environment found."
+    fi
+}
+
+alias activate=activate_venv
+
 # jupyter lab
 # alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
 # alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") && source deactivate & rm /tmp/lab.log'

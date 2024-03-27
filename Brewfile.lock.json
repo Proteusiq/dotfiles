@@ -2,16 +2,16 @@
   "entries": {
     "tap": {
       "homebrew/cask-fonts": {
-        "revision": "9af4c36630e5e6d06be83fefa4d0a84310c1e8e2"
+        "revision": "0cd072fa6dafd498c04a31a1657aebc3feb3ec89"
       },
       "homebrew/bundle": {
-        "revision": "faf12b3096f5e05aba220c380cfff6a223572917"
+        "revision": "6b81dab671af75e14530d27e15865f558c1ce983"
       },
       "homebrew/cask": {
-        "revision": "3a7914762028c7b04971fa63f50defb9e5eb2b55"
+        "revision": "fd5b7350a1e82fdca08c6b7eb143dfe2ff67dde8"
       },
       "homebrew/core": {
-        "revision": "7ea72b006a3a34984143b5ff74eed04af20a4a27"
+        "revision": "00fdea44db6489aa8b7654b5f072498f2e59699a"
       },
       "homebrew/services": {
         "revision": "89ba81ef193cb4d623b0b1385bdefa4460f1e97a"
@@ -2870,7 +2870,7 @@
         }
       },
       "google-chrome": {
-        "version": "123.0.6312.59",
+        "version": "123.0.6312.87",
         "options": {
           "full_name": "google-chrome",
           "args": {
