@@ -41,5 +41,5 @@ eval "$(pixi completion --shell zsh)"
 
 
 # start tmux on open
-# [[ $- != *i* ]] && return
-# [[ -z "$TMUX" ]] && exec tmux
+[[ $- != *i* ]] && return
+[[ -z "$TMUX" ]] && exec tmux

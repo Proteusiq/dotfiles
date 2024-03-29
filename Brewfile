@@ -124,6 +124,7 @@ cask "font-hack-nerd-font"
 
 # Browsers
 cask "google-chrome"
+cask "arc"
 
 # Window Management
 # Tools for managing application windows

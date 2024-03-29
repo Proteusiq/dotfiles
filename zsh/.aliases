@@ -418,6 +418,9 @@ activate_venv() {
 
 alias activate=activate_venv
 
-# jupyter lab
-# alias jupyterit='pyenv shell jupyter && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
-# alias jupyterkill='kill -9 $(ps -ef| grep jupyter-lab | head -n 1 | awk "{print \$2;}") && source deactivate & rm /tmp/lab.log'
+
+# Alias to start Jupyter Lab
+alias jupyterit='cd "$HOME/Codes/lab" && source .venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
+
+# Alias to kill Jupyter Lab
+alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && cd "$HOME/Codes/lab" && deactivate && rm /tmp/lab.log'

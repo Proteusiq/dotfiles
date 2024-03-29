@@ -66,7 +66,7 @@ configure_node() {
 }
 
 
-# Function to configure Python and Jupyter Lab
+# Function to configure Python
 configure_python() {
     echo "🐍  Configuring Rye: Cargo for Python"
     if ! command -v rye &> /dev/null; then
@@ -84,7 +84,41 @@ configure_python() {
     fi
     
     }
+
+# Function to setup Jupyter Lab environment
+setup_jupyter_lab() {
+    echo "📚 Setting up Jupyter Lab environment in Codes/lab..."
+
+    # Confirmation prompt
+    read -p "Do you want to proceed with the setup? [y/N]: " confirm && [[ $confirm == [yY] ]] || return 1
+
+    mkdir -p "$HOME/Codes/lab"
+    cd "$HOME/Codes/lab"
     
+    # Check if virtual environment directory exists
+    if [ ! -d ".venv" ]; then
+        echo "Creating virtual environment..."
+        uv venv .venv
+    fi
+    
+    # Activate the virtual environment
+    source .venv/bin/activate
+    
+    # Check if Jupyter Lab is installed
+    if ! pip freeze | grep jupyterlab &> /dev/null; then
+        echo "Installing Jupyter Lab..."
+        uv pip install jupyterlab jupyterlab-dash
+    fi
+    
+    # Deactivate the virtual environment
+    deactivate
+
+    echo "Jupyter Lab setup complete! 🚀"
+    echo "Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
+    
+    # back to dotfiles
+    cd $HOME/dotfiles
+}
 
 
 # Function to install vim-plug for Neovim
@@ -116,6 +150,7 @@ install_xcode_tools
 install_brew
 configure_node
 configure_python
+setup_jupyter_lab
 install_vim_plug
 setup_utils
 stow_dotfiles
