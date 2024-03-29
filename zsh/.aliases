@@ -420,7 +420,7 @@ alias activate=activate_venv
 
 
 # Alias to start Jupyter Lab
-alias jupyterit='cd "$HOME/Codes/lab" && source .venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
+alias jupyterit='cd "$HOME/Codes/lab" && source .venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 & && cd -'
 
 # Alias to kill Jupyter Lab
-alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && cd "$HOME/Codes/lab" && deactivate && rm /tmp/lab.log'
+alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && cd "$HOME/Codes/lab" && deactivate && rm /tmp/lab.log && cd -'

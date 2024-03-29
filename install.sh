@@ -117,7 +117,7 @@ setup_jupyter_lab() {
     echo "Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
     
     # back to dotfiles
-    cd $HOME/dotfiles
+    cd -
 }
 
 
