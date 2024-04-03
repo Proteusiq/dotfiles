@@ -392,6 +392,9 @@ alias du="ncdu"
 alias ls="eza"
 alias tree="eza --tree"
 
+# uv
+alias pip='uv pip'
+
 # activate venv or .venv projects similar to deactivate
 activate_venv() {
     local dir=$PWD
@@ -424,3 +427,7 @@ alias jupyterit='cd "$HOME/Codes/lab" && source .venv/bin/activate && nohup jupy
 
 # Alias to kill Jupyter Lab
 alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && cd "$HOME/Codes/lab" && deactivate && rm /tmp/lab.log && cd -'
+
+# Productive Laziness
+# llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
+alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "eval {}"; }; llm_func'

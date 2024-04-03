@@ -57,6 +57,7 @@ The install script will also setup Python and Node versions/environments:
 # Command Line Tools
 # Utilities and tools to enhance the command line interface experience
 "ack" # A tool like grep, optimized for programmers
+"aldente" # Battery life 
 "applesimutils" # Apple Simulator Utilities
 "alttab" # Better preview app switcher 
 "autoenv" # Automatically source environment variable

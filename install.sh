@@ -136,6 +136,9 @@ setup_utils(){
     # install git large files
     git lfs install
 
+    # productive laziness
+    llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
+
 }
 
 # Function to use GNU Stow to manage dotfiles

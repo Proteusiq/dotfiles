@@ -135,6 +135,7 @@ brew "koekeishiya/formulae/yabai" # A tiling window manager for macOS
 # Misc Tools
 # Miscellaneous tools and utilities
 brew "applesimutils"
+cask "aldente"
 
 
 # Initialization for yabai and skhd (commented out for manual execution)
