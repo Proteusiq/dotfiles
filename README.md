@@ -46,10 +46,11 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 -   [`Brewfile`](./Brewfile) - contains all homebrew packages, casks, and mac appstore apps
 -   [VSCode settings](./vscode/settings.json)
 
-The install script will also setup Python and Node versions/environments:
+The install script will also setup Python, Node and Bun versions/environments:
 
 -   [rye](https://github.com/astral-sh/rye) sets the global Python version to latest stable version
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
+-   [bun](https://bun.sh/)  all-in-one toolkit for JavaScript and TypeScript apps
 
 <details><summary>Brewfile Tools Definitions</summary>
 

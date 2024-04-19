@@ -59,10 +59,12 @@ set_macos_preferences() {
     ./macos/.macos
 }
 
-# Function to configure Node
+# Function to configure Node and Bun
 configure_node() {
     echo "📦  Configuring Node..."
     npm install -g n 1>/dev/null
+    curl -fsSL https://bun.sh/install | bash
+    echo "🍞 baked bun -v$($HOME/.bun/bin/bun --version)"
 }
 
 
