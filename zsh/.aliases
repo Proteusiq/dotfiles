@@ -141,7 +141,7 @@ alias truncate="gtruncate"
 
 # printing text
 alias echo="gecho"
-alias printf="gprintf"
+# alias printf="gprintf"
 
 # redirection
 alias tee="gtee"

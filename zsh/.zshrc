@@ -64,4 +64,4 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # better history
-# eval "$(atuin init zsh)"
+eval "$(atuin init zsh)"
