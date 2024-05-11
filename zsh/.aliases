@@ -90,6 +90,8 @@ alias gbi="git browse -- issues"
 # pull-request
 alias gpr="git pull-request"
 
+# better cd
+alias cd="z"
 # better ls
 # alias ls="echo; colorls -A --group-directories-first"
 
@@ -134,7 +136,7 @@ alias touch="gtouch"
 
 # disk usage
 alias df="gdf"
-alias du="gdu"
+# alias du="gdu"
 alias stat="gstat"
 alias sync="gsync"
 alias truncate="gtruncate"
@@ -389,7 +391,7 @@ git() {
 # aliases
 alias top="bpytop"
 alias du="ncdu"
-alias ls="eza"
+alias ls="eza --icons=always"
 alias tree="eza --tree"
 
 # uv
