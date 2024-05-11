@@ -91,6 +91,9 @@ brew "go"
 # 🦀 Rustlang Development
 brew "rust"
 
+# 🎀 Gum shell scripting
+brew "gum"
+
 # Productivity Applications
 # Applications to enhance productivity
 cask "1password"

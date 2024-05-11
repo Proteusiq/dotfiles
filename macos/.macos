@@ -400,6 +400,7 @@ defaults write com.apple.dock launchanim -bool false
 # (i.e. use the old Exposé behavior instead)
 # defaults write com.apple.dock expose-group-by-app -bool false
 
+
 # Disable Dashboard
 defaults write com.apple.dashboard mcx-disabled -bool true
 
@@ -937,6 +938,8 @@ defaults write com.apple.WindowManager HideDesktop -int 1
 
 defaults write com.apple.chronod effectiveRemoteWidgetsEnabled -int 0
 defaults write com.apple.chronod remoteWidgetsEnabled -int 0
+
+defaults write com.apple.trackpad.forceClick -int 1
 
 # Spotlig => RayCast
 defaults write com.apple.Spotlight engagementCount-com.apple.Spotlight -int 0

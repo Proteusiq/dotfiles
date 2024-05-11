@@ -86,6 +86,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "gnupg" # GNU Pretty Good Privacy (PGP) package
 "go" # The Go programming language
 "grep" # GNU grep, egrep and fgrep
+"gum" # Glamorous shell scripts
 "gzip" # GNU compression utility
 "hiddenbar" # Hides unpopular tab icons
 "hyperfine" # A command-line benchmarking tool
