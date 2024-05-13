@@ -8,10 +8,10 @@
         "revision": "114edd435d2f6abfa1ebb84b3a47bf9c8efe3870"
       },
       "homebrew/cask": {
-        "revision": "fb6b64bddd4573cae487e0b036e96c3b907a3c81"
+        "revision": "510080239d0b51f9b2f15be10d1288b301eb11f3"
       },
       "homebrew/core": {
-        "revision": "e67764a0a71fc1831cbf2fc58184e38a246a871c"
+        "revision": "dd85c7a93b7ffe599420fde4137f770fc9f98211"
       },
       "homebrew/services": {
         "revision": "ace980db3a870d993f49f38137836d489a0e4a96"

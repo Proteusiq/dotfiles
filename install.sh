@@ -134,7 +134,22 @@ install_vim_plug() {
     git clone https://github.com/LazyVim/starter ~/.config/nvim
     rm -rf ~/.config/nvim/.git
 
+    
+
 }
+
+
+# tmux plugin manager installation
+tmux_if_not_exists() {
+    local folder="$HOME/.tmux/plugins/tpm"
+    local url="https://github.com/tmux-plugins/tpm"
+
+    # Check if the directory exists, clone if not
+    [ -d "$folder" ] || git clone $url $folder
+}
+
+
+
 
 # Extra Setups
 setup_utils(){
@@ -168,6 +183,7 @@ configure_node
 configure_python
 setup_jupyter_lab
 install_vim_plug
+tmux_if_not_exists  
 setup_utils
 stow_dotfiles
 
