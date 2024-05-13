@@ -425,6 +425,23 @@ activate_venv() {
 alias activate=activate_venv
 
 
+# remove all __pycache__ directories under a specified path
+clean_pycache() {
+    local target_dir=$1
+    
+    # Confirm target directory
+    if [ -z "$target_dir" ]; then
+        echo "Usage: clean_pycache <directory>"
+        return 1
+    fi
+
+    # Find and remove __pycache__ directories
+    echo "Searching for __pycache__ directories under $target_dir..."
+    find $target_dir -type d -name '__pycache__' -exec rm -rf {} + 
+}
+
+alias clean=clean_pycache
+
 # Alias to start Jupyter Lab
 alias jupyterit='source $HOME/Codes/lab/.venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
 

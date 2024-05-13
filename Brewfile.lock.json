@@ -8,10 +8,10 @@
         "revision": "114edd435d2f6abfa1ebb84b3a47bf9c8efe3870"
       },
       "homebrew/cask": {
-        "revision": "510080239d0b51f9b2f15be10d1288b301eb11f3"
+        "revision": "94935e071e21bfd7071bcbd5f9a4c8b643865aae"
       },
       "homebrew/core": {
-        "revision": "dd85c7a93b7ffe599420fde4137f770fc9f98211"
+        "revision": "1b795b73e9d25cec60cd5a6676ee34484c3caf2e"
       },
       "homebrew/services": {
         "revision": "ace980db3a870d993f49f38137836d489a0e4a96"
@@ -2951,7 +2951,7 @@
         }
       },
       "postman": {
-        "version": "11.0.12",
+        "version": "11.1.0",
         "options": {
           "full_name": "postman",
           "args": {
