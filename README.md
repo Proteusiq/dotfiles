@@ -171,6 +171,12 @@ defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
 defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
 
+# TMux
+```sh
+# installl plugins
+<prefix> + I
+```
+
 See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
 
 ## Acknowledgements
