@@ -130,7 +130,7 @@ install_vim_plug() {
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
     # required
-    mv ~/.config/nvim{,.bak}
+    rm -rf ~/.config/nvim
     git clone https://github.com/LazyVim/starter ~/.config/nvim
     rm -rf ~/.config/nvim/.git
 

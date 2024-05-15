@@ -73,6 +73,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "diffutils" # File comparison utilities
 "direnv" # Environment switcher for the shell
 "eza" # A better ls and tree
+"fd" # A simple, fast and user-friendly alternative to 'find'
 "ffmpeg" # A complete, cross-platform solution to record, convert and stream audio and video
 "findutils" # GNU `find`, `locate`, `updatedb`, and `xargs` commands
 "fzf" # Command-line fuzzy finder
@@ -101,6 +102,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "python" # Interpreted, interactive, object-oriented programming language
 "raycast" # A better spotlight
 "rename" # Perl-powered file rename script with many helpful built-ins
+"ripgrep" # Recursively searches directories for a regex pattern while respecting your gitignore
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language
 "rye" # Python's Cargo
@@ -177,6 +179,27 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 <prefix> + I
 ```
 
+# fzf
+<details><summary>Using fzf</summary>
+
+```sh
+# search
+fzf
+# open files/folders with nvim
+nvim # Ctrl + t (C-t)
+nvim ** # + TAB
+
+# open files and folder
+cd ** # + TAB
+
+# commands things with fzf (kill, unalias, unset, export, ssh)
+kill -9 ** # TAB (Next TAB will multiselect and Shift+Tab to deselect)
+
+# looking throw the history
+# C-r 
+docker # + C-r filter search to 'docker' history
+```
+</details>
 See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
 
 ## Acknowledgements

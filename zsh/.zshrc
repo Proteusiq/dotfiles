@@ -65,3 +65,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # better history
 eval "$(atuin init zsh)"
+
+# fzf key binding and completion
+eval "$(fzf --zsh)"
