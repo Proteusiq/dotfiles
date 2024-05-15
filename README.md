@@ -198,7 +198,7 @@ tmux ls # list sessions
 
 ```sh
 # search
-fzf
+fzf # fzf -q .py$ -e
 # open files/folders with nvim
 nvim # Ctrl + t (C-t)
 nvim ** # + TAB
