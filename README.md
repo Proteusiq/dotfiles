@@ -176,6 +176,7 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 
 # TMux
 <details><summary>Using tmux</summary>
+
 ```sh
 # installl plugins
 <leader> + I # prefix is <leader key> which is C-b
@@ -213,6 +214,7 @@ kill -9 ** # TAB (Next TAB will multiselect and Shift+Tab to deselect)
 docker # + C-r filter search to 'docker' history
 ```
 </details>
+
 See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
 
 ## Acknowledgements
