@@ -174,8 +174,8 @@ defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
 defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
 
-# TMux
-<details><summary>Using tmux</summary>
+## Using Tools
+<details><summary>Tips + Tricks</summary>
 
 ```sh
 # installl plugins
@@ -193,8 +193,7 @@ tmux ls # list sessions
 
 ```
 
-# fzf
-<details><summary>Using fzf</summary>
+### Using fzf
 
 ```sh
 # search
