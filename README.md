@@ -110,6 +110,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "starship" # Cross-shell prompt for astronauts
 "stow" # Manage installation of multiple softwares in the same directory structure
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently
+"tldr" # Too long I did nor read man
 "tmux" # Terminal multiplexer
 "uv" # Better drop in pip replacer alias pip='uv pip'
 "vim" # Highly configurable text editor built to enable efficient text editing
@@ -174,9 +175,21 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
 
 # TMux
+<details><summary>Using tmux</summary>
 ```sh
 # installl plugins
-<prefix> + I
+<leader> + I # prefix is <leader key> which is C-b
+
+<leader> + c # create a new session
+<leader> + n # previous session or instead of n, a <NUMBER> to switch to session
+<leader> + "Shift + 2" (") or i to split horizontal
+<leader> + "Shift + 5"  (%) o - to split vertical
+<leader> + Arrows or hjkl # move across panes
+<leader> + : # command mode (:rename-window <NAME> :rename-session <NAME> :kill-session -t <NAME or NUM>, :kill-server # kills all session)
+<leader> + d # dettach session
+tmux ls # list sessions
+<leader> + s # list sessions
+
 ```
 
 # fzf
