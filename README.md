@@ -219,6 +219,60 @@ kill -9 ** # TAB (Next TAB will multiselect and Shift+Tab to deselect)
 # C-r 
 docker # + C-r filter search to 'docker' history
 ```
+
+## Oh Vim
+
+Here is a table of keybindings and their explanations for Vim:
+
+| **Key**        | **Explanation**                                                            |
+|----------------|----------------------------------------------------------------------------|
+| `Esc`          | Command mode                                                               |
+| `i`            | Edit mode                                                                  |
+| `V`            | Visual mode                                                                |
+| `o`            | Adds newline below and enters edit mode                                    |
+| `O`            | Adds newline above                                                         |
+| `dd`           | Cuts the current line                                                      |
+| `d}`           | Cuts until the end of the block                                            |
+| `V` + `hjkl` + `d` | Visually select text and delete                                        |
+| `cw`           | Change word: deletes the word in focus and enters edit mode                |
+| `dw`           | Delete word                                                                |
+| `D`            | Delete to the end of the line                                              |
+| `C`            | Delete to the end of the line and enter edit mode                          |
+| `ct<char>`     | Delete up to (but not including) the specified character                   |
+| `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode                        |
+| `qa ... q`     | Record macro                                                               |
+| `@a`           | Repeat recorded macro                                                      |
+| `13@a`         | Repeat recorded macro 13 times                                             |
+| `Shift+V Shift+G :` | Select to the end of the document                                     |
+| `:'<,'> norm A!` | Jump to the end and add `!`                                              |
+| `:norm I`      | Jump to the beginning and enter insert mode                                |
+| `gf`           | Go to file path and open                                                   |
+| `gx`           | Go to URL and open in browser                                              |
+| `hjkl`         | Move cursor (left, down, up, right)                                        |
+| `20j`          | Go down 20 lines                                                           |
+| `:20`          | Jump to line 20                                                            |
+| `w`            | Move to the next word                                                      |
+| `b`            | Move backward one word                                                     |
+| `4b`           | Move backward 4 words                                                      |
+| `0`            | Move to the beginning of the line                                          |
+| `^`            | Move to the first non-blank character of the line                          |
+| `t<char>`      | Move just before the specified character                                   |
+| `f<char>`      | Move to the specified character                                            |
+| `%`            | Move to the matching parenthesis, bracket, or brace                        |
+| `:h navigation` | Help on navigation                                                        |
+| `:h search`    | Help on search commands                                                    |
+| `.`            | Repeat the last action                                                     |
+| `u`            | Undo                                                                      |
+| `3u`           | Undo last 3 changes                                                        |
+| `Ctrl-r`       | Redo                                                                      |
+| `gg`           | Go to the top of the file                                                  |
+| `G`            | Go to the bottom of the file                                               |
+| `{`            | Jump backward by paragraph                                                 |
+| `}`            | Jump forward by paragraph                                                  |
+| `yy`           | Copy (yank) the current line                                               |
+| `P`            | Paste before the cursor                                                    |
+| `p`            | Paste after the cursor                                                     |
+
 </details>
 
 See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
