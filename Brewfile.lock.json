@@ -2,19 +2,19 @@
   "entries": {
     "tap": {
       "homebrew/cask-fonts": {
-        "revision": "5ea3139dcb6d9ca2dd69ca1fe7f878d1c72824ad"
+        "revision": "0ed20f35d21ebc3f4f829689b101078718ad5ce1"
       },
       "homebrew/bundle": {
-        "revision": "fb26c695c48a7be9f2c77c4a48bcbdd369301700"
+        "revision": "0fe5895d24e8a64fc9ddff63eb5c6680164a432d"
       },
       "homebrew/cask": {
-        "revision": "517fd79040416c56464da78c76bead49797ab7b8"
+        "revision": "8e1128f8ba87fd42be024981c652e6eb74a746a1"
       },
       "homebrew/core": {
-        "revision": "3b26d048971754c5ff90b2f12bedb36f96b34720"
+        "revision": "f9537ff8230a162a81152e9e8e3a8e57a6ee1f70"
       },
       "homebrew/services": {
-        "revision": "e7b5961d767f6e98bb83a0eb3af9ee95dc19345f"
+        "revision": "6d0d089f49d4d89c32060cc4bb4ea44a93d5b04c"
       },
       "koekeishiya/formulae": {
         "revision": "bd744b3c3f5958368313fc594371d13986d51cb0"
@@ -3020,7 +3020,7 @@
         }
       },
       "google-chrome": {
-        "version": "124.0.6367.208",
+        "version": "125.0.6422.61",
         "options": {
           "full_name": "google-chrome",
           "args": {
@@ -3221,6 +3221,15 @@
         "version": "1.26.1,55",
         "options": {
           "full_name": "aldente",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "chatgpt": {
+        "version": "1.2024.134,1715807927",
+        "options": {
+          "full_name": "chatgpt",
           "args": {
             "appdir": "/Applications"
           }
