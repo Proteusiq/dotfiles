@@ -118,8 +118,31 @@ eval "$(direnv hook zsh)"
 # zoxide
 eval "$(zoxide init zsh)"
 
-# rye
+# Rye
 export RYE_NO_AUTO_INSTALL=1
+source "$HOME/.rye/env"
 
 # pixi
 export PIXI_BETA_WARNING_OFF=true
+# pixi auto completion
+eval "$(pixi completion --shell zsh)"
+
+# set starship prompt
+eval "$(starship init zsh)"
+
+# start tmux on open
+[[ $- != *i* ]] && return
+[[ -z "$TMUX" ]] && exec tmux
+
+# bun completions
+[ -s "/Users/pwd/.bun/_bun" ] && source "/Users/pwd/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# better history
+eval "$(atuin init zsh)"
+
+# fzf key binding and completion
+eval "$(fzf --zsh)"

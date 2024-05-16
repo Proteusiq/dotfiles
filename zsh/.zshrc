@@ -30,29 +30,3 @@ antigen bundles <<EOBUNDLES
 EOBUNDLES
 antigen apply
 
-# set starship prompt
-eval "$(starship init zsh)"
-
-# Rye
-source "$HOME/.rye/env"
-
-# pixi auto completion
-eval "$(pixi completion --shell zsh)"
-
-
-# start tmux on open
-[[ $- != *i* ]] && return
-[[ -z "$TMUX" ]] && exec tmux
-
-# bun completions
-[ -s "/Users/pwd/.bun/_bun" ] && source "/Users/pwd/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# better history
-eval "$(atuin init zsh)"
-
-# fzf key binding and completion
-eval "$(fzf --zsh)"
