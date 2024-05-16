@@ -450,4 +450,4 @@ alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && deactivate && rm /tmp/lab.
 
 # Productive Laziness
 # llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
-alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "eval {}"; }; llm_func'
+alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "echo {}; eval {}"; }; llm_func'
