@@ -192,6 +192,12 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 tmux ls # list sessions
 <leader> + s # list sessions
 
+# custom
+<leader> + C-p (P) # => popup window
+iexit # alias to kill-session
+ikill # alias to kill-server
+iswitch # alias to switch-session
+ipop # alias for popup window
 ```
 
 ### Using fzf

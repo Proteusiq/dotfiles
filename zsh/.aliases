@@ -452,10 +452,11 @@ alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && deactivate && rm /tmp/lab.
 # llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
 alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "echo \"execute:\n\t {}\n\"; eval {}"; }; llm_func'
 
-# tmux session exit
-alias iexit='tmux kill-session -t $(tmux display-message -p '#S')'
+# tmux 
+alias iexit='tmux kill-session -t $(tmux display-message -p '#S')' # session exit
 
-# tmux server exit: kill all sessions
-alias kexit='tmux kill-server'
+alias ikill='tmux kill-server' # tmux server exit: kill all sessions
+alias iswitch='tmux choose-session' # show sessions
+alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
 
 
