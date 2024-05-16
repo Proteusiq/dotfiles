@@ -14,6 +14,10 @@ source ~/antigen.zsh
 fpath=(~/.zfunc $fpath)
 autoload -Uz compinit && compinit
 
+# load the rest of the configs
+source $HOME/dotfiles/zsh/.exports
+source $HOME/dotfiles/zsh/.aliases
+
 antigen bundles <<EOBUNDLES
     tmux
     command-not-found
@@ -29,10 +33,6 @@ antigen apply
 # set starship prompt
 eval "$(starship init zsh)"
 
-# load the rest of the configs
-source $HOME/dotfiles/zsh/.exports
-source $HOME/dotfiles/zsh/.aliases
-
 # Rye
 source "$HOME/.rye/env"
 
@@ -46,18 +46,6 @@ eval "$(pixi completion --shell zsh)"
 
 # bun completions
 [ -s "/Users/pwd/.bun/_bun" ] && source "/Users/pwd/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
