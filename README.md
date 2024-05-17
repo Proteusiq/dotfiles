@@ -309,8 +309,9 @@ Vim keybindings:
 |----------|------------------------------------------|
 | `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode |
 
-This should provide a <details>
-### Using lazy(neo)vim
+
+
+## Using lazy(neo)vim
 
 ```sh
 <leader> # Space
