@@ -222,7 +222,7 @@ docker # + C-r filter search to 'docker' history
 
 ## Oh Vim
 
-                                                     |
+                                                     
 Vim keybindings:
 
 ### Modes
@@ -310,6 +310,13 @@ Vim keybindings:
 | `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode |
 
 This should provide a <details>
+### Using lazy(neo)vim
+
+```sh
+<leader> # Space
+```
+
+</details>
 
 See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
 
