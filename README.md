@@ -191,6 +191,10 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 <leader> + d # dettach session
 tmux ls # list sessions
 <leader> + s # list sessions
+<leader> + , # rename window
+<leader> + & # close window
+
+<leader> + z # min/maximize pane
 
 # custom
 <leader> + C-p (P) # => popup window
