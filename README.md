@@ -174,7 +174,7 @@ defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
 defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
 
-### Who Do You Call? 👻
+### Who You Gonna Call? 👻
 [cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<cli_command>`
 
 ## Using Tools
