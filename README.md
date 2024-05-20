@@ -174,6 +174,9 @@ defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
 defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
 
+### Who You Gonna Call? 👻
+[cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<cli_command>`
+
 ## Using Tools
 <details><summary>Tips + Tricks</summary>
 
@@ -191,6 +194,10 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 <leader> + d # dettach session
 tmux ls # list sessions
 <leader> + s # list sessions
+<leader> + , # rename window
+<leader> + & # close window
+
+<leader> + z # min/maximize pane
 
 # custom
 <leader> + C-p (P) # => popup window
