@@ -6,6 +6,8 @@ tap "homebrew/core"
 tap "homebrew/services"
 tap "koekeishiya/formulae"
 tap "wix/brew"
+tap "jesseduffield/lazygit"
+tap "jesseduffield/lazydocker"
 
 # Global configuration for casks
 cask_args appdir: "/Applications"
@@ -17,6 +19,8 @@ brew "azure-cli"
 brew "git"
 brew "git-lfs"
 brew "terraform"
+brew "lazygit"
+brew "lazydocker"
 
 
 # UI Tools for software development

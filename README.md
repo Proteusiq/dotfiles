@@ -92,6 +92,8 @@ The install script will also setup Python, Node and Bun versions/environments:
 "hiddenbar" # Hides unpopular tab icons
 "hyperfine" # A command-line benchmarking tool
 "jq" # Lightweight and flexible command-line JSON processor
+"lazygit" # The lazier way to manage everything git
+"lazydocker" # The lazier way to manage everything docker
 "llm" # Running LLM as CLI
 "moreutils" # Collection of tools that nobody wrote when UNIX was young
 "ncdu" # NCurses Disk Usage
