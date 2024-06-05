@@ -192,7 +192,7 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 <leader> + "Shift + 2" (") or i to split horizontal
 <leader> + "Shift + 5"  (%) o - to split vertical
 <leader> + Arrows or hjkl # move across panes
-<leader> + : # command mode (:rename-window <NAME> :rename-session <NAME> :kill-session -t <NAME or NUM>, :kill-server # kills all session)
+<leader> + : # command mode (:rename-window <NAME> :rename-session <NAME> :kill-session -a #kill all session but this one :kill-session -t <NAME or NUM>, :kill-server # kills all session)
 <leader> + d # dettach session
 tmux ls # list sessions
 <leader> + s # list sessions
