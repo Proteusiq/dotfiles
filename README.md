@@ -182,7 +182,7 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ## Using Tools
 <details><summary>Tips + Tricks</summary>
 
-### Using tmux
+### Using [tmux](https://tmuxcheatsheet.com/)
 ```sh
 # installl plugins
 <leader> + I # prefix is <leader key> which is C-b
