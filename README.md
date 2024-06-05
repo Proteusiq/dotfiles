@@ -324,6 +324,8 @@ Vim keybindings:
 
 ```sh
 <leader> # Space
+<C-w> # window actions
+     # w # moves back to Neo-Tree
 ```
 
 </details>
