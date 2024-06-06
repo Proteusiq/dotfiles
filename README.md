@@ -326,6 +326,7 @@ Vim keybindings:
 <leader> # Space
 <C-w> # window actions
      # w # moves back to Neo-Tree
+[b ]b  # option/alt 8 and 9 for [] to navigate buffers(tabs)  
 ```
 
 </details>
