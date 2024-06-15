@@ -35,4 +35,3 @@ antigen apply
 [ -s "/Users/pwd/.bun/_bun" ] && source "/Users/pwd/.bun/_bun"
 
 
-eval "$(atuin init zsh)"
