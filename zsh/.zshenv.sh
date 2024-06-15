@@ -5,6 +5,10 @@ if [[ -z "$LANG" ]]; then
     eval "$(locale)"
 fi
 
+
+# neovim python virtual environment
+[ ! -d ~/.virtualenvs/neovim ] && python -m ~/.virtualenvs/neovim
+
 # set editors
 export VISUAL=vim
 export EDITOR="$VISUAL"
