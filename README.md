@@ -111,6 +111,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "starship" # Cross-shell prompt for astronauts
 "stow" # Manage installation of multiple softwares in the same directory structure
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently
+"thefuck" # Autocorrection with f as alias
 "tldr" # Too long I did nor read man
 "tmux" # Terminal multiplexer
 "uv" # Better drop in pip replacer alias pip='uv pip'
