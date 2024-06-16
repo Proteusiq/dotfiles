@@ -161,6 +161,30 @@ setup_utils() {
 
 }
 
+create_virtualenvs() {
+    # virtual environment directories and their respective packages
+    declare -A envs
+    envs["$HOME/.virtualenvs/neovim"]="pynvim"
+    envs["$HOME/.virtualenvs/debugpy"]="pynvim debugpy"
+
+    # create .virtualenvs directory if it doesn't exist
+    mkdir -p "$HOME/.virtualenvs"
+
+    # for each environment check existence and install
+    for env in "${!envs[@]}"; do
+        # create it if not exist
+        if [ ! -d "$env" ]; then
+            python -m venv "$env"
+        fi
+
+        # upgrade pip and install the required packages
+        "$env/bin/pip" install --upgrade pip
+        "$env/bin/pip" install --upgrade ${envs[$env]}
+    done
+
+    echo "🔥 Virtual environments and 📦 packages installed."
+}
+
 # Function to use GNU Stow to manage dotfiles
 stow_dotfiles() {
     echo "🐗  Stowing dotfiles..."
@@ -174,6 +198,7 @@ install_brew
 configure_node
 configure_python
 setup_jupyter_lab
+create_virtualenvs
 install_vim_plug
 tmux_if_not_exists
 setup_utils
