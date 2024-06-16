@@ -113,7 +113,7 @@ cask "chatgpt"
 
 
 # LLM Development
-brew "llm" # Running LLM as CLI
+# brew "llm" # Running LLM as CLI -> installed using rye tools install
 brew "ollama" # Running Large Language Model Locally
 brew "portaudio" # Needed of pyaudio
 

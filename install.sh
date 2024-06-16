@@ -156,7 +156,8 @@ setup_utils() {
     git lfs install
 
     # productive laziness
-    # llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
+    rye tools install llm
+    llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
 
 }
 
