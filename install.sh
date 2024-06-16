@@ -156,30 +156,36 @@ setup_utils() {
     git lfs install
 
     # productive laziness
-    rye tools install llm
+    rye tools list | grep -q "^llm" || rye tools install llm
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
 
 }
 
 create_virtualenvs() {
+    echo "Creating Python Virtual Environments"
     # virtual environment directories and their respective packages
-    declare -A envs
-    envs["$HOME/.virtualenvs/neovim"]="pynvim"
-    envs["$HOME/.virtualenvs/debugpy"]="pynvim debugpy"
+    envs=(
+        "$HOME/.virtualenvs/neovim|pynvim"
+        "$HOME/.virtualenvs/debugpy|pynvim debugpy"
+    )
 
     # create .virtualenvs directory if it doesn't exist
     mkdir -p "$HOME/.virtualenvs"
 
     # for each environment check existence and install
-    for env in "${!envs[@]}"; do
+    for env in "${envs[@]}"; do
+        IFS='|' read -r dir packages <<<"$env"
+
         # create it if not exist
-        if [ ! -d "$env" ]; then
-            python -m venv "$env"
+        if [ ! -d "$dir" ]; then
+            python -m venv "$dir" &>/dev/null
         fi
 
         # upgrade pip and install the required packages
-        "$env/bin/pip" install --upgrade pip
-        "$env/bin/pip" install --upgrade ${envs[$env]}
+        "$dir/bin/pip" install --upgrade pip &>/dev/null
+
+        "$dir/bin/pip" install --upgrade $packages &>/dev/null
+
     done
 
     echo "🔥 Virtual environments and 📦 packages installed."
