@@ -24,6 +24,7 @@ brew "lazydocker"
 
 
 # UI Tools for software development
+
 cask "docker"
 cask "pgadmin4"
 cask "postman"
@@ -78,7 +79,7 @@ brew "neovim"
 brew "tmux"
 brew "starship"
 cask "alacritty"
-cask "kitty"
+
 
 
 
