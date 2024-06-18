@@ -55,11 +55,12 @@ The install script will also setup Python, Node and Bun versions/environments:
 <details><summary>Brewfile Tools Definitions</summary>
 
 ```sh
-# Command Line Tools
+# GUI & Command Line Tools
 # Utilities and tools to enhance the command line interface experience
 "ack" # A tool like grep, optimized for programmers
 "aldente" # Battery life 
 "applesimutils" # Apple Simulator Utilities
+"arc" # Browser for the future - 1Password, Vimium C extentions
 "alttab" # Better preview app switcher 
 "autoenv" # Automatically source environment variable
 "azure-cli" # Microsoft Azure Command Line Interface
@@ -101,7 +102,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "ollama" # Running Large Language Models offline
 "pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
 "python" # Interpreted, interactive, object-oriented programming language
-"raycast" # A better spotlight
+"raycast" # A better spotlight - CleanShotX, Ollama, OpenAI, Alacritty, Brew extensitions
 "rename" # Perl-powered file rename script with many helpful built-ins
 "ripgrep" # Recursively searches directories for a regex pattern while respecting your gitignore
 "rsync" # Utility that provides fast incremental file transfer
