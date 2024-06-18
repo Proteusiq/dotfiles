@@ -3,4 +3,4 @@
 -- Add any additional options here
 
 -- main editor configs
-vim.g.python3_host_prog = os.getenv("HOME") .. "/.virtualenvs/nvim/bin/python"
+vim.g.python_host_prog = os.getenv("HOME") .. "/.virtualenvs/nvim/bin/python"
