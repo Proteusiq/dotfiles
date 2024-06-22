@@ -27,7 +27,7 @@ function Manager:render(area)
     })
 end
 
-require("starship"):setup()
+--require("starship"):setup()
 
 require("zoxide"):setup({
     update_db = true,
