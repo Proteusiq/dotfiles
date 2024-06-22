@@ -2,7 +2,7 @@
 
 # dotfiles
 
-Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A Spin-Off [Sara Pope's](https://github.com/gretzky/dotfiles).
+Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://github.com/gretzky/dotfiles) Spin-Off.
 
 ![CleanShot 2024-06-22 at 19 34 12@2x](https://github.com/Proteusiq/dotfiles/assets/14926709/b5374cdb-753c-4559-ad8e-920d9653de34)
 
