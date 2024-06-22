@@ -11,7 +11,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A Spin-Off [Sara Pope's](http
 -   Window management: [yabai](https://github.com/koekeishiya/yabai)
 -   Hotkeys: [skhd](https://github.com/koekeishiya/skhd)
 -   Vim: [neovim](https://neovim.io/) with [vim-plug](https://github.com/junegunn/vim-plug) to manage plugins
--   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf)
+-   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [yazi](https://github.com/sxyazi/yazi)
 
 ## Installation
 

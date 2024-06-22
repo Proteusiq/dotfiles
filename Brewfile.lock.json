@@ -2849,6 +2849,10 @@
             }
           }
         }
+      },
+      "jstkdng/programs/ueberzugpp": {
+        "version": "2.9.2",
+        "bottle": false
       }
     },
     "cask": {

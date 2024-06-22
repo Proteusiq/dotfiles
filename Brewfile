@@ -152,6 +152,7 @@ brew "koekeishiya/formulae/yabai" # A tiling window manager for macOS
 
 # Misc Tools
 # Miscellaneous tools and utilities
+brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
 brew "applesimutils"
 cask "aldente"
 
