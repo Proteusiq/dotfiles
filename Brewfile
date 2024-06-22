@@ -16,6 +16,7 @@ cask_args appdir: "/Applications"
 # CLI Tools for software development
 brew "autoenv"
 brew "azure-cli"
+brew "difftastic"
 brew "git"
 brew "git-lfs"
 brew "terraform"
