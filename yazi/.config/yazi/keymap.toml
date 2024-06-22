@@ -1,0 +1,146 @@
+"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+
+[manager]
+
+prepend_keymap = [
+    { on = [
+        "w",
+    ], exec = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
+    { on = [
+        "W",
+    ], exec = "tasks_show" },
+
+    # Navigation
+    { on = [
+        "u",
+    ], run = "arrow -1" },
+    { on = [
+        "e",
+    ], run = "arrow 1" },
+
+    { on = [
+        "U",
+    ], run = "arrow -5" },
+    { on = [
+        "E",
+    ], run = "arrow 5" },
+
+    { on = [
+        "n",
+    ], run = "leave" },
+    { on = [
+        "i",
+    ], run = "plugin --sync smart-enter" },
+
+    { on = [
+        "N",
+    ], run = "back" },
+    { on = [
+        "I",
+    ], run = "forward" },
+
+    { on = [
+        "<C-u>",
+    ], run = "seek -5" },
+    { on = [
+        "<C-e>",
+    ], run = "seek 5" },
+
+    # Operation
+    { on = [
+        "l",
+    ], run = "link" },
+    { on = [
+        "L",
+    ], run = "link --relative" },
+
+    # Find
+    { on = [
+        "-",
+    ], run = "find_arrow" },
+    { on = [
+        "=",
+    ], run = "find_arrow --previous" },
+]
+
+[tasks]
+
+prepend_keymap = [
+    { on = [
+        "W",
+    ], run = "close" },
+
+    { on = [
+        "u",
+    ], run = "arrow -1" },
+    { on = [
+        "e",
+    ], run = "arrow 1" },
+]
+
+[select]
+
+prepend_keymap = [
+    { on = [
+        "u",
+    ], run = "arrow -1" },
+    { on = [
+        "e",
+    ], run = "arrow 1" },
+
+    { on = [
+        "U",
+    ], run = "arrow -5" },
+    { on = [
+        "E",
+    ], run = "arrow 5" },
+]
+
+[input]
+
+prepend_keymap = [
+    # Mode
+    { on = ["k"], run = "insert" },
+    { on = ["<C-n>"], run = ["move -999", "insert"] },
+    { on = ["<C-i>"], run = ["move 999", "insert --append"] },
+
+    # Character-wise movement
+    { on = ["n"], run = "move -1" },
+    { on = ["i"], run = "move 1" },
+
+    # Word-wise movement
+    { on = ["h"], run = "forward --end-of-word" },
+
+    # Line-wise movement
+    { on = ["N"], run = "move -999" },
+    { on = ["I"], run = "move 999" },
+
+    # Cut/Yank/Paste
+    { on = ["x"], run = ["delete", "move 1 --in-operating"] },
+
+    # Undo/Redo
+    { on = ["l"], run = "undo" },
+    { on = ["L"], run = "redo" },
+]
+
+[completion]
+
+prepend_keymap = [
+    { on = [
+        "<C-u>",
+    ], run = "arrow -1" },
+    { on = [
+        "<C-e>",
+    ], run = "arrow 1" },
+]
+
+[help]
+
+prepend_keymap = [
+    # Navigation
+    { on = ["u"], run = "arrow -1" },
+    { on = ["e"], run = "arrow 1" },
+
+    { on = ["U"], run = "arrow -5" },
+    { on = ["E"], run = "arrow 5" },
+]

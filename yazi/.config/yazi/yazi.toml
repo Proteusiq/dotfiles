@@ -1,0 +1,109 @@
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+[manager]
+linemode = "size"
+show_hidden = true
+sort_by = "natural"
+
+[preview]
+tab_size = 2
+max_width = 1000
+max_height = 1000
+
+[opener]
+edit = [
+    { run = '${EDITOR:=vi} "$@"', desc = "$EDITOR", block = true },
+    { run = 'code "$@"', orphan = true },
+]
+play = [
+    { run = 'mpv --force-window "$@"' },
+    { run = 'iina --no-stdin "$@"' },
+    { run = '''mediainfo "$1"; echo "Press enter to exit"; read''', block = true, desc = "Show media info" },
+]
+archive = [
+    { run = 'unar "$1"', desc = "Extract here" },
+    { run = '/Applications/MacZip.app/Contents/MacOS/MacZip "$1"', orphan = true, desc = "MacZip" },
+]
+
+[open]
+rules = [
+    { name = "*/", use = [
+        "open",
+        "edit",
+        "reveal",
+    ] },
+
+    { mime = "text/*", use = [
+        "edit",
+        "reveal",
+    ] },
+    { mime = "image/*", use = [
+        "open",
+        "reveal",
+    ] },
+    { mime = "video/*", use = [
+        "play",
+        "reveal",
+    ] },
+    { mime = "audio/*", use = [
+        "play",
+        "reveal",
+    ] },
+    { mime = "inode/x-empty", use = [
+        "edit",
+        "reveal",
+    ] },
+
+    { mime = "application/json", use = [
+        "edit",
+        "reveal",
+    ] },
+    { mime = "*/javascript", use = [
+        "edit",
+        "reveal",
+    ] },
+
+    { mime = "application/zip", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+    { mime = "application/gzip", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+    { mime = "application/x-tar", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+    { mime = "application/x-bzip", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+    { mime = "application/x-bzip2", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+    { mime = "application/x-7z-compressed", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+    { mime = "application/x-rar", use = [
+        "extract",
+        "reveal",
+        "archive",
+    ] },
+
+    { mime = "*", use = [
+        "open",
+        "reveal",
+    ] },
+]
+
+[plugin]
+prepend_previewers = [{ mime = "audio/*", run = "exifaudio" }]

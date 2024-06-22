@@ -42,6 +42,7 @@ brew "direnv"
 brew "eza"
 brew "fd"
 brew "ffmpeg"
+brew "ffmpegthumbnailer" #  video thumbnailer requirement yazi
 brew "findutils"
 brew "fzf"
 brew "gawk"
@@ -63,6 +64,7 @@ brew "screen"
 brew "stow"
 brew "thefuck"
 brew "tldr"
+brew "unar" # opens archieve yazi requirement
 brew "wget"
 brew "yarn"
 brew "zlib"
@@ -70,6 +72,7 @@ brew "zplug"
 brew "zsh"
 brew "zoxide"
 brew "wget"
+brew "yazi"
 brew "yarn"
 
 
@@ -116,6 +119,7 @@ cask "chatgpt"
 # LLM Development
 # brew "llm" # Running LLM as CLI -> installed using rye tools install
 brew "ollama" # Running Large Language Model Locally
+brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
 
 # Utilities
@@ -132,6 +136,7 @@ cask "transmission"
 
 # Fonts
 # Font installations for design and development
+cask "font-symbols-only-nerd-font" # yazi requirement
 cask "font-hack"
 cask "font-hack-nerd-font"
 

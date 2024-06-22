@@ -38,6 +38,14 @@ install_xcode_tools() {
     fi
 }
 
+# Optional macOS preferences setup
+read -p "Would you like to set macOS preferences now? (y/N): " response
+if [[ "$response" =~ ^[yY](es)?$ ]]; then
+    set_macos_preferences
+else
+    echo "Skipping macOS preferences setup."
+fi
+
 # Function to install Homebrew and packages
 install_brew() {
     echo "🍺  Installing Homebrew and packages..."
@@ -194,7 +202,7 @@ create_virtualenvs() {
 # Function to use GNU Stow to manage dotfiles
 stow_dotfiles() {
     echo "🐗  Stowing dotfiles..."
-    stow alacritty fzf git nvim skhd starship tmux vim yabai zsh
+    stow alacritty fzf git nvim skhd starship tmux vim yabai zsh yazi
 }
 
 # Main setup sequence
@@ -210,12 +218,6 @@ tmux_if_not_exists
 setup_utils
 stow_dotfiles
 
-# Optional macOS preferences setup
-read -p "Would you like to set macOS preferences now? (y/N): " response
-if [[ "$response" =~ ^[yY](es)?$ ]]; then
-    set_macos_preferences
-else
-    echo "Skipping macOS preferences setup."
-fi
+
 
 echo "✨  Setup completed successfully!"
