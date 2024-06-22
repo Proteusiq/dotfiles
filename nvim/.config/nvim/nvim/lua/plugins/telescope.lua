@@ -1,104 +1,62 @@
-return {
-    "nvim-telescope/telescope.nvim",
-    cmd = "Telescope",
-    config = function()
-        local actions = require("telescope.actions")
-        local previewers = require("telescope.previewers")
-        local sorters = require("telescope.sorters")
+-- require('telescope').load_extension('harpoon')
+require('telescope').load_extension('git_worktree')
 
-        require("telescope").load_extension("grapple")
-
-        -- Filemanager shortcuts
-        -- <A-c>/c	Create file/folder at current path (trailing path separator creates folder)
-        -- <A-r>/r	Rename multi-selected files/folders
-        -- <A-m>/m	Move multi-selected files/folders to current path
-        -- <A-y>/y	Copy (multi-)selected files/folders to current path
-        -- <A-d>/d	Delete (multi-)selected files/folders
-        -- <C-o>/o	Open file/folder with default system application
-        -- <C-g>/g	Go to parent directory
-        -- <C-e>/e	Go to home directory
-        -- <C-w>/w	Go to current working directory (cwd)
-        -- <C-t>/t	Change nvim's cwd to selected folder/file(parent)
-        -- <C-f>/f	Toggle between file and folder browser
-        -- <C-h>/h	Toggle hidden files/folders
-        -- <C-s>/s	Toggle all entries ignoring ./ and ../
-
-        local width = 0.95
-        local height = 0.95
-
-        require("telescope").setup({
-            pickers = {
-                buffers = {
-                    show_all_buffers = true,
-                    sort_lastused = true,
-                    sort_mru = true,
-                    previewer = false,
-                    theme = "dropdown",
-                    mappings = {
-                        i = {
-                            ["<c-d>"] = "delete_buffer",
-                        },
-                    },
+-- [[ Configure Telescope ]]
+-- See `:help telescope` and `:help telescope.setup()`
+require('telescope').setup {
+    defaults = {
+        layout_strategy = "horizontal",
+        layout_config = {
+            preview_width = 0.65,
+            horizontal = {
+                size = {
+                    width = "95%",
+                    height = "95%",
                 },
             },
-            defaults = {
-                mappings = {
-                    i = {
-                        ["<esc>"] = actions.close,
-                        ["<C-u>"] = false,
-                        ["<C-j>"] = require("telescope.actions").cycle_history_next,
-                        ["<C-k>"] = require("telescope.actions").cycle_history_prev,
-                        ["<C-n>"] = require("telescope.actions").move_selection_next,
-                        ["<C-p>"] = require("telescope.actions").move_selection_previous,
-                    },
-                    n = {},
-                },
-                vimgrep_arguments = {
-                    "rg",
-                    "--vimgrep",
-                    "--hidden",
-                    "--smart-case",
-                    "--trim",
-                    "--no-heading",
-                    "--with-filename",
-                    "--line-number",
-                    "--column",
-                },
-                prompt_prefix = " ",
-                selection_caret = " ",
-                entry_prefix = "  ",
-                set_env = { ["COLORTERM"] = "truecolor" },
-                initial_mode = "insert",
-                selection_strategy = "reset",
-                sorting_strategy = "ascending",
-                layout_strategy = "horizontal",
-                layout_config = {
-                    prompt_position = "top",
-                    horizontal = {
-                        mirror = false,
-                        width = width,
-                        height = height,
-                    },
-                    vertical = {
-                        mirror = false,
-                        width = width,
-                        height = height,
-                    },
-                },
-                file_sorter = sorters.get_fuzzy_file,
-                file_ignore_patterns = { "gtk/**/*", "node_modules", ".git", "pdf_viewer" },
-                generic_sorter = sorters.get_generic_fuzzy_sorter,
-                winblend = 0,
-                border = {},
-                borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-                color_devicons = true,
-                use_less = true,
-                path_display = {},
-                file_previewer = previewers.vim_buffer_cat.new,
-                grep_previewer = previewers.vim_buffer_vimgrep.new,
-                qflist_previewer = previewers.vim_buffer_qflist.new,
-                extensions = {},
+        },
+        pickers = {
+            find_files = {
+                theme = "dropdown",
+            }
+        },
+        mappings = {
+            i = {
+                ['<C-u>'] = false,
+                ['<C-d>'] = false,
+                ["<C-j>"] = require('telescope.actions').move_selection_next,
+                ["<C-k>"] = require('telescope.actions').move_selection_previous,
+                ["<C-d>"] = require('telescope.actions').move_selection_previous,
             },
-        })
-    end,
+        },
+    },
 }
+
+-- Enable telescope fzf native, if installed
+pcall(require('telescope').load_extension, 'fzf')
+
+-- See `:help telescope.builtin`
+vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader>/', function()
+    -- You can pass additional configuration to telescope to change theme, layout, etc.
+    require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+        winblend = 10,
+        previewer = true,
+    })
+end, { desc = '[/] Fuzzily search in current buffer]' })
+
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
+-- vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>sS', require('telescope.builtin').git_status, { desc = '' })
+vim.keymap.set('n', '<leader>sm', ":Telescope harpoon marks<CR>", { desc = 'Harpoon [M]arks' })
+vim.keymap.set("n", "<Leader>sr", "<CMD>lua require('telescope').extensions.git_worktree.git_worktrees()<CR>", silent)
+vim.keymap.set("n", "<Leader>sR", "<CMD>lua require('telescope').extensions.git_worktree.create_git_worktree()<CR>",
+    silent)
+vim.keymap.set("n", "<Leader>sn", "<CMD>lua require('telescope').extensions.notify.notify()<CR>", silent)
+
+vim.api.nvim_set_keymap("n", "st", ":TodoTelescope<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<Leader><tab>", "<Cmd>lua require('telescope.builtin').commands()<CR>", { noremap = false })
