@@ -181,6 +181,7 @@ defaults write com.apple.menuextra.clock ShowDate -int 0
 defaults write com.apple.menuextra.clock ShowDayOfWeek  -int 0
 defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
+See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
 
 ### Who You Gonna Call? 👻
 [cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<cli_command>`
@@ -337,7 +338,7 @@ Vim keybindings:
 
 </details>
 
-See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
+
 
 ## Acknowledgements
 
