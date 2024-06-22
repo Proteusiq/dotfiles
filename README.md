@@ -4,7 +4,8 @@
 
 Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A Spin-Off [Sara Pope's](https://github.com/gretzky/dotfiles).
 
-<img width="1333" alt="image" src="https://github.com/Proteusiq/dotfiles/assets/14926709/9046ac0a-33d1-4d03-948f-dc6e293e06b8">
+![CleanShot 2024-06-22 at 19 34 12@2x](https://github.com/Proteusiq/dotfiles/assets/14926709/b5374cdb-753c-4559-ad8e-920d9653de34)
+
 
 
 -   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/) and [eza](https://github.com/eza-community/eza)
