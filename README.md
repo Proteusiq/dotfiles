@@ -11,7 +11,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 -   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/) and [eza](https://github.com/eza-community/eza)
 -   Window management: [yabai](https://github.com/koekeishiya/yabai)
 -   Hotkeys: [skhd](https://github.com/koekeishiya/skhd)
--   Vim: [neovim](https://neovim.io/) with [vim-plug](https://github.com/junegunn/vim-plug) to manage plugins
+-   Vim: [neovim](https://neovim.io/) with [lazyvim](https://github.com/LazyVim/LazyVim) destro
 -   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [yazi](https://github.com/sxyazi/yazi)
 
 ## Installation
