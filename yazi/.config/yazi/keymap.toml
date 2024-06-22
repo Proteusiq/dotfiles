@@ -5,10 +5,10 @@
 prepend_keymap = [
     { on = [
         "w",
-    ], exec = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
+    ], run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
     { on = [
         "W",
-    ], exec = "tasks_show" },
+    ], run = "tasks_show" },
 
     # Navigation
     { on = [
