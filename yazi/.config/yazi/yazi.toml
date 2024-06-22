@@ -28,7 +28,7 @@ archive = [
 [open]
 rules = [
     { name = "*/", use = [
-        "open",
+        "nvim",
         "edit",
         "reveal",
     ] },
