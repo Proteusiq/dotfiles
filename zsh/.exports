@@ -53,12 +53,12 @@ export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git
 # - The first argument to the function ($1) is the base path to start traversal
 # - See the source code (completion.{bash,zsh}) for the details.
 _fzf_compgen_path() {
-  fd --hidden --exclude .git . "$1"
+    fd --hidden --exclude .git . "$1"
 }
 
 # Use fd to generate the list for directory completion
 _fzf_compgen_dir() {
-  fd --type=d --hidden --exclude .git . "$1"
+    fd --type=d --hidden --exclude .git . "$1"
 }
 
 source ~/dotfiles/fzf/.fzf/fzf-git.sh
@@ -72,15 +72,15 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 # - The first argument to the function is the name of the command.
 # - You should make sure to pass the rest of the arguments to fzf.
 _fzf_comprun() {
-  local command=$1
-  shift
+    local command=$1
+    shift
 
-  case "$command" in
-    cd)           fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
-    export|unset) fzf --preview "eval 'echo \${}'"         "$@" ;;
-    ssh)          fzf --preview 'dig {}'                   "$@" ;;
-    *)            fzf --preview "$show_file_or_dir_preview" "$@" ;;
-  esac
+    case "$command" in
+    cd) fzf --preview 'eza --tree --color=always {} | head -200' "$@" ;;
+    export | unset) fzf --preview "eval 'echo \${}'" "$@" ;;
+    ssh) fzf --preview 'dig {}' "$@" ;;
+    *) fzf --preview "$show_file_or_dir_preview" "$@" ;;
+    esac
 }
 
 # <end: Josean Martinez>
@@ -91,7 +91,7 @@ export PATH=$PATH:$HOME/depot_tools
 # android
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
 if [ -d $ANDROID_SDK_ROOT ]; then
-  PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$PATH"
+    PATH="$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/platform-tools:$PATH"
 fi
 
 # ripgrep
@@ -100,7 +100,6 @@ export RIPGREP_CONFIG_PATH=$HOME/.rgrc
 # linux utils
 export PATH="/usr/local/opt/util-linux/bin:$PATH"
 export PATH="/usr/local/opt/util-linux/sbin:$PATH"
-
 
 # GOLANG
 export GOROOT=/usr/local/go
@@ -117,6 +116,9 @@ eval "$(direnv hook zsh)"
 
 # zoxide
 eval "$(zoxide init zsh)"
+
+# the fuck
+eval "$(thefuck --alias)"
 
 # Rye
 export RYE_NO_AUTO_INSTALL=1
@@ -140,7 +142,6 @@ eval "$(starship init zsh)"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
 
 # fzf key binding and completion
 eval "$(fzf --zsh)"

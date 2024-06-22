@@ -4,6 +4,10 @@
 
 echo -e "\nInitializing macOS setup...\n"
 
+# Ask for user inputs at the beginning
+read -p "Would you like to set macOS preferences now? (y/N): " macos_preferences_confirm
+read -p "Do you want to proceed with the Jupyter Lab setup? [y/N]: " jupyter_confirm
+
 ZSHHOME=$HOME/dotfiles/zsh
 
 # Function to create directories
@@ -38,14 +42,6 @@ install_xcode_tools() {
     fi
 }
 
-# Optional macOS preferences setup
-read -p "Would you like to set macOS preferences now? (y/N): " response
-if [[ "$response" =~ ^[yY](es)?$ ]]; then
-    set_macos_preferences
-else
-    echo "Skipping macOS preferences setup."
-fi
-
 # Function to install Homebrew and packages
 install_brew() {
     echo "🍺  Installing Homebrew and packages..."
@@ -63,8 +59,12 @@ install_brew() {
 
 # Function to set macOS preferences
 set_macos_preferences() {
-    echo "💻  Setting macOS preferences..."
-    ./macos/.macos
+    if [[ "$macos_preferences_confirm" =~ ^[yY](es)?$ ]]; then
+        echo "💻  Setting macOS preferences..."
+        ./macos/.macos
+    else
+        echo "Skipping macOS preferences setup."
+    fi
 }
 
 # Function to configure Node and Bun
@@ -85,48 +85,46 @@ configure_python() {
         rye self completion -s zsh >>~/.zfunc/_rye
         rye config --set-bool behavior.global-python=true
         rye config --set-bool behavior.use-uv=true
-
     else
-
         echo "🍺 Updating Rye..."
         rye self update
     fi
-
 }
 
 # Function to setup Jupyter Lab environment
 setup_jupyter_lab() {
-    echo "📚 Setting up Jupyter Lab environment in Codes/lab..."
+    if [[ $jupyter_confirm == [yY] ]]; then
+        echo "📚 Setting up Jupyter Lab environment in Codes/lab..."
 
-    # Confirmation prompt
-    read -p "Do you want to proceed with the setup? [y/N]: " confirm && [[ $confirm == [yY] ]] || return 1
+        mkdir -p "$HOME/Codes/lab"
+        cd "$HOME/Codes/lab"
 
-    mkdir -p "$HOME/Codes/lab"
-    cd "$HOME/Codes/lab"
+        # Check if virtual environment directory exists
+        if [ ! -d ".venv" ]; then
+            echo "Creating virtual environment..."
+            uv venv .venv
+        fi
 
-    # Check if virtual environment directory exists
-    if [ ! -d ".venv" ]; then
-        echo "Creating virtual environment..."
-        uv venv .venv
+        # Activate the virtual environment
+        source .venv/bin/activate
+
+        # Check if Jupyter Lab is installed
+        if ! pip freeze | grep jupyterlab &>/dev/null; then
+            echo "Installing Jupyter Lab..."
+            uv pip install jupyterlab jupyterlab-dash
+        fi
+
+        # Deactivate the virtual environment
+        deactivate
+
+        echo "Jupyter Lab setup complete! 🚀"
+        echo "Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
+
+        # back to dotfiles
+        cd -
+    else
+        echo "Skipping Jupyter Lab setup."
     fi
-
-    # Activate the virtual environment
-    source .venv/bin/activate
-
-    # Check if Jupyter Lab is installed
-    if ! pip freeze | grep jupyterlab &>/dev/null; then
-        echo "Installing Jupyter Lab..."
-        uv pip install jupyterlab jupyterlab-dash
-    fi
-
-    # Deactivate the virtual environment
-    deactivate
-
-    echo "Jupyter Lab setup complete! 🚀"
-    echo "Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
-
-    # back to dotfiles
-    cd -
 }
 
 # Function to install vim-plug for Neovim
@@ -155,6 +153,15 @@ tmux_if_not_exists() {
     [ -d "$folder" ] || git clone $url $folder
 }
 
+# yazi thems installation
+yazi_if_not_exists() {
+    local folder="$HOME/.config/yazi/flavors"
+    local url="https://github.com/yazi-rs/flavors.git"
+
+    # Check if the directory exists, clone if not
+    [ -d "$folder" ] || git clone $url $folder
+}
+
 # Extra Setups
 setup_utils() {
     # auto source .envs
@@ -166,7 +173,6 @@ setup_utils() {
     # productive laziness
     rye tools list | grep -q "^llm" || rye tools install llm
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
-
 }
 
 create_virtualenvs() {
@@ -191,9 +197,7 @@ create_virtualenvs() {
 
         # upgrade pip and install the required packages
         "$dir/bin/pip" install --upgrade pip &>/dev/null
-
         "$dir/bin/pip" install --upgrade $packages &>/dev/null
-
     done
 
     echo "🔥 Virtual environments and 📦 packages installed."
@@ -208,6 +212,7 @@ stow_dotfiles() {
 # Main setup sequence
 create_dirs
 install_xcode_tools
+set_macos_preferences
 install_brew
 configure_node
 configure_python
@@ -215,9 +220,8 @@ setup_jupyter_lab
 create_virtualenvs
 install_vim_plug
 tmux_if_not_exists
+yazi_if_not_exists
 setup_utils
 stow_dotfiles
-
-
 
 echo "✨  Setup completed successfully!"
