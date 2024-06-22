@@ -165,7 +165,10 @@ yazi_if_not_exists() {
 # Extra Setups
 setup_utils() {
     # auto source .envs
-    echo "source $(brew --prefix autoenv)/activate.sh" >>~/.zprofile
+    grep -qF "source \$(brew --prefix autoenv)/activate.sh" ~/.zprofile || echo "source \$(brew --prefix autoenv)/activate.sh" >> ~/.zprofile
+
+    # aliases help
+    chmod +x $ZSHHOME/.alias_help.sh
 
     # install git large files
     git lfs install

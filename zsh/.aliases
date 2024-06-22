@@ -467,3 +467,5 @@ alias iswitch='tmux choose-session' # show sessions
 alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
 
 alias f="thefuck"
+
+alias alias_help='$HOME/dotfiles/zsh/.alias_help.sh'
