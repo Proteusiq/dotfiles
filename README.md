@@ -37,6 +37,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
     -   [starship](./starship)
     -   [tmux](./tmux)
     -   [VSCode](./vscode)
+    -   [yazi](./yazi/)
     -   [yabai](./yabai)
 -   Shell environment configs:
     -   [Antigen](https://github.com/zsh-users/antigen) for zsh plugin management
@@ -122,6 +123,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "watchman" # Watch files and take action when they change
 "wget" # Internet file retriever
 "yarn" # JavaScript package manager
+"yazi" # Terminal file management
 "zlib" # General-purpose lossless data-compression library
 "zplug" # A next-generation plugin manager for zsh
 "zsh" # UNIX shell (command interpreter)
