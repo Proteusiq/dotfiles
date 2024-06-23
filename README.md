@@ -8,11 +8,13 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 
 
 
--   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/) and [eza](https://github.com/eza-community/eza)
+-   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/)
 -   Window management: [yabai](https://github.com/koekeishiya/yabai)
+-   File management: [yazi](https://github.com/sxyazi/yazi)
 -   Hotkeys: [skhd](https://github.com/koekeishiya/skhd)
 -   Vim: [neovim](https://neovim.io/) with [lazyvim](https://github.com/LazyVim/LazyVim) destro
--   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [yazi](https://github.com/sxyazi/yazi)
+-   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [eza](https://github.com/eza-community/eza)
+-   Languages: Python, Rust, Go, JavaScript, Lua
 
 ## Installation
 
@@ -149,8 +151,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 - Be sure to update the user name/email values in the global [gitconfig](./git/.gitconfig)
 #### Color Schemes
 
-- Alacritty color scheme is [Snazzy](https://github.com/sindresorhus/terminal-snazzy)
-- VSCode/Vim color scheme is [Ayu](https://github.com/dempfi/ayu)
+- Alacritty, Tmux, Nvim := color scheme == [Catppuccin-Mocha](https://github.com/catppuccin/catppuccin)
 
 ### After First Installation, Sync dotfile with GitHub
 Configure GitHub to usee SSH [Configure](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) + [Setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
