@@ -151,7 +151,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 - Be sure to update the user name/email values in the global [gitconfig](./git/.gitconfig)
 #### Color Schemes
 
-- Alacritty, Tmux, Nvim := color scheme == [Catppuccin-Mocha](https://github.com/catppuccin/catppuccin)
+- Alacritty, Tmux, Nvim, fzf := color scheme == [Catppuccin-Mocha](https://github.com/catppuccin/catppuccin)
 
 ### After First Installation, Sync dotfile with GitHub
 Configure GitHub to usee SSH [Configure](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) + [Setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
