@@ -207,9 +207,10 @@ tmux ls # list sessions
 <leader> + & # close window
 
 <leader> + z # min/maximize pane
+<leader> + p (P menu) # => popup terminal (leader + p to close)
+<leader> + O  # => popup sessions (esc to close)
 
 # custom
-<leader> + C-p (P) # => popup window
 iexit # alias to kill-session
 ikill # alias to kill-server
 iswitch # alias to switch-session
@@ -334,6 +335,10 @@ Vim keybindings:
 <C-w> # window actions
      # w # moves back to Neo-Tree
 [b ]b  # option/alt 8 and 9 for [] to navigate buffers(tabs)  
+
+# command mode
+: # run sh commands: use case sort data, select and execute : <','>!sort or structure JSON <','> !jq 
+: + Shift + 1 # filter mode: echo "OPENAI_API_KEY=sk-****** >> .env"
 ```
 
 </details>
