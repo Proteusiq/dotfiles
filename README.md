@@ -192,7 +192,10 @@ See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s set
 ## Using Tools
 <details><summary>Tips + Tricks</summary>
 
-### Using [tmux](https://tmuxcheatsheet.com/)
+  ### Short🐈
+  Ctrl + f
+
+  ### Using [tmux](https://tmuxcheatsheet.com/)
 ```sh
 # installl plugins
 <leader> + I # prefix is <leader key> which is C-b
