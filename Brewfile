@@ -8,6 +8,7 @@ tap "koekeishiya/formulae"
 tap "wix/brew"
 tap "jesseduffield/lazygit"
 tap "jesseduffield/lazydocker"
+tap "espanso/espanso"
 
 # Global configuration for casks
 cask_args appdir: "/Applications"
@@ -26,6 +27,7 @@ brew "lazydocker"
 
 # UI Tools for software development
 
+cask "espanso"
 cask "docker"
 cask "pgadmin4"
 cask "postman"

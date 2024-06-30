@@ -78,6 +78,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "coreutils" # GNU File, Shell, and Text utilities
 "diffutils" # File comparison utilities
 "direnv" # Environment switcher for the shell
+"espanso" # Expands text shortcuts to full template
 "eza" # A better ls and tree
 "fd" # A simple, fast and user-friendly alternative to 'find'
 "ffmpeg" # A complete, cross-platform solution to record, convert and stream audio and video
