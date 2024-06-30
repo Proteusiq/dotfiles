@@ -1,10 +1,7 @@
-[default_session]
-startup_script = "nvim -c ':Telescope find_files'"
-
 [[session]]
 name = "Downloads 📥"
 path = "~/Downloads"
-startup_command = "ls"
+startup_command = "yazi"
 
 [[session]]
 name = "tmux config"
