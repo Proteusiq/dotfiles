@@ -8,7 +8,6 @@ echo -e "\n🐌 The World Changed! Beginning MacOS setup...\n"
 
 # Ask for user inputs at the beginning
 read -r -p "  Would you like to set macOS preferences now? (y/N): " macos_preferences_confirm
-read -r -p "🪐 Do you want to proceed with the Jupyter Lab setup? (y/N): " jupyter_confirm
 
 ZSHHOME="$HOME/dotfiles/zsh"
 
@@ -95,41 +94,37 @@ configure_python() {
 
 # Function to setup Jupyter Lab environment
 setup_jupyter_lab() {
-    if [[ "$jupyter_confirm" =~ ^[yY](es)?$ ]]; then
-        echo "🪐 Setting up Jupyter Lab environment in Codes/lab..."
+    echo "🪐 Setting up Jupyter Lab environment in Codes/lab..."
 
-        mkdir -p "$HOME/Codes/lab"
-        cd "$HOME/Codes/lab"
+    mkdir -p "$HOME/Codes/lab"
+    cd "$HOME/Codes/lab"
 
-        # Check if virtual environment directory exists
-        if [ ! -d ".venv" ]; then
-            echo "🪐 Creating virtual environment..."
-            uv venv .venv
-        fi
-
-        # Activate the virtual environment
-        source .venv/bin/activate
-
-        # Check if Jupyter Lab is installed
-        if ! pip freeze | grep jupyterlab &>/dev/null; then
-            echo "🪐 Installing Jupyter Lab..."
-            uv pip install jupyterlab jupyterlab-dash
-        else
-            echo "🪐 Jupyter Lab is already installed. Upgrading..."
-            uv pip install --upgrade jupyterlab jupyterlab-dash
-        fi
-
-        # Deactivate the virtual environment
-        deactivate
-
-        echo "🪐 Jupyter Lab setup complete! 🚀"
-        echo "🪐 Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
-
-        # back to dotfiles
-        cd - || exit
-    else
-        echo "🪐  Skipping Jupyter Lab setup."
+    # Check if virtual environment directory exists
+    if [ ! -d ".venv" ]; then
+        echo "🪐 Creating virtual environment..."
+        uv venv .venv
     fi
+
+    # Activate the virtual environment
+    source .venv/bin/activate
+
+    # Check if Jupyter Lab is installed
+    if ! pip freeze | grep jupyterlab &>/dev/null; then
+        echo "🪐 Installing Jupyter Lab..."
+        uv pip install jupyterlab jupyterlab-dash
+    else
+        echo "🪐 Jupyter Lab is already installed. Upgrading..."
+        uv pip install --upgrade jupyterlab jupyterlab-dash
+    fi
+
+    # Deactivate the virtual environment
+    deactivate
+
+    echo "🪐 Jupyter Lab setup complete! 🚀"
+    echo "🪐 Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
+
+    # Back to the original directory
+    cd - || exit
 }
 
 # Function to install vim-plug for Neovim
