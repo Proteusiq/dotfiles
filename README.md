@@ -195,6 +195,10 @@ See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s set
   ### Short🐈
   Ctrl + f
 
+  ### Sesh Tmux
+  raycast plugins sesh + sesh connect on terminal rocks
+  alias fz for `sesh connect $(sesh list | fzf)`
+
   ### Using [tmux](https://tmuxcheatsheet.com/)
 ```sh
 # installl plugins

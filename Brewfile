@@ -7,6 +7,7 @@ tap "homebrew/core"
 tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit"
+tap "joshmedeski/sesh"
 tap "koekeishiya/formulae"
 tap "wix/brew"
 
@@ -158,7 +159,7 @@ brew "koekeishiya/formulae/yabai" # A tiling window manager for macOS
 brew "applesimutils"
 cask "aldente"
 brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
-
+brew "joshmedeski/sesh/sesh" # session manager for tmux
 
 # Initialization for yabai and skhd (commented out for manual execution)
 # yabai --install-service

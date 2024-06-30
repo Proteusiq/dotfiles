@@ -8,10 +8,10 @@
         "revision": "5372559758cc6fb81024349431b6baad7ffd1bda"
       },
       "homebrew/cask": {
-        "revision": "6d40373ef8c4030f44caf44b31e748d99dce25a3"
+        "revision": "e691f61ce7bbf33477c1879066e7e8bc11d77753"
       },
       "homebrew/core": {
-        "revision": "b254c9f8b8dd578afece13915c0b4adab7930f35"
+        "revision": "221d8668ff50da1f7da669e0cf0211e9adce7c5f"
       },
       "homebrew/services": {
         "revision": "7f7ddaf729993e4f2bf676eae89b1e61e5527774"
@@ -30,6 +30,9 @@
       },
       "espanso/espanso": {
         "revision": "4afd8c3434aff7c7ccaa921189be11495ee67fc0"
+      },
+      "joshmedeski/sesh": {
+        "revision": "44d6064dc8abc29ff9fa63b6b5f5275037a8c930"
       }
     },
     "brew": {
@@ -2856,6 +2859,10 @@
             }
           }
         }
+      },
+      "joshmedeski/sesh/sesh": {
+        "version": "1.2.0",
+        "bottle": false
       }
     },
     "cask": {
