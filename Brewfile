@@ -1,14 +1,14 @@
 # Taps (package repositories)
-tap "homebrew/cask-fonts"
+tap "espanso/espanso"
 tap "homebrew/bundle"
 tap "homebrew/cask"
+tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "homebrew/services"
+tap "jesseduffield/lazydocker"
+tap "jesseduffield/lazygit"
 tap "koekeishiya/formulae"
 tap "wix/brew"
-tap "jesseduffield/lazygit"
-tap "jesseduffield/lazydocker"
-tap "espanso/espanso"
 
 # Global configuration for casks
 cask_args appdir: "/Applications"
@@ -27,7 +27,6 @@ brew "lazydocker"
 
 # UI Tools for software development
 
-cask "espanso"
 cask "docker"
 cask "pgadmin4"
 cask "postman"
@@ -37,8 +36,8 @@ cask "visual-studio-code"
 # Enhancements and utilities for better terminal experience
 brew "ack"
 brew "bat"
-brew "bpytop"
 brew "binutils"
+brew "bpytop"
 brew "coreutils"
 brew "diffutils"
 brew "direnv"
@@ -69,21 +68,21 @@ brew "thefuck"
 brew "tldr"
 brew "unar" # opens archieve yazi requirement
 brew "wget"
+brew "wget"
 brew "yarn"
+brew "yarn"
+brew "yazi"
 brew "zlib"
+brew "zoxide"
 brew "zplug"
 brew "zsh"
-brew "zoxide"
-brew "wget"
-brew "yazi"
-brew "yarn"
 
 
 # Terminal Editors and Emulator
-brew "vim"
 brew "neovim"
-brew "tmux"
 brew "starship"
+brew "tmux"
+brew "vim"
 cask "alacritty"
 
 
@@ -110,14 +109,16 @@ brew "gum"
 
 # Productivity Applications
 # Applications to enhance productivity
+
 cask "1password"
 cask "alt-tab"
+cask "chatgpt"
 cask "cleanshot"
+cask "espanso"
 cask "hiddenbar"
 cask "obsidian"
 cask "raycast"
-cask "chatgpt"
-
+cask "shortcat" # Vimium C for Applications. Path to Mouseless world
 
 # LLM Development
 # brew "llm" # Running LLM as CLI -> installed using rye tools install
@@ -136,16 +137,15 @@ cask "syncthing"
 cask "the-unarchiver"
 cask "transmission"
 
-
 # Fonts
 # Font installations for design and development
-cask "font-symbols-only-nerd-font" # yazi requirement
 cask "font-hack"
 cask "font-hack-nerd-font"
+cask "font-symbols-only-nerd-font" # yazi requirement
 
 # Browsers
-cask "google-chrome"
 cask "arc"
+cask "google-chrome"
 
 # Window Management
 # Tools for managing application windows
@@ -155,9 +155,9 @@ brew "koekeishiya/formulae/yabai" # A tiling window manager for macOS
 
 # Misc Tools
 # Miscellaneous tools and utilities
-brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
 brew "applesimutils"
 cask "aldente"
+brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
 
 
 # Initialization for yabai and skhd (commented out for manual execution)

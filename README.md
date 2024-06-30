@@ -116,6 +116,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "rust" # Safe, concurrent, practical language
 "rye" # Python's Cargo
 "screen" # GNU screen, terminal multiplexer
+"shotcat" # Vimium C for Apps: Path to Mouseless World
 "starship" # Cross-shell prompt for astronauts
 "stow" # Manage installation of multiple softwares in the same directory structure
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently

@@ -8,10 +8,10 @@
         "revision": "5372559758cc6fb81024349431b6baad7ffd1bda"
       },
       "homebrew/cask": {
-        "revision": "9e57a754e68851fa640f88536f86d97f7eca2b0d"
+        "revision": "6d40373ef8c4030f44caf44b31e748d99dce25a3"
       },
       "homebrew/core": {
-        "revision": "8d75409f03ffc1bad683fdbdd4dce235239e2d82"
+        "revision": "b254c9f8b8dd578afece13915c0b4adab7930f35"
       },
       "homebrew/services": {
         "revision": "7f7ddaf729993e4f2bf676eae89b1e61e5527774"
@@ -3079,6 +3079,15 @@
         "version": "1.27,57",
         "options": {
           "full_name": "aldente",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "shortcat": {
+        "version": "0.11.4",
+        "options": {
+          "full_name": "shortcat",
           "args": {
             "appdir": "/Applications"
           }
