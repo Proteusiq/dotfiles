@@ -467,5 +467,7 @@ alias iswitch='tmux choose-session' # show sessions
 alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
 
 alias f="thefuck"
-alias fz="sesh connect $(sesh list | fzf)"
+alias fz="sesh connect \"$(
+    sesh list -i | gum filter --limit 1 --placeholder 'Pick a sesh' --height 50 --prompt='⚡'
+)\""
 alias alias_help='$HOME/dotfiles/zsh/.alias_help.sh'

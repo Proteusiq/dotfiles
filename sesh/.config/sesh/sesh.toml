@@ -4,7 +4,7 @@ startup_script = "nvim -c ':Telescope find_files'"
 [[session]]
 name = "Downloads 📥"
 path = "~/Downloads"
-startup_command = "yazi"
+startup_command = "ls"
 
 [[session]]
 name = "tmux config"
