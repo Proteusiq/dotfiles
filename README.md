@@ -197,9 +197,10 @@ See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s set
 
   ### Sesh Tmux
   raycast plugins sesh + sesh connect on terminal rocks
-  alias fz for `sesh connect $(sesh list | fzf)`
+  <leader> + k
 
-  ### Using [tmux](https://tmuxcheatsheet.com/)
+
+ ### Using [tmux](https://tmuxcheatsheet.com/)
 ```sh
 # installl plugins
 <leader> + I # prefix is <leader key> which is C-b
