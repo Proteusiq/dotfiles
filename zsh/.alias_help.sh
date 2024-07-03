@@ -219,7 +219,8 @@ function show_functions() {
         "rename-branch" "rename git branch" "Rename a git branch and update it" \
         "git" "smart git clone" "Clone a repository and change into it" \
         "yy" "yazi" "Open yazi with a temporary file for cwd" \
-        "activate_venv" "activate Python virtual environment" "Activate virtual environment in current or parent directory" \
+        "activate" "activate Python virtual environment" "Activate virtual environment in current or parent directory" \
+        "loadenv" "load .env or -f dotenv file to activate" "Export .env to global PATH" \
         "clean_pycache" "remove all __pycache__ directories" "Clean Python cache files"
 }
 

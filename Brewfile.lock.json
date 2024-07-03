@@ -5,16 +5,16 @@
         "revision": "0ed20f35d21ebc3f4f829689b101078718ad5ce1"
       },
       "homebrew/bundle": {
-        "revision": "5372559758cc6fb81024349431b6baad7ffd1bda"
+        "revision": "18d741fa58d82f7ebc4b46d3a4e4d81ba4e9d9ed"
       },
       "homebrew/cask": {
-        "revision": "6d1c962a2edf477b3ff171f513386a1da9019ba4"
+        "revision": "0e26c70cc217ab946003cc0db5a98bf5ae43d1f5"
       },
       "homebrew/core": {
-        "revision": "221d8668ff50da1f7da669e0cf0211e9adce7c5f"
+        "revision": "248c77b04fadc910979a5680f2adb5e2a2c61bb7"
       },
       "homebrew/services": {
-        "revision": "7f7ddaf729993e4f2bf676eae89b1e61e5527774"
+        "revision": "8f56f39ac5ced2efc0d6cda4d433b9f6663e28e8"
       },
       "koekeishiya/formulae": {
         "revision": "757b5c222bce502d4292dfbb9648eb749689d704"

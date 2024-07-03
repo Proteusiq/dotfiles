@@ -348,8 +348,11 @@ Vim keybindings:
 [b ]b  # option/alt 8 and 9 for [] to navigate buffers(tabs)  
 
 # command mode
-: # run sh commands: use case sort data, select and execute : <','>!sort or structure JSON <','> !jq 
-: + Shift + 1 # filter mode: echo "OPENAI_API_KEY=sk-****** >> .env"
+: # run sh commands: use case sort data, select and execute : <','>!sort or structure JSON <','> !jq
+# Visual mode select: 
+#   '<,'>s/^./# &/ -> replace anything with '#' to all non-blank lines"
+#   '<,'>s/^\([^#]\)/# &/ -> replace anything but lines  starting with '#' with # "
+: + !(Shift + 1) # filter mode: echo "OPENAI_API_KEY=sk-****** >> .env"
 ```
 
 </details>

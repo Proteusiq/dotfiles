@@ -432,6 +432,32 @@ activate_venv() {
 
 alias activate=activate_venv
 
+loadenv() {
+    # Default .env file
+    ENV_FILE=".env"
+
+    # Parse optional arguments
+    while getopts f: flag; do
+        case "${flag}" in
+        f) ENV_FILE=${OPTARG} ;;
+        esac
+    done
+
+    # Check if the specified .env file exists
+    if [ -f "$ENV_FILE" ]; then
+        # Read the .env file line by line
+        while IFS= read -r line; do
+            # Ignore lines starting with # and empty lines
+            if [[ ! "$line" =~ ^#.* ]] && [[ -n "$line" ]]; then
+                # Export each line as an environment variable
+                export $line
+            fi
+        done <"$ENV_FILE"
+    else
+        echo "$ENV_FILE file not found!"
+    fi
+}
+
 # remove all __pycache__ directories under a specified path
 clean_pycache() {
     local target_dir=$1

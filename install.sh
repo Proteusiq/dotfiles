@@ -173,6 +173,7 @@ setup_utils() {
     # Productive laziness
     rye tools list | grep -q "^llm" || rye tools install llm
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
+    llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
 }
 
 # Function to create Python virtual environments
