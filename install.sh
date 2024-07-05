@@ -139,8 +139,8 @@ install_vim_plug() {
     rm -rf ~/.config/nvim/.git
 
     # Remove default and use mine via link
-    rm -rf ~/.config/nvim/lua
-    ln -s ~/.config/nvim/nvim/lua ~/.config/nvim/lua
+    rm -rf ~/.config/nvim
+    # ln -s ~/.config/nvim/nvim/lua ~/.config/nvim/lua
 }
 
 # Function to install tmux plugin manager
