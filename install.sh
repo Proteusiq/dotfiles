@@ -127,22 +127,6 @@ setup_jupyter_lab() {
     cd - || exit
 }
 
-# Function to install vim-plug for Neovim
-install_vim_plug() {
-    echo "👽  Installing vim-plug for Neovim..."
-    curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
-        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-    # Set up LazyVim starter template
-    rm -rf ~/.config/nvim
-    git clone https://github.com/LazyVim/starter ~/.config/nvim
-    rm -rf ~/.config/nvim/.git
-
-    # Remove default and use mine via link
-    rm -rf ~/.config/nvim
-    # ln -s ~/.config/nvim/nvim/lua ~/.config/nvim/lua
-}
-
 # Function to install tmux plugin manager
 install_tmux_plugins() {
     local folder="$HOME/.tmux/plugins/tpm"
@@ -215,7 +199,6 @@ configure_node
 configure_python
 setup_jupyter_lab
 create_virtualenvs
-install_vim_plug
 install_tmux_plugins
 install_yazi_themes
 setup_utils
