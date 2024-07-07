@@ -3,7 +3,7 @@ return {
   name = "render-markdown",
   dependencies = {
     "nvim-treesitter/nvim-treesitter", -- Mandatory
-    "nvim-tree/nvim-web-devicons", -- Optional but recommended
+    "nvim-tree/nvim-web-devicons",
   },
   config = function()
     require("render-markdown").setup({})
