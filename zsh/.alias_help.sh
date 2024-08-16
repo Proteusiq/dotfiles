@@ -220,7 +220,8 @@ function show_functions() {
         "git" "smart git clone" "Clone a repository and change into it" \
         "yy" "yazi" "Open yazi with a temporary file for cwd" \
         "activate" "activate Python virtual environment" "Activate virtual environment in current or parent directory" \
-        "loadenv" "load .env or -f dotenv file to activate" "Export .env to global PATH" \
+        "setenv" "load .env or -f dotenv file to activate" "Export .env to global PATH" \
+        "unsetenv" "unload .env or -f dotenv file to activate" "Export .env to global PATH" \
         "clean_pycache" "remove all __pycache__ directories" "Clean Python cache files"
 }
 
