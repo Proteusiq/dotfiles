@@ -432,29 +432,19 @@ activate_venv() {
 
 alias activate=activate_venv
 
-loadenv() {
-    # Default .env file
-    ENV_FILE=".env"
-
-    # Parse optional arguments
-    while getopts f: flag; do
-        case "${flag}" in
-        f) ENV_FILE=${OPTARG} ;;
-        esac
-    done
-
-    # Check if the specified .env file exists
-    if [ -f "$ENV_FILE" ]; then
-        # Read the .env file line by line
-        while IFS= read -r line; do
-            # Ignore lines starting with # and empty lines
-            if [[ ! "$line" =~ ^#.* ]] && [[ -n "$line" ]]; then
-                # Export each line as an environment variable
-                export $line
-            fi
-        done <"$ENV_FILE"
+setenv() {
+    if [ -f .env ]; then
+        export $(grep -v '^#' .env | xargs -0)
     else
-        echo "$ENV_FILE file not found!"
+        echo ".env file not found in the current directory."
+    fi
+}
+
+unsetenv() {
+    if [ -f .env ]; then
+        unset $(grep -v '^#' .env | sed 's/=.*//' | xargs -0)
+    else
+        echo ".env file not found in the current directory."
     fi
 }
 
