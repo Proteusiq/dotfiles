@@ -68,7 +68,6 @@ The install script will also setup Python, Node and Bun versions/environments:
 "applesimutils" # Apple Simulator Utilities
 "arc" # Browser for the future - 1Password, Vimium C extentions
 "alttab" # Better preview app switcher 
-"autoenv" # Automatically source environment variable
 "azure-cli" # Microsoft Azure Command Line Interface
 "bat" # A cat clone with syntax highlighting and Git integration
 "bpytop" # Resource monitor that shows usage and stats
@@ -93,6 +92,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "gnu-which" # GNU implementation of the 'which' utility to find path of executables
 "gnupg" # GNU Pretty Good Privacy (PGP) package
 "go" # The Go programming language
+"graphviz" # Visualizing graphs
 "grep" # GNU grep, egrep and fgrep
 "gum" # Glamorous shell scripts
 "gzip" # GNU compression utility

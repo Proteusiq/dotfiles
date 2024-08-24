@@ -16,7 +16,6 @@ cask_args appdir: "/Applications"
 
 # Development Tools
 # CLI Tools for software development
-brew "autoenv"
 brew "azure-cli"
 brew "difftastic"
 brew "git"
@@ -54,6 +53,7 @@ brew "gnu-tar"
 brew "gnu-time"
 brew "gnu-which"
 brew "gnupg"
+brew "graphviz" # use by PyMC vizuation graph
 brew "grep"
 brew "gzip"
 brew "hyperfine"
