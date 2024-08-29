@@ -122,6 +122,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently
 "thefuck" # Autocorrection with f as alias
 "tldr" # Too long I did nor read man
+"toilet" # ascii art fonting fun e.g. toilet -w 200 -f standard
 "tmux" # Terminal multiplexer
 "uv" # Better drop in pip replacer alias pip='uv pip'
 "vim" # Highly configurable text editor built to enable efficient text editing

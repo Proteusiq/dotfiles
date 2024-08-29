@@ -67,6 +67,7 @@ brew "screen"
 brew "stow"
 brew "thefuck"
 brew "tldr"
+brew "toilet" # ascii art fonts
 brew "unar" # opens archieve yazi requirement
 brew "wget"
 brew "wget"
