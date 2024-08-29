@@ -45,6 +45,7 @@ brew "eza"
 brew "fd"
 brew "ffmpeg"
 brew "ffmpegthumbnailer" #  video thumbnailer requirement yazi
+brew "figlet" # ascii fonts similar to toilet but better fonts
 brew "findutils"
 brew "fzf"
 brew "gawk"
