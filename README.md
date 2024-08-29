@@ -81,6 +81,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "eza" # A better ls and tree
 "fd" # A simple, fast and user-friendly alternative to 'find'
 "ffmpeg" # A complete, cross-platform solution to record, convert and stream audio and video
+"figlet" # ascii fonts similar to toilet but with better fonts
 "findutils" # GNU `find`, `locate`, `updatedb`, and `xargs` commands
 "fzf" # Command-line fuzzy finder
 "gawk" # GNU awk utility
@@ -122,7 +123,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "terraform" # Tool for building, changing, and versioning infrastructure safely and efficiently
 "thefuck" # Autocorrection with f as alias
 "tldr" # Too long I did nor read man
-"toilet" # ascii art fonting fun e.g. toilet -w 200 -f standard
+"toilet" # ascii art fonting similar to figlet but with filter and boarder e.g. toilet -F border -f future Welcome Prayson
 "tmux" # Terminal multiplexer
 "uv" # Better drop in pip replacer alias pip='uv pip'
 "vim" # Highly configurable text editor built to enable efficient text editing
