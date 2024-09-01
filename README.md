@@ -339,6 +339,7 @@ Vim keybindings:
 |----------|------------------------------------------|
 | `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode |
 
+Grammar of Vim: [Learn Vim the Smarter Way](https://learnvim.irian.to)
 
 
 ## Using lazy(neo)vim
