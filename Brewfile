@@ -18,6 +18,7 @@ cask_args appdir: "/Applications"
 # CLI Tools for software development
 brew "azure-cli"
 brew "difftastic"
+brew "gh" # github cli use by plenary
 brew "git"
 brew "git-lfs"
 brew "terraform"
@@ -30,7 +31,6 @@ brew "lazydocker"
 cask "docker"
 cask "pgadmin4"
 cask "postman"
-cask "visual-studio-code"
 
 # Command Line Utilities
 # Enhancements and utilities for better terminal experience

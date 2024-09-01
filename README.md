@@ -85,6 +85,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "findutils" # GNU `find`, `locate`, `updatedb`, and `xargs` commands
 "fzf" # Command-line fuzzy finder
 "gawk" # GNU awk utility
+"gh" # GitHub cli used by plenary
 "git" # Distributed revision control system
 "git-lfs" # Git Large Files Storage
 "gnu-sed" # GNU implementation of the famous stream editor
