@@ -111,9 +111,6 @@ export PATH=$PATH:$GOROOT/bin:$GOBIN
 export PNPM_HOME=$HOME/Library/pnpm
 export PATH=$PNPM_HOME:$PATH
 
-# direnv
-eval "$(direnv hook zsh)"
-
 # zoxide
 eval "$(zoxide init zsh)"
 
