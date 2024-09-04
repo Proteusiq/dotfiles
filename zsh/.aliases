@@ -466,7 +466,7 @@ clean_pycache() {
 alias clean=clean_pycache
 
 # Alias to start Jupyter Lab
-alias jupyterit='source $HOME/Codes/lab/.venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &'
+alias jupyterit='source $HOME/Codes/lab/.venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &;activate'
 
 # Alias to kill Jupyter Lab
 alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && deactivate && rm /tmp/lab.log'
@@ -477,8 +477,11 @@ alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "echo \"exec
 
 # tmux
 alias iexit='tmux kill-session -t $(tmux display-message -p '#S')' # session exit
+alias ix=iexit
 
-alias ikill='tmux kill-server'      # tmux server exit: kill all sessions
+alias ikill='tmux kill-server' # tmux server exit: kill all sessions
+alias ik=ikill
+
 alias iswitch='tmux choose-session' # show sessions
 alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
 
