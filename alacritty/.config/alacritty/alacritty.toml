@@ -631,3 +631,7 @@ decorations = "buttonless"
 [window.padding]
 x = 20
 y = 20
+
+[window.dimensions]
+columns = 200
+lines = 80
