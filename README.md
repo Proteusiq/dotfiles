@@ -52,7 +52,6 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
     -   [`.aliases`](./zsh/.aliases)
     -   [`.exports`](./zsh/.exports)
 -   [`Brewfile`](./Brewfile) - contains all homebrew packages, casks, and mac appstore apps
--   [VSCode settings](./vscode/settings.json)
 
 The install script will also setup Python, Node and Bun versions/environments:
 
