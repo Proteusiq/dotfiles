@@ -2,7 +2,7 @@
   path = ~/.gitconfig.local
 [core]
   editor = $EDITOR
-  excludesfile = ~/.gitignore
+	excludesfile = ~/.gitignore
   ignorecase = false
   abbrev = 12
 [alias]
@@ -20,7 +20,7 @@
   algorithm = patience
   colorMoved = zebra
 [push]
-  default = current
+	default = current
 [commit]
   verbose = true
   # template = ~/.gitmessage
