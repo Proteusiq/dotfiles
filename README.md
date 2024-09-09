@@ -13,7 +13,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 -   File management: [yazi](https://github.com/sxyazi/yazi)
 -   Hotkeys: [skhd](https://github.com/koekeishiya/skhd)
 -   Vim: [neovim](https://neovim.io/) with [lazyvim](https://github.com/LazyVim/LazyVim) destro
--   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [eza](https://github.com/eza-community/eza)
+-   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [eza](https://github.com/eza-community/eza), [llm](https://github.com/llm-cli/llm), [aider](https://github.com/paul-gauthier/aider)
 -   Languages: Python, Rust, Go, JavaScript, Lua
 
 ## Installation
@@ -54,7 +54,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 
 The install script will also setup Python, Node and Bun versions/environments:
 
--   [rye](https://github.com/astral-sh/rye) sets the global Python version to latest stable version
+-   [rye](https://github.com/astral-sh/rye) sets the global Python version to latest stable version and installs additional tools like `llm` and `aider`
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
 -   [bun](https://bun.sh/)  all-in-one toolkit for JavaScript and TypeScript apps
 
@@ -103,7 +103,6 @@ The install script will also setup Python, Node and Bun versions/environments:
 "jq" # Lightweight and flexible command-line JSON processor
 "lazygit" # The lazier way to manage everything git
 "lazydocker" # The lazier way to manage everything docker
-"llm" # Running LLM as CLI
 "moreutils" # Collection of tools that nobody wrote when UNIX was young
 "ncdu" # NCurses Disk Usage
 "neovim" # Ambitious Vim-fork focused on extensibility and agility
