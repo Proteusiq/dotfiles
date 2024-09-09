@@ -41,7 +41,6 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
     -   [skhd](./skhd)
     -   [starship](./starship)
     -   [tmux](./tmux)
-    -   [VSCode](./vscode)
     -   [yazi](./yazi/)
     -   [yabai](./yabai)
 -   Shell environment configs:
