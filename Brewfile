@@ -124,7 +124,6 @@ cask "raycast"
 cask "shortcat" # Vimium C for Applications. Path to Mouseless world
 
 # LLM Development
-# brew "llm" # Running LLM as CLI -> installed using rye tools install
 brew "ollama" # Running Large Language Model Locally
 brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
