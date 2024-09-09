@@ -155,10 +155,17 @@ setup_utils() {
     git lfs install
 
     # Productive laziness
+    # LLM
     rye tools list | grep -q "^llm" && rye tools uninstall llm
     rye tools install llm
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
     llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
+
+    # Aider
+
+    rye tools list | grep -q "^aider" && rye tools uninstall aider-chat
+    rye tools install aider-chat
+
 }
 
 # Function to create Python virtual environments

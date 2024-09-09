@@ -35,3 +35,6 @@ Temporary Items
 # Files to track system changes on UI and add changes to macos/..macos
 before
 after
+
+.env
+.aider*
