@@ -52,3 +52,11 @@ bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
 
 
+# Function to add, comment, and push changes
+function git_add_comment_push() {
+    git add .
+    echo "Enter commit message: "
+    read commit_message
+    git commit -m "$commit_message"
+    git push
+}
