@@ -127,6 +127,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "tldr" # Too long I did nor read man
 "toilet" # ascii art fonting similar to figlet but with filter and boarder e.g. toilet -F border -f future Welcome Prayson
 "tmux" # Terminal multiplexer
+"universal-ctags" # Creates a compressed version of a code bases used by Aider
 "uv" # Better drop in pip replacer alias pip='uv pip'
 "vim" # Highly configurable text editor built to enable efficient text editing
 "watchman" # Watch files and take action when they change
