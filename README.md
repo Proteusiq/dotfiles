@@ -284,6 +284,8 @@ Vim keybindings:
 | `3u`     | Undo last 3 changes                             |
 | `Ctrl-r` | Redo                                            |
 
+Better grammar `diw` or `daw` - delete inside/arround word
+
 ### Navigation
 | **Key**  | **Explanation**                                  |
 |----------|--------------------------------------------------|
