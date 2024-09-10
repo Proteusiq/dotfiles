@@ -197,12 +197,12 @@ See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s set
 
   ### Short🐈
   Ctrl + f
-
+---
   ### Sesh Tmux
   raycast plugins sesh + sesh connect on terminal rocks
   <leader> + k
 
-
+---
  ### Using [tmux](https://tmuxcheatsheet.com/)
 ```sh
 # installl plugins
@@ -230,7 +230,7 @@ ikill # alias to kill-server
 iswitch # alias to switch-session
 ipop # alias for popup window
 ```
-
+---
 ### Using fzf
 
 ```sh
@@ -250,7 +250,7 @@ kill -9 ** # TAB (Next TAB will multiselect and Shift+Tab to deselect)
 # C-r 
 docker # + C-r filter search to 'docker' history
 ```
-
+---
 ## Oh Vim
 
 ### Vim Grammar: Verb + Noun
@@ -402,7 +402,7 @@ Better grammar `diw` or `daw` - delete inside/arround word
 |----------|------------------------------------------|
 | `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode |
 
-
+---
 ## Using lazy(neo)vim
 
 ```sh
