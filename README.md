@@ -253,8 +253,69 @@ docker # + C-r filter search to 'docker' history
 
 ## Oh Vim
 
+# Vim Grammar: Verb + Noun
+
+In Vim, editing operations follow a grammar-like structure: **Verb + Noun**. The verb represents an action, while the noun represents the text or movement the action operates on. This allows for flexible and powerful editing.
+See: Learn Vim the Smarter Way](https://learnvim.irian.to)
+
+## Verbs
+
+| Verb | Action                                      |
+|------|---------------------------------------------|
+| `d`  | delete                                      |
+| `c`  | change (delete + enter insert mode)         |
+| `y`  | yank (copy)                                 |
+
+## Nouns (Motions)
+
+| Noun   | Description                        |
+|--------|------------------------------------|
+| `w`    | word (forward by word)             |
+| `b`    | back (backward by word)            |
+| `3j`   | down 3 lines                       |
+| `G`    | down to bottom                     |
+| `gg`   | up to top                          |
+| `s`    | sentence                           |
+| `p`    | paragraph                          |
+
+## Nouns (Text Objects)
+
+| Noun  | Description                        |
+|-------|------------------------------------|
+| `iw`  | inner word                         |
+| `ib`  | inner bracket (i{ or i() )         |
+| `i"`  | inner quotes                       |
+| `is`  | inner sentence                     |
+| `as`  | a sentence                         |
+
+## Nouns (Parameterizers)
+
+| Noun   | Description                               |
+|--------|-------------------------------------------|
+| `f`, `F` | find the next character                  |
+| `t`, `T` | find until next character                |
+| `/`      | next match (word/pattern)                |
+
+## Examples: Verb + Noun (Preferably Text Objects for repeatability with dot `.`)
+
+| Command   | Action                                   |
+|-----------|------------------------------------------|
+| `diw`     | delete inner word                        |
+| `yib`     | yank (copy) inner bracket                |
+| `cfK`     | change to next occurrence of character K |
+
+## Prefix: g (Super Prefix to Extend Commands)
+
+| Command   | Action                                   |
+|-----------|------------------------------------------|
+| `gUaw`    | uppercase a word                         |
+
+---
+
+This structure allows you to combine commands fluidly, increasing efficiency in text editing. By mastering verbs, nouns, and their combinations, you can perform powerful editing operations with minimal keystrokes.
+
                                                      
-Vim keybindings:
+More Vim keybindings:
 
 ### Modes
 | **Key**  | **Explanation**                          |
@@ -341,8 +402,6 @@ Better grammar `diw` or `daw` - delete inside/arround word
 | **Key**  | **Explanation**                          |
 |----------|------------------------------------------|
 | `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode |
-
-Grammar of Vim: [Learn Vim the Smarter Way](https://learnvim.irian.to)
 
 
 ## Using lazy(neo)vim
