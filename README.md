@@ -253,10 +253,10 @@ docker # + C-r filter search to 'docker' history
 
 ## Oh Vim
 
-# Vim Grammar: Verb + Noun
+### Vim Grammar: Verb + Noun
 
 In Vim, editing operations follow a grammar-like structure: **Verb + Noun**. The verb represents an action, while the noun represents the text or movement the action operates on. This allows for flexible and powerful editing.
-See: Learn Vim the Smarter Way](https://learnvim.irian.to)
+See: Learn Vim the Smarter Way](https://learnvim.irian.to). Note: Visual mode **Noun<selected> + Verb***.
 
 ## Verbs
 
@@ -313,7 +313,6 @@ See: Learn Vim the Smarter Way](https://learnvim.irian.to)
 ---
 
 This structure allows you to combine commands fluidly, increasing efficiency in text editing. By mastering verbs, nouns, and their combinations, you can perform powerful editing operations with minimal keystrokes.
-
                                                      
 More Vim keybindings:
 
