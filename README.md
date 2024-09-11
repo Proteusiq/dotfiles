@@ -257,6 +257,7 @@ Allowing dot `.` <repeatability> of action.
 |-----------|------------------------------------------|
 | `gUaw`    | uppercase a word                         |
 
+:g/^\s*$/d   => search and remove all empty lines
 ---
 
 This structure allows you to combine commands fluidly, increasing efficiency in text editing. By mastering verbs, nouns, and their combinations, you can perform powerful editing operations with minimal keystrokes.
@@ -417,7 +418,7 @@ docker # + C-r filter search to 'docker' history
 ```
 ---
 
-## Using lazy(neo)vim
+## Using lazyVim
 
 ```sh
 <leader> # Space
@@ -431,6 +432,24 @@ docker # + C-r filter search to 'docker' history
 #   '<,'>s/^./# &/ -> replace anything with '#' to all non-blank lines"
 #   '<,'>s/^\([^#]\)/# &/ -> replace anything but lines  starting with '#' with # "
 : + !(Shift + 1) # filter mode: echo "OPENAI_API_KEY=sk-****** >> .env"
+
+# Telescope:
+:Telescope keymap
+:Telescope lsp_definition `gd`
+:Telescope live_grep
+:Telescope lsp_reference `gr`
+:Telescope git_branches
+:Telescopes buffers
+
+# More
+
+Switch words
+:s/\(hello\)\s\(there\)/\2 \1/
+
+= => indent =G indent all to bottom
+:help or :h v_d(help of visual mode d) (ctrl + wc) window close
+
+
 ```
 
 </details>
