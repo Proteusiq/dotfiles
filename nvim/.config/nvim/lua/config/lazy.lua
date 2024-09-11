@@ -16,6 +16,14 @@ vim.opt.rtp:prepend(lazypath)
 
 vim.g.python3_host_prog = "~/.virtualenvs/debugpy/bin/python"
 
+-- Set up autocmd in Lua
+vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
+  pattern = "*",
+  callback = function()
+    vim.cmd("silent! wall")
+  end,
+})
+
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
