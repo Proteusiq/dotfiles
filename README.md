@@ -237,7 +237,7 @@ See: [Learn Vim the Smarter Way](https://learnvim.irian.to). Note: Visual mode *
 | `/`      | next match (word/pattern)                |
 
 ## Examples: Verb + Noun 
-> Preferably Text Objects for repeatability with dot `.`
+>Preferably Text Objects for repeatability with dot `.`
 
 | Command   | Action                                   |
 |-----------|------------------------------------------|
