@@ -165,7 +165,8 @@ Change dotfile remote url to use ssh:
 `git remote set-url origin git@github.com:Proteusiq/dotfiles.git`
 
 ## MacOS settings
-> Steps of updating or changing  `macos/.macos` to fit your preferences
+<details><summary>Steps of updating or changing  `macos/.macos` to fit your preferences</summary>
+
 Example changing Clock to Analog:
 ```sh
 # step 1: generate before change default settings
@@ -189,71 +190,11 @@ defaults write com.apple.menuextra.clock ShowSeconds  -int 0
 ```
 See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s settings for inspiration and examples
 
-### Who You Gonna Call? 👻
-[cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<cli_command>`
+</details>
 
-## Using Tools
-<details><summary>Tips + Tricks</summary>
-
-  ### Short🐈
-  Ctrl + f
----
-  ### Sesh Tmux
-  raycast plugins sesh + sesh connect on terminal rocks
-  <leader> + k
-
----
- ### Using [tmux](https://tmuxcheatsheet.com/)
-```sh
-# installl plugins
-<leader> + I # prefix is <leader key> which is C-b
-
-<leader> + c # create a new session
-<leader> + n # previous session or instead of n, a <NUMBER> to switch to session
-<leader> + "Shift + 2" (") or i to split horizontal
-<leader> + "Shift + 5"  (%) o - to split vertical
-<leader> + Arrows or hjkl # move across panes
-<leader> + : # command mode (:rename-window <NAME> :rename-session <NAME> :kill-session -a #kill all session but this one :kill-session -t <NAME or NUM>, :kill-server # kills all session)
-<leader> + d # dettach session
-tmux ls # list sessions
-<leader> + s # list sessions
-<leader> + , # rename window
-<leader> + & # close window
-
-<leader> + z # min/maximize pane
-<leader> + p (P menu) # => popup terminal (leader + p to close)
-<leader> + O  # => popup sessions (esc to close)
-
-# custom
-iexit # alias to kill-session
-ikill # alias to kill-server
-iswitch # alias to switch-session
-ipop # alias for popup window
-```
----
-### Using fzf
-
-```sh
-# search
-fzf # fzf -q .py$ -e
-# open files/folders with nvim
-nvim # Ctrl + t (C-t)
-nvim ** # + TAB
-
-# open files and folder
-cd ** # + TAB
-
-# commands things with fzf (kill, unalias, unset, export, ssh)
-kill -9 ** # TAB (Next TAB will multiselect and Shift+Tab to deselect)
-
-# looking throw the history
-# C-r 
-docker # + C-r filter search to 'docker' history
-```
----
 ## Oh Vim
-
 ### Vim Grammar: Verb + Noun
+<details><summary>🧘🏾‍♂️ Vim</summary>
 
 In Vim, editing operations follow a grammar-like structure: **Verb + Noun**. The verb represents an action, while the noun represents the text or movement the action operates on. This allows for flexible and powerful editing.
 See: Learn Vim the Smarter Way](https://learnvim.irian.to). Note: Visual mode **Noun<selected> + Verb***.
@@ -301,8 +242,15 @@ See: Learn Vim the Smarter Way](https://learnvim.irian.to). Note: Visual mode **
 | Command   | Action                                   |
 |-----------|------------------------------------------|
 | `diw`     | delete inner word                        |
+| `da"`     | delete contents a(rround) and include `"`|
 | `yib`     | yank (copy) inner bracket                |
 | `cfK`     | change to next occurrence of character K |
+
+Why Text Objects over Motions:
+ 
+`cw` change executes from the current cursor position, while `ciw` execute whole object regardless of the cursor position.
+Allowing dot `.` <repeatability> of action.
+
 
 ## Prefix: g (Super Prefix to Extend Commands)
 
@@ -403,6 +351,73 @@ Better grammar `diw` or `daw` - delete inside/arround word
 | `Ctrl-p` / `Ctrl-n` | Browse written variables or names in edit mode |
 
 ---
+
+</details>
+
+### Who You Gonna Call? 👻
+[cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<cli_command>`
+
+## Using Tools
+<details><summary>Tips + Tricks</summary>
+
+  ### Short🐈
+  Ctrl + f
+---
+
+  ### Sesh Tmux
+  raycast plugins sesh + sesh connect on terminal rocks
+  <leader> + k
+
+---
+ ### Using [tmux](https://tmuxcheatsheet.com/)
+```sh
+# installl plugins
+<leader> + I # prefix is <leader key> which is C-b
+
+<leader> + c # create a new session
+<leader> + n # previous session or instead of n, a <NUMBER> to switch to session
+<leader> + "Shift + 2" (") or i to split horizontal
+<leader> + "Shift + 5"  (%) o - to split vertical
+<leader> + Arrows or hjkl # move across panes
+<leader> + : # command mode (:rename-window <NAME> :rename-session <NAME> :kill-session -a #kill all session but this one :kill-session -t <NAME or NUM>, :kill-server # kills all session)
+<leader> + d # dettach session
+tmux ls # list sessions
+<leader> + s # list sessions
+<leader> + , # rename window
+<leader> + & # close window
+
+<leader> + z # min/maximize pane
+<leader> + p (P menu) # => popup terminal (leader + p to close)
+<leader> + O  # => popup sessions (esc to close)
+
+# custom
+iexit # alias to kill-session
+ikill # alias to kill-server
+iswitch # alias to switch-session
+ipop # alias for popup window
+```
+---
+### Using fzf
+
+```sh
+# search
+fzf # fzf -q .py$ -e
+# open files/folders with nvim
+nvim # Ctrl + t (C-t)
+nvim ** # + TAB
+
+# open files and folder
+cd ** # + TAB
+
+# commands things with fzf (kill, unalias, unset, export, ssh)
+kill -9 ** # TAB (Next TAB will multiselect and Shift+Tab to deselect)
+
+# looking throw the history
+# C-r 
+docker # + C-r filter search to 'docker' history
+```
+---
+
 ## Using lazy(neo)vim
 
 ```sh
