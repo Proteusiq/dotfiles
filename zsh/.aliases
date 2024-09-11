@@ -65,7 +65,7 @@ alias glg="git log --graph"
 alias glo="git log --oneline"
 
 # changelog
-alias changelog="git log --pretty=format:"%h %ad%x09%an%x09%s" --date=short"
+alias changelog='git log --pretty=format:"%h %ad%x09%an%x09%s" --date=short'
 
 # push
 alias gp="git push"
@@ -487,4 +487,18 @@ alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}
 
 alias f=fuck
 
-alias alias_help='$HOME/dotfiles/zsh/.alias_help.sh'
+alias() {
+    if [[ "$1" == "--help" ]]; then
+        shift
+        if [[ -n "$1" ]]; then
+            "$HOME/dotfiles/zsh/.alias_help.sh" "$@"
+        else
+            "$HOME/dotfiles/zsh/.alias_help.sh"
+        fi
+    elif [[ "$1" == "--describe" ]]; then
+        shift
+        "$HOME/dotfiles/zsh/.alias_help.sh" --describe "$@"
+    else
+        command alias "$@"
+    fi
+}

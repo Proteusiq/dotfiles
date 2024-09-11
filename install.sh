@@ -143,6 +143,8 @@ install_yazi_themes() {
     [ -d "$folder" ] || git clone "$url" "$folder"
 }
 
+# Function for additional setups
+setup_utils() {
 
     # Aliases help
     chmod +x "$ZSHHOME/.alias_help.sh"
