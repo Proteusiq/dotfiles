@@ -225,39 +225,42 @@ function show_functions() {
         "clean_pycache" "remove all __pycache__ directories" "Clean Python cache files"
 }
 
-function show_help() {
-    show_git_aliases
-    show_coreutils_aliases
-    show_yarn_aliases
-    show_pnpm_aliases
-    show_shortcuts
-    show_special_aliases
-    show_functions
+function describe_alias() {
+    local alias_name="$1"
+    case "$alias_name" in
+        g) print_alias "g" "git" "Use git" ;;
+        ga) print_alias "ga" "git add" "Add file contents to the index" ;;
+        gb) print_alias "gb" "git branch" "List, create, or delete branches" ;;
+        # Add more cases for each alias as needed
+        *) echo "Alias '$alias_name' not found." ;;
+    esac
 }
 
-case "$1" in
-git)
-    show_git_aliases
-    ;;
-coreutils)
-    show_coreutils_aliases
-    ;;
-yarn)
-    show_yarn_aliases
-    ;;
-pnpm)
-    show_pnpm_aliases
-    ;;
-shortcuts)
-    show_shortcuts
-    ;;
-special)
-    show_special_aliases
-    ;;
-functions)
-    show_functions
-    ;;
-*)
-    show_help
-    ;;
-esac
+function show_help() {
+    echo "Usage: alias_help [category|--describe alias_name]"
+    echo "Categories:"
+    echo "  git        Show Git aliases"
+    echo "  coreutils  Show Coreutils aliases"
+    echo "  yarn       Show Yarn aliases"
+    echo "  pnpm       Show PNPM aliases"
+    echo "  shortcuts  Show Shortcuts"
+    echo "  special    Show Special aliases"
+    echo "  functions  Show Functions"
+    echo "Options:"
+    echo "  --describe alias_name  Describe a specific alias"
+}
+
+if [[ "$1" == "--describe" ]]; then
+    describe_alias "$2"
+else
+    case "$1" in
+        git) show_git_aliases ;;
+        coreutils) show_coreutils_aliases ;;
+        yarn) show_yarn_aliases ;;
+        pnpm) show_pnpm_aliases ;;
+        shortcuts) show_shortcuts ;;
+        special) show_special_aliases ;;
+        functions) show_functions ;;
+        *) show_help ;;
+    esac
+fi
