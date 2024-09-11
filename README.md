@@ -257,8 +257,8 @@ Allowing dot `.` <repeatability> of action.
 | Command   | Action                                   |
 |-----------|------------------------------------------|
 | `gUaw`    | uppercase a word                         |
+| `:g/^\s*$/d` | search and remove all empty lines.    |
 
-:g/^\s*$/d   => search and remove all empty lines
 ---
 
 This structure allows you to combine commands fluidly, increasing efficiency in text editing. By mastering verbs, nouns, and their combinations, you can perform powerful editing operations with minimal keystrokes.
