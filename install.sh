@@ -143,10 +143,6 @@ install_yazi_themes() {
     [ -d "$folder" ] || git clone "$url" "$folder"
 }
 
-# Function for additional setups
-setup_utils() {
-    # Auto source .envs
-    grep -qF "source \$(brew --prefix autoenv)/activate.sh" ~/.zprofile || echo "source \$(brew --prefix autoenv)/activate.sh" >>~/.zprofile
 
     # Aliases help
     chmod +x "$ZSHHOME/.alias_help.sh"
