@@ -16,7 +16,25 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 -   Tools: [tmux](https://github.com/tmux/tmux), [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf), [eza](https://github.com/eza-community/eza), [aider](https://github.com/paul-gauthier/aider)
 -   Languages: Python, Rust, Go, JavaScript, Lua
 
-## Installation
+## Managing Aliases
+
+The dotfiles include a comprehensive set of aliases to streamline your workflow. You can view and manage these aliases using the `alias_help.sh` script. To see a list of available alias categories, run:
+
+```bash
+./zsh/.alias_help.sh
+```
+
+To describe a specific alias, use:
+
+```bash
+./zsh/.alias_help.sh --describe <alias_name>
+```
+
+For example, to see what the alias `g` does, you would run:
+
+```bash
+./zsh/.alias_help.sh --describe g
+```
 
 **Before you get started** make sure you give full disk access permission to your terminal (for writing macos defaults). `System Preferences -> Privacy -> Full Disk Access`.
 
