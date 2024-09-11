@@ -231,7 +231,7 @@ function describe_alias() {
         g) print_alias "g" "git" "Use git" ;;
         ga) print_alias "ga" "git add" "Add file contents to the index" ;;
         gb) print_alias "gb" "git branch" "List, create, or delete branches" ;;
-        # Add more cases for each alias as needed
+        gp) print_alias "gp" "git push" "Update remote refs along with associated objects" ;;
         *) echo "Alias '$alias_name' not found." ;;
     esac
 }
