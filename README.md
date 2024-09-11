@@ -236,7 +236,8 @@ See: [Learn Vim the Smarter Way](https://learnvim.irian.to). Note: Visual mode *
 | `t`, `T` | find until next character                |
 | `/`      | next match (word/pattern)                |
 
-## Examples: Verb + Noun (Preferably Text Objects for repeatability with dot `.`)
+## Examples: Verb + Noun 
+> Preferably Text Objects for repeatability with dot `.`
 
 | Command   | Action                                   |
 |-----------|------------------------------------------|
