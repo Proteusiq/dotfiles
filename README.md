@@ -193,8 +193,7 @@ See [RexYuan](https://github.com/RexYuan/Blemishine/tree/main/preferences)'s set
 </details>
 
 ## Oh Vim
-### Vim Grammar: Verb + Noun
-<details><summary>🧘🏾‍♂️ Vim</summary>
+<details><summary>🧘🏾‍♂️ Vim Grammar: Verb + Noun</summary>
 
 In Vim, editing operations follow a grammar-like structure: **Verb + Noun**. The verb represents an action, while the noun represents the text or movement the action operates on. This allows for flexible and powerful editing.
 See: Learn Vim the Smarter Way](https://learnvim.irian.to). Note: Visual mode **Noun<selected> + Verb***.
