@@ -493,12 +493,12 @@ alias() {
         if [[ -n "$1" ]]; then
             "$HOME/dotfiles/zsh/.alias_help.sh" "$@"
         else
-            "$HOME/dotfiles/zsh/.alias_help.sh"
+            command alias "$@"
         fi
     elif [[ "$1" == "--describe" ]]; then
         shift
         "$HOME/dotfiles/zsh/.alias_help.sh" --describe "$@"
     else
-        $HOME/dotfiles/zsh/.alias_help.sh
+        command alias "$@"
     fi
 }
