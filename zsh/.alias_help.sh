@@ -412,17 +412,17 @@ function describe_alias() {
 }
 
 function show_help() {
-    echo "Usage: alias [--help category]"
-    echo "Categories:"
-    echo "  git        Show Git aliases"
-    echo "  coreutils  Show Coreutils aliases"
-    echo "  yarn       Show Yarn aliases"
-    echo "  pnpm       Show PNPM aliases"
-    echo "  shortcuts  Show Shortcuts"
-    echo "  special    Show Special aliases"
-    echo "  functions  Show Functions"
-    echo "Options:"
-    echo "  --describe alias_name  Describe a specific alias"
+    echo -e "\033[1;36mUsage:\033[0m alias [--help category]"
+    echo -e "\033[1;33mCategories:\033[0m"
+    echo -e "  \033[1;32mgit\033[0m        Show Git aliases"
+    echo -e "  \033[1;32mcoreutils\033[0m  Show Coreutils aliases"
+    echo -e "  \033[1;32myarn\033[0m       Show Yarn aliases"
+    echo -e "  \033[1;32mpnpm\033[0m       Show PNPM aliases"
+    echo -e "  \033[1;32mshortcuts\033[0m  Show Shortcuts"
+    echo -e "  \033[1;32mspecial\033[0m    Show Special aliases"
+    echo -e "  \033[1;32mfunctions\033[0m  Show Functions"
+    echo -e "\033[1;33mOptions:\033[0m"
+    echo -e "  \033[1;32m--describe alias_name\033[0m  Describe a specific alias"
 }
 
 if [[ "$1" == "--describe" ]]; then
