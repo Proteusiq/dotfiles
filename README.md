@@ -21,19 +21,25 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 The dotfiles include a comprehensive set of aliases to streamline your workflow. You can view and manage these aliases using the `alias_help.sh` script. To see a list of available alias categories, run:
 
 ```bash
-./zsh/.alias_help.sh
+aliases
 ```
+To describe a specific category, use:
+
+```bash
+aliases --help <category_name>
+```
+
 
 To describe a specific alias, use:
 
 ```bash
-./zsh/.alias_help.sh --describe <alias_name>
+aliases --describe <alias_name>
 ```
 
-For example, to see what the alias `g` does, you would run:
+For example, to see what the alias `gp` does, you would run:
 
 ```bash
-./zsh/.alias_help.sh --describe g
+aliases --describe gp
 ```
 
 **Before you get started** make sure you give full disk access permission to your terminal (for writing macos defaults). `System Preferences -> Privacy -> Full Disk Access`.

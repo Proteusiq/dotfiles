@@ -487,7 +487,7 @@ alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}
 
 alias f=fuck
 
-alias() {
+aliases() {
     if [[ "$1" == "--help" ]]; then
         "$HOME/dotfiles/zsh/.alias_help.sh" "$2"
     elif [[ "$1" == "--describe" ]]; then
