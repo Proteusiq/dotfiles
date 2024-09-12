@@ -489,16 +489,11 @@ alias f=fuck
 
 alias() {
     if [[ "$1" == "--help" ]]; then
-        shift
-        if [[ -n "$1" ]]; then
-            "$HOME/dotfiles/zsh/.alias_help.sh" "$@"
-        else
-            command alias "$@"
-        fi
+        "$HOME/dotfiles/zsh/.alias_help.sh"
     elif [[ "$1" == "--describe" ]]; then
         shift
         "$HOME/dotfiles/zsh/.alias_help.sh" --describe "$@"
     else
-        command alias "$@"
+        echo "$HOME/dotfiles/zsh/.alias_help.sh"
     fi
 }
