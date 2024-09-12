@@ -499,6 +499,6 @@ alias() {
         shift
         "$HOME/dotfiles/zsh/.alias_help.sh" --describe "$@"
     else
-        command alias "$@"
+        $HOME/dotfiles/zsh/.alias_help.sh
     fi
 }

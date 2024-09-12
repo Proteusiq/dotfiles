@@ -412,7 +412,7 @@ function describe_alias() {
 }
 
 function show_help() {
-    echo "Usage: alias_help [category|--describe alias_name]"
+    echo "Usage: alias [--help category]"
     echo "Categories:"
     echo "  git        Show Git aliases"
     echo "  coreutils  Show Coreutils aliases"
