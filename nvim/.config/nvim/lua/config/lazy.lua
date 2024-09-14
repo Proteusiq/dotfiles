@@ -14,7 +14,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 -- Set up autocmd in Lua
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
   pattern = "*",
