@@ -1,62 +1,71 @@
-
-
 return {
   "mfussenegger/nvim-dap-python",
   keys = {
-    -- Key mapping for debugging the current test method
+    -- **Test-Related Key Mappings**
     {
       mode = "n",
-      "<leader>df",
+      "<leader>dm",
       function()
         require("dap-python").test_method()
       end,
-      desc = "Debug Python Test Method",
+      desc = "Debug Test Method",
     },
-    -- Key mapping for debugging the current test class
     {
       mode = "n",
       "<leader>dc",
       function()
         require("dap-python").test_class()
       end,
-      desc = "Debug Python Test Class",
+      desc = "Debug Test Class",
     },
-    -- Key mapping for testing the current file (module)
+    -- **File-Related Key Mappings**
     {
       mode = "n",
-      "<leader>dm",
-      function()
-        require("dap-python").test_module()
-      end,
-      desc = "Debug Python Test Module",
-    },
-    -- Key mapping for debugging the entire file (non-test code)
-    {
-      mode = "n",
-      "<leader>dr",
+      "<leader>df",
       function()
         require("dap-python").debug_file()
       end,
       desc = "Debug Python File",
     },
-    -- Custom key mapping to debug the function under the cursor (non-test code)
+
+    -- **Function-Related Key Mappings**
     {
       mode = "n",
-      "<leader>dfn",
+      "<leader>du",
       function()
-        local dap = require("dap")
-        local python = require("dap-python")
+        -- Custom function to debug the function under the cursor
+        local dap_python = require("dap-python")
         local utils = require("dap-python.utils")
-        local file_path = vim.fn.expand("%:p")
-        local line_num = vim.fn.line(".")
-        local func_name = utils.get_func_name_at_line(file_path, line_num)
+        local path = vim.fn.expand("%:p")
+        local row = vim.fn.line(".")
+        local func_name = utils.get_func_at_line(path, row)
         if func_name then
-          python.debug_at_point()
+          dap_python.debug_at_point()
         else
           print("No function found under cursor.")
         end
       end,
       desc = "Debug Function Under Cursor",
+    },
+
+    -- **Class-Related Key Mappings**
+    {
+      mode = "n",
+      "<leader>dk",
+      function()
+        -- Custom function to debug the class under the cursor
+        local dap_python = require("dap-python")
+        local utils = require("dap-python.utils")
+        local path = vim.fn.expand("%:p")
+        local row = vim.fn.line(".")
+        local class_name = utils.get_class_at_line(path, row)
+        if class_name then
+          dap_python.debug_at_point()
+        else
+          print("No class found under cursor.")
+        end
+      end,
+      desc = "Debug Class Under Cursor",
     },
   },
   config = function()

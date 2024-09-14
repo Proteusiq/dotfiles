@@ -474,6 +474,17 @@ Switch words
 = => indent =G indent all to bottom
 :help or :h v_d(help of visual mode d) (ctrl + wc) window close
 
+# Debugging
+## Key Mappings
+
+| Shortcut      | Description                  |
+|---------------|------------------------------|
+| `<leader>dm`  | Debug Test Method             |
+| `<leader>dc`  | Debug Test Class              |
+| `<leader>df`  | Debug Python File             |
+| `<leader>du`  | Debug Function Under Cursor   |
+| `<leader>dk`  | Debug Class Under Cursor      |
+
 
 ```
 
