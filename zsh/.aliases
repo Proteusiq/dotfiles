@@ -486,6 +486,7 @@ alias iswitch='tmux choose-session' # show sessions
 alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
 
 alias f=fuck
+alias update='zsh -c ~/dotfiles/install.sh'
 
 aliases() {
     if [[ "$1" == "--help" ]]; then
