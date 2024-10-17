@@ -1,7 +1,6 @@
 # Taps (package repositories)
 tap "espanso/espanso"
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit"

@@ -47,13 +47,14 @@ install_xcode_tools() {
 install_brew() {
     echo "🍺 Installing Homebrew and packages..."
     if ! command -v brew &>/dev/null; then
+        export HOMEBREW_NO_INSTALL_FROM_API=1
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>~/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
 
     echo "🍺 Updating Homebrew..."
-    brew update
+    brew update --force
     echo "🍺 Installing packages..."
     brew bundle --file="$HOME/dotfiles/Brewfile"
 }
