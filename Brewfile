@@ -21,6 +21,7 @@ brew "git-lfs"
 brew "terraform"
 brew "lazygit"
 brew "lazydocker"
+brew "mongosh"
 
 
 # UI Tools for software development

@@ -127,6 +127,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "jq" # Lightweight and flexible command-line JSON processor
 "lazygit" # The lazier way to manage everything git
 "lazydocker" # The lazier way to manage everything docker
+"mongosh" # Mongo DB shell
 "moreutils" # Collection of tools that nobody wrote when UNIX was young
 "ncdu" # NCurses Disk Usage
 "neovim" # Ambitious Vim-fork focused on extensibility and agility
