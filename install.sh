@@ -144,6 +144,7 @@ install_yazi_themes() {
     [ -d "$folder" ] || git clone "$url" "$folder"
 }
 
+
 # Function for additional setups
 setup_utils() {
 
