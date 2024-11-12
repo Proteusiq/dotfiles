@@ -18,6 +18,7 @@ brew "difftastic"
 brew "gh" # github cli use by plenary
 brew "git"
 brew "git-lfs"
+brew "git-filter-repo"
 brew "terraform"
 brew "lazygit"
 brew "lazydocker"

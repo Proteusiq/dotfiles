@@ -112,6 +112,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "gh" # GitHub cli used by plenary
 "git" # Distributed revision control system
 "git-lfs" # Git Large Files Storage
+"git-filter-repo" # When we mess up and want to clean
 "gnu-sed" # GNU implementation of the famous stream editor
 "gnu-tar" # GNU version of the tar archiving utility
 "gnu-time" # GNU implementation of the time utility
