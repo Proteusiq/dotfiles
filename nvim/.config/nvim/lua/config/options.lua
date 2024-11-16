@@ -42,3 +42,7 @@ vim.api.nvim_create_autocmd("InsertLeave", {
     end
   end,
 })
+
+-- views can only be fully collapsed with the global statusline
+vim.opt.laststatus = 3
+
