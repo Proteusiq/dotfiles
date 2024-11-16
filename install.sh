@@ -82,9 +82,9 @@ configure_python() {
     echo "🐍 Configuring Rye: Cargo for Python"
     if ! command -v rye &>/dev/null; then
         echo "🐍  Installing Rye"
-        curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
+        curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
         source "$HOME/.rye/env"
-        rye self completion -s zsh >>~/.zfunc/_rye
+        rye self completion -s zsh >> ~/.zfunc/_rye
         rye config --set-bool behavior.global-python=true
         rye config --set-bool behavior.use-uv=true
     else
