@@ -112,6 +112,7 @@ brew "gum"
 # Productivity Applications
 # Applications to enhance productivity
 
+brew "1password-cli"
 cask "1password"
 cask "alt-tab"
 cask "chatgpt"
