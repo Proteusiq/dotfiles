@@ -153,8 +153,7 @@ cask "google-chrome"
 # Window Management
 # Tools for managing application windows
 brew "koekeishiya/formulae/skhd" # Simple hotkey daemon for macOS
-brew "koekeishiya/formulae/yabai" # A tiling window manager for macOS
-
+cask "nikitabobko/tap/aerospace" # inplace of yabai
 
 # Misc Tools
 # Miscellaneous tools and utilities
@@ -163,8 +162,3 @@ cask "aldente"
 brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
 brew "joshmedeski/sesh/sesh" # session manager for tmux
 
-# Initialization for yabai and skhd (commented out for manual execution)
-# yabai --install-service
-# yabai --start-service
-# skhd --install-service
-# skhd --start-service

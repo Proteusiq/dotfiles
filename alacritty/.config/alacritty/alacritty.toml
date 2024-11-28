@@ -624,8 +624,8 @@ semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 decorations = "buttonless"
 
 [window.padding]
-x = 20
-y = 20
+x = 40
+y = 40
 
 [window.dimensions]
 columns = 200
