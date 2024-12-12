@@ -157,15 +157,13 @@ setup_utils() {
 
     # Productive laziness
     # LLM
-    rye tools list | grep -q "^llm" && rye tools uninstall llm
-    rye tools install llm
+    uv tool list | grep -q "llm" && uv tool upgrade llm || uv tool install llm
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
     llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
 
     # Aider
 
-    rye tools list | grep -q "^aider" && rye tools uninstall aider-chat
-    rye tools install aider-chat
+    uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat
 
 }
 
