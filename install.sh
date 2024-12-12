@@ -164,6 +164,7 @@ setup_utils() {
     # Aider
 
     uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat
+    uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting
 
 }
 
