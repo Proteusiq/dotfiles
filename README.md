@@ -135,6 +135,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "node" # Platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 "ollama" # Running Large Language Models offline
 "pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
+"posting" # Postman but in TUI
 "python" # Interpreted, interactive, object-oriented programming language
 "raycast" # A better spotlight - CleanShotX, Ollama, OpenAI, Alacritty, Brew extensitions
 "rename" # Perl-powered file rename script with many helpful built-ins
