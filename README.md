@@ -66,7 +66,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
     -   [starship](./starship)
     -   [tmux](./tmux)
     -   [yazi](./yazi/)
-    -   [yabai](./yabai)
+    -   [aerospace](./aerospace/)
 -   Shell environment configs:
     -   [Antigen](https://github.com/zsh-users/antigen) for zsh plugin management
     -   [`.zshrc`](./zsh/.zshrc)
