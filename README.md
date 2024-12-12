@@ -9,7 +9,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 
 
 -   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/)
--   Window management: [yabai](https://github.com/koekeishiya/yabai)
+-   Window management: [aerospace](https://github.com/nikitabobko/AeroSpace)
 -   File management: [yazi](https://github.com/sxyazi/yazi)
 -   Hotkeys: [skhd](https://github.com/koekeishiya/skhd)
 -   Vim: [neovim](https://neovim.io/) with [lazyvim](https://github.com/LazyVim/LazyVim) destro
