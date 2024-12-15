@@ -507,7 +507,7 @@ pyproject_() {
 
     # Check if pyproject.toml exists and add a [project] table if missing
     if ! grep -q '\[project\]' pyproject.toml; then
-        echo -e "[project]\nname = \"$package_name\"\nversion = \"0.1.0\"" >>pyproject.toml
+        echo -e "[project]\nname >= \"$package_name\"\nversion = \"0.1.0\"" >>pyproject.toml
     fi
 
     # Append common settings to pyproject.toml
