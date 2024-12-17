@@ -126,6 +126,9 @@ export PIXI_BETA_WARNING_OFF=true
 # pixi auto completion
 eval "$(pixi completion --shell zsh)"
 
+# uv auto completion
+eval "$(uv generate-shell-completion zsh)"
+
 # set starship prompt
 eval "$(starship init zsh)"
 
