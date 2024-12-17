@@ -488,7 +488,6 @@ alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}
 alias f=fuck
 alias update='zsh -c ~/dotfiles/install.sh'
 
-
 pyproject_() {
     # Prompt for package name and Python version
     echo -n "Package name: "
@@ -500,34 +499,23 @@ pyproject_() {
     python_version="${python_version:-3.11}"
 
     # UV flow commands
-    uv init "$package_name" || { echo "Failed to initialize with UV"; exit 1; }
+    uv init "$package_name" --no-workspace 
     cd "$package_name" || exit
     mkdir -p "src/$package_name" tests/
-
-    # Ensure hello.py exists before moving
-    if [ -f hello.py ]; then
-        mv hello.py "src/$package_name/"
-    else
-        # Create a simple hello.py if it doesn't exist
-        cat <<EOL >"src/$package_name/hello.py"
-def main():
-    print("Hello from $package_name!")
-EOL
-    fi
-
+    mv hello.py "src/$package_name/"
     uv python pin "$python_version"
 
     # Check if pyproject.toml exists and add a [project] table if missing
     if ! grep -q '\[project\]' pyproject.toml; then
-        echo -e "[project]\nname = \"$package_name\"\nversion = \"0.1.0\"" >>pyproject.toml
+        echo -e "[project]\nname >= \"$package_name\"\nversion = \"0.1.0\"" >>pyproject.toml
     fi
 
     # Append common settings to pyproject.toml
     echo -e '\n[tool.pytest.ini_options]\npythonpath = ["src"]' >>pyproject.toml
     echo -e '\n[tool.ruff.lint]\nselect = [\n\t  "A", # warn about shadowing built-ins\n\t  "E", # style stuff, whitespaces\n\t  "F", # important pyflakes lints\n\t  "I", # import sorting\n\t  "N", # naming\n]' >>pyproject.toml
 
-    # Add dev dependencies
-    uv add --dev ruff pytest || { echo "Failed to add dev dependencies"; exit 1; }
+    # Add dev dependencies 
+    uv add --dev ruff pytest
 
     # Create a test
     cat <<EOL >tests/test_hello.py
@@ -547,7 +535,6 @@ EOL
     echo "🐍 Project: '$package_name' with Python $python_version created"
     tree .
 }
-
 
 # alias for the function
 alias pyproject=pyproject_
