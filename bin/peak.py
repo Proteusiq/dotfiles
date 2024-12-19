@@ -4,23 +4,59 @@
 # dependencies = [
 #   "rich >= 13.8.1",
 #   "duckdb >= 1.1.3",
+#   "typer >= 0.15.1",
 # ]
 # ///
-""" Peak onto Tables in DB WIP """
+"""Peak onto Tables in DB WIP"""
+
+import random
+from pathlib import Path
+from typing import Annotated
+
+import duckdb
+import typer
 from rich.console import Console
-from rich.table import Table
+from rich.table import Column, Table
+from rich.theme import Theme
+
+app = typer.Typer(name="Peak")
+
+console = Console(theme=Theme({"repr.number": "bold green blink"}))
+print = console.print
+
+STYLES = ["cyan", "magenta", "green", "blue",]
 
 
-console = Console()
-table = Table(title="DataX")
+@app.command()
+def open(
+    source: Annotated[Path, typer.Argument(help="data source uri")],
+    get: Annotated[str, typer.Option(help="table name")] = "",
+):
+    if not get:
+        get = source.stem
+        with duckdb.connect(source) as con:
+            results = con.sql("SHOW tables;")
+            table = Table(
+                Column(header="Tables", justify="right", style="cyan"),
+                title=f"\n{source.name}",)
+            for row in results.fetchall():
+                table.add_row(row[0])
 
-table.add_column("Name", justify="right", style="cyan", no_wrap=True)
-table.add_column("Title", style="magenta")
-table.add_column("Age", style="green")
+            print(table)
+        raise typer.Exit()
 
-for row in (["Prayson", "Principal Data Scientist", "38"],
-            ["Shahnoza", "Senior Data Scientist", "32"],
-            ["Mette", "Data Scientist", "34"]):
-    table.add_row(*row)
+    table = Table(title=get)
+    with duckdb.connect(source) as con:
+        results = con.sql(f"SELECT * FROM {get};")
 
-console.print(table)
+        for column in results.columns:
+            table.add_column(column, style=random.choice(STYLES))
+
+        for row in results.fetchall():
+            table.add_row(*row)
+
+        print(table)
+
+
+if __name__ == "__main__":
+    app()
