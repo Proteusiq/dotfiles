@@ -77,23 +77,6 @@ configure_node() {
     echo "🍞 Baked bun -v$($HOME/.bun/bin/bun --version)"
 }
 
-# Function to configure Python
-configure_python() {
-    echo "🐍 Configuring Rye: Cargo for Python"
-    if ! command -v rye &>/dev/null; then
-        echo "🐍  Installing Rye"
-        curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
-        source "$HOME/.rye/env"
-        mkdir -p ~/.zfunc
-        rye self completion -s zsh >> ~/.zfunc/_rye
-        rye config --set-bool behavior.global-python=true
-        rye config --set-bool behavior.use-uv=true
-    else
-        echo "🍺 Updating Rye..."
-        rye self update
-    fi
-}
-
 # Function to setup Jupyter Lab environment
 setup_jupyter_lab() {
     echo "🪐 Setting up Jupyter Lab environment in Codes/lab..."
@@ -210,7 +193,6 @@ install_xcode_tools
 set_macos_preferences
 install_brew
 configure_node
-configure_python
 setup_jupyter_lab
 create_virtualenvs
 install_tmux_plugins

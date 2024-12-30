@@ -78,7 +78,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 
 The install script will also setup Python, Node and Bun versions/environments:
 
--   [rye](https://github.com/astral-sh/rye) sets the global Python version to latest stable version and installs additional tools like `aider`
+-   [uv](https://github.com/astral-sh/uv) manages Python version to latest stable version and installs additional tools like `aider`
 -   [n](https://github.com/tj/n) sets the global Node version to LTS
 -   [bun](https://bun.sh/)  all-in-one toolkit for JavaScript and TypeScript apps
 
@@ -142,7 +142,6 @@ The install script will also setup Python, Node and Bun versions/environments:
 "ripgrep" # Recursively searches directories for a regex pattern while respecting your gitignore
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language
-"rye" # Python's Cargo
 "screen" # GNU screen, terminal multiplexer
 "shotcat" # Vimium C for Apps: Path to Mouseless World
 "starship" # Cross-shell prompt for astronauts
@@ -153,7 +152,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "toilet" # ascii art fonting similar to figlet but with filter and boarder e.g. toilet -F border -f future Welcome Prayson
 "tmux" # Terminal multiplexer
 "universal-ctags" # Creates a compressed version of a code bases used by Aider
-"uv" # Better drop in pip replacer alias pip='uv pip'
+"uv" # Python's Cargo. Better drop in pip replacer alias pip='uv pip'
 "vim" # Highly configurable text editor built to enable efficient text editing
 "watchman" # Watch files and take action when they change
 "wget" # Internet file retriever
