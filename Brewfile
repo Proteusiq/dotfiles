@@ -85,8 +85,7 @@ brew "neovim"
 brew "starship"
 brew "tmux"
 brew "vim"
-cask "alacritty"
-
+cask "ghostty"
 
 
 

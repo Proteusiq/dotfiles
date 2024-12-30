@@ -8,7 +8,7 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 
 
 
--   Terminal: [Alacritty](https://github.com/jwilm/alacritty) using zsh w/ [starship prompt](https://starship.rs/)
+-   Terminal: [Ghostty](https://github.com/ghostty-org/ghostty) using zsh w/ [starship prompt](https://starship.rs/)
 -   Window management: [aerospace](https://github.com/nikitabobko/AeroSpace)
 -   File management: [yazi](https://github.com/sxyazi/yazi)
 -   Hotkeys: [skhd](https://github.com/koekeishiya/skhd)
@@ -59,7 +59,7 @@ This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.s
 
 -   Configs for the following tools:
     -   git
-    -   [Alacritty](./alacritty)
+    -   [ghostty](./ghosttytty)
     -   [fzf](./fzf)
     -   [neovim](./nvim)
     -   [skhd](./skhd)
@@ -164,15 +164,12 @@ The install script will also setup Python, Node and Bun versions/environments:
 "zsh" # UNIX shell (command interpreter)
 "zoxide" # A faster way to navigate your filesystem
 
-# Custom Taps (Specialized tools)
-"koekeishiya/formulae/skhd" # Simple hotkey daemon for macOS
-"koekeishiya/formulae/yabai" # A tiling window manager for macOS
 
 # GUI Applications (Casks)
 # Various applications installed through Homebrew Cask
 "1password" # Password manager
 "1password-cli" # Using op vault cli
-"alacritty" # GPU-accelerated terminal emulator
+"ghostty" # GPU-accelerated terminal emulator
 "docker" # Platform to develop, ship, and run applications
 ````
 
@@ -184,7 +181,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 - Be sure to update the user name/email values in the global [gitconfig](./git/.gitconfig)
 #### Color Schemes
 
-- Alacritty, Tmux, Nvim, fzf := color scheme == [Catppuccin-Mocha](https://github.com/catppuccin/catppuccin)
+- ghostty, Tmux, Nvim, fzf := color scheme == [Catppuccin-Mocha](https://github.com/catppuccin/catppuccin)
 
 ### After First Installation, Sync dotfile with GitHub
 Configure GitHub to usee SSH [Configure](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) + [Setup](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)

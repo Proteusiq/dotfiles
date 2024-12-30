@@ -1,0 +1,9 @@
+theme = catppuccin-mocha
+font-size = 13
+mouse-hide-while-typing = true
+window-decoration = false
+font-family = Hack Nerd Font
+
+# windows
+window-width=170
+window-height=60
