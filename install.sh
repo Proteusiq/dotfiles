@@ -201,7 +201,7 @@ create_virtualenvs() {
 # Function to use GNU Stow to manage dotfiles
 stow_dotfiles() {
     echo "🐗  Stowing dotfiles..."
-    stow --adopt -d "$HOME/dotfiles" -t "$HOME" fzf git ghostty nvim sesh skhd starship tmux vim zsh yazi aerospace
+    stow --adopt -d "$HOME/dotfiles" -t "$HOME" fzf git ghostty nvim sesh starship tmux vim zsh yazi aerospace
 }
 
 # Main setup sequence
