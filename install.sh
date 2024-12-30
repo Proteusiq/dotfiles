@@ -87,7 +87,7 @@ setup_jupyter_lab() {
     # Check if virtual environment directory exists
     if [ ! -d ".venv" ]; then
         echo "🪐 Creating virtual environment..."
-        uv venv .venv
+        uv venv
     fi
 
     # Activate the virtual environment

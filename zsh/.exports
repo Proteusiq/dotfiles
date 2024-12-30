@@ -117,9 +117,6 @@ eval "$(zoxide init zsh)"
 # the fuck
 eval "$(thefuck --alias)"
 
-# Rye
-export RYE_NO_AUTO_INSTALL=1
-source "$HOME/.rye/env"
 
 # pixi
 export PIXI_BETA_WARNING_OFF=true
@@ -137,7 +134,7 @@ eval "$(starship init zsh)"
 [[ -z "$TMUX" ]] && exec tmux
 
 # bun completions
-[ -s "/Users/pwd/.bun/_bun" ] && source "/Users/pwd/.bun/_bun"
+[ -s "%HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -150,7 +147,7 @@ export FZF_DEFAULT_OPTS=" \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
 # uv tools
-export PATH="/Users/pwd/.local/bin:$PATH"
+export PATH="%HOME/.local/bin:$PATH"
 
 # fzf key binding and completion
 eval "$(fzf --zsh)"
