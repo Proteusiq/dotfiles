@@ -169,7 +169,7 @@ setup_utils() {
     # custom scripts
 
     for file in $HOME/dotfiles/bin/*.py; do
-        cp "$file" "/usr/local/bin/$(basename "${file%.py}")"
+        sudo cp "$file" "/usr/local/bin/$(basename "${file%.py}")"
     done
 }
 
@@ -200,7 +200,7 @@ create_virtualenvs() {
 # Function to use GNU Stow to manage dotfiles
 stow_dotfiles() {
     echo "🐗  Stowing dotfiles..."
-    stow -d "$HOME/dotfiles" -t "$HOME" alacritty fzf git nvim sesh skhd starship tmux vim zsh yazi aerospace
+    stow --adopt -d "$HOME/dotfiles" -t "$HOME" alacritty fzf git nvim sesh skhd starship tmux vim zsh yazi aerospace
 }
 
 # Main setup sequence
