@@ -158,6 +158,7 @@ setup_utils() {
     # Productive laziness
     # LLM
     uv tool list | grep -q "llm" && uv tool upgrade llm || uv tool install llm
+    export PATH="$HOME/.local/bin:$PATH"
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
     llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
 
@@ -169,7 +170,7 @@ setup_utils() {
     # custom scripts
 
     for file in $HOME/dotfiles/bin/*.py; do
-        sudo cp "$file" "/usr/local/bin/$(basename "${file%.py}")"
+        cp "$file" "$HOME/.local/bin/$(basename "${file%.py}")"
     done
 }
 
