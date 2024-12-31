@@ -192,10 +192,11 @@ stow_dotfiles() {
 
 # Main setup sequence
 # create_dirs
-# install_xcode_tools
-# set_macos_preferences
-# install_brew
-# configure_node
+create_dirs
+install_xcode_tools
+set_macos_preferences
+install_brew
+configure_node
 setup_jupyter_lab
 create_virtualenvs
 install_tmux_plugins
