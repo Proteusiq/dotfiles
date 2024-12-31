@@ -94,7 +94,7 @@ setup_jupyter_lab() {
     source .venv/bin/activate
 
     # Check if Jupyter Lab is installed
-    if ! pip freeze | grep jupyterlab &>/dev/null; then
+    if ! uv pip freeze | grep jupyterlab &>/dev/null; then
         echo "🪐 Installing Jupyter Lab..."
         uv pip install jupyterlab jupyterlab-dash
     else
@@ -151,7 +151,7 @@ setup_utils() {
     uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting
 
     # better scripts
-    cargo install repgrep
+    rgr --version | grep -q "repgrep" || cargo install repgrep
 
     # custom scripts
 
@@ -172,13 +172,13 @@ create_virtualenvs() {
 
     for env in "${envs[@]}"; do
         IFS='|' read -r dir packages <<<"$env"
-
         if [ ! -d "$dir" ]; then
-            python -m venv "$dir" &>/dev/null
+            uv venv "$dir" &>/dev/null
         fi
 
-        "$dir/bin/pip" install --upgrade pip &>/dev/null
-        "$dir/bin/pip" install --upgrade $packages &>/dev/null
+        source $dir/bin/activate  
+        uv pip install --upgrade $packages #&>/dev/null
+        deactivate
     done
 
     echo "🔥  Virtual environments and 📦 packages installed."
@@ -191,11 +191,11 @@ stow_dotfiles() {
 }
 
 # Main setup sequence
-create_dirs
-install_xcode_tools
-set_macos_preferences
-install_brew
-configure_node
+# create_dirs
+# install_xcode_tools
+# set_macos_preferences
+# install_brew
+# configure_node
 setup_jupyter_lab
 create_virtualenvs
 install_tmux_plugins
