@@ -139,6 +139,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "python" # Interpreted, interactive, object-oriented programming language
 "raycast" # A better spotlight - CleanShotX, Ollama, OpenAI, Alacritty, Brew extensitions
 "rename" # Perl-powered file rename script with many helpful built-ins
+"repgrep" # rgr interactive rust ripgrep extention
 "ripgrep" # Recursively searches directories for a regex pattern while respecting your gitignore
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language

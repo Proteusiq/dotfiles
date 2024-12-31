@@ -150,6 +150,9 @@ setup_utils() {
     uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat
     uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting
 
+    # better scripts
+    cargo install repgrep
+
     # custom scripts
 
     for file in $HOME/dotfiles/bin/*.py; do

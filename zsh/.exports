@@ -146,8 +146,11 @@ export FZF_DEFAULT_OPTS=" \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
+# cargo
+export PATH="$HOME/.cargo/bin:$PATH"
+
 # uv tools
-export PATH="%HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # fzf key binding and completion
 eval "$(fzf --zsh)"
