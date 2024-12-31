@@ -25,7 +25,7 @@ background = 1C2021
 
 # keybindings
 keybind = cmd+b>r=reload_config
-keybind = cmd+b>x=close_surface
+keybind = cmd+b>x=close_window
 
 keybind = cmd+b>n=new_window
 
@@ -48,7 +48,7 @@ keybind = cmd+b>n=new_window
 # keybind = cmd+b>9=goto_tab:9
 
 # split
-keybind = cmd+b>\=new_split:right
+keybind = cmd+b>i=new_split:right
 keybind = cmd+b>-=new_split:down
 
 keybind = cmd+b>j=goto_split:bottom

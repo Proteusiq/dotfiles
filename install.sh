@@ -191,7 +191,6 @@ stow_dotfiles() {
 }
 
 # Main setup sequence
-# create_dirs
 create_dirs
 install_xcode_tools
 set_macos_preferences
