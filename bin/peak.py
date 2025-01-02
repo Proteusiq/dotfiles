@@ -12,7 +12,6 @@
 import random
 from os import environ
 from enum import Enum
-from pathlib import Path
 from typing import Annotated, Optional
 
 import duckdb
@@ -33,13 +32,9 @@ STYLES = [
     "blue",
 ]
 
-show_tables = {
-    "sqlite": "SHOW tables;",
-    "postgres": """
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = 'public';
-          """,
+connection = {
+    "sqlite": "ATTACH '{source}' (TYPE SQLITE);",
+    "postgres": "ATTACH '{source}' AS db (TYPE POSTGRES, READ_ONLY, SCHEMA 'public');",
 }
 
 
@@ -53,10 +48,10 @@ _ = [duckdb.sql(f"INSTALL {db.value};") for db in Kind]
 
 @app.command()
 def open(
-    source: Annotated[Optional[Path], typer.Option(help="data source uri")] = None,
+    source: Annotated[Optional[str], typer.Option(help="data source uri")] = None,
     get: Annotated[Optional[str], typer.Option(help="table name")] = None,
     limit: Annotated[int, typer.Option(help="number of show rows")] = 5,
-    kind: Annotated[Kind, typer.Option(help="database kind")] = Kind.sqlite,
+    kind: Annotated[Optional[Kind], typer.Option(help="database kind")] = None,
 ):
     if (source := environ.get("CONNECTION_STRING", source)) is None:  # type: ignore
         print(
@@ -64,37 +59,43 @@ def open(
         )
         raise typer.Exit()
 
+    if kind is not None:
+        source = source[source.find(kind):]
+    else:
+        kind = Kind.sqlite # set default
+
     if get is None:
         list_tables(source=source, kind=kind)
         raise typer.Exit()
 
-    show_table(source=source, table=get, limit=limit)
+    show_table(source=source, table=get, limit=limit, kind=kind)
 
 
-def list_tables(source: Path, kind: Kind) -> None:
-    with duckdb.connect(source) as con:
-        results = con.sql(show_tables.get(kind, "sqlite"))
-        t = Table(
-            Column(header="Tables", justify="right", style="cyan"),
-            title=f"\n{kind.value}",
-        )
-        for row in results.fetchall():
-            t.add_row(row[0])
+def list_tables(source: str, kind: Kind) -> None:
+    
+    duckdb.sql(connection.get(kind).format(source=source))
+    results = duckdb.sql("SHOW ALL tables;")
+    t = Table(
+        Column(header="Tables", justify="right", style="cyan"),
+        title=f"\n{kind.value}",
+    )
+    for row in results.fetchall():
+        t.add_row(row[0])
     print(t)
 
 
-def show_table(source: Path, table: str, limit: int = 5) -> None:
+def show_table(source: str, table: str, limit: int = 5, kind:Kind=Kind.sqlite) -> None:
     t = Table(title=table)
-    with duckdb.connect(source) as con:
-        results = con.sql(f"SELECT * FROM {table} LIMIT {limit};")
+    duckdb.sql(connection.get(kind).format(source=source))
+    results = duckdb.sql(f"SELECT * FROM db.public.{table} LIMIT {limit};")
 
-        for column in results.columns:
-            t.add_column(column, style=random.choice(STYLES))
+    for column in results.columns:
+        t.add_column(column, style=random.choice(STYLES))
 
-        for row in results.fetchall():
-            t.add_row(*row)
+    for row in results.fetchall():
+        t.add_row(*row)
 
-        print(t)
+    print(t)
 
 
 if __name__ == "__main__":
