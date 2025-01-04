@@ -55,21 +55,31 @@ _ = [duckdb.sql(f"INSTALL {db.value};") for db in Flavor]
 def open(
     source: Annotated[
         Optional[str],
-        typer.Option("--source", "-s", help="data source uri", envvar="CONNECTION_STRING"),
+        typer.Option(
+            "--source", "-s", help="data source uri", envvar="CONNECTION_STRING"
+        ),
     ] = None,
     table: Annotated[
         Optional[str], typer.Option("--get", "-g", help="table name")
     ] = None,
-    limit: Annotated[int, typer.Option("--limit", "-l", min=5, help="number of show rows"),] = 5,
-   
+    limit: Annotated[
+        int,
+        typer.Option("--limit", "-l", min=5, help="number of show rows"),
+    ] = 5,
 ):
+    """
+    ---
+
+    source code: [proteusiq/dotfiles bin](https://github.com/Proteusiq/dotfiles/blob/main/bin/peak.py)
+    """
+
     if source is None:
         print(
-            "Missing [bold cyan]source[/]. Pass in source** or set environment variable CONNECTION_STRING"
+            "Missing [bold cyan]source[/]. Pass in source or set environment variable CONNECTION_STRING"
         )
-        raise typer.Exit()
+        raise typer.Abort()
     else:
-       flavor = get_flavor(source)
+        flavor = get_flavor(source)
 
     table, query = generate_query(
         source=source, table=table, flavor=flavor, limit=limit
@@ -114,11 +124,13 @@ def generate_query(
 
     return SQL(table=table, query=query)
 
+
 def get_flavor(source: str) -> Flavor:
-    for flavor in Flavor: 
+    for flavor in Flavor:
         if flavor.value in source:
             return flavor
     return Flavor.sqlite
+
 
 if __name__ == "__main__":
     app()
