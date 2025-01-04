@@ -60,12 +60,12 @@ def open(
     table: Annotated[
         Optional[str], typer.Option("--get", "-g", help="table name")
     ] = None,
-    limit: Annotated[int, typer.Option("--limit", "-l", help="number of show rows")] = 5,
+    limit: Annotated[int, typer.Option("--limit", "-l", min=5, help="number of show rows"),] = 5,
    
 ):
     if source is None:
         print(
-            "Missing [bold cyan]source [/]. Pass in source or set environment variable CONNECTION_STRING"
+            "Missing [bold cyan]source[/]. Pass in source** or set environment variable CONNECTION_STRING"
         )
         raise typer.Exit()
     else:
