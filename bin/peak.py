@@ -61,16 +61,15 @@ def open(
         Optional[str], typer.Option("--get", "-g", help="table name")
     ] = None,
     limit: Annotated[int, typer.Option("--limit", "-l", help="number of show rows")] = 5,
-    flavor: Annotated[
-        Flavor, typer.Option("--flavor", "-f", help="database flavor")
-
-    ] = Flavor.sqlite,
+   
 ):
     if source is None:
         print(
             "Missing [bold cyan]source [/]. Pass in source or set environment variable CONNECTION_STRING"
         )
         raise typer.Exit()
+    else:
+       flavor = get_flavor(source)
 
     table, query = generate_query(
         source=source, table=table, flavor=flavor, limit=limit
@@ -115,6 +114,11 @@ def generate_query(
 
     return SQL(table=table, query=query)
 
+def get_flavor(source: str) -> Flavor:
+    for flavor in Flavor: 
+        if flavor.value in source:
+            return flavor
+    return Flavor.sqlite
 
 if __name__ == "__main__":
     app()
