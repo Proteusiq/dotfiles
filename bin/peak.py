@@ -21,7 +21,11 @@ from rich.console import Console
 from rich.table import Table
 from rich.theme import Theme
 
-app = typer.Typer(name="Peak")
+app = typer.Typer(
+    name="Peak",
+    rich_markup_mode="markdown",
+    no_args_is_help=True,
+)
 
 console = Console(theme=Theme({"repr.number": "bold green blink"}))
 print = console.print
@@ -50,11 +54,17 @@ _ = [duckdb.sql(f"INSTALL {db.value};") for db in Flavor]
 @app.command()
 def open(
     source: Annotated[
-        Optional[str], typer.Option(help="data source uri", envvar="CONNECTION_STRING")
+        Optional[str],
+        typer.Option("--source", "-s", help="data source uri", envvar="CONNECTION_STRING"),
     ] = None,
-    table: Annotated[Optional[str], typer.Option("--get", help="table name")] = None,
-    limit: Annotated[int, typer.Option(help="number of show rows")] = 5,
-    flavor: Annotated[Flavor, typer.Option(help="database flavor")] = Flavor.sqlite,
+    table: Annotated[
+        Optional[str], typer.Option("--get", "-g", help="table name")
+    ] = None,
+    limit: Annotated[int, typer.Option("--limit", "-l", help="number of show rows")] = 5,
+    flavor: Annotated[
+        Flavor, typer.Option("--flavor", "-f", help="database flavor")
+
+    ] = Flavor.sqlite,
 ):
     if source is None:
         print(
@@ -62,7 +72,9 @@ def open(
         )
         raise typer.Exit()
 
-    table, query = generate_query(source=source, table=table, flavor=flavor, limit=limit)
+    table, query = generate_query(
+        source=source, table=table, flavor=flavor, limit=limit
+    )
     show_table(table=table, query=query)
 
 
