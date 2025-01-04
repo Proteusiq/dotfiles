@@ -52,7 +52,7 @@ def open(
     source: Annotated[
         Optional[str], typer.Option(help="data source uri", envvar="CONNECTION_STRING")
     ] = None,
-    get: Annotated[Optional[str], typer.Option(help="table name")] = None,
+    table: Annotated[Optional[str], typer.Option("--get", help="table name")] = None,
     limit: Annotated[int, typer.Option(help="number of show rows")] = 5,
     flavor: Annotated[Flavor, typer.Option(help="database flavor")] = Flavor.sqlite,
 ):
@@ -62,7 +62,7 @@ def open(
         )
         raise typer.Exit()
 
-    table, query = generate_query(source=source, table=get, flavor=flavor, limit=limit)
+    table, query = generate_query(source=source, table=table, flavor=flavor, limit=limit)
     show_table(table=table, query=query)
 
 
