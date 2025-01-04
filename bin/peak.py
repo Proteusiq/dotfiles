@@ -53,7 +53,7 @@ def open(
     source: Annotated[Optional[str], typer.Option(help="data source uri")] = None,
     get: Annotated[Optional[str], typer.Option(help="table name")] = None,
     limit: Annotated[int, typer.Option(help="number of show rows")] = 5,
-    kind: Annotated[Optional[Kind], typer.Option(help="database kind")] = None,
+    kind: Annotated[Kind, typer.Option(help="database kind")] = Kind.sqlite,
 ):
     source = source or environ.get("CONNECTION_STRING")
     if source is None:
@@ -61,9 +61,6 @@ def open(
             "Missing [bold cyan]source [/]. Pass in source or set environment variable CONNECTION_STRING"
         )
         raise typer.Exit()
-
-    if kind is None:
-        kind = Kind.sqlite  # set default
 
     table, query = generate_query(source=source, table=get, kind=kind, limit=limit)
     show_table(table=table, query=query)
