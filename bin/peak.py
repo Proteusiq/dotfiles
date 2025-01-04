@@ -18,7 +18,7 @@ from typing import NamedTuple
 import duckdb
 import typer
 from rich.console import Console
-from rich.table import Table                              
+from rich.table import Table
 from rich.theme import Theme
 
 app = typer.Typer(name="Peak")
@@ -39,21 +39,22 @@ class SQL(NamedTuple):
     query: str
 
 
-class Kind(str, Enum):
+class Flavor(str, Enum):
     sqlite = "sqlite"
     postgres = "postgres"
 
 
-_ = [duckdb.sql(f"INSTALL {db.value};") for db in Kind]
+_ = [duckdb.sql(f"INSTALL {db.value};") for db in Flavor]
 
 
 @app.command()
 def open(
-    source: Annotated[Optional[str], typer.Option(help="data source uri",
-                                                  envvar="CONNECTION_STRING")] = None,
+    source: Annotated[
+        Optional[str], typer.Option(help="data source uri", envvar="CONNECTION_STRING")
+    ] = None,
     get: Annotated[Optional[str], typer.Option(help="table name")] = None,
     limit: Annotated[int, typer.Option(help="number of show rows")] = 5,
-    kind: Annotated[Kind, typer.Option(help="database kind")] = Kind.sqlite,
+    flavor: Annotated[Flavor, typer.Option(help="database flavor")] = Flavor.sqlite,
 ):
     if source is None:
         print(
@@ -61,7 +62,7 @@ def open(
         )
         raise typer.Exit()
 
-    table, query = generate_query(source=source, table=get, kind=kind, limit=limit)
+    table, query = generate_query(source=source, table=get, flavor=flavor, limit=limit)
     show_table(table=table, query=query)
 
 
@@ -85,14 +86,14 @@ def generate_query(
     source: str,
     table: str | None = None,
     limit: int = 5,
-    kind: Kind = Kind.sqlite,
+    flavor: Flavor = Flavor.sqlite,
 ) -> SQL:
     connection = {
         "sqlite": f"ATTACH '{source}' (TYPE SQLITE);USE {Path(source).stem};",
         "postgres": f"""ATTACH '{source}' AS db (TYPE POSTGRES, READ_ONLY, SCHEMA 'public');
     USE db.public;""",
     }
-    duckdb.sql(connection[kind])
+    duckdb.sql(connection[flavor])
 
     if table is None:
         table = "Tables"
