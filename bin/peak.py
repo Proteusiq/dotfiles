@@ -11,7 +11,6 @@
 
 import random
 from pathlib import Path
-from os import environ
 from enum import Enum
 from typing import Annotated, Optional
 from typing import NamedTuple
@@ -50,12 +49,12 @@ _ = [duckdb.sql(f"INSTALL {db.value};") for db in Kind]
 
 @app.command()
 def open(
-    source: Annotated[Optional[str], typer.Option(help="data source uri")] = None,
+    source: Annotated[Optional[str], typer.Option(help="data source uri",
+                                                  envvar="CONNECTION_STRING")] = None,
     get: Annotated[Optional[str], typer.Option(help="table name")] = None,
     limit: Annotated[int, typer.Option(help="number of show rows")] = 5,
     kind: Annotated[Kind, typer.Option(help="database kind")] = Kind.sqlite,
 ):
-    source = source or environ.get("CONNECTION_STRING")
     if source is None:
         print(
             "Missing [bold cyan]source [/]. Pass in source or set environment variable CONNECTION_STRING"
