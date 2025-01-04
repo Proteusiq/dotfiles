@@ -12,8 +12,7 @@
 import random
 from pathlib import Path
 from enum import Enum
-from typing import Annotated, Optional
-from typing import NamedTuple
+from typing import Annotated, NamedTuple, Optional
 
 import duckdb
 import typer

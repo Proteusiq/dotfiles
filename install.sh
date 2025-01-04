@@ -165,7 +165,7 @@ create_virtualenvs() {
     echo "🐍  Creating Python Virtual Environments..."
     local envs=(
         "$HOME/.virtualenvs/neovim|pynvim"
-        "$HOME/.virtualenvs/debugpy|pynvim debugpy"
+        "$HOME/.virtualenvs/debugpy|pynvim debugpy ruff"
     )
 
     mkdir -p "$HOME/.virtualenvs"
