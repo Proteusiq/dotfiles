@@ -63,7 +63,7 @@ def open(
     ] = None,
     limit: Annotated[
         int,
-        typer.Option("--limit", "-l", min=5, help="number of show rows"),
+        typer.Option("--limit", "-l", min=1, help="number of show rows"),
     ] = 5,
 ):
     """
