@@ -158,6 +158,6 @@ cask "nikitabobko/tap/aerospace" # inplace of yabai
 # Miscellaneous tools and utilities
 brew "applesimutils"
 cask "aldente"
-brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
+#brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
 brew "joshmedeski/sesh/sesh" # session manager for tmux
 
