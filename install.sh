@@ -12,21 +12,7 @@ read -r -p "  Would you like to set macOS preferences now? (y/N): " macos_pre
 ZSHHOME="$HOME/dotfiles/zsh"
 
 # Function to create directories
-create_dirs() {
-    echo "🗄 Creating directories..."
-    local dirs=(
-        "$HOME/Codes"
-        "$HOME/Documents/Screenshots"
-        "$HOME/Downloads/Torrents"
-    )
 
-    for dir in "${dirs[@]}"; do
-        mkdir -p "$dir"
-        echo "Created $dir"
-    done
-}
-
-# Function to install Xcode Command Line Tools
 install_xcode_tools() {
     echo "🛠 Installing Xcode Command Line Tools..."
     if ! xcode-select --print-path &>/dev/null; then
@@ -147,8 +133,8 @@ setup_utils() {
 
     # Aider
 
-    uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat
-    uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting
+    uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat --python 3.11
+    uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting --python 3.11
 
     # better scripts
     rgr --version | grep -q "repgrep" || cargo install repgrep
