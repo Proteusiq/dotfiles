@@ -51,8 +51,11 @@ To install:
 
 `curl -L https://bit.ly/42YwVdi | sh`
 
-This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.sh) which will fetch this repo and run the install script.
+This expands to [run.sh](https://github.com/proteusiq/dotfiles/blob/master/run.sh) which will fetch this repo and run the install script. Use less to peak in the script before running it.
 
+```sh
+curl -LsSf https://bit.ly/42YwVdi | less
+```
 🫸🏾 *don't accept macOS changes unless you know what it means*
 
 ## File overview
