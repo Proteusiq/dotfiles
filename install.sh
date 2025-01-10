@@ -12,7 +12,20 @@ read -r -p "  Would you like to set macOS preferences now? (y/N): " macos_pre
 ZSHHOME="$HOME/dotfiles/zsh"
 
 # Function to create directories
+create_dirs() {
+    echo "🗄 Creating directories..."
+    local dirs=(
+        "$HOME/Codes"
+        "$HOME/Documents/Screenshots"
+        "$HOME/Downloads/Torrents"
+    )
+    for dir in "${dirs[@]}"; do
+        mkdir -p "$dir"
+        echo "Created $dir" 
+    done
+}
 
+# Function to install Xcode Command Line Tools
 install_xcode_tools() {
     echo "🛠 Installing Xcode Command Line Tools..."
     if ! xcode-select --print-path &>/dev/null; then
