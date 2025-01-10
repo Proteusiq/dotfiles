@@ -488,6 +488,9 @@ alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}
 alias f=fuck
 alias update='zsh -c ~/dotfiles/install.sh'
 
+alias clip='pbcopy'
+alias paste='pbpaste'
+
 pyproject_() {
     # Prompt for package name and Python version
     echo -n "Package name: "
@@ -499,7 +502,7 @@ pyproject_() {
     python_version="${python_version:-3.11}"
 
     # UV flow commands
-    uv init "$package_name" --no-workspace 
+    uv init "$package_name" --no-workspace
     cd "$package_name" || exit
     mkdir -p "src/$package_name" tests/
     mv hello.py "src/$package_name/"
@@ -514,7 +517,7 @@ pyproject_() {
     echo -e '\n[tool.pytest.ini_options]\npythonpath = ["src"]' >>pyproject.toml
     echo -e '\n[tool.ruff.lint]\nselect = [\n\t  "A", # warn about shadowing built-ins\n\t  "E", # style stuff, whitespaces\n\t  "F", # important pyflakes lints\n\t  "I", # import sorting\n\t  "N", # naming\n]' >>pyproject.toml
 
-    # Add dev dependencies 
+    # Add dev dependencies
     uv add --dev ruff pytest
 
     # Create a test
