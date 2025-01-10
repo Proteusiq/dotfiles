@@ -134,7 +134,7 @@ eval "$(starship init zsh)"
 [[ -z "$TMUX" ]] && exec tmux
 
 # bun completions
-[ -s "%HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

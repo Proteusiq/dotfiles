@@ -32,7 +32,7 @@ antigen apply
 
 
 # bun completions
-[ -s "/Users/pwd/.bun/_bun" ] && source "/Users/pwd/.bun/_bun"
+[ -s "%HOME/.bun/_bun" ] && source "%HOME/.bun/_bun"
 
 # tmux session
 function sesh-sessions() {
