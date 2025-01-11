@@ -23,6 +23,9 @@ return {
           merge_pr = { lhs = "<C-r>", desc = "merge pull request" },
         },
       },
+      suppress_missing_scope = {
+        projects_v2 = true,
+      },
       comment_icon = "▎", -- comment marker
       outdated_icon = "󰅒 ", -- outdated indicator
       resolved_icon = " ", -- resolved indicator
