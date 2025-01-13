@@ -2,7 +2,7 @@
 
 font-size = 13
 theme = catppuccin-mocha
-shell-integration-features = no-cursor,sudo,no-title
+shell-integration-features = no-title
 cursor-style = block
 adjust-cell-height = 35%
 # background-opacity = 0.96
@@ -12,7 +12,7 @@ mouse-scroll-multiplier = 2
 
 window-padding-balance = true
 window-save-state = always
-macos-titlebar-style=transparent
+# macos-titlebar-style=transparent
 window-colorspace = "display-p3"
 background = 1C2021
 # foreground = d4be98

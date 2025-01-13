@@ -395,7 +395,11 @@ Better grammar `diw` or `daw` - delete inside/arround word
 
   ### Sesh Tmux
   raycast plugins sesh + sesh connect on terminal rocks
-  <leader> + k
+  <leader> + K
+  
+ ### Increasing and Decreasing Pane
+  <leader> + [hjkl] 
+    
 
 ---
  ### Using [tmux](https://tmuxcheatsheet.com/)
