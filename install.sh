@@ -164,7 +164,6 @@ setup_utils() {
         cp "$file" "$HOME/.local/bin/$(basename "${file%.py}")"
     done
 
-    # create .rgrc used in find-replace if it does not exit
 }
 
 # Function to create Python virtual environments
