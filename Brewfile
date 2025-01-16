@@ -13,6 +13,7 @@ cask_args appdir: "/Applications"
 
 # Development Tools
 # CLI Tools for software development
+brew "act" 
 brew "azure-cli"
 brew "difftastic"
 brew "gh" # github cli use by plenary
