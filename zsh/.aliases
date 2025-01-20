@@ -433,19 +433,71 @@ activate_venv() {
 alias activate=activate_venv
 
 setenv() {
-    if [ -f .env ]; then
-        export $(grep -v '^#' .env | xargs -0)
-    else
-        echo ".env file not found in the current directory."
+    local env_file=".env"
+    local use_op=false
+
+    # Parse arguments
+    while [[ "$#" -gt 0 ]]; do
+        case $1 in
+            --key) use_op=true ;;
+            *) echo "❌ Unknown parameter: $1"; return 1 ;;
+        esac
+        shift
+    done
+
+    # Check if .env exists
+    if [[ ! -f "$env_file" ]]; then
+        echo "❌ $env_file not found"
+        return 1
     fi
+
+    process_env_line() {
+        local line=$1
+        local var_name="${line%%=*}"
+        local var_value="${line#*=}"
+
+        # Handle 1Password URIs
+        if $use_op && [[ $var_value =~ op://.*$ ]]; then
+            # Clean URI and fetch value
+            var_value="${var_value//[\"\']/}"
+            var_value="$(op read "$var_value")"
+        fi
+
+        export "$var_name=$var_value"
+    }
+
+    # Process each line in .env
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
+        
+        process_env_line "$line"
+    done < <(grep -v '^[[:space:]]*$' "$env_file")
+
+    echo "✅ Environment variables loaded from $env_file"
 }
 
 unsetenv() {
-    if [ -f .env ]; then
-        unset $(grep -v '^#' .env | sed 's/=.*//' | xargs -0)
-    else
-        echo ".env file not found in the current directory."
+    local env_file=".env"
+
+    # Check if .env exists
+    if [[ ! -f "$env_file" ]]; then
+        echo "❌ $env_file not found"
+        return 1
     fi
+
+    # Process each line in .env
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
+        
+        # Extract variable name before the = sign
+        local var_name="${line%%=*}"
+        # Unset the variable
+        unset "$var_name"
+    done < <(grep -v '^[[:space:]]*$' "$env_file")
+
+    echo "✅ Environment variables unset from $env_file"
 }
 
 # remove all __pycache__ directories under a specified path
