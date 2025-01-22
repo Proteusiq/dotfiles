@@ -31,6 +31,7 @@ brew "mongosh"
 cask "docker"
 cask "pgadmin4"
 cask "postman"
+cask "lm-studio" # LM Studio a better ollama + open-webui in one 
 
 # Command Line Utilities
 # Enhancements and utilities for better terminal experience
