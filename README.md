@@ -132,6 +132,8 @@ The install script will also setup Python, Node and Bun versions/environments:
 "jq" # Lightweight and flexible command-line JSON processor
 "lazygit" # The lazier way to manage everything git
 "lazydocker" # The lazier way to manage everything docker
+"lm-studio" # A better LM Studio => Ollama + Open-Webui as Application
+"llama.cpp" # Serves LLM models # used for rernaking models
 "mongosh" # Mongo DB shell
 "moreutils" # Collection of tools that nobody wrote when UNIX was young
 "ncdu" # NCurses Disk Usage
