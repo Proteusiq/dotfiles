@@ -60,3 +60,6 @@ function git_add_comment_push() {
     git commit -m "$commit_message"
     git push
 }
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:$HOME/.lmstudio/bin"
