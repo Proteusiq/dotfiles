@@ -126,6 +126,7 @@ cask "shortcat" # Vimium C for Applications. Path to Mouseless world
 
 # LLM Development
 brew "ollama" # Running Large Language Model Locally
+brew "llama.cpp"
 brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
 brew "universal-ctags" # Needed for aider
