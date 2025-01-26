@@ -146,6 +146,8 @@ setup_utils() {
     
 
     # Aider and Posting
+    # Aider
+
     uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat --python 3.11
     uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting --python 3.11
 
@@ -160,6 +162,7 @@ setup_utils() {
     [! -f $HOME/.rgrc] && touch $HOME/.rgrc
 
     
+
     # custom scripts
 
     for file in $HOME/dotfiles/bin/*.py; do
