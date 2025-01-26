@@ -21,7 +21,7 @@ create_dirs() {
     )
     for dir in "${dirs[@]}"; do
         mkdir -p "$dir"
-        echo "Created $dir" 
+        echo "Created $dir"
     done
 }
 
@@ -127,7 +127,6 @@ install_yazi_themes() {
     [ -d "$folder" ] || git clone "$url" "$folder"
 }
 
-
 # Function for additional setups
 setup_utils() {
 
@@ -143,7 +142,6 @@ setup_utils() {
     export PATH="$HOME/.local/bin:$PATH"
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
     llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
-    
 
     # Aider and Posting
     # Aider
@@ -151,17 +149,15 @@ setup_utils() {
     uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat --python 3.11
     uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting --python 3.11
 
-        # Add Claude and Ollama
-    llm  install llm-claude-3 llm-ollama &>/dev/null;
-    
+    # Add Claude and Ollama
+    llm install llm-claude-3 llm-ollama &>/dev/null
+
     # Set Claude as defult
     llm models default claude-3-5-sonnet-latest
 
     # better scripts
     rgr --version | grep -q "repgrep" || cargo install repgrep
-    [! -f $HOME/.rgrc] && touch $HOME/.rgrc
-
-    
+    [ -f "$HOME/.rgrc" ] || touch "$HOME/.rgrc"
 
     # custom scripts
 
@@ -187,7 +183,7 @@ create_virtualenvs() {
             uv venv "$dir" &>/dev/null
         fi
 
-        source $dir/bin/activate  
+        source $dir/bin/activate
         uv pip install --upgrade $packages #&>/dev/null
         deactivate
     done
