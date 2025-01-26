@@ -150,6 +150,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "rsync" # Utility that provides fast incremental file transfer
 "rust" # Safe, concurrent, practical language
 "screen" # GNU screen, terminal multiplexer
+"slides" # Presentation on terminal
 "shotcat" # Vimium C for Apps: Path to Mouseless World
 "starship" # Cross-shell prompt for astronauts
 "stow" # Manage installation of multiple softwares in the same directory structure
