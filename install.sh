@@ -144,11 +144,6 @@ setup_utils() {
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
     llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
     
-    # Add Claude and Ollama
-    llm  install llm-claude-3 llm-ollama
-    
-    # Set Claude as defult
-    llm models default claude-3-5-sonnet-latest 
 
     # Aider and Posting
     uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat --python 3.11
@@ -156,7 +151,6 @@ setup_utils() {
 
     # better scripts
     rgr --version | grep -q "repgrep" || cargo install repgrep
-   [! -f $HOME/.rgrc] && touch $HOME/.rgrc 
     
     # custom scripts
 
