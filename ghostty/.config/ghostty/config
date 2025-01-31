@@ -43,8 +43,9 @@ keybind = cmd+b>e=equalize_splits
 copy-on-select = clipboard
 
 #macos
-macos-titlebar-style=hidden
-window-decoration=false
-window-inherit-working-directory=true
-macos-titlebar-proxy-icon=hidden
+macos-titlebar-style = hidden
+window-decoration = false
+window-inherit-working-directory = true
+macos-titlebar-proxy-icon = hidden
+macos-option-as-alt = left
 
