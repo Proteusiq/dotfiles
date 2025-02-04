@@ -153,7 +153,7 @@ setup_utils() {
     llm install llm-claude-3 llm-ollama &>/dev/null
 
     # Set Claude as defult
-    llm models default claude-3-5-sonnet-latest
+    llm models default claude-3.5-sonnet-latest
 
     # better scripts
     rgr --version | grep -q "repgrep" || cargo install repgrep
