@@ -473,6 +473,9 @@ docker # + C-r filter search to 'docker' history
 # direct command output to buffer
 `:r !ls -al`
 
+# fold and unfold text
+`:set foldmethod=manual` select an area > `zf` to fold, `zo`to unfold under cursor
+
 # Telescope:
 :Telescope keymap
 :Telescope lsp_definition `gd`
