@@ -470,6 +470,9 @@ docker # + C-r filter search to 'docker' history
 #   '<,'>s/^\([^#]\)/# &/ -> replace anything but lines  starting with '#' with # "
 : + !(Shift + 1) # filter mode: echo "OPENAI_API_KEY=sk-****** >> .env"
 
+# direct command output to buffer
+`:r !ls -al`
+
 # Telescope:
 :Telescope keymap
 :Telescope lsp_definition `gd`
