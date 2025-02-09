@@ -76,41 +76,6 @@ configure_node() {
     echo "🍞 Baked bun -v$($HOME/.bun/bin/bun --version)"
 }
 
-# Function to setup Jupyter Lab environment
-setup_jupyter_lab() {
-    echo "🪐 Setting up Jupyter Lab environment in Codes/lab..."
-
-    mkdir -p "$HOME/Codes/lab"
-    cd "$HOME/Codes/lab"
-
-    # Check if virtual environment directory exists
-    if [ ! -d ".venv" ]; then
-        echo "🪐 Creating virtual environment..."
-        uv venv
-    fi
-
-    # Activate the virtual environment
-    source .venv/bin/activate
-
-    # Check if Jupyter Lab is installed
-    if ! uv pip freeze | grep jupyterlab &>/dev/null; then
-        echo "🪐 Installing Jupyter Lab..."
-        uv pip install jupyterlab jupyterlab-dash
-    else
-        echo "🪐 Jupyter Lab is already installed. Upgrading..."
-        uv pip install --upgrade jupyterlab jupyterlab-dash
-    fi
-
-    # Deactivate the virtual environment
-    deactivate
-
-    echo "🪐 Jupyter Lab setup complete! 🚀"
-    echo "🪐 Use 'jupyterit' to start and 'jupyterkill' to stop Jupyter Lab."
-
-    # Back to the original directory
-    cd - || exit
-}
-
 # Function to install tmux plugin manager
 install_tmux_plugins() {
     local folder="$HOME/.tmux/plugins/tpm"
@@ -150,7 +115,7 @@ setup_utils() {
     uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting --python 3.11
 
     # Add Claude and Ollama
-    llm install llm-claude-3 llm-ollama &>/dev/null
+    llm install llm-anthropic llm-ollama &>/dev/null
 
     # Set Claude as defult
     llm models default claude-3.5-sonnet-latest
@@ -203,7 +168,6 @@ install_xcode_tools
 set_macos_preferences
 install_brew
 configure_node
-setup_jupyter_lab
 create_virtualenvs
 install_tmux_plugins
 install_yazi_themes

@@ -517,12 +517,6 @@ clean_pycache() {
 
 alias clean=clean_pycache
 
-# Alias to start Jupyter Lab
-alias jupyterit='source $HOME/Codes/lab/.venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &;activate'
-
-# Alias to kill Jupyter Lab
-alias jupyterkill='kill -9 $(pgrep -f jupyter-lab) && deactivate && rm /tmp/lab.log'
-
 # Productive Laziness
 # llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
 alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "echo \"execute:\n\t {}\n\"; eval {}"; }; llm_func'

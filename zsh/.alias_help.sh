@@ -198,8 +198,6 @@ function show_special_aliases() {
         "du" "ncdu" "Use ncdu for disk usage analysis" \
         "ls" "eza --icons=always" "Use eza for better directory listing" \
         "tree" "eza --tree" "Use eza for better tree listing" \
-        "jupyterit" "source $HOME/Codes/lab/.venv/bin/activate && nohup jupyter lab --allow-root > /tmp/lab.log 2>&1 &" "Start Jupyter Lab" \
-        "jupyterkill" "kill -9 $(pgrep -f jupyter-lab) && deactivate && rm /tmp/lab.log" "Kill Jupyter Lab" \
         "cmd" "llm_func() { command llm -t cmd \"$@\" | xargs -I {} sh -c \"echo \"execute:\n\t {}\n\"; eval {}\"; }; llm_func" "Productive laziness with llm" \
         "iexit" "tmux kill-session -t $(tmux display-message -p '#S')" "Exit tmux session" \
         "ikill" "tmux kill-server" "Kill tmux server" \
