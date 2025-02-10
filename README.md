@@ -18,29 +18,27 @@ Dotfiles for 🦀(MLOps) and 🐲(Data Scientist): A [Sara Pope's](https://githu
 
 ## Managing Aliases
 
-The dotfiles include a comprehensive set of aliases to streamline your workflow. You can view and manage these aliases using the `alias_help.sh` script. To see a list of available alias categories, run:
+The dotfiles include a comprehensive set of aliases to streamline your workflow. You can view and manage these aliases using the CLI tool. To see a list of available alias categories and examples, run:
 
 ```bash
 aliases
 ```
-To describe a specific category, use:
+
+To show all aliases in a specific category, use:
 
 ```bash
-aliases --help <category_name>
+aliases --show git
+aliases -s shortcuts
 ```
 
-
-To describe a specific alias, use:
+To see detailed information about a specific alias, use:
 
 ```bash
-aliases --describe <alias_name>
+aliases --describe ga
+aliases -d gp
 ```
 
-For example, to see what the alias `gp` does, you would run:
-
-```bash
-aliases --describe gp
-```
+Available categories: git, coreutils, yarn, pnpm, shortcuts, special, functions
 
 **Before you get started** make sure you give full disk access permission to your terminal (for writing macos defaults). `System Preferences -> Privacy -> Full Disk Access`.
 
