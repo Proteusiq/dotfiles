@@ -47,6 +47,10 @@
 	process = git-lfs filter-process
 [gpg]
 	format = ssh
+[commit]
+	gpgsign = true
+[user]
+	signingkey = ~/.ssh/id_ed25519.pub
 [difftool]
         prompt = false
 
