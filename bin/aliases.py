@@ -335,12 +335,40 @@ FUNCTIONS = [
 
 
 @app.command()
-def show(category: Optional[Category] = typer.Argument(None)):
-    """Show aliases for a specific category or display help if no category specified."""
-    if category is None:
-        show_help()
+def main(
+    show: Optional[Category] = typer.Option(
+        None, "--show", "-s", help="Show aliases for a specific category"
+    ),
+    describe: str = typer.Option(
+        None, "--describe", "-d", help="Describe a specific alias"
+    ),
+):
+    """
+    CLI tool to display and manage aliases
+
+    Examples:
+        Show all Git aliases:
+            aliases -s git
+
+        Show details for a specific alias:
+            aliases -d ga
+
+        List all categories:
+            aliases
+    """
+    if describe:
+        show_alias_description(describe)
         return
 
+    if show:
+        show_category_aliases(show)
+        return
+
+    show_help()
+
+
+def show_category_aliases(category: Category):
+    """Display aliases for a specific category."""
     alias_map = {
         Category.GIT: ("Git Aliases", GIT_ALIASES),
         Category.COREUTILS: ("Coreutils Aliases", COREUTILS_ALIASES),
@@ -356,9 +384,8 @@ def show(category: Optional[Category] = typer.Argument(None)):
         add_aliases(title, aliases)
 
 
-@app.command()
-def describe(alias_name: str):
-    """Describe a specific alias."""
+def show_alias_description(alias_name: str):
+    """Show detailed description for a specific alias."""
     all_aliases = (
         GIT_ALIASES
         + COREUTILS_ALIASES
@@ -378,26 +405,31 @@ def describe(alias_name: str):
 
 
 def show_help():
-    """Display help information."""
-    console.print("\n[cyan bold]Usage:[/] aliases [--help category]")
+    """Display help information with examples."""
+    console.print("\n[cyan bold]Usage Examples:[/]")
+    console.print("  [green]aliases -s git[/]          # Show all Git aliases")
+    console.print("  [green]aliases -s shortcuts[/]    # Show all shortcuts")
+    console.print("  [green]aliases -d ga[/]          # Show details for 'ga' alias")
 
-    table = Table(show_header=False, box=None)
+    table = Table(title="Available Categories", show_header=True, box=None)
     table.add_column("Category", style="green")
     table.add_column("Description")
+    table.add_column("Example", style="cyan")
 
-    table.add_row("git", "Show Git aliases")
-    table.add_row("coreutils", "Show Coreutils aliases")
-    table.add_row("yarn", "Show Yarn aliases")
-    table.add_row("pnpm", "Show PNPM aliases")
-    table.add_row("shortcuts", "Show Shortcuts")
-    table.add_row("special", "Show Special aliases")
-    table.add_row("functions", "Show Functions")
+    table.add_row("git", "Git version control aliases", "g, ga, gp")
+    table.add_row("coreutils", "Enhanced Unix commands", "ls, cp, mv")
+    table.add_row("yarn", "Yarn package manager", "y, yi, ya")
+    table.add_row("pnpm", "PNPM package manager", "pn, pna, pni")
+    table.add_row("shortcuts", "Common shortcuts", "c, x, o")
+    table.add_row("special", "Special commands", "cat, dev, work")
+    table.add_row("functions", "Shell functions", "gi, take, up")
 
     console.print("\n[yellow bold]Categories:[/]")
     console.print(table)
 
     console.print("\n[yellow bold]Options:[/]")
-    console.print("[green]--describe alias_name[/]  Describe a specific alias")
+    console.print("[green]-s, --show CATEGORY[/]     Show aliases for a category")
+    console.print("[green]-d, --describe ALIAS[/]    Show detailed description of an alias")
 
 
 if __name__ == "__main__":
