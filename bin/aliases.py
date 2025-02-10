@@ -38,10 +38,12 @@ def print_alias(name: str, command: str, description: str) -> None:
     content.add_column("Description", width=40)
     content.add_row(name, command, description)
     
+    # Create title with full command
+    title = f"[cyan bold]{name}[/] ([green]{command}[/])"
     panel = Panel(
         content,
         box=ROUNDED,
-        title=f"[cyan bold]{name}[/]",
+        title=title,
         border_style="blue",
         padding=(1, 2)
     )
