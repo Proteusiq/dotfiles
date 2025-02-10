@@ -426,7 +426,14 @@ def show_alias_description(alias_name: str):
 
     for name, command, description in all_aliases:
         if name == alias_name:
-            print_alias(name, command, description)
+            table = Table(box=ROUNDED, title="[blue bold]Alias Details[/]", border_style="blue")
+            table.add_column("Alias", style="cyan bold", width=15)
+            table.add_column("Command", style="green", width=30)
+            table.add_column("Description", width=90)
+            print_alias(name, command, description, table)
+            console.print()
+            console.print(Panel(table, border_style="blue"))
+            console.print()
             return
 
     console.print(f"[red]Alias '{alias_name}' not found.[/]")
