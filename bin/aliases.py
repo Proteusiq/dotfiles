@@ -11,7 +11,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from rich.box import box
+from rich.box import ROUNDED, HEAVY
 from rich.text import Text
 from typing import Optional
 from enum import Enum
@@ -40,7 +40,7 @@ def print_alias(name: str, command: str, description: str) -> None:
     
     panel = Panel(
         content,
-        box=box.ROUNDED,
+        box=ROUNDED,
         title=f"[cyan bold]{name}[/]",
         border_style="blue",
         padding=(1, 2)
@@ -53,7 +53,7 @@ def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
     category_panel = Panel(
         "",
         title=f"[blue bold]{category}[/]",
-        box=box.HEAVY,
+        box=HEAVY,
         border_style="blue",
         padding=(1, 2)
     )
