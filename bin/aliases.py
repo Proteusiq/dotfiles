@@ -367,17 +367,35 @@ def main(
     ),
 ):
     """
-    CLI tool to display and manage aliases
+    CLI tool to display and manage shell aliases and functions
 
     Examples:
+        List all available categories:
+            aliases
+
         Show all Git aliases:
+            aliases --show git
             aliases -s git
 
+        Show all shortcuts:
+            aliases --show shortcuts
+            aliases -s shortcuts
+
         Show details for a specific alias:
+            aliases --describe ga
             aliases -d ga
 
-        List all categories:
-            aliases
+        Get help with yarn commands:
+            aliases --show yarn
+            aliases -s yarn
+
+        Learn about special commands:
+            aliases --show special
+            aliases -s special
+
+        Discover useful functions:
+            aliases --show functions
+            aliases -s functions
     """
     if describe:
         show_alias_description(describe)
@@ -429,30 +447,34 @@ def show_alias_description(alias_name: str):
 
 def show_help():
     """Display help information with examples."""
-    console.print("\n[cyan bold]Usage Examples:[/]")
-    console.print("  [green]aliases -s git[/]          # Show all Git aliases")
-    console.print("  [green]aliases -s shortcuts[/]    # Show all shortcuts")
-    console.print("  [green]aliases -d ga[/]          # Show details for 'ga' alias")
+    console.print("\n[cyan bold]🚀 Usage Examples:[/]")
+    console.print("  [green]aliases --show git[/]        # Show all Git aliases")
+    console.print("  [green]aliases --show shortcuts[/]  # Show all shortcuts")
+    console.print("  [green]aliases --describe ga[/]     # Show details for 'ga' alias")
+    console.print("  [green]aliases --show yarn[/]       # Show Yarn package manager commands")
+    console.print("  [green]aliases --show functions[/]  # Show useful shell functions")
 
-    table = Table(title="Available Categories", show_header=True, box=None)
-    table.add_column("Category", style="green")
-    table.add_column("Description")
-    table.add_column("Example", style="cyan")
+    table = Table(title="📚 Available Categories", show_header=True, box=ROUNDED)
+    table.add_column("Category 📂", style="green")
+    table.add_column("Description 📝")
+    table.add_column("Examples ✨", style="cyan")
 
-    table.add_row("git", "Git version control aliases", "g, ga, gp")
-    table.add_row("coreutils", "Enhanced Unix commands", "ls, cp, mv")
-    table.add_row("yarn", "Yarn package manager", "y, yi, ya")
-    table.add_row("pnpm", "PNPM package manager", "pn, pna, pni")
-    table.add_row("shortcuts", "Common shortcuts", "c, x, o")
-    table.add_row("special", "Special commands", "cat, dev, work")
-    table.add_row("functions", "Shell functions", "gi, take, up")
+    table.add_row("git", "Git version control shortcuts", "g (git), ga (add), gp (push)")
+    table.add_row("coreutils", "Enhanced Unix commands", "ls (list), cp (copy), mv (move)")
+    table.add_row("yarn", "Yarn package manager", "y (yarn), yi (init), ya (add)")
+    table.add_row("pnpm", "PNPM package manager", "pn (pnpm), pna (add), pni (install)")
+    table.add_row("shortcuts", "Quick command shortcuts", "c (clear), x (exit), o (open)")
+    table.add_row("special", "Special system commands", "cat (bat), dev (cd ~/dev)")
+    table.add_row("functions", "Useful shell functions", "gi (gitignore), take (mkdir+cd)")
 
-    console.print("\n[yellow bold]Categories:[/]")
+    console.print("\n[yellow bold]🗂️  Categories:[/]")
     console.print(table)
 
-    console.print("\n[yellow bold]Options:[/]")
-    console.print("[green]-s, --show CATEGORY[/]     Show aliases for a category")
-    console.print("[green]-d, --describe ALIAS[/]    Show detailed description of an alias")
+    console.print("\n[yellow bold]⚙️  Options:[/]")
+    console.print("[green]--show, -s CATEGORY[/]    Show all aliases in a category")
+    console.print("[green]--describe, -d ALIAS[/]    Show detailed description of an alias")
+    
+    console.print("\n[cyan]💡 Tip:[/] Use [green]aliases --describe <alias>[/] to learn more about any command!")
 
 
 if __name__ == "__main__":
