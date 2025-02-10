@@ -77,19 +77,19 @@ def open(
     source: Annotated[
         Optional[str],
         typer.Option(
-            "--source", "-s", help="data source uri", envvar="CONNECTION_STRING"
+            "--source", "-s", help="data source uri", envvar="CONNECTION_STRING",
         ),
     ] = None,
     table: Annotated[
-        Optional[str], typer.Option("--get", "-g", help="table name")
+        Optional[str], typer.Option("--get", "-g", help="table name",),
     ] = None,
     limit: Annotated[
         int,
-        typer.Option("--limit", "-l", min=1, help="number of show rows"),
+        typer.Option("--limit", "-l", min=1, help="number of show rows",),
     ] = 5,
     debug: Annotated[
         bool,
-        typer.Option("--debug", help="Enable debug logging"),
+        typer.Option("--debug", help="Enable debug logging",),
     ] = False,
 ):
     """
