@@ -426,84 +426,78 @@ def show_alias_description(alias_name: str):
 
     for name, command, description in all_aliases:
         if name == alias_name:
-            # Create main details panel
-            details_table = Table(
-                box=ROUNDED,
-                title="[blue bold]Alias Details[/]",
+            # Create a single container with all details
+            main_table = Table(
+                box=HEAVY,
+                title="[blue bold]Alias Information[/]",
                 border_style="blue",
-                show_header=False,
+                show_header=True,
+                width=100
             )
-            details_table.add_column("Key", style="cyan bold", width=15)
-            details_table.add_column("Value", style="green")
-            
-            details_table.add_row("Alias", f"[cyan bold]{name}[/]")
-            details_table.add_row("Command", f"[green]{command}[/]")
-            details_table.add_row("Description", description)
+            main_table.add_column("Category", style="cyan bold", width=30)
+            main_table.add_column("Details", style="white")
 
-            # Add example usage
-            example_table = Table(
-                box=ROUNDED,
-                title="[yellow bold]Example Usage[/]",
-                border_style="yellow",
-                show_header=False,
-            )
-            example_table.add_column("", style="yellow")
+            # Details section
+            details_content = Table(show_header=False, box=None)
+            details_content.add_column("", style="green")
+            details_content.add_row(f"[cyan bold]Alias:[/] {name}")
+            details_content.add_row(f"[green]Command:[/] {command}")
+            details_content.add_row(f"Description: {description}")
+            main_table.add_row("[blue]Details[/]", details_content)
 
-            # Generate contextual examples based on the alias type
+            # Examples section
+            examples_content = Table(show_header=False, box=None)
+            examples_content.add_column("", style="yellow")
+
+            # Generate contextual examples
             if name in [a[0] for a in GIT_ALIASES]:
-                example_table.add_row(f"$ {name} # Run basic command")
+                examples_content.add_row(f"$ {name} # Run basic command")
                 if "add" in command:
-                    example_table.add_row(f"$ {name} file.txt # Add specific file")
-                    example_table.add_row(f"$ {name} . # Add all changes")
+                    examples_content.add_row(f"$ {name} file.txt # Add specific file")
+                    examples_content.add_row(f"$ {name} . # Add all changes")
                 elif "commit" in command:
-                    example_table.add_row(f'$ {name} "feat: add new feature"')
+                    examples_content.add_row(f'$ {name} "feat: add new feature"')
                 elif "checkout" in command:
-                    example_table.add_row(f"$ {name} main # Switch to main branch")
-                    example_table.add_row(f"$ {name} -b feature # Create new branch")
+                    examples_content.add_row(f"$ {name} main # Switch to main branch")
+                    examples_content.add_row(f"$ {name} -b feature # Create new branch")
             elif name in [a[0] for a in YARN_ALIASES]:
-                example_table.add_row(f"$ {name} # Basic command")
+                examples_content.add_row(f"$ {name} # Basic command")
                 if "add" in command:
-                    example_table.add_row(f"$ {name} react # Add package")
-                    example_table.add_row(f"$ {name} @types/react # Add types")
+                    examples_content.add_row(f"$ {name} react # Add package")
+                    examples_content.add_row(f"$ {name} @types/react # Add types")
             elif name in [a[0] for a in PNPM_ALIASES]:
-                example_table.add_row(f"$ {name} # Basic command")
+                examples_content.add_row(f"$ {name} # Basic command")
                 if "add" in command:
-                    example_table.add_row(f"$ {name} -D typescript # Add dev dependency")
+                    examples_content.add_row(f"$ {name} -D typescript # Add dev dependency")
             elif "mkdir" in command or "cd" in command:
-                example_table.add_row(f"$ {name} new-project")
-                example_table.add_row(f"$ {name} path/to/dir")
+                examples_content.add_row(f"$ {name} new-project")
+                examples_content.add_row(f"$ {name} path/to/dir")
             else:
-                example_table.add_row(f"$ {name}")
+                examples_content.add_row(f"$ {name}")
+            
+            main_table.add_row("[yellow]Examples[/]", examples_content)
 
-            # Print everything
-            console.print()
-            console.print(Panel(details_table, border_style="blue"))
-            console.print()
-            console.print(Panel(example_table, border_style="yellow"))
-            console.print()
-
-            # Add tips if available
+            # Tips section if available
             if any(keyword in command for keyword in ["git", "yarn", "pnpm", "nvim"]):
-                tips_table = Table(
-                    box=ROUNDED,
-                    title="[green bold]💡 Tips[/]",
-                    border_style="green",
-                    show_header=False,
-                )
-                tips_table.add_column("", style="green")
+                tips_content = Table(show_header=False, box=None)
+                tips_content.add_column("", style="green")
                 
                 if "git" in command:
-                    tips_table.add_row("• Use --help to see all available options")
-                    tips_table.add_row("• Add -v for verbose output")
+                    tips_content.add_row("• Use --help to see all available options")
+                    tips_content.add_row("• Add -v for verbose output")
                 elif "yarn" in command or "pnpm" in command:
-                    tips_table.add_row("• Check package.json for available scripts")
-                    tips_table.add_row("• Use --help to see all options")
+                    tips_content.add_row("• Check package.json for available scripts")
+                    tips_content.add_row("• Use --help to see all options")
                 elif "nvim" in command:
-                    tips_table.add_row("• Press :help for built-in documentation")
-                    tips_table.add_row("• Use :checkhealth to verify setup")
+                    tips_content.add_row("• Press :help for built-in documentation")
+                    tips_content.add_row("• Use :checkhealth to verify setup")
+                
+                main_table.add_row("[green]Tips[/]", tips_content)
 
-                console.print(Panel(tips_table, border_style="green"))
-                console.print()
+            # Print the single container
+            console.print()
+            console.print(Panel(main_table, border_style="blue"))
+            console.print()
             return
 
     console.print(f"[red]Alias '{alias_name}' not found.[/]")
