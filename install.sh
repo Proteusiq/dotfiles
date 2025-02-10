@@ -95,9 +95,6 @@ install_yazi_themes() {
 # Function for additional setups
 setup_utils() {
 
-    # Aliases help
-    chmod +x "$ZSHHOME/.alias_help.sh"
-
     # Install git large files
     git lfs install
 

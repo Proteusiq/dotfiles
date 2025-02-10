@@ -439,8 +439,11 @@ setenv() {
     # Parse arguments
     while [[ "$#" -gt 0 ]]; do
         case $1 in
-            --key) use_op=true ;;
-            *) echo "❌ Unknown parameter: $1"; return 1 ;;
+        --key) use_op=true ;;
+        *)
+            echo "❌ Unknown parameter: $1"
+            return 1
+            ;;
         esac
         shift
     done
@@ -470,7 +473,7 @@ setenv() {
     while IFS= read -r line || [[ -n "$line" ]]; do
         # Skip comments and empty lines
         [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
-        
+
         process_env_line "$line"
     done < <(grep -v '^[[:space:]]*$' "$env_file")
 
@@ -490,7 +493,7 @@ unsetenv() {
     while IFS= read -r line || [[ -n "$line" ]]; do
         # Skip comments and empty lines
         [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
-        
+
         # Extract variable name before the = sign
         local var_name="${line%%=*}"
         # Unset the variable
@@ -537,15 +540,3 @@ alias update='zsh -c ~/dotfiles/install.sh'
 alias clip='pbcopy'
 alias paste='pbpaste'
 
-aliases() {
-    if [[ "$1" == "--help" ]]; then
-        "$HOME/dotfiles/zsh/.alias_help.sh" "$2"
-    elif [[ "$1" == "--describe" ]]; then
-        shift
-        "$HOME/dotfiles/zsh/.alias_help.sh" --describe "$@"
-    elif [[ -n "$1" ]]; then
-        command alias "$@"
-    else
-        "$HOME/dotfiles/zsh/.alias_help.sh"
-    fi
-}
