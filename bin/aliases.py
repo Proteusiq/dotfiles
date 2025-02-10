@@ -10,6 +10,8 @@
 import typer
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
+from rich.box import box
 from rich.text import Text
 from typing import Optional
 from enum import Enum
@@ -29,18 +31,37 @@ class Category(str, Enum):
 
 
 def print_alias(name: str, command: str, description: str) -> None:
-    table = Table(show_header=False, box=None)
-    table.add_column("Name", style="cyan", width=12)
-    table.add_column("Command", style="green", width=42)
-    table.add_column("Description")
-    table.add_row(name, command, description)
-    console.print(table)
+    """Print a single alias in a beautiful box."""
+    content = Table(show_header=False, box=None, padding=(0, 1))
+    content.add_column("Name", style="cyan bold", width=12)
+    content.add_column("Command", style="green", width=42)
+    content.add_column("Description", width=40)
+    content.add_row(name, command, description)
+    
+    panel = Panel(
+        content,
+        box=box.ROUNDED,
+        title=f"[cyan bold]{name}[/]",
+        border_style="blue",
+        padding=(1, 2)
+    )
+    console.print(panel)
 
 
 def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
-    console.print(f"\n[blue bold]{category}[/]")
+    """Display a category of aliases in a beautiful box."""
+    category_panel = Panel(
+        "",
+        title=f"[blue bold]{category}[/]",
+        box=box.HEAVY,
+        border_style="blue",
+        padding=(1, 2)
+    )
+    console.print(category_panel)
+    
     for name, command, description in aliases:
         print_alias(name, command, description)
+        console.print()  # Add spacing between aliases
 
 
 GIT_ALIASES = [
