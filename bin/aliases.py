@@ -50,15 +50,10 @@ def print_alias(name: str, command: str, description: str) -> None:
 
 
 def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
-    """Display a category of aliases in a beautiful box."""
-    category_panel = Panel(
-        "",
-        title=f"[blue bold]{category}[/]",
-        box=HEAVY,
-        border_style="blue",
-        padding=(1, 2)
-    )
-    console.print(category_panel)
+    """Display a category of aliases."""
+    console.print(f"\n[blue bold]{category}[/]")
+    console.print("=" * len(category))
+    console.print()
     
     for name, command, description in aliases:
         print_alias(name, command, description)
