@@ -29,35 +29,28 @@ class Category(str, Enum):
     FUNCTIONS = "functions"
 
 
-def print_alias(name: str, command: str, description: str) -> None:
-    """Print a single alias in a beautiful box."""
-    content = Table(show_header=False, box=None, padding=(0, 1))
-    content.add_column("Name", style="cyan bold", width=12)
-    content.add_column("Command", style="green", width=42)
-    content.add_column("Description", width=40)
-    content.add_row(name, command, description)
-    
-    # Create title with full command
-    title = f"[cyan bold]{name}[/] ([green]{command}[/])"
-    panel = Panel(
-        content,
-        box=ROUNDED,
-        title=title,
-        border_style="blue",
-        padding=(1, 2)
+def print_alias(name: str, command: str, description: str, table: Table) -> None:
+    """Add an alias to the table."""
+    table.add_row(
+        f"[cyan bold]{name}[/]",
+        f"[green]{command}[/]",
+        description
     )
-    console.print(panel)
 
 
 def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
-    """Display a category of aliases."""
-    console.print(f"\n[blue bold]{category}[/]")
-    console.print("=" * len(category))
-    console.print()
+    """Display a category of aliases in a single table."""
+    table = Table(box=ROUNDED, title=f"[blue bold]{category}[/]", border_style="blue")
+    table.add_column("Alias", style="cyan bold", width=12)
+    table.add_column("Command", style="green", width=42)
+    table.add_column("Description", width=40)
     
     for name, command, description in aliases:
-        print_alias(name, command, description)
-        console.print()  # Add spacing between aliases
+        print_alias(name, command, description, table)
+    
+    console.print()
+    console.print(Panel(table, border_style="blue"))
+    console.print()
 
 
 GIT_ALIASES = [
