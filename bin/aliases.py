@@ -42,8 +42,8 @@ def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
     """Display a category of aliases in a single table."""
     table = Table(box=ROUNDED, title=f"[blue bold]{category}[/]", border_style="blue", width=300)
     table.add_column("Alias", style="cyan bold", width=15)
-    table.add_column("Command", style="green", width=50)
-    table.add_column("Description", width=230)
+    table.add_column("Command", style="green", width=30)
+    table.add_column("Description", width=90)
     
     for name, command, description in aliases:
         print_alias(name, command, description, table)
