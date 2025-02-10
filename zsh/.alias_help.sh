@@ -405,7 +405,6 @@ function describe_alias() {
         ls) print_alias "ls" "eza --icons=always" "Use eza for better directory listing" ;;
         tree) print_alias "tree" "eza --tree" "Use eza for better tree listing" ;;
         *) echo "Alias '$alias_name' not found." ;;
-        *) echo "Alias '$alias_name' not found." ;;
     esac
 }
 

@@ -537,57 +537,6 @@ alias update='zsh -c ~/dotfiles/install.sh'
 alias clip='pbcopy'
 alias paste='pbpaste'
 
-pyproject_() {
-    # Prompt for package name and Python version
-    echo -n "Package name: "
-    read -r package_name
-    echo -n "Python Version [default: 3.11]: "
-    read -r python_version
-
-    # Set the default Python version if none provided
-    python_version="${python_version:-3.11}"
-
-    # UV flow commands
-    uv init "$package_name" --no-workspace
-    cd "$package_name" || exit
-    mkdir -p "src/$package_name" tests/
-    mv hello.py "src/$package_name/"
-    uv python pin "$python_version"
-
-    # Check if pyproject.toml exists and add a [project] table if missing
-    if ! grep -q '\[project\]' pyproject.toml; then
-        echo -e "[project]\nname >= \"$package_name\"\nversion = \"0.1.0\"" >>pyproject.toml
-    fi
-
-    # Append common settings to pyproject.toml
-    echo -e '\n[tool.pytest.ini_options]\npythonpath = ["src"]' >>pyproject.toml
-    echo -e '\n[tool.ruff.lint]\nselect = [\n\t  "A", # warn about shadowing built-ins\n\t  "E", # style stuff, whitespaces\n\t  "F", # important pyflakes lints\n\t  "I", # import sorting\n\t  "N", # naming\n]' >>pyproject.toml
-
-    # Add dev dependencies
-    uv add --dev ruff pytest
-
-    # Create a test
-    cat <<EOL >tests/test_hello.py
-from $package_name import hello
-
-def test_main_output(capfd):
-    # Arrange
-    hello.main()
-
-    # Act
-    captured = capfd.readouterr()
-
-    # Assert
-    assert captured.out == "Hello from $package_name!\\n"
-EOL
-
-    echo "🐍 Project: '$package_name' with Python $python_version created"
-    tree .
-}
-
-# alias for the function
-alias pyproject=pyproject_
-
 aliases() {
     if [[ "$1" == "--help" ]]; then
         "$HOME/dotfiles/zsh/.alias_help.sh" "$2"
