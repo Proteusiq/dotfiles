@@ -7,13 +7,14 @@
 # ]
 # ///
 
-import typer
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-from rich.box import ROUNDED, HEAVY
-from typing import Optional
 from enum import Enum
+from typing import Optional
+
+import typer
+from rich.box import HEAVY, ROUNDED
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 console = Console()
 app = typer.Typer(help="CLI tool to display and manage aliases")
