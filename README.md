@@ -121,6 +121,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "gnu-which" # GNU implementation of the 'which' utility to find path of executables
 "gnupg" # GNU Pretty Good Privacy (PGP) package
 "go" # The Go programming language
+"goose" # Goose AI Agent on the loose
 "graphviz" # Visualizing graphs
 "grep" # GNU grep, egrep and fgrep
 "gum" # Glamorous shell scripts

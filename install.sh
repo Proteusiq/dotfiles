@@ -99,6 +99,9 @@ setup_utils() {
     git lfs install
 
     # Productive laziness
+    # Goose
+    curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash
+
     # LLM
     uv tool list | grep -q "llm" && uv tool upgrade llm || uv tool install llm
     export PATH="$HOME/.local/bin:$PATH"
