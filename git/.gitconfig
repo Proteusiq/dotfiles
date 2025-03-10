@@ -32,8 +32,8 @@
   branch = false
   difftool = true
 [user]
-	name = proteusiq
-	email = praysonpi@gmail.com
+	name = Prayson W. Daniel
+	email = prdani@norlys.dk
 [pull]
 	rebase = false
 [init]
@@ -58,3 +58,9 @@
         cmd = difft "$LOCAL" "$REMOTE"
 [rerere]
 	enabled = true
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
