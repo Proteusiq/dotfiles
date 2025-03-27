@@ -124,6 +124,8 @@ The install script will also setup Python, Node and Bun versions/environments:
 "grep" # GNU grep, egrep and fgrep
 "gum" # Glamorous shell scripts
 "gzip" # GNU compression utility
+"harlequin" # CLI access to DB. Much better than my custom"peak" cli
+"httpie" # Colorful curl. Instead of curl,  just httpx 
 "hiddenbar" # Hides unpopular tab icons
 "hyperfine" # A command-line benchmarking tool
 "jq" # Lightweight and flexible command-line JSON processor
@@ -138,7 +140,6 @@ The install script will also setup Python, Node and Bun versions/environments:
 "node" # Platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 "ollama" # Running Large Language Models offline
 "pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
-"posting" # Postman but in TUI
 "python" # Interpreted, interactive, object-oriented programming language
 "raycast" # A better spotlight - CleanShotX, Ollama, OpenAI, Alacritty, Brew extensitions
 "rename" # Perl-powered file rename script with many helpful built-ins

@@ -58,6 +58,7 @@ brew "gnupg"
 brew "graphviz" # use by PyMC vizuation graph
 brew "grep"
 brew "gzip"
+brew "httpie" # better curl
 brew "hyperfine"
 brew "jq"
 brew "moreutils"
