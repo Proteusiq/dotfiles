@@ -127,6 +127,7 @@ def show_table(
         t.add_column(column, style=random.choice(STYLES))
 
     for row in results.fetchall():
+        row = [f"{value}" for value in row] # stringfy
         t.add_row(*row)
 
     print(t)
