@@ -6,9 +6,6 @@ set -euo pipefail
 
 echo -e "\n🐌 The World Changed! Beginning MacOS setup...\n"
 
-# Ask for user inputs at the beginning
-read -r -p "  Would you like to set macOS preferences now? (y/N): " macos_preferences_confirm
-
 ZSHHOME="$HOME/dotfiles/zsh"
 
 # Function to create directories
@@ -58,15 +55,6 @@ install_brew() {
     brew bundle --file="$HOME/dotfiles/Brewfile"
 }
 
-# Function to set macOS preferences
-set_macos_preferences() {
-    if [[ "$macos_preferences_confirm" =~ ^[yY](es)?$ ]]; then
-        echo "  Setting macOS preferences..."
-        source "$HOME/dotfiles/macos/.macos"
-    else
-        echo "  Skipping macOS preferences setup."
-    fi
-}
 
 # Function to configure Node and Bun
 configure_node() {
@@ -165,7 +153,6 @@ stow_dotfiles() {
 # Main setup sequence
 create_dirs
 install_xcode_tools
-set_macos_preferences
 install_brew
 configure_node
 create_virtualenvs
