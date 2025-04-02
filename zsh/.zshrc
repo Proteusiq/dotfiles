@@ -10,9 +10,17 @@ SAVEHIST=10000
 
 source ~/antigen.zsh
 
+# Add Homebrew completions to fpath before initializing compinit
+if type brew &>/dev/null; then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:$FPATH"
+fi
+
 # rye completetion
 fpath=(~/.zfunc $fpath)
-autoload -Uz compinit && compinit
+
+# Initialize completion system
+autoload -Uz compinit
+compinit -i
 
 # load the rest of the configs
 source $HOME/dotfiles/zsh/.exports
