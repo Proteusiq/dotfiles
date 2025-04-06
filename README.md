@@ -383,6 +383,15 @@ Better grammar `diw` or `daw` - delete inside/arround word
 
 ---
 
+### Extra: Comment Visual Block
+```sh
+ggVG
+<ctrl> + v
+<shift> + i
+#<space>
+<ESC>
+```
+
 </details>
 
 ### Who You Gonna Call? 👻
