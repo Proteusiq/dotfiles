@@ -96,11 +96,11 @@ setup_utils() {
     llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
     llm --system 'Reply with neovim commands only, no extra infromation' --save nvim
 
-    # Aider, Posting and Harlequin
+    # Aider and Posting
     # Aider
 
     uv tool list | grep -q "aider" && uv tool upgrade aider-chat || uv tool install aider-chat --python 3.11
-    uv tool list | grep -q "harlequin" && uv tool upgrade harlequin || uv tool install harlequin --python 3.11
+    uv tool list | grep -q "posting" && uv tool upgrade posting || uv tool install posting --python 3.11
     
     # Add Claude and Ollama
     llm install llm-anthropic llm-ollama &>/dev/null
