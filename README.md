@@ -146,6 +146,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "repgrep" # rgr interactive rust ripgrep extention
 "ripgrep" # Recursively searches directories for a regex pattern while respecting your gitignore
 "rsync" # Utility that provides fast incremental file transfer
+"ruby" # A beautiful language
 "rust" # Safe, concurrent, practical language
 "screen" # GNU screen, terminal multiplexer
 "slides" # Presentation on terminal
