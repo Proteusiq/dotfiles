@@ -88,6 +88,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 # Utilities and tools to enhance the command line interface experience
 "ack" # A tool like grep, optimized for programmers
 "act" # Run Github actions locally
+"aider" # LLM code agent on terminal 
 "aldente" # Battery life 
 "applesimutils" # Apple Simulator Utilities
 "arc" # Browser for the future - 1Password, Vimium C extentions
@@ -141,6 +142,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "ollama" # Running Large Language Models offline
 "pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
 "python" # Interpreted, interactive, object-oriented programming language
+"ra-aid" # Large Code Base LLM Agent => works with aider
 "raycast" # A better spotlight - CleanShotX, Ollama, OpenAI, Alacritty, Brew extensitions
 "rename" # Perl-powered file rename script with many helpful built-ins
 "repgrep" # rgr interactive rust ripgrep extention
