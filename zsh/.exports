@@ -160,3 +160,8 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # fzf key binding and completion
 eval "$(fzf --zsh)"
+
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+fi
+
