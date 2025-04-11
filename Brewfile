@@ -139,7 +139,6 @@ brew "universal-ctags" # Needed for aider
 
 brew "wireguard-tools"
 cask "flux"
-cask "kap"
 cask "lulu"
 cask "syncthing"
 cask "the-unarchiver"
@@ -153,7 +152,6 @@ cask "font-symbols-only-nerd-font" # yazi requirement
 
 # Browsers
 cask "arc"
-cask "google-chrome"
 
 # Window Management
 # Tools for managing application windows
