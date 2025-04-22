@@ -42,3 +42,6 @@ vim.opt.laststatus = 3
 
 -- gg and G jumps to startline and endline
 vim.opt.startofline = true
+
+-- rust baby
+vim.g.lazyvim_rust_diagnostics = "rust-analyzer"
