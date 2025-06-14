@@ -65,3 +65,7 @@ function git_add_comment_push() {
 }
 
 
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
