@@ -38,7 +38,7 @@ cask "lm-studio" # LM Studio a better ollama + open-webui in one
 brew "ack"
 brew "bat"
 brew "binutils"
-brew "bpytop"
+brew "btop"
 brew "coreutils"
 brew "diffutils"
 brew "direnv"

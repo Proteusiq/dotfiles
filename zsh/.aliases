@@ -398,7 +398,7 @@ function yy() {
 }
 
 # aliases
-alias top="bpytop"
+alias top="btop"
 alias du="ncdu"
 alias ls="eza --icons=always"
 alias tree="eza --tree"
