@@ -95,6 +95,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "alttab" # Better preview app switcher 
 "azure-cli" # Microsoft Azure Command Line Interface
 "bat" # A cat clone with syntax highlighting and Git integration
+"broot" # A better tree
 "btop" # Resource monitor that shows usage and stats
 "binutils" # GNU binary tools for native development
 "chruby" # Changes the current Ruby
