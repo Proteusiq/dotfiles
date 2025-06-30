@@ -166,3 +166,10 @@ eval "$(fzf --zsh)"
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 fi
+
+# Broot
+source $HOME/.config/broot/launcher/bash/br
+
+# Autin
+. "$HOME/.atuin/bin/env"
+eval "$(atuin init zsh)"
