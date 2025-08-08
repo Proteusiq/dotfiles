@@ -13,7 +13,7 @@ cask_args appdir: "/Applications"
 
 # Development Tools
 # CLI Tools for software development
-brew "act" 
+brew "act"
 brew "azure-cli"
 brew "difftastic"
 brew "gh" # github cli use by plenary
@@ -31,7 +31,7 @@ brew "mongosh"
 cask "docker"
 cask "pgadmin4"
 cask "postman"
-cask "lm-studio" # LM Studio a better ollama + open-webui in one 
+cask "lm-studio" # LM Studio a better ollama + open-webui in one
 
 # Command Line Utilities
 # Enhancements and utilities for better terminal experience
@@ -129,7 +129,7 @@ cask "raycast"
 cask "shortcat" # Vimium C for Applications. Path to Mouseless world
 
 # LLM Development
-brew "ollama" # Running Large Language Model Locally
+cask "ollama" # Running Large Language Model Locally
 brew "llama.cpp"
 brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
