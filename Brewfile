@@ -7,6 +7,7 @@ tap "jesseduffield/lazygit"
 tap "joshmedeski/sesh"
 tap "koekeishiya/formulae"
 tap "wix/brew"
+tap "sst/tap"
 
 # Global configuration for casks
 cask_args appdir: "/Applications"
@@ -134,7 +135,7 @@ brew "llama.cpp"
 brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
 brew "universal-ctags" # Needed for aider
-
+brew "sst/tap/opencode" # Agents on CLI inspired by neovim
 # Utilities
 # General utilities for everyday use
 

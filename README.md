@@ -141,6 +141,7 @@ The install script will also setup Python, Node and Bun versions/environments:
 "neovim" # Ambitious Vim-fork focused on extensibility and agility
 "node" # Platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications
 "ollama" # Running Large Language Models offline
+"opencode" # AI coding agent, built for the terminal.
 "pixi" # Fast than mamba: Drop in replacer of Pyenv + Poetry for conda universe
 "python" # Interpreted, interactive, object-oriented programming language
 "ra-aid" # Large Code Base LLM Agent => works with aider
