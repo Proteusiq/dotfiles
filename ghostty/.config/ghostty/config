@@ -1,7 +1,7 @@
 # windows
 
 font-size = 13
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 shell-integration-features = no-title
 cursor-style = block
 adjust-cell-height = 35%
