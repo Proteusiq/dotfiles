@@ -1,7 +1,7 @@
 return {
-  "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "neovim/nvim-lspconfig",
+  "wmason-org/mason.nvim",
+  "wmason-org/mason-lspconfig.nvim",
+  "neovim/nvim-lspconfig",
   opts = {
     ensure_installed = {
       "stylua",
