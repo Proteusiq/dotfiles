@@ -1,6 +1,6 @@
 return {
-  "wmason-org/mason.nvim",
-  "wmason-org/mason-lspconfig.nvim",
+  "mason-org/mason.nvim",
+  "mason-org/mason-lspconfig.nvim",
   "neovim/nvim-lspconfig",
   opts = {
     ensure_installed = {
