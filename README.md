@@ -180,7 +180,6 @@ The install script will also setup Python, Node and Bun versions/environments:
 "1password" # Password manager
 "1password-cli" # Using op vault cli
 "ghostty" # GPU-accelerated terminal emulator
-"docker" # Platform to develop, ship, and run applications
 ````
 
 </details>

@@ -29,7 +29,6 @@ brew "mongosh"
 
 # UI Tools for software development
 
-cask "docker"
 cask "pgadmin4"
 cask "postman"
 cask "lm-studio" # LM Studio a better ollama + open-webui in one
