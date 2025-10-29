@@ -14,6 +14,12 @@ export LANG="en_US"
 # https://stackoverflow.com/a/42265848/96656
 export GPG_TTY=$(tty)
 
+# Man Page in Nvim
+export MANPAGER='nvim +Man!'
+
+# Sudo Editor
+SUDO_EDITOR="nvim"
+
 # brew
 PATH=$PATH:/opt/homebrew/bin
 
@@ -27,9 +33,6 @@ export PATH="$NPM_PACKAGES/bin:$PATH"
 
 # yarn
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-# atuin
-eval "$(atuin init zsh)"
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -170,6 +173,6 @@ fi
 # Broot
 source $HOME/.config/broot/launcher/bash/br
 
-# Autin
+# Atuin
 . "$HOME/.atuin/bin/env"
 eval "$(atuin init zsh)"
