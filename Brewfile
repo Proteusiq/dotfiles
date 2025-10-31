@@ -141,9 +141,6 @@ brew "sst/tap/opencode" # Agents on CLI inspired by neovim
 brew "wireguard-tools"
 cask "flux"
 cask "lulu"
-cask "syncthing"
-cask "the-unarchiver"
-cask "transmission"
 
 # Fonts
 # Font installations for design and development
