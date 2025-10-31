@@ -201,19 +201,305 @@ iswitch  # Interactive session switcher
 
 </details>
 
-<details><summary>🔍 FZF Fuzzy Finding</summary>
+<details><summary>🔍 Commands and Everything</summary>
 
-**Interactive search:**
+# Cool CLI Commands Reference
+
+A curated collection of powerful command-line tools and shortcuts for macOS.
+
+---
+
+## Process & Port Management
+
+| Command | Description |
+|---------|-------------|
+| `lsof -i tcp:80` | Check which process is running on port 80 |
+| `lsof -i -nP` | List all network connections with ports (no DNS resolution) |
+| `pwdx <pid>` | Get the working directory of a process |
+
+---
+
+## Command History & Execution
+
+| Command | Description |
+|---------|-------------|
+| `history 15` | List your last 15 commands with numbers |
+| `!!` | Repeat last command |
+| `!23` | Repeat command number 23 |
+| `!f90` | Repeat last command starting with 'f90' |
+| `!!addtext` | Append text to previous command |
+| `^string1^string2` | Substitute string1 with string2 in previous command |
+| `!!:s/foo/bar/` | Same as above (alternative syntax) |
+| `!*` or `!&` | All arguments from last command |
+| `!$` | Last argument from previous command |
+| `!:1-3` | Arguments 1-3 from previous command |
+| `cd !$:h` | cd to parent directory of last executed file |
+| `until !!; do :; done` | Retry last command until it succeeds |
+| `sudo !!` | Run last command with sudo |
+| `echo "!!" > foo.sh` | Save last command to script |
+
+---
+
+## FZF Interactive Search
+
+| Command | Description |
+|---------|-------------|
+| `nvim **<TAB>` | Open files with fzf |
+| `cd **<TAB>` | Navigate with fzf |
+| `kill -9 **<TAB>` | Process selection with fzf |
+| `<Ctrl-r>` | Search command history |
+| `docker <Ctrl-r>` | Filter history by 'docker' |
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Description |
+|----------|-------------|
+| `Ctrl+C` | Interrupt current process |
+| `Ctrl+Z` | Send foreground process to background |
+| `Ctrl+S` | Suspend terminal output |
+| `Ctrl+Q` | Resume terminal output |
+| `Ctrl+L` | Clear screen |
+| `Ctrl+U` | Clear entire line |
+| `Ctrl+W` | Delete last word |
+| `Ctrl+R` | Search command history interactively |
+| `Ctrl+A` | Move to beginning of line |
+| `Ctrl+E` | Move to end of line |
+| `Ctrl+X Ctrl+E` | Open editor for complex commands |
+| `bind -P` | List all bash shortcuts |
+
+---
+
+## Custom Key Bindings
+
+| Command | Description |
+|---------|-------------|
+| `bind -x '"\C-l":ls -l'` | Bind Ctrl+L to 'ls -l' |
+| `bind '"<ctrl+v><functionKey>":"command\n"'` | Bind function key to command |
+
+---
+
+## Scheduling & Timing
+
+| Command | Description |
+|---------|-------------|
+| `echo "ls -l" \| at midnight` | Execute command at specific time |
+| `leave +15` | System notification in 15 minutes (1555→3:55pm) |
+| `timeout 5s <COMMAND>` | Kill command after 5 seconds |
+| `watch -n 1 "do foo"` | Run command every 1 second |
+| `while x=0; do foo; sleep 1; done` | Alternative to watch command |
+
+---
+
+## File Operations & Search
+
+| Command | Description |
+|---------|-------------|
+| `find . -exec grep -l -e 'myregex' {} \; >> outfile.txt` | Find files matching regex, output to file |
+| `grep -lir "some text" *` | Search text recursively (case-insensitive, filenames only) |
+| `find . -type d -empty -delete` | Delete empty directories |
+| `find . -iname '*.jpg' -exec echo '<img src="{}">' \; > gallery.html` | Create HTML gallery from JPGs |
+| `cp file.txt{,.bak}` | Quick backup (creates file.txt.bak) |
+| `chmod --reference file1 file2` | Copy permissions from file1 to file2 |
+| `ls -Q` | List files with quotes around names |
+| `touch ./-i` | Create file that blocks 'rm -rf *' |
+
+---
+
+## File Renaming
+
+| Command | Description |
+|---------|-------------|
+| `for f in *; do mv "$f" "$(echo "$f" \| tr '[:upper:]' '[:lower:]' \| tr ' ' '_')"; done` | Lowercase and replace spaces with underscores |
+| `rename 'y/ /_/' *` | Replace spaces with underscores (Perl rename) |
+| `rename 'y/A-Z/a-z/' *` | Convert to lowercase |
+| `rename 'y/A-Z /a-z_/' *` | Both operations at once |
+| `rename --version` | Check which version of rename you have |
+
+---
+
+## Text Processing & Viewing
+
+| Command | Description |
+|---------|-------------|
+| `less +F production.log` | View log with follow mode (better than tail -f) |
+| `cat file.txt` | Display file contents |
+| `tac file.txt` | Display file contents in reverse |
+| `column -s, -t <file.csv>` | Format CSV as aligned table |
+| `curl -s "url/json" \| python -m json.tool \| less -R` | Pretty print JSON |
+
+---
+
+## Log File Monitoring with Timestamps
+
+| Command | Description |
+|---------|-------------|
+| `tail -f file \| while read; do echo "$(date +%T.%N) $REPLY"; done` | Add timestamps to log output |
+| `tail -f file \| awk '{ printf "\033[1;90m%s\033[0m  \033[1;32m%s\033[0m\n", strftime("%T"), $0 }'` | Add colored timestamps |
+| `tail -f file \| awk '{ts = strftime("%T"); if ($0 ~ /ERROR/) color="\033[1;31m"; else if ($0 ~ /WARN/) color="\033[1;33m"; else color="\033[1;32m"; printf "\033[1;90m%s\033[0m  %s%s\033[0m\n", ts, color, $0}'` | Color-coded log levels (ERROR=red, WARN=yellow) |
+| `cat /var/log/secure.log \| awk '{print substr($0,0,12)}' \| uniq -c \| sort -nr \| awk '{printf("\n%s ",$0); for (i = 0; i<$1; i++) {printf("*")};}'` | Generate ASCII histogram from logs |
+
+---
+
+## Archives & Compression
+
+| Command | Description |
+|---------|-------------|
+| `tar -cf - . \| pv -s $(du -sb . \| awk '{print $1}') \| gzip > out.tgz` | Create tar with progress bar |
+| `tar --create --file - --posix --gzip -- <dir> \| openssl enc -e -aes256 -out <file>` | Create encrypted archive |
+| `openssl enc -d -aes256 -in <file> \| tar --extract --file - --gzip` | Decrypt and extract archive |
+
+---
+
+## Git Commands
+
+| Command | Description |
+|---------|-------------|
+| `git add -u` | Stage all modified and deleted files |
+| `git rm $(git ls-files --deleted)` | Remove deleted files from git |
+| `git log --format='%aN' \| sort -u` | List all contributors |
+| `git commit -m "$(curl -s http://whatthecommit.com/index.txt)"` | Random commit message (fun!) |
+
+---
+
+## Network & Web
+
+| Command | Description |
+|---------|-------------|
+| `curl ifconfig.me` | Get your public IP address |
+| `curl wttr.in/copenhagen` | Check weather for Copenhagen |
+| `nc -v -l 80 < file.ext` | Send file over network (simple server) |
+| `ssh-copy-id username@hostname` | Copy SSH public key to remote host |
+| `wget --reject html,htm --accept pdf,zip -rl1 --no-check-certificate https://url` | Download all PDFs and ZIPs (HTTPS) |
+| `wget --reject html,htm --accept pdf,zip -rl1 url` | Download all PDFs and ZIPs (HTTP) |
+| `wget --random-wait -r -p -e robots=off -U mozilla http://example.com` | Download entire website |
+| `wget -mkEpnp example.com` | Mirror website (shorter syntax) |
+| `lynx -dump http://domain.com \| awk '/http/{print $2}'` | Extract all URLs from webpage |
+
+---
+
+## System Administration
+
+| Command | Description |
+|---------|-------------|
+| `sudo -K` | Forget sudo credentials immediately |
+| `disown -a && exit` | Close shell but keep running tasks |
+| `wall <<< "Hello, World"` | Broadcast message to all logged-in users |
+| `echo "message" \| wall` | Alternative broadcast syntax |
+| `kill -9 -1` | Kill all your processes |
+
+---
+
+## Aliases & Bypassing
+
+| Command | Description |
+|---------|-------------|
+| `alias 'ps?'='ps ax \| grep '` | Create alias for process search |
+| `\ls -hog` | Run ls without alias |
+| `\foo` | Run foo without alias |
+| `<COMMAND> \|:` | Discard output (faster than >> /dev/null) |
+
+---
+
+## Advanced Operations
+
+| Command | Description |
+|---------|-------------|
+| `bash -x ./script.sh` | Run script in debug mode |
+| `bc <<< 'obase=60;299'` | Convert seconds to minutes (base 60) |
+| `command \| figlet` | Display command output in large ASCII text |
+| `history \| awk '{print $2}' \| sort \| uniq -c \| sort -rn \| head` | Most frequently used commands |
+| `mkdir -p data/{validation/,train/{examples/,tests/}}` | Create nested directory structure |
+| `command <<< word` | Pass single word to stdin (instead of echo word \| command) |
+| `rm !(*.foo\|*.bar\|*.baz)` | Remove everything except specified patterns |
+| `rm -f !(survivor.txt)` | Remove everything except one file |
+| `svn log -q \| grep "\|" \| awk "{print \$3}" \| sort \| uniq -c \| sort -nr` | Find frequent SVN committers |
+
+---
+
+## Vim Integration
+
+| Command | Description |
+|---------|-------------|
+| `:r !command` | Execute command and insert output into vim |
+| `:x` | Save and quit (same as :wq, shorter) |
+
+---
+
+## Security & Privacy
+
+| Command | Description |
+|---------|-------------|
+| `unset HISTFILE` | Don't save commands in history (current session) |
+| `read -s pass; echo $pass \| md5sum \| base64 \| cut -c -16` | Generate password from passphrase |
+
+---
+
+## Multimedia
+
+| Command | Description |
+|---------|-------------|
+| `ffmpeg -f x11grab -r 25 -s 800x600 -i :0.0 /tmp/output.mpg` | Record screen |
+| `read && ffmpeg -y -r 1 -t 3 -f video4linux2 -vframes 1 -s sxga -i /dev/video ~/webcam-$(date +%m_%d_%Y_%H_%M).jpeg` | Take webcam snapshot |
+| `for n in E2 A2 D3 G3 B3 E4; do play -n synth 4 pluck $n repeat 2; done` | Guitar tuner (requires sox) |
+
+---
+
+## Fun & Visualization
+
+| Command | Description |
+|---------|-------------|
+| `watch -t -n1 "date +%T\|figlet"` | Display ASCII clock |
+| `cat /dev/urandom \| hexdump -C \| grep "ca fe"` | Pretend to be busy |
+| `alias busy='my_file=$(find /usr/include -type f \| sort -R \| head -n 1); my_len=$(wc -l $my_file \| awk "{print $1}"); let "r = $RANDOM % $my_len" 2>/dev/null; vim +$r $my_file'` | More elaborate "busy" effect |
+| `tr -c "[:digit:]" " " < /dev/urandom \| dd cbs=$COLUMNS conv=unblock \| GREP_COLOR="1;32" grep --color "[^ ]"` | Matrix effect (simple) |
+| `echo -e "\e[32m"; while :; do for i in {1..16}; do r="$(($RANDOM % 2))"; if [[ $(($RANDOM % 5)) == 1 ]]; then if [[ $(($RANDOM % 4)) == 1 ]]; then v+="\e[1m $r "; else v+="\e[2m $r "; fi; else v+=" "; fi; done; echo -e "$v"; v=""; done` | Matrix effect (advanced) |
+
+---
+
+## Google Search Function
+
 ```bash
-# File/folder operations
-nvim **<TAB>     # Open files with fzf
-cd **<TAB>       # Navigate with fzf
-kill -9 **<TAB>  # Process selection
-
-# History search
-<Ctrl-r>         # Search command history
-docker <Ctrl-r>  # Filter history by 'docker'
+function google {
+  Q="$@"
+  GOOG_URL='https://www.google.de/search?tbs=li:1&q='
+  AGENT="Mozilla/4.0"
+  stream=$(curl -A "$AGENT" -skLm 10 "${GOOG_URL}${Q//\ /+}" | grep -oP '\/url\?q=.+?&amp' | sed 's|/url?q=||; s|&amp||')
+  echo -e "${stream//\%/\x}"
+}
 ```
+
+---
+
+## Homebrew (macOS Package Manager)
+
+| Command | Description |
+|---------|-------------|
+| `brew update && brew upgrade \`brew outdated\`` | Update all Homebrew packages |
+
+---
+
+## Helpful Search & Documentation
+
+| Command | Description |
+|---------|-------------|
+| `apropos network \| more` | Search command manual pages |
+| `man <command>` | View manual for command |
+
+---
+
+## Notes
+
+- Commands tested on macOS with standard Unix utilities
+- Some require Homebrew packages: `pv`, `figlet`, `sox`, `rename`, `wget`
+- Always test destructive commands (`rm`, `kill`) carefully
+- Check `rename --version` - behavior differs between Perl and util-linux versions
+- For `wget` parameters: `-m` (mirror), `-k` (convert links), `-E` (adjust extensions), `-p` (page requisites), `-n` (no clobber)
+
+---
+
+**Created for macOS users | Share freely**
 
 </details>
 
