@@ -115,6 +115,8 @@ After first installation, configure SSH for GitHub:
 ```bash
 # Generate SSH key (follow GitHub's guide)
 ssh-keygen -t ed25519 -C "your.email@example.com"
+gh auth login
+gh ssh-key add ~/.ssh/id_ed25519.pub --type signing
 
 # Switch to SSH remote
 git remote set-url origin git@github.com:Proteusiq/dotfiles.git
@@ -149,7 +151,7 @@ aliases -d gp
 
 ```
 dotfiles/
-├── aerospace/        # Window management config
+├── aerospace/       # Window management config
 ├── bin/             # Custom scripts (aliases, peak)
 ├── fzf/             # Fuzzy finder config
 ├── ghostty/         # Terminal emulator config
@@ -484,8 +486,6 @@ A collection of most common CLI commands.
 - For `wget` parameters: `-m` (mirror), `-k` (convert links), `-E` (adjust extensions), `-p` (page requisites), `-n` (no clobber)
 
 ---
-
-**Created for macOS users | Share freely**
 
 </details>
 
