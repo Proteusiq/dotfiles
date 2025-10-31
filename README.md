@@ -201,7 +201,7 @@ iswitch  # Interactive session switcher
 
 </details>
 
-<details><summary>🔍 Commands and Everything</summary>
+<details><summary>🔍 Commands "Here, There and Everywhere"</summary>
 
 # Cool CLI Commands Reference
 
