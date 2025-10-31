@@ -205,7 +205,7 @@ iswitch  # Interactive session switcher
 
 # Cool CLI Commands Reference
 
-A curated collection of powerful command-line tools and shortcuts for macOS.
+A collection of most common CLI commands.
 
 ---
 
@@ -455,20 +455,6 @@ A curated collection of powerful command-line tools and shortcuts for macOS.
 | `alias busy='my_file=$(find /usr/include -type f \| sort -R \| head -n 1); my_len=$(wc -l $my_file \| awk "{print $1}"); let "r = $RANDOM % $my_len" 2>/dev/null; vim +$r $my_file'` | More elaborate "busy" effect |
 | `tr -c "[:digit:]" " " < /dev/urandom \| dd cbs=$COLUMNS conv=unblock \| GREP_COLOR="1;32" grep --color "[^ ]"` | Matrix effect (simple) |
 | `echo -e "\e[32m"; while :; do for i in {1..16}; do r="$(($RANDOM % 2))"; if [[ $(($RANDOM % 5)) == 1 ]]; then if [[ $(($RANDOM % 4)) == 1 ]]; then v+="\e[1m $r "; else v+="\e[2m $r "; fi; else v+=" "; fi; done; echo -e "$v"; v=""; done` | Matrix effect (advanced) |
-
----
-
-## Google Search Function
-
-```bash
-function google {
-  Q="$@"
-  GOOG_URL='https://www.google.de/search?tbs=li:1&q='
-  AGENT="Mozilla/4.0"
-  stream=$(curl -A "$AGENT" -skLm 10 "${GOOG_URL}${Q//\ /+}" | grep -oP '\/url\?q=.+?&amp' | sed 's|/url?q=||; s|&amp||')
-  echo -e "${stream//\%/\x}"
-}
-```
 
 ---
 
