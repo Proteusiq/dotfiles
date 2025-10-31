@@ -124,12 +124,12 @@ cask "chatgpt"
 cask "cleanshot"
 cask "espanso"
 cask "hiddenbar"
-cask "obsidian"
+cask "notion"
 cask "raycast"
 cask "shortcat" # Vimium C for Applications. Path to Mouseless world
 
 # LLM Development
-cask "ollama" # Running Large Language Model Locally
+cask "ollama-app" # Running Large Language Model Locally
 brew "llama.cpp"
 brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
@@ -139,7 +139,7 @@ brew "sst/tap/opencode" # Agents on CLI inspired by neovim
 # General utilities for everyday use
 
 brew "wireguard-tools"
-cask "flux"
+cask "flux-app"
 cask "lulu"
 
 # Fonts

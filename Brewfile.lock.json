@@ -3186,10 +3186,10 @@
           }
         }
       },
-      "obsidian": {
-        "version": "1.7.7",
+      "notion": {
+        "version": "latest",
         "options": {
-          "full_name": "obsidian",
+          "full_name": "notion",
           "args": {
             "appdir": "/Applications"
           }
