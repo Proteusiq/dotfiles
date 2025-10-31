@@ -230,7 +230,7 @@ A collection of most common CLI commands.
 | `!23` | Repeat command number 23 |
 | `!f90` | Repeat last command starting with 'f90' |
 | `!!moretext` | Append text to previous command |
-| `^foo^bar` | Substitute foo with bat in previous command |
+| `^foo^bar` | Substitute foo with bar in previous command |
 | `!!:s/foo/bar/` | Same as above (alternative syntax) |
 | `!*` or `!&` | All arguments from last command |
 | `!$` | Last argument from previous command |
