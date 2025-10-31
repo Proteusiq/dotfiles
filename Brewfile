@@ -72,7 +72,7 @@ brew "screen"
 brew "slides"
 brew "stow"
 brew "thefuck"
-brew "tldr"
+brew "tlrc"
 brew "toilet" # ascii art fonts
 brew "unar" # opens archieve yazi requirement
 brew "wget"

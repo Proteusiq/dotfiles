@@ -562,7 +562,7 @@ Vim follows **Verb + Noun** grammar for powerful text editing:
 
 **Useful resources:**
 - [cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<command>`
-- Command reference: `tldr <command>`
+- Command reference: `tlrc <command>`
 - Vim help: `:help <topic>` or `:Telescope help_tags`
 
 
