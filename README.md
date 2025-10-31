@@ -123,7 +123,7 @@ git remote set-url origin git@github.com:Proteusiq/dotfiles.git
 ```
 
 ### Color Scheme
-All tools use **Catppuccin Mocha** theme:
+All tools use **Catppuccin Mocha** [theme](https://catppuccin.com/):
 - Ghostty
 - Tmux  
 - Neovim
