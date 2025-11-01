@@ -226,7 +226,7 @@ alias vi="vim"
 alias reload="source ~/.zshrc"
 
 # use bat
-alias cat="bat --paging=never"
+alias cat="bat" # bat --paging=never activated in: | clip
 
 # commonly used dirs
 alias dev="cd ~/dev"
