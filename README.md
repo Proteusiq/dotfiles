@@ -63,7 +63,6 @@ curl -LsSf https://bit.ly/42YwVdi | less
 - Full Disk Access for Terminal (`System Preferences → Privacy → Full Disk Access`)
 
 **Recommended:**
-- At least 8GB free disk space
 - Stable internet connection for initial setup
 
 ## Installation
