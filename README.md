@@ -200,6 +200,8 @@ ikill    # Kill all sessions
 iswitch  # Interactive session switcher
 ```
 
+More extras? [tmux's cheatsheet](https://tmuxcheatsheet.com/)
+
 </details>
 
 <details><summary>🔍 Commands "Here, There and Everywhere"</summary>
