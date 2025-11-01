@@ -200,7 +200,7 @@ ikill    # Kill all sessions
 iswitch  # Interactive session switcher
 ```
 
-More extras? [tmux's cheatsheet](https://tmuxcheatsheet.com/)
+> More extras? [tmux's cheatsheet](https://tmuxcheatsheet.com/) and [man page](https://github.com/tmux/tmux/wiki/Getting-Started)
 
 </details>
 
