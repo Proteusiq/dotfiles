@@ -76,8 +76,6 @@ brew "tlrc"
 brew "toilet" # ascii art fonts
 brew "unar" # opens archieve yazi requirement
 brew "wget"
-brew "wget"
-brew "yarn"
 brew "yarn"
 brew "yazi"
 brew "zlib"
