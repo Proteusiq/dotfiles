@@ -6,8 +6,8 @@
 - Use `uv run` for all script and command execution
 - Always run formatters and linters before committing:
   ```bash
-  uv format
-  uv check --fix
+  uv run ruff format
+  uv run runff check --fix
   ```
 - Verify all tests pass with `uv run pytest`
 - If tests fail, fix them before proceeding with other changes
