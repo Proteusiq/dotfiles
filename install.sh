@@ -138,7 +138,6 @@ create_dirs() {
     local dirs=(
         "$HOME/Codes"
         "$HOME/Documents/Screenshots"
-        "$HOME/Downloads/Torrents"
     )
     
     for dir in "${dirs[@]}"; do
@@ -297,9 +296,7 @@ setup_utils() {
     # UV tools installation with error handling
     local uv_tools=(
         "llm"
-        "aider-chat --python 3.11"
-        "posting --python 3.11" 
-        "ra-aid --python 3.11"
+        "aider-chat --python 3.13"
     )
 
     if [[ "$DRY_RUN" == false ]] && command -v uv &>/dev/null; then
@@ -315,7 +312,7 @@ setup_utils() {
         done
         log "✅ UV tools configured"
     elif [[ "$DRY_RUN" == true ]]; then
-        echo "[DRY RUN] Would install/upgrade UV tools: llm, aider-chat, posting, ra-aid"
+        echo "[DRY RUN] Would install/upgrade UV tools: llm, aider-chat"
     else
         log_warn "UV not found, skipping tool installations"
     fi
@@ -331,8 +328,8 @@ setup_utils() {
         execute llm --system 'Reply with linux terminal commands only, no extra information' --save cmd &>/dev/null
         execute llm --system 'Reply with neovim commands only, no extra information' --save nvim &>/dev/null
         
-        # Set default model
-        execute llm models default claude-3.5-sonnet-latest &>/dev/null
+         # Set default model
+         execute llm models default claude-haiku-4.5 &>/dev/null
         
         log "✅ LLM configured with templates and plugins"
     elif [[ "$DRY_RUN" == true ]]; then
