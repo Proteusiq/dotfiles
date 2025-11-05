@@ -1,8 +1,15 @@
+local function setup_snacks_ui()
+  local snacks_ok, snacks = pcall(require, "snacks")
+  if snacks_ok then
+    vim.ui.input = require("snacks.input")
+    vim.ui.select = require("snacks.picker.select").select
+  end
+end
+
 return {
   "folke/snacks.nvim",
   priority = 1000,
   lazy = false,
-  ---@type snacks.Config
    opts = {
     bigfile = { enabled = true },
     dashboard = {
@@ -186,9 +193,10 @@ return {
     })
   end,
   config = function(_, opts)
-    require("snacks").setup(opts)
+    local snacks = require("snacks")
+    snacks.setup(opts)
     -- Set vim.ui functions after setup to use Snacks
-    vim.ui.input = require("snacks.input")
-    vim.ui.select = require("snacks.picker.select").select
+    vim.ui.input = snacks.input
+    vim.ui.select = snacks.picker.select
   end,
 }
