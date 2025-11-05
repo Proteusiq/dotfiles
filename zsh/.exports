@@ -20,6 +20,9 @@ export MANPAGER='nvim +Man!'
 # Sudo Editor
 SUDO_EDITOR="nvim"
 
+# Snacks.nvim Ghostty support
+export SNACKS_GHOSTTY=true
+
 # brew
 PATH=$PATH:/opt/homebrew/bin
 
