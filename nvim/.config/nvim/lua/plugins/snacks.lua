@@ -5,12 +5,22 @@ return {
   ---@type snacks.Config
    opts = {
     bigfile = { enabled = true },
-    dashboard = { enabled = true },
+    dashboard = {
+      enabled = true,
+      sections = {
+        { section = "header" },
+        { section = "keys", gap = 1, padding = 1 },
+        { section = "startup" },
+      },
+    },
     image = { enabled = true },
+    input = { enabled = true },
     notifier = {
       enabled = true,
       timeout = 3000,
+      top_down = true,
     },
+    picker = { enabled = true },
     quickfile = { enabled = true },
     statuscolumn = { enabled = true },
     words = { enabled = true },
@@ -159,6 +169,10 @@ return {
           Snacks.debug.backtrace()
         end
         vim.print = _G.dd -- Override print to use snacks for `:=` command
+
+        -- Set vim.ui functions to use Snacks
+        vim.ui.input = Snacks.input
+        vim.ui.select = Snacks.picker.select
 
         -- Create some toggle mappings
         Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")

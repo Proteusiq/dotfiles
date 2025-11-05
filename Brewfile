@@ -48,6 +48,7 @@ brew "fd"
 brew "ffmpeg"
 brew "ffmpegthumbnailer" #  video thumbnailer requirement yazi
 brew "figlet" # ascii fonts similar to toilet but better fonts
+brew "ghostscript" # required to render PDF files in snacks.nvim
 brew "findutils"
 brew "fzf"
 brew "gawk"
@@ -58,6 +59,7 @@ brew "gnu-which"
 brew "gnupg"
 brew "graphviz" # use by PyMC vizuation graph
 brew "grep"
+brew "imagemagick" # required to convert images in snacks.nvim
 brew "gzip"
 brew "httpie" # better curl
 brew "hyperfine"
@@ -130,6 +132,8 @@ cask "ollama-app" # Running Large Language Model Locally
 brew "llama.cpp"
 brew "poppler" # PDF preview requirement for yazi
 brew "portaudio" # Needed of pyaudio
+brew "mermaid-cli" # required to render Mermaid diagrams in snacks.nvim
+brew "tectonic" # required to render LaTeX math expressions in snacks.nvim
 brew "universal-ctags" # Needed for aider
 brew "sst/tap/opencode" # Agents on CLI inspired by neovim
 # Utilities
