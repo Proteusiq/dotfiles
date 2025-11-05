@@ -15,7 +15,6 @@ Modern macOS dotfiles for developers focused on Rust 🦀, Python 🐍, and data
 - [Configuration](#configuration)
 - [Managing Aliases](#managing-aliases)
 - [File Structure](#file-structure)
-- [Customization](#customization)
 - [Usage Tips](#usage-tips)
 - [Troubleshooting](#troubleshooting)
 - [Acknowledgements](#acknowledgements)
@@ -175,8 +174,6 @@ dotfiles/
 - **Shell Environment**: [Antigen](https://github.com/zsh-users/antigen) for zsh plugin management
 - **Package Management**: [Brewfile](./Brewfile) contains all Homebrew packages, casks, and Mac App Store apps
 - **Language Setup**: [uv](https://github.com/astral-sh/uv) for Python, [n](https://github.com/tj/n) for Node.js, [Bun](https://bun.sh/) for TypeScript/JavaScript
-
-## Customization
 
 ## Usage Tips
 
