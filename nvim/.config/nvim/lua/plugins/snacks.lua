@@ -170,10 +170,6 @@ return {
         end
         vim.print = _G.dd -- Override print to use snacks for `:=` command
 
-        -- Set vim.ui functions to use Snacks
-        vim.ui.input = Snacks.input
-        vim.ui.select = Snacks.picker.select
-
         -- Create some toggle mappings
         Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
         Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
@@ -188,5 +184,11 @@ return {
         Snacks.toggle.inlay_hints():map("<leader>uh")
       end,
     })
+  end,
+  config = function(_, opts)
+    require("snacks").setup(opts)
+    -- Set vim.ui functions after setup to use Snacks
+    vim.ui.input = require("snacks.input")
+    vim.ui.select = require("snacks.picker.select").select
   end,
 }
