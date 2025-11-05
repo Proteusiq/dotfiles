@@ -3,9 +3,10 @@ return {
   priority = 1000,
   lazy = false,
   ---@type snacks.Config
-  opts = {
+   opts = {
     bigfile = { enabled = true },
     dashboard = { enabled = true },
+    image = { enabled = true },
     notifier = {
       enabled = true,
       timeout = 3000,
