@@ -43,6 +43,9 @@ curl -LsSf https://bit.ly/42YwVdi | less
 - **Terminal Multiplexer**: [tmux](https://github.com/tmux/tmux)
 - **Session Management**: [sesh](https://github.com/joshmedeski/sesh)
 
+### Editor Plugins & Extensions
+- **[Snacks.nvim](https://github.com/folke/snacks.nvim)** by folke: A collection of small QoL plugins for Neovim including dashboard, scratch buffers, git integration, and more
+
 ### Development Languages & Tools
 - **Python**: [uv](https://github.com/astral-sh/uv), [pixi](https://pixi.sh/), [aider](https://github.com/paul-gauthier/aider) with Python 3.13
 - **Rust**: Full toolchain with cargo
