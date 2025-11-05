@@ -196,7 +196,11 @@ return {
     local snacks = require("snacks")
     snacks.setup(opts)
     -- Set vim.ui functions after setup to use Snacks
-    vim.ui.input = snacks.input
-    vim.ui.select = snacks.picker.select
+    vim.ui.input = function(...)
+      return snacks.input(...)
+    end
+    vim.ui.select = function(...)
+      return snacks.picker.select(...)
+    end
   end,
 }
