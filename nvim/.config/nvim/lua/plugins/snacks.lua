@@ -165,6 +165,15 @@ return {
     },
   },
   init = function()
+    local ok = pcall(require, "snacks.input")
+    if ok then
+      vim.ui.input = require("snacks.input")
+    end
+    ok = pcall(require, "snacks.picker.select")
+    if ok then
+      vim.ui.select = require("snacks.picker.select").select
+    end
+
     vim.api.nvim_create_autocmd("User", {
       pattern = "VeryLazy",
       callback = function()
@@ -192,15 +201,5 @@ return {
       end,
     })
   end,
-  config = function(_, opts)
-    local snacks = require("snacks")
-    snacks.setup(opts)
-    -- Set vim.ui functions after setup to use Snacks
-    vim.ui.input = function(...)
-      return snacks.input(...)
-    end
-    vim.ui.select = function(...)
-      return snacks.picker.select(...)
-    end
-  end,
+
 }
