@@ -204,6 +204,62 @@ iswitch  # Interactive session switcher
 
 </details>
 
+<details><summary>⚡ Neovim/LazyVim</summary>
+
+**Essential bindings:**
+```bash
+<Space>          # Leader key
+<Ctrl-w>w        # Switch to file tree
+[b ]b            # Navigate buffers (Alt+8/9)
+
+# Command mode operations
+:!<command>      # Execute shell command
+:'<,'>!sort      # Sort selected lines
+:'<,'>!jq        # Format JSON selection
+:r !ls -al       # Insert command output
+
+# Telescope
+:Telescope keymap         # Show all keymaps
+:Telescope live_grep      # Live grep search
+:Telescope git_branches   # Git branch switcher
+```
+
+**Debugging shortcuts:**
+- `<leader>dm` - Debug test method
+- `<leader>dc` - Debug test class  
+- `<leader>df` - Debug Python file
+- `<leader>du` - Debug function under cursor
+
+</details>
+
+<details><summary>🧘 Vim Grammar Reference</summary>
+
+Vim follows **Verb + Noun** grammar for powerful text editing:
+
+**Verbs (Actions):**
+- `d` - delete
+- `c` - change (delete + insert mode)
+- `y` - yank (copy)
+
+**Nouns (Motions):**
+- `w/b` - word forward/backward
+- `gg/G` - top/bottom of file
+- `{/}` - paragraph navigation
+
+**Text Objects (preferred for repeatability):**
+- `iw/aw` - inner/around word
+- `i"/a"` - inner/around quotes
+- `i(/a(` - inner/around parentheses
+
+**Examples:**
+- `diw` - delete inner word
+- `ci"` - change inside quotes
+- `yap` - yank around paragraph
+
+**Pro tip:** Text objects work regardless of cursor position and support the `.` repeat command.
+
+</details>
+
 <details><summary>🔍 Commands "Here, There and Everywhere"</summary>
 
 # Cool CLI Commands Reference
@@ -218,7 +274,7 @@ A collection of most common CLI commands.
 |---------|-------------|
 | `lsof -i tcp:80` | Check which process is running on port 80 |
 | `lsof -i -nP` | List all network connections with ports (no DNS resolution) |
-| `pwdx <pid>` | Get the working directory of a process |
+| `lsof -p <pid> \| grep cwd` | Get the working directory of a process (macOS alternative to pwdx) |
 
 ---
 
@@ -304,7 +360,7 @@ A collection of most common CLI commands.
 | `find . -type d -empty -delete` | Delete empty directories |
 | `find . -iname '*.jpg' -exec echo '<img src="{}">' \; > gallery.html` | Create HTML gallery from JPGs |
 | `cp file.txt{,.bak}` | Quick backup (creates file.txt.bak) |
-| `chmod --reference file1 file2` | Copy permissions from file1 to file2 |
+| `chmod $(stat -f%A file1) file2` | Copy permissions from file1 to file2 (macOS alternative) |
 | `ls -Q` | List files with quotes around names |
 | `touch ./-i` | Create file that blocks 'rm -rf *' |
 
@@ -338,10 +394,10 @@ A collection of most common CLI commands.
 
 | Command | Description |
 |---------|-------------|
-| `tail -f file \| while read; do echo "$(date +%T.%N) $REPLY"; done` | Add timestamps to log output |
+| `tail -f file \| while read; do echo "$(date +%T.%3N) $REPLY"; done` | Add timestamps to log output (macOS uses %3N for milliseconds) |
 | `tail -f file \| awk '{ printf "\033[1;90m%s\033[0m  \033[1;32m%s\033[0m\n", strftime("%T"), $0 }'` | Add colored timestamps |
 | `tail -f file \| awk '{ts = strftime("%T"); if ($0 ~ /ERROR/) color="\033[1;31m"; else if ($0 ~ /WARN/) color="\033[1;33m"; else color="\033[1;32m"; printf "\033[1;90m%s\033[0m  %s%s\033[0m\n", ts, color, $0}'` | Color-coded log levels (ERROR=red, WARN=yellow) |
-| `cat /var/log/secure.log \| awk '{print substr($0,0,12)}' \| uniq -c \| sort -nr \| awk '{printf("\n%s ",$0); for (i = 0; i<$1; i++) {printf("*")};}'` | Generate ASCII histogram from logs |
+| `cat /var/log/system.log \| awk '{print substr($0,0,12)}' \| uniq -c \| sort -nr \| awk '{printf("\n%s ",$0); for (i = 0; i<$1; i++) {printf("*")};}'` | Generate ASCII histogram from logs (macOS uses system.log instead of secure.log) |
 
 ---
 
@@ -349,7 +405,7 @@ A collection of most common CLI commands.
 
 | Command | Description |
 |---------|-------------|
-| `tar -cf - . \| pv -s $(du -sb . \| awk '{print $1}') \| gzip > out.tgz` | Create tar with progress bar |
+| `tar -cf - . \| pv -s $(du -s . \| awk '{print $1 * 512}') \| gzip > out.tgz` | Create tar with progress bar (macOS: du -s returns 512-byte blocks) |
 | `tar --create --file - --posix --gzip -- <dir> \| openssl enc -e -aes256 -out <file>` | Create encrypted archive |
 | `openssl enc -d -aes256 -in <file> \| tar --extract --file - --gzip` | Decrypt and extract archive |
 
@@ -453,11 +509,11 @@ A collection of most common CLI commands.
 
 | Command | Description |
 |---------|-------------|
-| `watch -t -n1 "date +%T\|figlet"` | Display ASCII clock |
+| `while true; do clear; date +%T \| figlet; sleep 1; done` | Display ASCII clock (macOS alternative to watch) |
 | `cat /dev/urandom \| hexdump -C \| grep "ca fe"` | Pretend to be busy |
 | `alias busy='my_file=$(find /usr/include -type f \| sort -R \| head -n 1); my_len=$(wc -l $my_file \| awk "{print $1}"); let "r = $RANDOM % $my_len" 2>/dev/null; vim +$r $my_file'` | More elaborate "busy" effect |
-| `tr -c "[:digit:]" " " < /dev/urandom \| dd cbs=$COLUMNS conv=unblock \| GREP_COLOR="1;32" grep --color "[^ ]"` | Matrix effect (simple) |
-| `echo -e "\e[32m"; while :; do for i in {1..16}; do r="$(($RANDOM % 2))"; if [[ $(($RANDOM % 5)) == 1 ]]; then if [[ $(($RANDOM % 4)) == 1 ]]; then v+="\e[1m $r "; else v+="\e[2m $r "; fi; else v+=" "; fi; done; echo -e "$v"; v=""; done` | Matrix effect (advanced) |
+| `yes \| head -c $(tput cols) \| tr '\n' ' ' \| sed 's/ /$(printf "\033[1;32m.\033[0m")/g'` | Matrix effect (simple, macOS version) |
+| `printf '\033[32m'; while :; do for i in {1..16}; do r=$((RANDOM % 2)); if (( (RANDOM % 5) == 1 )); then if (( (RANDOM % 4) == 1 )); then printf '\033[1m %d ' "$r"; else printf '\033[2m %d ' "$r"; fi; else printf '  '; fi; done; printf '\033[0m\n'; done` | Matrix effect (advanced, macOS version) |
 
 ---
 
@@ -487,62 +543,6 @@ A collection of most common CLI commands.
 - For `wget` parameters: `-m` (mirror), `-k` (convert links), `-E` (adjust extensions), `-p` (page requisites), `-n` (no clobber)
 
 ---
-
-</details>
-
-<details><summary>⚡ Neovim/LazyVim</summary>
-
-**Essential bindings:**
-```bash
-<Space>          # Leader key
-<Ctrl-w>w        # Switch to file tree
-[b ]b            # Navigate buffers (Alt+8/9)
-
-# Command mode operations
-:!<command>      # Execute shell command
-:'<,'>!sort      # Sort selected lines
-:'<,'>!jq        # Format JSON selection
-:r !ls -al       # Insert command output
-
-# Telescope
-:Telescope keymap         # Show all keymaps
-:Telescope live_grep      # Live grep search
-:Telescope git_branches   # Git branch switcher
-```
-
-**Debugging shortcuts:**
-- `<leader>dm` - Debug test method
-- `<leader>dc` - Debug test class  
-- `<leader>df` - Debug Python file
-- `<leader>du` - Debug function under cursor
-
-</details>
-
-<details><summary>🧘 Vim Grammar Reference</summary>
-
-Vim follows **Verb + Noun** grammar for powerful text editing:
-
-**Verbs (Actions):**
-- `d` - delete
-- `c` - change (delete + insert mode)
-- `y` - yank (copy)
-
-**Nouns (Motions):**
-- `w/b` - word forward/backward
-- `gg/G` - top/bottom of file
-- `{/}` - paragraph navigation
-
-**Text Objects (preferred for repeatability):**
-- `iw/aw` - inner/around word
-- `i"/a"` - inner/around quotes
-- `i(/a(` - inner/around parentheses
-
-**Examples:**
-- `diw` - delete inner word
-- `ci"` - change inside quotes
-- `yap` - yank around paragraph
-
-**Pro tip:** Text objects work regardless of cursor position and support the `.` repeat command.
 
 </details>
 
