@@ -675,10 +675,10 @@ A collection of most common CLI commands.
 
 </details>
 
-<details><summary>💡 Practical Usage Tips & Guides</summary>
+<details><summary>💡 Pragmatic Goodies & Guides</summary>
 
-### 🔍 Explore File History Over Time
-
+#### 🔍 Explore File History Over Time
+___
 One of the most powerful features in this setup is the ability to see how a file has changed throughout your git history. This is incredibly useful for:
 - Understanding the evolution of code changes
 - Tracking when bugs were introduced
@@ -704,9 +704,9 @@ One of the most powerful features in this setup is the ability to see how a file
 
 This integration combines Telescope's powerful fuzzy finding with git-file-history extension to give you instant access to temporal navigation of your codebase.
 
-### 🎨 Quickly Switch Between Color Themes
-
-Change your editor's appearance instantly without leaving Neovim. Perfect for:
+#### 🎨 Quickly Switch Between Color Themes
+___
+Change editor's appearance instantly without leaving Neovim. Perfect for:
 - Finding the right theme for different times of day (dark mode at night, light mode during day)
 - Testing how code looks in different color schemes
 - Matching your editor theme to your mood or lighting conditions
@@ -730,11 +730,11 @@ tokyonight         " Type to filter (fuzzy search)
 
 All installed colorschemes are available with live preview as you browse!
 
-### 🛠️ Essential CLI Tools
+#### 🛠️ Essential CLI Tools
+___
+Command-line tools for various tasks. Here are quick how-tos for the essential ones:
 
-Your dotfiles include powerful command-line tools for various tasks. Here are quick how-tos for the essential ones:
-
-#### 📋 **lnav** - Log Viewer & Analyzer
+##### 📋 **lnav** - Log Viewer & Analyzer
 View and analyze log files with an interactive terminal UI. Perfect for debugging and monitoring logs from multiple sources.
 
 ```bash
@@ -747,7 +747,7 @@ lnav                               # Interactive log file picker
 
 ---
 
-#### 🐙 **lazygit** - Git Management UI
+##### 🐙 **lazygit** - Git Management UI
 Interact with Git repositories through an intuitive terminal UI. Also accessible in Neovim via `<leader>gg`.
 
 ```bash
@@ -759,7 +759,7 @@ lazygit                            # Open Git UI in current repo
 
 ---
 
-#### 🐳 **lazydocker** - Docker Management UI
+##### 🐳 **lazydocker** - Docker Management UI
 Manage Docker containers, images, and networks with an interactive TUI.
 
 ```bash
@@ -771,7 +771,7 @@ lazydocker                         # Open Docker UI
 
 ---
 
-#### 💾 **harlequin** - SQL IDE
+##### 💾 **harlequin** - SQL IDE
 Run and test SQL queries interactively with connection management and results formatting.
 
 ```bash
@@ -784,7 +784,7 @@ harlequin --dialect duckdb         # Specify SQL dialect (duckdb, sqlite, postgr
 
 ---
 
-#### ⚡ **hyperfine** - Benchmarking Tool
+##### ⚡ **hyperfine** - Benchmarking Tool
 Measure and compare command execution time with statistical analysis.
 
 ```bash
@@ -797,7 +797,7 @@ hyperfine --show-output 'cmd'      # Show command output while benchmarking
 
 ---
 
-#### 🌐 **httpie** - Better HTTP Client
+##### 🌐 **httpie** - Better HTTP Client
 Human-friendly HTTP CLI client (better than curl).
 
 ```bash
