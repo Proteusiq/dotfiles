@@ -201,31 +201,163 @@ iswitch  # Interactive session switcher
 
 </details>
 
-<details><summary>⚡ Neovim/LazyVim</summary>
+<details><summary>⚡ Neovim/LazyVim - Complete Plugin Guide</summary>
 
-**Essential bindings:**
+This configuration includes 23 powerful plugins organized by category. Below is the complete reference guide with keybindings, purposes, and practical examples.
+
+### File & Buffer Management
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **Telescope** | Fuzzy file finder | `<leader>ff` | Find files project-wide |
+| | Live grep search | `<leader>fg` | Search file contents |
+| | Buffer list | `<leader>fb` | Quick buffer switcher |
+| | Help tags | `<leader>fh` | Documentation search |
+| **Harpoon** | Add bookmark | `<leader>a` | Mark current file for quick access |
+| | View bookmarks | `<C-e>` | Toggle harpoon menu |
+| | Jump to file 1-4 | `<leader>1-4` | Direct jump to bookmarked file |
+| | Next/prev file | `<C-S-P>/<C-S-N>` | Cycle through bookmarks |
+| **Yazi** | Open file manager | `<leader>-` | Browse files in current directory |
+| | Open in cwd | `<leader>cw` | Browse from working directory |
+
+### Code Navigation & Structure
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **Navbuddy** | Open code navigator | `<leader>nv` | LSP-powered symbol tree browser |
+| | Navigate structure | `k/i/j/l` | Previous/next/parent/children |
+| **Undotree** | Toggle undo tree | `<leader>u` | Visualize and navigate undo history |
+
+### Editing & Text Manipulation
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **Surround** | Add surrounding | `ys<motion><char>` | Example: `ysiw"` wraps word in quotes |
+| | Change surrounding | `cs<old><new>` | Example: `cs"'` changes "text" to 'text' |
+| | Delete surrounding | `ds<char>` | Example: `ds"` removes quotes |
+| **Better Escape** | Fast escape | `jk` or `jj` | Alternative to `<Esc>` (customizable) |
+| **Live Command** | Preview commands | `:s/foo/bar/` | Real-time preview while typing |
+
+### Git & GitHub Integration
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **Snacks** | Open Lazygit | `<leader>gg` | Full Git UI in Neovim |
+| | File history | `<leader>gf` | Lazygit history for current file |
+| | Git log | `<leader>gl` | Lazygit log for working directory |
+| | Blame line | `<leader>gb` | Show who changed this line |
+| | Browse on GitHub | `<leader>gB` | Open file on GitHub |
+| **Octo** | List issues | `<space>il` | GitHub issues on current repo |
+| | Close/reopen | `<space>ic`/`<space>io` | Issue state management |
+| | Checkout PR | `<space>po` | Checkout a pull request |
+| | Merge PR | `<space>pm` | Merge commit the PR |
+| | PR diff | `<space>pd` | View PR changes |
+| | Add reviewer | `<space>va` | Request PR review |
+| | Start review | `<space>vs` | Start/submit code review |
+| | Add comment | `<space>ca` | Comment on PR/issue |
+| | Add label | `<space>la` | Label issue/PR |
+| | Add assignee | `<space>aa` | Assign to user |
+| | Open in browser | `<C-b>` | Open PR/issue on GitHub.com |
+| | Reactions | `<space>r+` `<space>rh` | Add 👍 ❤️ 👎 reactions |
+| **Git Conflict** | Resolve conflicts | Auto-triggered | Tools appear on merge conflicts |
+
+### Debugging
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **DAP Python** | Debug test method | `<leader>dm` | Step through test methods |
+| | Debug test class | `<leader>dc` | Debug entire test class |
+| | Debug file | `<leader>df` | Debug current Python file |
+| | Debug function | `<leader>du` | Debug function under cursor |
+| | Debug class | `<leader>dk` | Debug class under cursor |
+| **Rustaceanvim** | Code action | `<leader>cR` | Rust LSP code actions |
+| | Debuggables | `<leader>dr` | List Rust debug targets |
+
+### AI & Development Assistance
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **OpenCode** | Ask about code | `<leader>oa` | Ask with `@this` context |
+| | Select prompt | `<leader>os` | Choose predefined prompt |
+| | Add context | `<leader>o+` | Add `@this` to context |
+| | Toggle panel | `<leader>ot` | Show/hide OpenCode panel |
+| | New session | `<leader>on` | Start fresh AI session |
+| | Interrupt | `<leader>oi` | Stop current operation |
+| | Scroll messages | `<S-C-u>/<S-C-d>` | Half-page scroll in messages |
+
+### Buffers & Windows
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **Snacks** | Scratch buffer | `<leader>.` | Quick temporary buffer |
+| | Delete buffer | `<leader>bd` | Close current buffer |
+| | Rename file | `<leader>cR` | Rename with preview |
+| | Floating terminal | `<C-/>` | Toggle terminal overlay |
+
+### UI & Display Toggles
+
+| Feature | Keymap | Purpose |
+|---------|--------|---------|
+| Spelling | `<leader>us` | Toggle spell check |
+| Wrapping | `<leader>uw` | Toggle line wrapping |
+| Relative numbers | `<leader>uL` | Toggle relative line numbers |
+| Diagnostics | `<leader>ud` | Show/hide LSP diagnostics |
+| Line numbers | `<leader>ul` | Toggle line number display |
+| Treesitter | `<leader>uT` | Toggle syntax highlighting |
+| Background | `<leader>ub` | Toggle dark/light mode |
+| Inlay hints | `<leader>uh` | Toggle LSP inlay hints |
+
+### Navigation & References
+
+| Plugin | Purpose | Keymap | Notes |
+|--------|---------|--------|-------|
+| **Snacks** | Next reference | `]]` | Jump to next symbol reference |
+| | Prev reference | `[[` | Jump to previous reference |
+| | Notification history | `<leader>n` | Show notification history |
+| | Neovim news | `<leader>N` | View Neovim news & updates |
+
+### Command Mode Operations
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `:!<command>` | Execute shell | `:!ls -al` |
+| `:'<,'>!sort` | Sort selection | Select lines, then run |
+| `:'<,'>!jq` | Format JSON | Pretty-print JSON selection |
+| `:r !<command>` | Insert output | `:r !date` inserts current date |
+| `:Telescope keymap` | Show keymaps | Searchable keymap reference |
+| `:Telescope live_grep` | Search project | Live grep across files |
+| `:Telescope git_branches` | Git branches | Interactive branch switcher |
+
+### Quick Reference by Leader Key Prefix
+
+| Prefix | Purpose | Examples |
+|--------|---------|----------|
+| `<leader>f` | **Find/Fuzzy** | `ff` files, `fg` grep, `fb` buffers |
+| `<leader>g` | **Git** | `gg` lazygit, `gb` blame, `gf` history |
+| `<leader>o` | **OpenCode (AI)** | `oa` ask, `os` select, `on` session |
+| `<space>` | **Octo (GitHub)** | `il` issues, `po` checkout PR, `pm` merge |
+| `<leader>u` | **UI Toggles** | `us` spell, `uw` wrap, `ud` diagnostics |
+| `<leader>d` | **Debug** | `dm` method, `dc` class, `df` file |
+| `<leader>.` | **Scratch** | `.` toggle, `bd` delete, `S` select |
+| `<leader>n` | **Navigate** | `nv` navbuddy, `n` notifications |
+| `<leader>-` | **Files** | `-` current, `cw` working directory |
+
+### Essential Core Bindings
+
 ```bash
 <Space>          # Leader key
 <Ctrl-w>w        # Switch to file tree
 [b ]b            # Navigate buffers (Alt+8/9)
-
-# Command mode operations
-:!<command>      # Execute shell command
-:'<,'>!sort      # Sort selected lines
-:'<,'>!jq        # Format JSON selection
-:r !ls -al       # Insert command output
-
-# Telescope
-:Telescope keymap         # Show all keymaps
-:Telescope live_grep      # Live grep search
-:Telescope git_branches   # Git branch switcher
+<Ctrl-h/j/k/l>   # Navigate windows
 ```
 
-**Debugging shortcuts:**
-- `<leader>dm` - Debug test method
-- `<leader>dc` - Debug test class  
-- `<leader>df` - Debug Python file
-- `<leader>du` - Debug function under cursor
+### Pro Tips
+
+- **@this context**: Use `<leader>oa` with `@this` to ask OpenCode about your current code
+- **Fuzzy matching**: Telescope uses fuzzy search - type partial names and it finds matches
+- **Git workflow**: `<leader>gg` opens Lazygit for complex operations, `<space>il` for issues
+- **Quick edits**: Surround plugin (`ys`, `cs`, `ds`) makes text transformation fast and repeatable
+- **Markdown**: `.nvim/README.md` and other markdown files render beautifully inline
 
 </details>
 
