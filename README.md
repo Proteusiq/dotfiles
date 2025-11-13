@@ -675,6 +675,142 @@ A collection of most common CLI commands.
 
 </details>
 
+## Usage Tips
+
+### 🔍 Explore File History Over Time
+
+One of the most powerful features in this setup is the ability to see how a file has changed throughout your git history. This is incredibly useful for:
+- Understanding the evolution of code changes
+- Tracking when bugs were introduced
+- Learning from your own past edits
+- Reviewing refactoring decisions
+
+**Command:** `:Telescope git_file_history`
+
+**How to Use:**
+1. Open any file in your project
+2. Run `:Telescope git_file_history` to open the git file history picker
+3. Browse through all commits that touched this file
+4. Select a commit to view how the file looked at that point in time
+5. Use Telescope's navigation keys to explore previous versions side-by-side with diffs
+
+**Example Workflow:**
+```vim
+:Telescope git_file_history  " Open history for current file
+" Browse commits with j/k, preview with ?
+" Press <CR> to view the selected commit version
+" Use Telescope's diff view to see what changed
+```
+
+This integration combines Telescope's powerful fuzzy finding with git-file-history extension to give you instant access to temporal navigation of your codebase.
+
+### 🎨 Quickly Switch Between Color Themes
+
+Change your editor's appearance instantly without leaving Neovim. Perfect for:
+- Finding the right theme for different times of day (dark mode at night, light mode during day)
+- Testing how code looks in different color schemes
+- Matching your editor theme to your mood or lighting conditions
+- Discovering new themes and comparing them instantly
+
+**Keymap:** `<leader>uC`
+
+**How to Use:**
+1. Press `<leader>uC` to open the colorscheme picker
+2. Type to filter available themes (supports fuzzy search)
+3. Use `j/k` or arrow keys to navigate through themes
+4. Press `<CR>` to apply the selected theme immediately
+5. Press `?` in the picker to see all available actions
+
+**Example Workflow:**
+```vim
+<leader>uC         " Open colorscheme picker
+tokyonight         " Type to filter (fuzzy search)
+<CR>               " Apply selected theme instantly
+```
+
+All installed colorschemes are available with live preview as you browse!
+
+### 🛠️ Essential CLI Tools
+
+Your dotfiles include powerful command-line tools for various tasks. Here are quick how-tos for the essential ones:
+
+#### 📋 **lnav** - Log Viewer & Analyzer
+View and analyze log files with an interactive terminal UI. Perfect for debugging and monitoring logs from multiple sources.
+
+```bash
+lnav /var/log/system.log           # View a specific log file
+lnav                               # Interactive log file picker
+# Inside lnav: Use j/k to navigate, / to search, q to quit
+```
+
+**Use cases:** Debug application errors, monitor system logs, analyze multiple log files side-by-side
+
+---
+
+#### 🐙 **lazygit** - Git Management UI
+Interact with Git repositories through an intuitive terminal UI. Also accessible in Neovim via `<leader>gg`.
+
+```bash
+lazygit                            # Open Git UI in current repo
+# Inside: Stage files, commit, branch management with vim-like keybinds
+```
+
+**Use cases:** Visual staging, interactive rebasing, branch management, blame view
+
+---
+
+#### 🐳 **lazydocker** - Docker Management UI
+Manage Docker containers, images, and networks with an interactive TUI.
+
+```bash
+lazydocker                         # Open Docker UI
+# Inside: View containers, logs, exec commands with vim-like navigation
+```
+
+**Use cases:** Container debugging, quick logs viewing, resource monitoring, container lifecycle management
+
+---
+
+#### 💾 **harlequin** - SQL IDE
+Run and test SQL queries interactively with connection management and results formatting.
+
+```bash
+harlequin                          # Open SQL IDE
+harlequin --dialect duckdb         # Specify SQL dialect (duckdb, sqlite, postgres, etc.)
+# Inside: Write queries, view results, explore databases
+```
+
+**Use cases:** SQL development, database exploration, query testing, data analysis
+
+---
+
+#### ⚡ **hyperfine** - Benchmarking Tool
+Measure and compare command execution time with statistical analysis.
+
+```bash
+hyperfine 'command1' 'command2'    # Compare two commands
+hyperfine --runs 10 'your_command' # Run benchmark 10 times
+hyperfine --show-output 'cmd'      # Show command output while benchmarking
+```
+
+**Use cases:** Performance comparison, optimization validation, CI/CD benchmarking
+
+---
+
+#### 🌐 **httpie** - Better HTTP Client
+Human-friendly HTTP CLI client (better than curl).
+
+```bash
+http GET example.com               # Simple GET request
+http --auth user:pass POST httpbin.org/post name=value  # POST with auth
+http --headers GET github.com      # Show only headers
+http < request.json POST httpbin.org/post  # Send from file
+```
+
+**Use cases:** API testing, REST debugging, quick HTTP requests, webhook testing
+
+---
+
 ## Troubleshooting
 
 **Common issues:**

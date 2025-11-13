@@ -63,7 +63,9 @@ brew "imagemagick" # required to convert images in snacks.nvim
 brew "gzip"
 brew "httpie" # better curl
 brew "hyperfine"
+brew "harlequin" # SQL IDE for terminal
 brew "jq"
+brew "lnav" # log file viewer and analyzer
 brew "moreutils"
 brew "ncdu"
 brew "rename"
