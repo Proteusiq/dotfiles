@@ -675,7 +675,7 @@ A collection of most common CLI commands.
 
 </details>
 
-## Usage Tips
+<details><summary>💡 Practical Usage Tips & Guides</summary>
 
 ### 🔍 Explore File History Over Time
 
@@ -809,7 +809,7 @@ http < request.json POST httpbin.org/post  # Send from file
 
 **Use cases:** API testing, REST debugging, quick HTTP requests, webhook testing
 
----
+</details>
 
 ## Troubleshooting
 
