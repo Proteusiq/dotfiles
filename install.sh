@@ -297,22 +297,23 @@ setup_utils() {
     local uv_tools=(
         "llm"
         "aider-chat --python 3.13"
+        "harlequin"
     )
 
     if [[ "$DRY_RUN" == false ]] && command -v uv &>/dev/null; then
         log "🔧 Installing/updating UV tools..."
-        for tool_spec in "${uv_tools[@]}"; do
-            local tool_name=$(echo "$tool_spec" | cut -d' ' -f1)
-            
-            if uv tool list 2>/dev/null | grep -q "$tool_name"; then
-                execute uv tool upgrade $tool_spec &>/dev/null
-            else
-                execute uv tool install $tool_spec &>/dev/null
-            fi
-        done
-        log "✅ UV tools configured"
+         for tool_spec in "${uv_tools[@]}"; do
+             local tool_name=$(echo "$tool_spec" | cut -d' ' -f1)
+             
+             if uv tool list 2>/dev/null | grep -q "$tool_name"; then
+                 execute uv tool upgrade $tool_spec &>/dev/null
+             else
+                 execute uv tool install $tool_spec &>/dev/null
+             fi
+         done
+         log "✅ UV tools configured"
     elif [[ "$DRY_RUN" == true ]]; then
-        echo "[DRY RUN] Would install/upgrade UV tools: llm, aider-chat"
+        echo "[DRY RUN] Would install/upgrade UV tools: llm, aider-chat, harlequin"
     else
         log_warn "UV not found, skipping tool installations"
     fi
