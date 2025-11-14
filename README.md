@@ -52,7 +52,7 @@ curl -LsSf https://bit.ly/42YwVdi | less
 ### Enhanced CLI Experience
 - **Navigation**: [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf)
 - **File Operations**: [eza](https://github.com/eza-community/eza), [fd](https://github.com/sharkdp/fd), [ripgrep](https://github.com/BurntSushi/ripgrep)
-- **Git**: [lazygit](https://github.com/jesseduffield/lazygit), enhanced aliases
+- **Git**: [lazygit](https://github.com/jesseduffield/lazygit), [serie](https://github.com/lusingander/serie) for rich git logs, enhanced aliases
 - **AI**: [OpenCode](https://opencode.ai/), [LLM](https://llm.datasette.io/), local models via [Ollama](https://ollama.ai/)
 
 ## Prerequisites
@@ -756,6 +756,21 @@ lazygit                            # Open Git UI in current repo
 ```
 
 **Use cases:** Visual staging, interactive rebasing, branch management, blame view
+
+---
+
+##### 📚 **serie** - Rich Git Commit Graph
+View a beautiful, rich git commit graph in your terminal with image rendering support.
+
+```bash
+serie                              # Open git commit graph in current repo
+serie --order topo                 # View commits topologically sorted
+serie --order chrono               # View commits chronologically (default)
+serie --preload                    # Preload all graph images for smoother scrolling
+# Inside: j/k navigate, Enter to show details, ? for help, / to search
+```
+
+**Use cases:** Visualizing commit history, understanding branch structure, exploring complex git workflows
 
 ---
 

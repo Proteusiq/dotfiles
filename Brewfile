@@ -23,6 +23,7 @@ brew "git-lfs"
 brew "git-filter-repo"
 brew "terraform"
 brew "lazygit"
+brew "serie" # rich git commit graph in terminal
 brew "lazydocker"
 brew "mongosh"
 
