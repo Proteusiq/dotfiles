@@ -22,17 +22,16 @@
   ```python
   def process_items(items: list[Item]) -> list[Result]:
       """Process items and return results.
-      
+ 
       Args:
           items: List of items to process.
-          
+  
       Returns:
           List of processed results.
-          
+  
       Raises:
           ValueError: If items list is empty.
       """
-      # Use batch processing for performance with large datasets
       return await batch_process(items)
   ```
 
