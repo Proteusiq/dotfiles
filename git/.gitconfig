@@ -67,4 +67,4 @@
 [blame]
 	coloring = highlightRecent
 [gpg "ssh"]
-	allowedSignersFile = /Users/pradan/.ssh/allowed_signers
+	allowedSignersFile = ~/.ssh/allowed_signers
