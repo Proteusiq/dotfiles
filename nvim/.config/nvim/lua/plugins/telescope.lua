@@ -1,8 +1,18 @@
 return {
   "nvim-telescope/telescope.nvim",
-  dependencies = { "nvim-lua/plenary.nvim" },
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    {
+      "isak102/telescope-git-file-history.nvim",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "tpope/vim-fugitive",
+      },
+    },
+  },
   config = function()
     local builtin = require("telescope.builtin")
+    require("telescope").load_extension("git_file_history")
 
     -- Telescope keymaps
     vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
