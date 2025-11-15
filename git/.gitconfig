@@ -66,3 +66,5 @@
 	helper = !/opt/homebrew/bin/gh auth git-credential
 [blame]
 	coloring = highlightRecent
+[gpg "ssh"]
+	allowedSignersFile = /Users/pradan/.ssh/allowed_signers
