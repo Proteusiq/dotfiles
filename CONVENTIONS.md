@@ -20,7 +20,7 @@
 - Comments should explain **why**, not **what** (the code itself should be self-explanatory)
 - Example:
   ```python
-  def process_items(items: list[Item]) -> list[Result]:
+  async def process_items(items: list[Item]) -> list[Result]:
       """Process items and return results.
  
       Args:
