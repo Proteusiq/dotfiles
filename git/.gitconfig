@@ -50,7 +50,7 @@
 [commit]
 	gpgsign = true
 [user]
-	signingkey = 800E4C469D8BB44E66619D69B50E468C76494412
+	signingkey = ~/.ssh/id_ed25519.pub
 [difftool]
         prompt = false
 
