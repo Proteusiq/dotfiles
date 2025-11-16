@@ -774,6 +774,18 @@ serie --preload                    # Preload all graph images for smoother scrol
 
 ---
 
+##### 📊 **gh-dash** - GitHub Dashboard
+Interactive GitHub CLI dashboard for viewing pull requests, issues, and more directly from your terminal.
+
+```bash
+gh-dash                                # Open GitHub dashboard
+# Inside: View PRs, issues, repos with vim-like navigation
+```
+
+**Use cases:** Quick PR review, issue tracking, repository status overview, GitHub activity monitoring
+
+---
+
 ##### 🐳 **lazydocker** - Docker Management UI
 Manage Docker containers, images, and networks with an interactive TUI.
 

@@ -283,8 +283,23 @@ setup_utils() {
     log "🔧 Setting up additional utilities..."
 
     # Git LFS
-    if command -v git &>/dev/null; then
-        execute git lfs install
+     if command -v git &>/dev/null; then
+         execute git lfs install
+     fi
+
+    # GitHub CLI extensions
+    if command -v gh &>/dev/null; then
+        log "📊 Installing GitHub CLI extensions..."
+        
+        # Check if gh-dash extension is already installed
+        if ! gh extension list 2>/dev/null | grep -q "dlvhdr/gh-dash"; then
+            execute gh extension install dlvhdr/gh-dash
+            log "✅ gh-dash extension installed"
+        else
+            log "✅ gh-dash extension already installed"
+        fi
+    else
+        log_warn "GitHub CLI (gh) not found, skipping extension installation"
     fi
 
     # Goose
