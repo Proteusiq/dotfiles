@@ -72,6 +72,7 @@ brew "rename"
 brew "ripgrep"
 brew "rsync"
 brew "ruby"
+brew "scooter" # interactive find-and-replace in the terminal
 brew "screen"
 brew "slides"
 brew "stow"

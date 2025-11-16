@@ -836,6 +836,37 @@ http < request.json POST httpbin.org/post  # Send from file
 
 **Use cases:** API testing, REST debugging, quick HTTP requests, webhook testing
 
+---
+
+##### 🔄 **scooter** - Interactive Find-and-Replace
+Interactive terminal UI for find-and-replace operations with preview, regex support, and editor integration.
+
+```bash
+scooter                            # Open scooter in current directory
+scooter ../path/to/dir             # Search in specific directory
+echo "text" | scooter              # Process stdin
+scooter --search-text "old" --replace-text "new" --immediate-search  # Pre-populate fields
+```
+
+**Key features:**
+- **Interactive toggling**: Select which instances to replace using spacebar
+- **Regex & fixed strings**: Switch between regex patterns and literal string matching
+- **Capture groups**: Use `(\d)` in search and `$1` in replacement
+- **Editor integration**: Press `e` to open selected file at the correct line in your `$EDITOR`
+- **Respects .gitignore**: Automatically ignores files per your `.gitignore` and `.ignore`
+- **Glob filtering**: Include/exclude files using glob patterns (e.g., `*.rs,*.py`)
+- **Performance**: Built on ripgrep's file walker for blazing-fast searches
+
+**Workflow example:**
+```vim
+scooter                           " Open scooter
+# Type search pattern, replacement, and toggle desired instances with space
+# Press Enter to execute replacements
+# Press e to open any file in your editor at that line
+```
+
+**Use cases:** Refactoring code, bulk renaming, updating imports, batch text replacements
+
 </details>
 
 ## Troubleshooting
