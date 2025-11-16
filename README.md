@@ -730,6 +730,41 @@ tokyonight         " Type to filter (fuzzy search)
 
 All installed colorschemes are available with live preview as you browse!
 
+#### 🎯 Multi-Cursor Editing with multicursor.nvim
+___
+Efficient multi-cursor editing directly in Neovim. Perfect for:
+- Simultaneous editing across multiple locations
+- Fast refactoring and bulk text operations
+- Reducing repetitive edits on similar patterns
+- Maintaining productivity without leaving the editor
+
+**Keymaps:** `<leader>mc` to create cursors, `<leader>mj/k` to navigate selections
+
+**How to Use:**
+1. Position cursor on target word/selection
+2. Press `<leader>mc` to add a cursor at current position
+3. Move to next location and repeat to add multiple cursors
+4. Edit normally - changes apply to all cursor locations simultaneously
+5. Press `<Esc>` or `<leader>m<Esc>` to clear all cursors
+
+**Example Workflow:**
+```vim
+<leader>mc         " Add cursor at current position
+<leader>mj         " Jump to next selection match
+<leader>mc         " Add another cursor
+i                  " Enter insert mode
+new_text           " Type - applies to all cursor positions
+<Esc>              " Exit and clear cursors
+```
+
+**Pro Tips:**
+- All cursors are **bufwin-local** - they persist when switching between windows with the same buffer
+- Use motions to select text before adding cursors for more precise edits
+- Combine with visual selection for faster multi-line operations
+- Use `<leader>ma` to select all matches of word under cursor
+
+**Use cases:** Variable renaming across file, bulk find-and-replace, consistent formatting updates, batch code modifications
+
 #### 🛠️ Essential CLI Tools
 ___
 Command-line tools for various tasks. Here are quick how-tos for the essential ones:
