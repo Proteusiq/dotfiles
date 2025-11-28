@@ -904,6 +904,33 @@ scooter                           " Open scooter
 
 </details>
 
+<details><summary>🐱 Shortcat - Keyboard-Driven UI Navigation</summary>
+
+Navigate macOS applications entirely with your keyboard using Shortcat. Perfect for:
+- Clicking buttons, links, and UI elements without a mouse
+- Speeding up repetitive GUI tasks
+- Accessibility and RSI prevention
+- Vim-like navigation in any application
+
+**Key Binding:**
+
+| Shortcut | Description |
+|----------|-------------|
+| `Cmd + S` | Activate Shortcat search mode |
+
+**How to Use:**
+1. Press `Cmd + S` to activate Shortcat
+2. Type to filter visible UI elements (buttons, links, menus)
+3. Press `Enter` to click the highlighted element
+4. Use arrow keys to navigate between matches
+
+**Pro Tips:**
+- Works in any macOS application
+- Combine with AeroSpace for a fully keyboard-driven workflow
+- Great for navigating System Preferences and other mouse-heavy apps
+
+</details>
+
 ## Troubleshooting
 
 **Common issues:**
