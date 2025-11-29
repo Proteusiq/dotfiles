@@ -924,11 +924,6 @@ Navigate macOS applications entirely with your keyboard using Shortcat. Perfect 
 3. Press `Enter` to click the highlighted element
 4. Use arrow keys to navigate between matches
 
-**Pro Tips:**
-- Works in any macOS application
-- Combine with AeroSpace for a fully keyboard-driven workflow
-- Great for navigating System Preferences and other mouse-heavy apps
-
 </details>
 
 ## Troubleshooting
