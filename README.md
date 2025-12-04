@@ -226,7 +226,7 @@ This configuration includes 23 powerful plugins organized by category. Below is 
 |--------|---------|--------|-------|
 | **Navbuddy** | Open code navigator | `<leader>nv` | LSP-powered symbol tree browser |
 | | Navigate structure | `k/i/j/l` | Previous/next/parent/children |
-| **Undotree** | Toggle undo tree | `<leader>u` | Visualize and navigate undo history |
+| **Atone** | Open undo history | `:Atone` | Visualize and navigate undo history |
 
 ### Editing & Text Manipulation
 
@@ -356,6 +356,7 @@ This configuration includes 23 powerful plugins organized by category. Below is 
 - **@this context**: Use `<leader>oa` with `@this` to ask OpenCode about your current code
 - **Fuzzy matching**: Telescope uses fuzzy search - type partial names and it finds matches
 - **Git workflow**: `<leader>gg` opens Lazygit for complex operations, `<space>il` for issues
+- **File history**: If you're disciplined with commits, `:Telescope git_file_history` is your best friend for tracking how a file evolved over time
 - **Quick edits**: Surround plugin (`ys`, `cs`, `ds`) makes text transformation fast and repeatable
 - **Markdown**: `.nvim/README.md` and other markdown files render beautifully inline
 
