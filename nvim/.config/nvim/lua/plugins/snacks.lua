@@ -39,6 +39,13 @@ return {
   },
   keys = {
     {
+      "<leader><leader>",
+      function()
+        Snacks.picker.files()
+      end,
+      desc = "Find Files",
+    },
+    {
       "<leader>.",
       function()
         Snacks.scratch()

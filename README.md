@@ -209,13 +209,14 @@ This configuration includes 23 powerful plugins organized by category. Below is 
 
 | Plugin | Purpose | Keymap | Notes |
 |--------|---------|--------|-------|
+| **Snacks** | Find files | `<leader><leader>` | Find files (like `<leader>ff`) |
 | **Telescope** | Fuzzy file finder | `<leader>ff` | Find files project-wide |
 | | Live grep search | `<leader>fg` | Search file contents |
 | | Buffer list | `<leader>fb` | Quick buffer switcher |
 | | Help tags | `<leader>fh` | Documentation search |
 | **Harpoon** | Add bookmark | `<leader>a` | Mark current file for quick access |
-| | View bookmarks | `<C-e>` | Toggle harpoon menu |
-| | Jump to file 1-4 | `<leader>1-4` | Direct jump to bookmarked file |
+| | View bookmarks | `<C-e>` | Toggle harpoon menu (Telescope) |
+| | Jump to file 1-4 | `<C-h>/<C-t>/<C-n>/<C-s>` | Direct jump to bookmarked file |
 | | Next/prev file | `<C-S-P>/<C-S-N>` | Cycle through bookmarks |
 | **Yazi** | Open file manager | `<leader>-` | Browse files in current directory |
 | | Open in cwd | `<leader>cw` | Browse from working directory |
@@ -281,8 +282,10 @@ This configuration includes 23 powerful plugins organized by category. Below is 
 | | Select prompt | `<leader>os` | Choose predefined prompt |
 | | Add context | `<leader>o+` | Add `@this` to context |
 | | Toggle panel | `<leader>ot` | Show/hide OpenCode panel |
+| | Select command | `<leader>oc` | Pick from available commands |
 | | New session | `<leader>on` | Start fresh AI session |
 | | Interrupt | `<leader>oi` | Stop current operation |
+| | Cycle agent | `<leader>oA` | Switch between agents |
 | | Scroll messages | `<S-C-u>/<S-C-d>` | Half-page scroll in messages |
 
 ### Buffers & Windows
@@ -739,30 +742,35 @@ Efficient multi-cursor editing directly in Neovim. Perfect for:
 - Reducing repetitive edits on similar patterns
 - Maintaining productivity without leaving the editor
 
-**Keymaps:** `<leader>mc` to create cursors, `<leader>mj/k` to navigate selections
+**Keymaps:** Arrow keys to add cursors, `<leader>n/N` to match word/selection
 
 **How to Use:**
 1. Position cursor on target word/selection
-2. Press `<leader>mc` to add a cursor at current position
-3. Move to next location and repeat to add multiple cursors
+2. Press `<up>/<down>` to add cursor above/below current line
+3. Or press `<leader>n` to add cursor at next match of word under cursor
 4. Edit normally - changes apply to all cursor locations simultaneously
-5. Press `<Esc>` or `<leader>m<Esc>` to clear all cursors
+5. Press `<Esc>` to clear all cursors
 
 **Example Workflow:**
 ```vim
-<leader>mc         " Add cursor at current position
-<leader>mj         " Jump to next selection match
-<leader>mc         " Add another cursor
+<down>             " Add cursor below current line
+<down>             " Add another cursor below
 i                  " Enter insert mode
 new_text           " Type - applies to all cursor positions
 <Esc>              " Exit and clear cursors
+
+" Or match-based:
+<leader>n          " Add cursor at next match of word
+<leader>n          " Add another cursor at next match
 ```
 
 **Pro Tips:**
 - All cursors are **bufwin-local** - they persist when switching between windows with the same buffer
-- Use motions to select text before adding cursors for more precise edits
-- Combine with visual selection for faster multi-line operations
-- Use `<leader>ma` to select all matches of word under cursor
+- Use `<leader><up>/<down>` to skip a line when adding cursors
+- Use `<leader>N` to match previous occurrence (backwards)
+- Use `<C-q>` to toggle (disable/enable) cursors
+- Use `<left>/<right>` to select different cursor as main (when multiple cursors active)
+- Use `<leader>x` to delete the main cursor
 
 **Use cases:** Variable renaming across file, bulk find-and-replace, consistent formatting updates, batch code modifications
 
