@@ -210,6 +210,7 @@ This configuration includes 23 powerful plugins organized by category. Below is 
 | Plugin | Purpose | Keymap | Notes |
 |--------|---------|--------|-------|
 | **Snacks** | Find files | `<leader><leader>` | Find files (like `<leader>ff`) |
+| | Search & Replace | `<leader>sr` | **BROKEN** - needs fix |
 | **Telescope** | Fuzzy file finder | `<leader>ff` | Find files project-wide |
 | | Live grep search | `<leader>fg` | Search file contents |
 | | Buffer list | `<leader>fb` | Quick buffer switcher |
