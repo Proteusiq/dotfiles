@@ -205,6 +205,50 @@ iswitch  # Interactive session switcher
 
 This configuration includes 23 powerful plugins organized by category. Below is the complete reference guide with keybindings, purposes, and practical examples.
 
+### LazyVim Extras
+
+Extras are managed in `nvim/.config/nvim/lua/plugins/extras.lua`. To add/remove extras, edit this file:
+
+```lua
+-- nvim/.config/nvim/lua/plugins/extras.lua
+return {
+  { import = "lazyvim.plugins.extras.coding.yanky" },
+  { import = "lazyvim.plugins.extras.dap.core" },
+  -- ... add or remove lines here
+}
+```
+
+**Currently enabled extras:**
+
+| Extra | Purpose | Key Features |
+|-------|---------|--------------|
+| `coding.yanky` | Enhanced yank/paste | Yank history, paste cycling |
+| `dap.core` | Debug Adapter Protocol | Breakpoints, stepping, REPL |
+| `editor.leap` | Fast motion | `s`/`S` to jump anywhere |
+| `editor.neo-tree` | File explorer | `<leader>e` sidebar |
+| `lang.python` | Python support | LSP, formatting, debugging |
+| `lang.rust` | Rust support | rust-analyzer, cargo integration |
+| `test.core` | Test runner | `<leader>tt` run nearest test |
+| `ui.mini-animate` | Smooth animations | Cursor, scroll, window animations |
+| `util.dot` | Dotfile syntax | Highlighting for config files |
+| `util.gh` | GitHub CLI | `gh` command integration |
+| `util.gitui` | GitUI integration | Alternative git TUI |
+| `util.octo` | GitHub in Neovim | Issues, PRs, code review |
+
+**Test keymaps from `test.core`:**
+
+| Keymap | Action |
+|--------|--------|
+| `<leader>tt` | Run nearest test |
+| `<leader>tT` | Run current file tests |
+| `<leader>tr` | Run last test |
+| `<leader>ts` | Toggle test summary |
+| `<leader>to` | Show test output |
+| `<leader>tO` | Toggle output panel |
+| `<leader>tS` | Stop tests |
+
+**To add more extras**, browse available options with `:LazyExtras` in Neovim, then add the import line to `extras.lua`. After saving, restart Neovim and run `:Lazy sync`.
+
 ### File & Buffer Management
 
 | Plugin | Purpose | Keymap | Notes |
