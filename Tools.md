@@ -552,19 +552,74 @@ Configuration: `~/.config/starship/starship.toml`
 ### Python
 
 #### uv
-Extremely fast Python package manager and resolver written in Rust.
+Extremely fast Python package manager, project manager, and resolver written in Rust. Replaces pip, pip-tools, pipx, poetry, pyenv, and virtualenv.
 
+**Creating Projects**
 ```bash
-uv venv                       # Create virtual environment
-uv pip install package        # Install package
-uv pip sync requirements.txt  # Sync from requirements
-uv tool install package       # Install CLI tool
-uv tool run package           # Run tool without installing
+uv init                       # Initialize project in current directory
+uv init myproj                # Initialize project in myproj/
+uv init --app --package       # Initialize packageable app (CLI, web app)
+uv init --lib --package       # Initialize packageable library
+uv init --python 3.12         # Use specific Python version
 ```
 
-Alias configured: `pip` -> `uv pip`
+**Managing Dependencies**
+```bash
+uv add requests               # Add dependency
+uv add pytest --dev           # Add dev dependency
+uv add -r requirements.txt    # Add from requirements file
+uv remove requests            # Remove dependency
+uv tree                       # Show dependency tree
+uv lock --upgrade             # Upgrade all dependencies
+```
 
-**Use cases:** Package management, virtual environments, CLI tools
+**Running Code**
+```bash
+uv run python                 # Run Python in project environment
+uv run pytest                 # Run pytest
+uv run --with rich python     # Run with additional package
+uv run --with bpython bpython # Run bpython REPL
+uv run --python 3.11 python   # Run with specific Python version
+```
+
+**Tools (like pipx)**
+```bash
+uvx ruff check .              # Run tool without installing (alias for uv tool run)
+uvx --from textual textual-demo  # Run command from specific package
+uv tool install ruff          # Install tool globally
+uv tool install --with plugins pkg  # Install with extra dependencies
+uv tool list                  # List installed tools
+uv tool upgrade ruff          # Upgrade specific tool
+uv tool upgrade --all         # Upgrade all tools
+uv tool uninstall ruff        # Uninstall tool
+```
+
+**Scripts with Inline Dependencies**
+```bash
+uv init --script myscript.py  # Initialize script with metadata
+uv add click --script myscript.py  # Add dependency to script
+uv run myscript.py            # Run script (installs deps automatically)
+```
+
+Add shebang to make scripts executable: `#!/usr/bin/env -S uv run`
+
+**Python Version Management**
+```bash
+uv python list                # List installed and available versions
+uv python install 3.12        # Install Python version
+uv python uninstall 3.11      # Uninstall Python version
+uv python pin 3.12            # Pin project to Python version
+```
+
+**Project Lifecycle**
+```bash
+uv build                      # Build packageable project
+uv publish                    # Publish to PyPI
+uv version                    # Check project version
+uv version --bump minor       # Bump version
+```
+
+**Use cases:** Project management, dependency resolution, running scripts, tool management, Python version management
 
 #### pixi
 Fast package manager for conda environments. Like Poetry for the conda world.
@@ -930,8 +985,10 @@ Installed via: `cargo install repgrep`
 ### Development
 | Task | Command |
 |------|---------|
-| Python env | `uv venv && source .venv/bin/activate` |
-| Install package | `uv pip install package` |
+| New Python project | `uv init` |
+| Add dependency | `uv add package` |
+| Run Python | `uv run python` |
+| Run tool once | `uvx ruff check .` |
 | Node version | `n lts` |
 | Run TypeScript | `bun run file.ts` |
 
