@@ -636,11 +636,11 @@ Once you learn this pattern, you stop memorizing commands and start *composing* 
 | Object | Meaning |
 |--------|---------|
 | `iw` | Inner word |
-| `aw` | A word (with space) |
+| `aw` | Around word |
 | `i"` | Inner quotes |
-| `a"` | A quoted string |
+| `a"` | Around quotess |
 | `i(` | Inner parentheses |
-| `a(` | A parentheses block |
+| `a(` | Around parentheses |
 | `i{` | Inner braces |
 | `it` | Inner tag (HTML/XML) |
 | `ip` | Inner paragraph |
