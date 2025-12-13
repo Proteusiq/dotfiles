@@ -561,19 +561,134 @@ Configuration: `~/.config/nvim/`
 
 Alias: `n` -> `nvim`
 
-### Core Navigation
+### Vim Grammar: Speaking the Language
+
+The key to mastering Vim is understanding its grammar. Vim commands follow a simple rule:
+
+```
+verb + noun
+```
+
+Or more specifically:
+
+```
+[count] + operator + [count] + motion/text-object
+```
+
+Once you learn this pattern, you stop memorizing commands and start *composing* them.
+
+**Verbs (Operators)** - What you want to do:
+
+| Operator | Action |
+|----------|--------|
+| `d` | Delete |
+| `c` | Change (delete + insert mode) |
+| `y` | Yank (copy) |
+| `v` | Visual select |
+| `gu` | Lowercase |
+| `gU` | Uppercase |
+| `>` | Indent right |
+| `<` | Indent left |
+| `=` | Auto-indent |
+
+**Nouns (Motions)** - Where to apply the action:
+
+| Motion | Meaning |
+|--------|---------|
+| `w` | Word forward |
+| `b` | Word backward |
+| `e` | End of word |
+| `0` | Start of line |
+| `$` | End of line |
+| `^` | First non-blank |
+| `gg` | Start of file |
+| `G` | End of file |
+| `}` | Next paragraph |
+| `{` | Previous paragraph |
+| `f{char}` | Find character forward |
+| `t{char}` | Till character forward |
+| `/pattern` | Search forward |
+
+**Text Objects** - Structured nouns:
+
+| Object | Meaning |
+|--------|---------|
+| `iw` | Inner word |
+| `aw` | A word (with space) |
+| `i"` | Inner quotes |
+| `a"` | A quoted string |
+| `i(` | Inner parentheses |
+| `a(` | A parentheses block |
+| `i{` | Inner braces |
+| `it` | Inner tag (HTML/XML) |
+| `ip` | Inner paragraph |
+| `is` | Inner sentence |
+
+**Examples - Composing Commands:**
+
+```
+dw      = delete word
+d$      = delete to end of line
+d3w     = delete 3 words
+diw     = delete inner word (word under cursor)
+di"     = delete inside quotes
+da(     = delete around parentheses (including parens)
+ci{     = change inside braces
+yap     = yank a paragraph
+gUiw    = uppercase inner word
+>ip     = indent paragraph
+```
+
+**The Power of Composition:**
+
+If you know 5 operators and 10 motions, you have 50 commands. Learn one new motion, gain 5 more commands. This is why Vim scales - knowledge multiplies.
+
+```
+Operators (5) x Motions (10) = Commands (50)
+```
+
+**Double Operator = Line Operation:**
+
+| Command | Action |
+|---------|--------|
+| `dd` | Delete line |
+| `yy` | Yank line |
+| `cc` | Change line |
+| `>>` | Indent line |
+| `gUU` | Uppercase line |
+
+**The Dot Command (`.`):**
+
+Repeats your last change. This is why Vim users prefer `ciw` over `bcw` - it creates a repeatable atomic action.
+
+```
+ciw     + new text + Esc    -> .  repeats "change word to new text"
+```
+
+### Motions & Navigation
 
 | Key | Action |
 |-----|--------|
 | `h/j/k/l` | Left/Down/Up/Right |
-| `w/b` | Next/Previous word |
+| `w/W` | Next word/WORD |
+| `b/B` | Previous word/WORD |
+| `e/E` | End of word/WORD |
 | `0/$` | Start/End of line |
+| `^` | First non-blank character |
 | `gg/G` | Start/End of file |
+| `{number}G` | Go to line number |
 | `Ctrl+d/u` | Half page down/up |
+| `Ctrl+f/b` | Full page down/up |
 | `%` | Jump to matching bracket |
-| `f{char}` | Jump to character |
+| `f{char}` | Find character (inclusive) |
+| `t{char}` | Till character (exclusive) |
+| `F{char}` | Find backward |
+| `T{char}` | Till backward |
+| `;/,` | Repeat f/t forward/backward |
 | `/{pattern}` | Search forward |
+| `?{pattern}` | Search backward |
 | `n/N` | Next/Previous search result |
+| `*/#` | Search word under cursor |
 
 ### File & Buffer Management
 
