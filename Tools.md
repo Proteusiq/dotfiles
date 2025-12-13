@@ -14,6 +14,7 @@ A comprehensive guide to all tools, utilities, and applications included in this
   - [System Monitoring](#system-monitoring)
   - [Text Processing](#text-processing)
 - [Terminal & Editors](#terminal--editors)
+- [Neovim](#neovim)
 - [Programming Languages](#programming-languages)
   - [Python](#python)
   - [Node.js & JavaScript](#nodejs--javascript)
@@ -497,17 +498,6 @@ Configuration: `~/.config/ghostty/config`
 
 **Use cases:** Primary terminal emulator, tmux integration
 
-### neovim
-Hyperextensible text editor built on Vim. Configured with LazyVim.
-
-```bash
-nvim file                     # Open file
-nvim +42 file                 # Open at line 42
-nvim -d file1 file2           # Diff mode
-```
-
-See README.md for extensive keybinding documentation.
-
 ### tmux
 Terminal multiplexer. Manage multiple terminal sessions in one window.
 
@@ -554,6 +544,180 @@ Configuration: `~/.config/sesh/sesh.toml`
 Minimal, fast, customizable prompt for any shell.
 
 Configuration: `~/.config/starship/starship.toml`
+
+---
+
+## Neovim
+
+Hyperextensible text editor built on Vim. Configured with [LazyVim](https://www.lazyvim.org/) as the base distribution.
+
+```bash
+nvim file                     # Open file
+nvim +42 file                 # Open at line 42
+nvim -d file1 file2           # Diff mode
+```
+
+Configuration: `~/.config/nvim/`
+
+Alias: `n` -> `nvim`
+
+### Core Navigation
+
+| Key | Action |
+|-----|--------|
+| `h/j/k/l` | Left/Down/Up/Right |
+| `w/b` | Next/Previous word |
+| `0/$` | Start/End of line |
+| `gg/G` | Start/End of file |
+| `Ctrl+d/u` | Half page down/up |
+| `%` | Jump to matching bracket |
+| `f{char}` | Jump to character |
+| `/{pattern}` | Search forward |
+| `n/N` | Next/Previous search result |
+
+### File & Buffer Management
+
+| Key | Action |
+|-----|--------|
+| `<leader><leader>` | Find files |
+| `<leader>ff` | Find files (Telescope) |
+| `<leader>fg` | Live grep search |
+| `<leader>fb` | Buffer list |
+| `<leader>fh` | Help tags |
+| `<leader>e` | File explorer (neo-tree) |
+| `<leader>-` | Yazi file manager |
+| `<leader>bd` | Delete buffer |
+| `<leader>.` | Scratch buffer |
+
+### Harpoon (Quick File Access)
+
+| Key | Action |
+|-----|--------|
+| `<leader>a` | Add file to harpoon |
+| `<leader>1-5` | Jump to harpoon file 1-5 |
+
+### Git Integration
+
+| Key | Action |
+|-----|--------|
+| `<leader>gg` | Open Lazygit |
+| `<leader>gf` | File history (Lazygit) |
+| `<leader>Gh` | File history (Telescope) |
+| `<leader>gl` | Git log |
+| `<leader>gb` | Blame line |
+| `<leader>gB` | Browse on GitHub |
+
+### Code Navigation (LSP)
+
+| Key | Action |
+|-----|--------|
+| `gd` | Go to definition |
+| `gr` | Go to references |
+| `K` | Hover documentation |
+| `<leader>ca` | Code actions |
+| `<leader>cr` | Rename symbol |
+| `<leader>cf` | Format code |
+| `<leader>cd` | Line diagnostics |
+| `<leader>nv` | Navbuddy symbol tree |
+| `]d/[d` | Next/Previous diagnostic |
+
+### Testing
+
+| Key | Action |
+|-----|--------|
+| `<leader>tt` | Run nearest test |
+| `<leader>tT` | Run file tests |
+| `<leader>tr` | Run last test |
+| `<leader>ts` | Toggle test summary |
+| `<leader>to` | Show test output |
+| `<leader>tS` | Stop tests |
+
+### Debugging (DAP)
+
+| Key | Action |
+|-----|--------|
+| `<leader>dm` | Debug test method |
+| `<leader>dc` | Debug test class |
+| `<leader>df` | Debug file |
+| `<leader>du` | Debug function |
+| `<leader>dk` | Debug class |
+
+### AI Integration (OpenCode)
+
+| Key | Action |
+|-----|--------|
+| `<leader>oa` | Ask about code |
+| `<leader>os` | Select prompt |
+| `<leader>o+` | Add context |
+| `<leader>ot` | Toggle panel |
+| `<leader>oc` | Select command |
+| `<leader>on` | New session |
+| `<leader>oi` | Interrupt |
+| `<leader>oA` | Cycle agent |
+
+### UI Toggles
+
+| Key | Action |
+|-----|--------|
+| `<leader>us` | Toggle spelling |
+| `<leader>uw` | Toggle word wrap |
+| `<leader>uL` | Toggle relative numbers |
+| `<leader>ud` | Toggle diagnostics |
+| `<leader>ul` | Toggle line numbers |
+| `<leader>uT` | Toggle treesitter |
+| `<leader>ub` | Toggle dark/light mode |
+| `<leader>uh` | Toggle inlay hints |
+| `<leader>n` | Notification history |
+| `<leader>N` | Neovim news |
+
+### Text Manipulation
+
+| Key | Action |
+|-----|--------|
+| `ys{motion}{char}` | Add surround |
+| `cs{old}{new}` | Change surround |
+| `ds{char}` | Delete surround |
+| `gc{motion}` | Toggle comment |
+| `gcc` | Comment line |
+| `>>/<<` | Indent/Unindent |
+| `J` | Join lines |
+| `.` | Repeat last action |
+
+### Multi-cursor
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+n` | Select word, add cursor |
+| `Ctrl+Up/Down` | Add cursor above/below |
+| `<leader>x` | Delete cursor |
+
+### Splits & Windows
+
+| Key | Action |
+|-----|--------|
+| `<leader>\|` | Vertical split |
+| `<leader>-` | Horizontal split |
+| `Ctrl+h/j/k/l` | Navigate splits |
+| `<leader>wd` | Delete window |
+
+### Installed Plugins
+
+Key plugins in this configuration:
+
+| Plugin | Purpose |
+|--------|---------|
+| **LazyVim** | Base distribution |
+| **Telescope** | Fuzzy finder |
+| **neo-tree** | File explorer |
+| **Harpoon** | Quick file marks |
+| **Yazi** | Terminal file manager |
+| **Lazygit** | Git UI |
+| **nvim-dap** | Debugger |
+| **nvim-cmp** | Autocompletion |
+| **Treesitter** | Syntax highlighting |
+| **Mason** | LSP installer |
+| **Snacks** | UI utilities |
+| **Catppuccin** | Color scheme |
 
 ---
 
