@@ -1,0 +1,944 @@
+# Tools Reference
+
+A comprehensive guide to all tools, utilities, and applications included in this dotfiles setup. Each tool is documented with its purpose, common usage patterns, and practical examples.
+
+## Table of Contents
+
+- [Development Tools](#development-tools)
+  - [Version Control](#version-control)
+  - [Infrastructure & Cloud](#infrastructure--cloud)
+  - [Database Tools](#database-tools)
+- [Command Line Utilities](#command-line-utilities)
+  - [File Navigation & Search](#file-navigation--search)
+  - [File Viewing & Processing](#file-viewing--processing)
+  - [System Monitoring](#system-monitoring)
+  - [Text Processing](#text-processing)
+- [Terminal & Editors](#terminal--editors)
+- [Programming Languages](#programming-languages)
+  - [Python](#python)
+  - [Node.js & JavaScript](#nodejs--javascript)
+  - [Go](#go)
+  - [Rust](#rust)
+- [AI & LLM Tools](#ai--llm-tools)
+- [Productivity Applications](#productivity-applications)
+- [Window Management](#window-management)
+- [System Utilities](#system-utilities)
+
+---
+
+## Development Tools
+
+### Version Control
+
+#### git
+The distributed version control system. Foundation for all source code management.
+
+```bash
+git status                    # Check working tree status
+git add -p                    # Interactive staging
+git commit -am "message"      # Stage and commit
+git log --oneline -10         # Recent commits
+```
+
+#### gh (GitHub CLI)
+Official GitHub CLI for managing repositories, issues, PRs, and more directly from the terminal.
+
+```bash
+gh repo clone owner/repo      # Clone a repository
+gh pr create                  # Create a pull request
+gh pr list                    # List open PRs
+gh issue list                 # List issues
+gh run list                   # View workflow runs
+gh api repos/:owner/:repo     # Direct API access
+```
+
+**Use cases:** PR workflows, issue management, GitHub Actions monitoring, API scripting
+
+#### lazygit
+A simple terminal UI for git commands. Makes complex git operations visual and intuitive.
+
+```bash
+lazygit                       # Open in current repo
+```
+
+| Key | Action |
+|-----|--------|
+| `space` | Stage/unstage file |
+| `c` | Commit |
+| `p` | Pull |
+| `P` | Push |
+| `b` | Branch operations |
+| `s` | Stash |
+| `?` | Help |
+
+**Use cases:** Visual staging, interactive rebasing, conflict resolution, branch management
+
+#### serie
+Rich git commit graph visualization in the terminal with image rendering support.
+
+```bash
+serie                         # Open commit graph
+serie --order topo            # Topological order
+serie --order chrono          # Chronological order
+serie --preload               # Preload images for smooth scrolling
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` | Navigate |
+| `Enter` | Show commit details |
+| `/` | Search |
+| `?` | Help |
+
+**Use cases:** Visualizing commit history, understanding branch structure, exploring complex git workflows
+
+#### gitlogue
+Cinematic git commit replay tool that turns your git history into an animated story with realistic typing animations and syntax highlighting.
+
+```bash
+gitlogue                      # Start screensaver mode
+gitlogue --commit HEAD~5..HEAD # Replay commit range
+gitlogue --commit abc123 --loop # Loop specific commit
+gitlogue --author "john"      # Filter by author
+gitlogue --theme dracula      # Use specific theme
+gitlogue --speed 20           # Typing speed (ms/char)
+gitlogue theme list           # List themes
+```
+
+**Use cases:** Screensaver, presentations, content creation, education, visualizing code evolution
+
+#### git-lfs
+Git Large File Storage. Handles large files (binaries, datasets, media) efficiently.
+
+```bash
+git lfs install               # Initialize in repo
+git lfs track "*.psd"         # Track file pattern
+git lfs ls-files              # List tracked files
+```
+
+#### git-filter-repo
+Powerful tool for rewriting git history. Faster and safer than git-filter-branch.
+
+```bash
+git filter-repo --path src/   # Keep only src/ directory
+git filter-repo --invert-paths --path secret.txt  # Remove file from history
+```
+
+**Use cases:** Removing sensitive data, splitting repositories, cleaning history
+
+#### difftastic
+Structural diff tool that understands syntax. Shows meaningful diffs, not just line changes.
+
+```bash
+difft file1.py file2.py       # Compare files
+git diff --external-diff=difft # Use with git
+```
+
+**Use cases:** Code review, understanding changes in context, syntax-aware diffs
+
+### Infrastructure & Cloud
+
+#### terraform
+Infrastructure as Code tool for provisioning cloud resources declaratively.
+
+```bash
+terraform init                # Initialize working directory
+terraform plan                # Preview changes
+terraform apply               # Apply changes
+terraform destroy             # Tear down infrastructure
+```
+
+#### azure-cli
+Microsoft Azure command-line interface for managing Azure resources.
+
+```bash
+az login                      # Authenticate
+az account list               # List subscriptions
+az vm list                    # List virtual machines
+az group create -n mygroup -l eastus  # Create resource group
+```
+
+#### act
+Run GitHub Actions locally. Test workflows without pushing to GitHub.
+
+```bash
+act                           # Run default event
+act -l                        # List available jobs
+act -j build                  # Run specific job
+act pull_request              # Simulate PR event
+```
+
+**Use cases:** Testing workflows locally, debugging Actions, faster iteration
+
+### Database Tools
+
+#### mongosh
+MongoDB Shell. Interactive JavaScript interface for MongoDB.
+
+```bash
+mongosh                       # Connect to local MongoDB
+mongosh "mongodb://host:port" # Connect to remote
+```
+
+```javascript
+// Inside mongosh
+show dbs                      // List databases
+use mydb                      // Switch database
+db.collection.find()          // Query documents
+db.collection.insertOne({})   // Insert document
+```
+
+#### harlequin
+Terminal-based SQL IDE with connection management and results formatting.
+
+```bash
+harlequin                     # Open SQL IDE
+harlequin "duckdb://./data.db" # Connect to DuckDB
+harlequin "sqlite:///path.db" # Connect to SQLite
+harlequin "postgres://..."    # Connect to PostgreSQL
+```
+
+**Use cases:** SQL development, database exploration, query testing, data analysis
+
+---
+
+## Command Line Utilities
+
+### File Navigation & Search
+
+#### fzf
+Command-line fuzzy finder. Enables interactive filtering for any list.
+
+```bash
+# Basic usage
+fzf                           # Interactive file finder
+cat file | fzf                # Filter any input
+
+# Integration with other commands
+vim $(fzf)                    # Open selected file in vim
+cd $(find . -type d | fzf)    # cd to selected directory
+
+# Shortcuts (with shell integration)
+Ctrl+r                        # Search command history
+Ctrl+t                        # Paste selected file path
+Alt+c                         # cd to selected directory
+```
+
+**Use cases:** File selection, history search, process killing, git operations
+
+#### fd
+A simple, fast alternative to find. User-friendly syntax and smart defaults.
+
+```bash
+fd                            # List all files
+fd pattern                    # Find files matching pattern
+fd -e py                      # Find by extension
+fd -t d                       # Find directories only
+fd -H                         # Include hidden files
+fd pattern -x rm              # Execute command on results
+```
+
+**Use cases:** File searching, scripting, finding files by pattern
+
+#### ripgrep (rg)
+Extremely fast grep alternative. Respects .gitignore by default.
+
+```bash
+rg pattern                    # Search in current directory
+rg pattern -t py              # Search only Python files
+rg -i pattern                 # Case insensitive
+rg -l pattern                 # List files only
+rg -C 3 pattern               # Show 3 lines context
+rg --json pattern             # JSON output
+```
+
+**Use cases:** Code search, log analysis, finding usages across codebase
+
+#### eza
+Modern replacement for ls with icons, git integration, and tree view.
+
+```bash
+eza                           # List files
+eza -l                        # Long format
+eza -la                       # Include hidden
+eza --tree                    # Tree view
+eza --icons                   # With icons
+eza --git                     # Show git status
+```
+
+Aliases configured:
+```bash
+ls    # eza
+ll    # eza -l
+la    # eza -la
+tree  # eza --tree
+```
+
+#### zoxide
+Smarter cd command that learns your habits. Jump to frequently used directories.
+
+```bash
+z foo                         # Jump to best match for "foo"
+z foo bar                     # Jump to best match for "foo bar"
+zi                            # Interactive selection with fzf
+zoxide query foo              # Show match without jumping
+```
+
+**Use cases:** Quick directory navigation, reducing cd path typing
+
+#### yazi
+Blazing fast terminal file manager with image preview support.
+
+```bash
+yazi                          # Open file manager
+yazi /path/to/dir             # Open specific directory
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` | Navigate up/down |
+| `h/l` | Parent/enter directory |
+| `Enter` | Open file |
+| `y` | Yank (copy) |
+| `p` | Paste |
+| `d` | Delete |
+| `a` | Create file |
+| `r` | Rename |
+| `space` | Select |
+| `/` | Search |
+| `q` | Quit |
+
+**Use cases:** File browsing, bulk operations, preview files without opening
+
+#### broot
+Interactive tree view with search. Navigate and operate on directory structures.
+
+```bash
+broot                         # Open in current directory
+br                            # Shortcut (if configured)
+```
+
+| Key | Action |
+|-----|--------|
+| Type | Filter/search |
+| `Enter` | cd to directory |
+| `alt+Enter` | Open in $EDITOR |
+| `ctrl+q` | Quit |
+
+### File Viewing & Processing
+
+#### bat
+A cat clone with syntax highlighting, line numbers, and git integration.
+
+```bash
+bat file.py                   # View with highlighting
+bat -l json data              # Force language
+bat -p file                   # Plain output (no decorations)
+bat -A file                   # Show non-printable characters
+bat --diff file               # Show git diff
+```
+
+Alias configured: `cat` -> `bat`
+
+#### jq
+Lightweight command-line JSON processor.
+
+```bash
+jq '.' file.json              # Pretty print
+jq '.key' file.json           # Extract key
+jq '.items[]' file.json       # Iterate array
+jq -r '.name' file.json       # Raw output (no quotes)
+jq 'keys' file.json           # List keys
+curl api | jq '.data'         # Process API response
+```
+
+**Use cases:** API responses, JSON configuration, data transformation
+
+#### ncdu
+NCurses disk usage analyzer. Interactive exploration of disk space.
+
+```bash
+ncdu                          # Analyze current directory
+ncdu /path                    # Analyze specific path
+ncdu -x /                     # Exclude other filesystems
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` | Navigate |
+| `Enter` | Enter directory |
+| `d` | Delete |
+| `g` | Show percentage/graph |
+| `q` | Quit |
+
+Alias configured: `du` -> `ncdu`
+
+#### lnav
+Log file navigator. View and analyze log files with filtering and highlighting.
+
+```bash
+lnav /var/log/system.log      # View specific log
+lnav                          # Interactive picker
+lnav -r                       # Recursive directory
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` | Navigate |
+| `/` | Search |
+| `:` | Command mode |
+| `i` | Toggle histogram |
+| `q` | Quit |
+
+**Use cases:** Debug application errors, monitor system logs, analyze multiple logs
+
+### System Monitoring
+
+#### btop
+Resource monitor with CPU, memory, disks, network, and processes.
+
+```bash
+btop                          # Open monitor
+```
+
+| Key | Action |
+|-----|--------|
+| `h` | Help |
+| `m` | Toggle memory display |
+| `n` | Toggle network display |
+| `d` | Toggle disk display |
+| `e` | Tree view |
+| `f` | Filter processes |
+| `k` | Kill process |
+| `q` | Quit |
+
+Alias configured: `top` -> `btop`
+
+#### hyperfine
+Command-line benchmarking tool with statistical analysis.
+
+```bash
+hyperfine 'command'           # Benchmark single command
+hyperfine 'cmd1' 'cmd2'       # Compare commands
+hyperfine --runs 10 'cmd'     # Specify run count
+hyperfine --warmup 3 'cmd'    # Warmup runs
+hyperfine --export-json r.json 'cmd'  # Export results
+```
+
+**Use cases:** Performance comparison, optimization validation, CI benchmarking
+
+### Text Processing
+
+#### GNU coreutils
+GNU versions of standard Unix utilities. More features than macOS defaults.
+
+Configured aliases include:
+```bash
+cp      # gcp -v
+mv      # gmv -v
+rm      # grm -v
+mkdir   # gmkdir -v
+chmod   # gchmod -v
+chown   # gchown -v
+```
+
+#### scooter
+Interactive find-and-replace in the terminal with preview.
+
+```bash
+scooter                       # Open in current directory
+scooter /path/to/dir          # Search specific directory
+scooter --search-text "old" --replace-text "new"  # Pre-populate
+```
+
+| Key | Action |
+|-----|--------|
+| Type | Filter matches |
+| `space` | Toggle instance |
+| `Enter` | Execute replacements |
+| `e` | Open in editor |
+
+**Use cases:** Refactoring, bulk renaming, batch text replacements
+
+#### rename
+Perl-based rename with regex support.
+
+```bash
+rename 's/\.txt$/.md/' *.txt  # Change extensions
+rename 'y/A-Z/a-z/' *         # Lowercase filenames
+rename 's/ /_/g' *            # Replace spaces with underscores
+```
+
+---
+
+## Terminal & Editors
+
+### ghostty
+GPU-accelerated terminal emulator. Fast, feature-rich, and highly configurable.
+
+Configuration: `~/.config/ghostty/config`
+
+**Use cases:** Primary terminal emulator, tmux integration
+
+### neovim
+Hyperextensible text editor built on Vim. Configured with LazyVim.
+
+```bash
+nvim file                     # Open file
+nvim +42 file                 # Open at line 42
+nvim -d file1 file2           # Diff mode
+```
+
+See README.md for extensive keybinding documentation.
+
+### vim
+Vi IMproved. Basic configuration for quick edits.
+
+```bash
+vim file                      # Open file
+```
+
+### tmux
+Terminal multiplexer. Manage multiple terminal sessions in one window.
+
+```bash
+tmux                          # Start new session
+tmux new -s name              # Named session
+tmux ls                       # List sessions
+tmux attach -t name           # Attach to session
+tmux kill-session -t name     # Kill session
+```
+
+Leader key: `Ctrl+b`
+
+| Binding | Action |
+|---------|--------|
+| `leader + c` | New window |
+| `leader + n` | Next window |
+| `leader + p` | Previous window |
+| `leader + "` | Horizontal split |
+| `leader + %` | Vertical split |
+| `leader + hjkl` | Navigate panes |
+| `leader + z` | Zoom pane |
+| `leader + d` | Detach |
+| `leader + I` | Install plugins |
+
+Aliases:
+```bash
+iexit   # Kill current session
+ikill   # Kill all sessions
+iswitch # Interactive session switcher
+```
+
+### sesh
+Smart session manager for tmux. Quick switching between projects.
+
+```bash
+sesh connect project          # Connect to or create session
+sesh list                     # List sessions
+```
+
+Configuration: `~/.config/sesh/sesh.toml`
+
+### starship
+Minimal, fast, customizable prompt for any shell.
+
+Configuration: `~/.config/starship/starship.toml`
+
+---
+
+## Programming Languages
+
+### Python
+
+#### uv
+Extremely fast Python package manager and resolver written in Rust.
+
+```bash
+uv venv                       # Create virtual environment
+uv pip install package        # Install package
+uv pip sync requirements.txt  # Sync from requirements
+uv tool install package       # Install CLI tool
+uv tool run package           # Run tool without installing
+```
+
+Alias configured: `pip` -> `uv pip`
+
+**Use cases:** Package management, virtual environments, CLI tools
+
+#### pixi
+Fast package manager for conda environments. Like Poetry for the conda world.
+
+```bash
+pixi init                     # Initialize project
+pixi add numpy                # Add dependency
+pixi run python script.py     # Run in environment
+pixi shell                    # Activate environment
+```
+
+**Use cases:** Data science projects, conda ecosystem, reproducible environments
+
+### Node.js & JavaScript
+
+#### node
+JavaScript runtime built on Chrome's V8 engine.
+
+```bash
+node script.js                # Run JavaScript
+node -e "console.log('hi')"   # Evaluate expression
+node --inspect script.js      # Debug mode
+```
+
+#### n
+Node.js version manager. Simple switching between versions.
+
+```bash
+n                             # Interactive version selection
+n latest                      # Install latest
+n lts                         # Install LTS
+n 18                          # Install specific version
+```
+
+Installed via: `npm install -g n`
+
+#### bun
+Fast all-in-one JavaScript runtime, bundler, and package manager.
+
+```bash
+bun run script.ts             # Run TypeScript directly
+bun install                   # Install dependencies
+bun add package               # Add dependency
+bun build ./src/index.ts      # Bundle
+bun test                      # Run tests
+```
+
+**Use cases:** Fast package installs, TypeScript execution, bundling
+
+#### yarn
+Fast, reliable dependency management.
+
+```bash
+yarn                          # Install dependencies
+yarn add package              # Add dependency
+yarn run script               # Run script
+```
+
+Aliases:
+```bash
+y     # yarn
+ya    # yarn add
+yad   # yarn add --dev
+yr    # yarn run
+ys    # yarn start
+yt    # yarn test
+```
+
+### Go
+
+#### go
+The Go programming language. Compiled, statically typed.
+
+```bash
+go run main.go                # Run program
+go build                      # Compile
+go test                       # Run tests
+go mod init                   # Initialize module
+go get package                # Add dependency
+```
+
+### Rust
+
+#### rust (rustc, cargo)
+Systems programming language focused on safety and performance.
+
+```bash
+cargo new project             # Create project
+cargo build                   # Compile
+cargo run                     # Build and run
+cargo test                    # Run tests
+cargo add package             # Add dependency
+rustc --version               # Check version
+```
+
+---
+
+## AI & LLM Tools
+
+### opencode
+AI coding assistant on the CLI. Neovim-inspired interface for AI pair programming.
+
+```bash
+opencode                      # Start interactive session
+```
+
+See README.md for Neovim integration keybindings.
+
+### ollama
+Run large language models locally.
+
+```bash
+ollama run llama2             # Run model
+ollama list                   # List installed models
+ollama pull mistral           # Download model
+ollama serve                  # Start server
+```
+
+**Use cases:** Local AI, privacy-focused LLM usage, offline development
+
+### llm
+CLI tool for interacting with LLMs. Supports multiple providers.
+
+```bash
+llm "What is Python?"         # Query default model
+llm -m gpt-4 "prompt"         # Specify model
+llm -t cmd "list files"       # Use template
+llm chat                      # Interactive chat
+llm models                    # List models
+```
+
+Installed via: `uv tool install llm`
+
+Configured templates:
+- `cmd` - Linux terminal commands
+- `nvim` - Neovim commands
+
+### aider
+AI pair programming in the terminal. Edits code directly in your repo.
+
+```bash
+aider                         # Start with current repo
+aider file1.py file2.py       # Add specific files
+aider --model gpt-4           # Specify model
+```
+
+Installed via: `uv tool install aider-chat`
+
+**Use cases:** AI-assisted coding, refactoring, implementing features
+
+### llama.cpp
+LLM inference in C/C++. Run models efficiently on CPU.
+
+```bash
+llama-cli -m model.gguf -p "prompt"  # Run inference
+```
+
+### LM Studio
+Desktop app for running local LLMs with a UI. Better than Ollama + Open WebUI combined.
+
+**Use cases:** Local LLM experimentation, model comparison, GUI-based AI
+
+---
+
+## Productivity Applications
+
+### 1Password
+Password manager with CLI integration.
+
+```bash
+op signin                     # Authenticate
+op item get "item name"       # Retrieve item
+op read "op://vault/item/field"  # Read secret
+```
+
+### Raycast
+Spotlight replacement with extensibility. Launcher, snippets, clipboard history.
+
+Default shortcut: `Cmd + Space`
+
+**Use cases:** App launching, snippets, window management, calculations
+
+### espanso
+Cross-platform text expander. Type abbreviations, get expansions.
+
+```yaml
+# Example config
+matches:
+  - trigger: ":email"
+    replace: "user@example.com"
+```
+
+**Use cases:** Email templates, code snippets, common phrases
+
+### Shortcat
+Keyboard-driven UI navigation. Click any button with your keyboard.
+
+Shortcut: `Cmd + Shift + Space` (configurable)
+
+**Use cases:** Mouseless workflow, accessibility, RSI prevention
+
+### hiddenbar
+Hide menu bar items. Keep your menu bar clean.
+
+### Notion
+Note-taking and knowledge management.
+
+### CleanShot
+Screenshot and screen recording tool with annotation.
+
+### Alt-Tab
+Windows-style alt-tab window switcher for macOS.
+
+---
+
+## Window Management
+
+### AeroSpace
+Tiling window manager for macOS. i3-like experience.
+
+Configuration: `~/.config/aerospace/aerospace.toml`
+
+| Key | Action |
+|-----|--------|
+| `alt + h/j/k/l` | Focus window |
+| `alt + shift + h/j/k/l` | Move window |
+| `alt + 1-9` | Switch workspace |
+| `alt + shift + 1-9` | Move to workspace |
+
+**Use cases:** Tiling window management, keyboard-driven workflow
+
+### skhd
+Simple hotkey daemon for macOS. Define custom keyboard shortcuts.
+
+Configuration: `~/.config/skhd/skhdrc`
+
+---
+
+## System Utilities
+
+### stow
+Symlink farm manager. Manages dotfiles by creating symlinks.
+
+```bash
+stow -d ~/dotfiles -t ~ zsh   # Stow zsh config
+stow -D zsh                   # Unstow
+stow --adopt zsh              # Adopt existing files
+```
+
+**Use cases:** Dotfiles management, keeping configs in git
+
+### direnv
+Load/unload environment variables based on directory.
+
+```bash
+# Create .envrc in project directory
+echo 'export API_KEY=xxx' > .envrc
+direnv allow                  # Allow the envrc
+```
+
+**Use cases:** Per-project environment, secrets management, auto-activation
+
+### thefuck
+Corrects your previous console command.
+
+```bash
+fuck                          # Correct last command
+```
+
+Alias configured: `f` -> `fuck`
+
+### tlrc
+Rust implementation of tldr. Simplified man pages with examples.
+
+```bash
+tlrc tar                      # Show tar examples
+tlrc git commit               # Show git commit examples
+```
+
+Alias configured: `tldr` -> `tlrc`
+
+### wireguard-tools
+Tools for WireGuard VPN.
+
+```bash
+wg                            # Show interface status
+wg-quick up wg0               # Bring up interface
+wg-quick down wg0             # Bring down interface
+```
+
+### AlDente
+Battery charge limiter for MacBooks. Extends battery lifespan.
+
+### Lulu
+macOS firewall. Block unknown outgoing connections.
+
+### Flux
+Adjusts display color based on time of day. Reduces eye strain.
+
+---
+
+## Fonts
+
+Installed fonts:
+- **Hack** - Monospace font designed for source code
+- **Hack Nerd Font** - Hack with additional glyphs/icons
+- **Symbols Only Nerd Font** - Just the icons (for yazi)
+
+---
+
+## Additional Tools from install.sh
+
+### Bun
+Installed via: `curl -fsSL https://bun.sh/install | bash`
+
+### gh-dash
+GitHub dashboard TUI. Installed as gh extension.
+
+```bash
+gh dash                       # Open dashboard
+```
+
+**Use cases:** PR review, issue tracking, repository monitoring
+
+### goose
+AI agent for automated coding tasks.
+
+Installed via: install.sh
+
+### repgrep (rgr)
+Interactive ripgrep. Browse search results in a TUI.
+
+```bash
+rgr pattern                   # Interactive search
+```
+
+Installed via: `cargo install repgrep`
+
+---
+
+## Quick Reference
+
+### File Operations
+| Task | Command |
+|------|---------|
+| Find files | `fd pattern` |
+| Search content | `rg pattern` |
+| Fuzzy find | `fzf` |
+| List files | `eza -la` |
+| Disk usage | `ncdu` |
+| File manager | `yazi` |
+
+### Git Operations
+| Task | Command |
+|------|---------|
+| Status | `gs` (git status) |
+| Stage all | `gaa` (git add .) |
+| Commit | `gc "message"` |
+| Push | `gp` |
+| Visual git | `lazygit` |
+| Commit graph | `serie` |
+
+### Development
+| Task | Command |
+|------|---------|
+| Python env | `uv venv && source .venv/bin/activate` |
+| Install package | `uv pip install package` |
+| Node version | `n lts` |
+| Run TypeScript | `bun run file.ts` |
+
+### System
+| Task | Command |
+|------|---------|
+| Process monitor | `btop` |
+| Benchmark | `hyperfine 'cmd'` |
+| Correct command | `fuck` |
+| Quick docs | `tldr command` |
