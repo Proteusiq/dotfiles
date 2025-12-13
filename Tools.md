@@ -54,6 +54,23 @@ gh api repos/:owner/:repo     # Direct API access
 
 **Use cases:** PR workflows, issue management, GitHub Actions monitoring, API scripting
 
+#### gh-dash
+Interactive GitHub dashboard TUI. View PRs, issues, and repository activity. Installed as gh extension.
+
+```bash
+gh dash                       # Open dashboard
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` | Navigate |
+| `Enter` | View details |
+| `/` | Search |
+| `?` | Help |
+| `q` | Quit |
+
+**Use cases:** PR review, issue tracking, repository monitoring, GitHub activity overview
+
 #### lazygit
 A simple terminal UI for git commands. Makes complex git operations visual and intuitive.
 
@@ -491,13 +508,6 @@ nvim -d file1 file2           # Diff mode
 
 See README.md for extensive keybinding documentation.
 
-### vim
-Vi IMproved. Basic configuration for quick edits.
-
-```bash
-vim file                      # Open file
-```
-
 ### tmux
 Terminal multiplexer. Manage multiple terminal sessions in one window.
 
@@ -643,18 +653,6 @@ node script.js                # Run JavaScript
 node -e "console.log('hi')"   # Evaluate expression
 node --inspect script.js      # Debug mode
 ```
-
-#### n
-Node.js version manager. Simple switching between versions.
-
-```bash
-n                             # Interactive version selection
-n latest                      # Install latest
-n lts                         # Install LTS
-n 18                          # Install specific version
-```
-
-Installed via: `npm install -g n`
 
 #### bun
 Fast all-in-one JavaScript runtime, bundler, and package manager.
@@ -935,15 +933,6 @@ Installed fonts:
 ### Bun
 Installed via: `curl -fsSL https://bun.sh/install | bash`
 
-### gh-dash
-GitHub dashboard TUI. Installed as gh extension.
-
-```bash
-gh dash                       # Open dashboard
-```
-
-**Use cases:** PR review, issue tracking, repository monitoring
-
 ### goose
 AI agent for automated coding tasks.
 
@@ -989,7 +978,6 @@ Installed via: `cargo install repgrep`
 | Add dependency | `uv add package` |
 | Run Python | `uv run python` |
 | Run tool once | `uvx ruff check .` |
-| Node version | `n lts` |
 | Run TypeScript | `bun run file.ts` |
 
 ### System
