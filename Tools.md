@@ -889,15 +889,16 @@ fuck                          # Correct last command
 
 Alias configured: `f` -> `fuck`
 
-### tlrc
-Rust implementation of tldr. Simplified man pages with examples.
+### tldr (tlrc)
+Official tldr client written in Rust. Simplified man pages with practical examples.
 
 ```bash
-tlrc tar                      # Show tar examples
-tlrc git commit               # Show git commit examples
+tldr tar                      # Show tar examples
+tldr git commit               # Show git commit examples
+tldr --update                 # Update page cache
 ```
 
-Alias configured: `tldr` -> `tlrc`
+Installed via: `brew install tlrc` (installs as `tldr`)
 
 ### wireguard-tools
 Tools for WireGuard VPN.

@@ -548,6 +548,5 @@ alias update=update_
 alias clip='pbcopy'
 alias paste='pbpaste'
 
-# tldr -> tlrc compatibility
-alias tldr='tlrc'
+# tlrc package installs binary as 'tldr' - no alias needed
 
