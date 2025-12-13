@@ -2,12 +2,12 @@
 
 # A utility script to set up a new macOS environment
 # Version: 2.0: Claude-4: Prompt: Make my script better 
-# Usage: ./setup.sh [--dry-run] [--verbose] [--skip-interactive]
+# Usage: ./setup.sh [--dry-run] [--verbose] [--skip-interactive] [--only <function>]
 
 set -euo pipefail
 
 # Configuration
-readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly ZSHHOME="$DOTFILES_DIR/zsh"
 readonly LOG_FILE="${LOG_FILE:-$HOME/macos-setup.log}"
@@ -23,6 +23,7 @@ readonly NC='\033[0m' # No Color
 DRY_RUN=false
 VERBOSE=false
 SKIP_INTERACTIVE=true
+ONLY_FUNCTION=""
 
 # Parse command line arguments
 parse_args() {
@@ -48,6 +49,14 @@ parse_args() {
                 show_help
                 exit 0
                 ;;
+            --only)
+                ONLY_FUNCTION="$2"
+                shift 2
+                ;;
+            --list)
+                list_functions
+                exit 0
+                ;;
             *)
                 echo "Unknown option: $1" >&2
                 show_help
@@ -68,12 +77,59 @@ OPTIONS:
     --verbose           Show detailed output
     --interactive       Enable interactive prompts (disabled by default)
     --skip-interactive  Disable interactive prompts (default behavior)
-    -h, --help         Show this help message
+    --only <function>   Run only the specified function
+    --list              List all available functions
+    -h, --help          Show this help message
 
 ENVIRONMENT VARIABLES:
     DOTFILES_DIR        Path to dotfiles directory (default: \$HOME/dotfiles)
-    LOG_FILE           Path to log file (default: \$HOME/macos-setup.log)
+    LOG_FILE            Path to log file (default: \$HOME/macos-setup.log)
+
+EXAMPLES:
+    $0 --only stow       # Only run the stow_dotfiles function
+    $0 --only cleanup    # Only run the cleanup function
+    $0 --only utils      # Only run the setup_utils function
+    $0 --list            # Show all available functions
 EOF
+}
+
+# Available functions for --only flag
+readonly AVAILABLE_FUNCTIONS=(
+    "dirs:create_dirs"
+    "xcode:install_xcode_tools"
+    "brew:install_brew"
+    "node:configure_node"
+    "venv:create_virtualenvs"
+    "tmux:install_tmux_plugins"
+    "yazi:install_yazi_themes"
+    "utils:setup_utils"
+    "stow:stow_dotfiles"
+    "cleanup:cleanup"
+)
+
+list_functions() {
+    echo "Available functions for --only flag:"
+    echo ""
+    for entry in "${AVAILABLE_FUNCTIONS[@]}"; do
+        local name="${entry%%:*}"
+        local func="${entry##*:}"
+        printf "  %-12s -> %s\n" "$name" "$func"
+    done
+    echo ""
+    echo "Usage: $0 --only <name>"
+}
+
+get_function_by_name() {
+    local name="$1"
+    for entry in "${AVAILABLE_FUNCTIONS[@]}"; do
+        local entry_name="${entry%%:*}"
+        local entry_func="${entry##*:}"
+        if [[ "$entry_name" == "$name" ]]; then
+            echo "$entry_func"
+            return 0
+        fi
+    done
+    return 1
 }
 
 # Logging functions
@@ -463,12 +519,31 @@ main() {
     # Initialize log file
     echo "macOS Setup Script - $(date)" > "$LOG_FILE"
     
-    log "🐌 The World Changed! Beginning MacOS setup..."
-    log "Log file: $LOG_FILE"
-    
     if [[ "$DRY_RUN" == true ]]; then
         log_info "DRY RUN MODE - No changes will be made"
     fi
+    
+    # If --only flag is set, run only that function
+    if [[ -n "$ONLY_FUNCTION" ]]; then
+        local target_func
+        if ! target_func=$(get_function_by_name "$ONLY_FUNCTION"); then
+            log_error "Unknown function: $ONLY_FUNCTION"
+            echo ""
+            list_functions
+            exit 1
+        fi
+        
+        log "Running only: $target_func"
+        if ! $target_func; then
+            log_error "Failed during: $target_func"
+            exit 1
+        fi
+        log "✅ $target_func completed successfully!"
+        return 0
+    fi
+    
+    log "🐌 The World Changed! Beginning MacOS setup..."
+    log "Log file: $LOG_FILE"
     
     # Run setup functions
     local functions=(

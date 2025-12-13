@@ -93,7 +93,21 @@ The install script supports several flags:
 ./install.sh --dry-run           # Preview changes without executing
 ./install.sh --verbose           # Show detailed output
 ./install.sh --skip-interactive  # Non-interactive mode (default)
+./install.sh --list              # List all available functions
+./install.sh --only <function>   # Run only a specific function
 ```
+
+**Run individual functions:**
+```bash
+# Use the `update` alias or run install.sh directly
+update --list                    # List available functions
+update --only stow               # Only stow dotfiles
+update --only cleanup            # Only run cleanup
+update --only utils              # Only setup utilities
+update --only brew               # Only install Homebrew packages
+```
+
+Available functions: `dirs`, `xcode`, `brew`, `node`, `venv`, `tmux`, `yazi`, `utils`, `stow`, `cleanup`
 
 ## Configuration
 
