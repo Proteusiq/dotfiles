@@ -418,7 +418,7 @@ return {
 - **@this context**: Use `<leader>oa` with `@this` to ask OpenCode about your current code
 - **Fuzzy matching**: Telescope uses fuzzy search - type partial names and it finds matches
 - **Git workflow**: `<leader>gg` opens Lazygit for complex operations, `<space>il` for issues
-- **File history**: If you're disciplined with commits, `:Telescope git_file_history` is your best friend for tracking how a file evolved over time
+- **File history**: If you're disciplined with commits, `<leader>Gh` (`:Telescope git_file_history`) is your best friend for tracking how a file evolved over time
 - **Quick edits**: Surround plugin (`ys`, `cs`, `ds`) makes text transformation fast and repeatable
 - **Markdown**: `.nvim/README.md` and other markdown files render beautifully inline
 
@@ -748,18 +748,18 @@ One of the most powerful features in this setup is the ability to see how a file
 - Learning from your own past edits
 - Reviewing refactoring decisions
 
-**Command:** `:Telescope git_file_history`
+**Keymap:** `<leader>Gh` or `:Telescope git_file_history`
 
 **How to Use:**
 1. Open any file in your project
-2. Run `:Telescope git_file_history` to open the git file history picker
+2. Press `<leader>Gh` (or run `:Telescope git_file_history`) to open the git file history picker
 3. Browse through all commits that touched this file
 4. Select a commit to view how the file looked at that point in time
 5. Use Telescope's navigation keys to explore previous versions side-by-side with diffs
 
 **Example Workflow:**
 ```vim
-:Telescope git_file_history  " Open history for current file
+<leader>Gh                   " Open history for current file
 " Browse commits with j/k, preview with ?
 " Press <CR> to view the selected commit version
 " Use Telescope's diff view to see what changed
