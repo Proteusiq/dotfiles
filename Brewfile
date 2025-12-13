@@ -24,6 +24,7 @@ brew "git-filter-repo"
 brew "terraform"
 brew "lazygit"
 brew "serie" # rich git commit graph in terminal
+brew "gitlogue" # cinematic git commit replay tool
 brew "lazydocker"
 brew "mongosh"
 

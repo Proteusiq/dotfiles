@@ -52,7 +52,7 @@ curl -LsSf https://bit.ly/42YwVdi | less
 ### Enhanced CLI Experience
 - **Navigation**: [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf)
 - **File Operations**: [eza](https://github.com/eza-community/eza), [fd](https://github.com/sharkdp/fd), [ripgrep](https://github.com/BurntSushi/ripgrep)
-- **Git**: [lazygit](https://github.com/jesseduffield/lazygit), [serie](https://github.com/lusingander/serie) for rich git logs, enhanced aliases
+- **Git**: [lazygit](https://github.com/jesseduffield/lazygit), [serie](https://github.com/lusingander/serie) for rich git logs, [gitlogue](https://github.com/unhappychoice/gitlogue) for cinematic commit replay, enhanced aliases
 - **AI**: [OpenCode](https://opencode.ai/), [LLM](https://llm.datasette.io/), local models via [Ollama](https://ollama.ai/)
 
 ## Prerequisites
@@ -874,6 +874,23 @@ serie --preload                    # Preload all graph images for smoother scrol
 ```
 
 **Use cases:** Visualizing commit history, understanding branch structure, exploring complex git workflows
+
+---
+
+##### 🎬 **gitlogue** - Cinematic Git Replay
+A cinematic Git commit replay tool that turns your Git history into a living, animated story with realistic typing animations and syntax highlighting.
+
+```bash
+gitlogue                           # Start cinematic screensaver mode
+gitlogue --commit HEAD~5..HEAD     # Replay a range of commits
+gitlogue --commit abc123 --loop    # Loop a specific commit
+gitlogue --author "john"           # Filter commits by author
+gitlogue --theme dracula           # Use a different theme
+gitlogue --speed 20                # Adjust typing speed (ms per char)
+gitlogue theme list                # List available themes
+```
+
+**Use cases:** Screensaver, presentations, content creation, education, visualizing code evolution
 
 ---
 
