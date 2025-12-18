@@ -238,6 +238,24 @@ harlequin "sqlite:///path.db" # Connect to SQLite
 harlequin "postgres://..."    # Connect to PostgreSQL
 ```
 
+| Key | Action |
+|-----|--------|
+| `Ctrl+Enter` | Run query |
+| `Ctrl+n` | New buffer (editor tab) |
+| `Ctrl+w` | Close buffer (editor tab) |
+| `Ctrl+k` | Next buffer (editor tab) |
+| `Ctrl+e` | Export results to CSV/Parquet/JSON |
+| `Ctrl+s` | Save query to file |
+| `Ctrl+o` | Open file in editor |
+| `F2` | Focus Query Editor |
+| `F5` | Focus Results Viewer |
+| `F6` | Focus Data Catalog |
+| `F9` | Toggle sidebar |
+| `F10` | Toggle fullscreen |
+| `j/k` | Switch tabs (in Results Viewer) |
+
+See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full keybindings reference.
+
 **Use cases:** SQL development, database exploration, query testing, data analysis
 
 ---
