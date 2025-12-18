@@ -482,6 +482,31 @@ chmod   # gchmod -v
 chown   # gchown -v
 ```
 
+#### vhs
+Record terminal sessions as GIFs. Write a simple script to automate your recording.
+
+```bash
+vhs record                    # Interactive recording
+vhs demo.tape                 # Run tape file and generate GIF
+vhs new demo.tape             # Create new tape file template
+vhs validate demo.tape        # Validate tape syntax
+vhs publish demo.gif          # Share recording via vhs.charm.sh
+```
+
+**Tape file example:**
+```
+Output demo.gif
+Set FontSize 14
+Set Width 1200
+Set Height 600
+
+Type "echo 'Hello, World!'"
+Enter
+Sleep 2s
+```
+
+**Use cases:** Documentation, tutorials, bug reports, showcasing CLI tools, README demos
+
 #### scooter
 Interactive find-and-replace in the terminal with preview.
 
@@ -512,6 +537,38 @@ rename 's/ /_/g' *            # Replace spaces with underscores
 ---
 
 ## Terminal & Editors
+
+### dawn
+Distraction-free writing environment with live markdown rendering. Renders markdown as you type: headers scale up, math becomes Unicode art, images appear inline.
+
+```bash
+dawn                          # Start new writing session
+dawn document.md              # Open existing file
+dawn -p document.md           # Preview mode (read-only)
+dawn -P document.md           # Print rendered output to stdout
+```
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+F` | Toggle focus mode |
+| `Ctrl+R` | Toggle raw markdown |
+| `Ctrl+L` | Table of contents |
+| `Ctrl+S` | Search |
+| `Ctrl+N` | Jump to/create footnote |
+| `Ctrl+Z` | Undo |
+| `Ctrl+Y` | Redo |
+| `Ctrl+H` | Show all shortcuts |
+| `Esc` | Close panel/modal |
+
+**Features:**
+- Live markdown rendering (headers, bold, italic, code, blockquotes, lists)
+- LaTeX math expressions as Unicode art
+- Syntax highlighting for 35+ languages
+- Tables with Unicode box-drawing
+- Writing timer for flow sessions
+- Light and dark themes
+
+**Use cases:** Distraction-free writing, drafting documents, markdown editing, focused writing sessions
 
 ### ghostty
 GPU-accelerated terminal emulator. Fast, feature-rich, and highly configurable.

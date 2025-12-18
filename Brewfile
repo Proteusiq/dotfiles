@@ -1,4 +1,5 @@
 # Taps (package repositories)
+tap "andrewmd5/tap"
 tap "espanso/espanso"
 tap "homebrew/bundle"
 tap "homebrew/services"
@@ -77,6 +78,7 @@ brew "scooter" # interactive find-and-replace in the terminal
 brew "screen"
 brew "slides"
 brew "stow"
+brew "vhs" # record terminal sessions as GIFs
 brew "thefuck"
 brew "tlrc"
 brew "toilet" # ascii art fonts
@@ -91,6 +93,7 @@ brew "zsh"
 
 
 # Terminal Editors and Emulator
+brew "andrewmd5/tap/dawn" # distraction-free markdown writing environment
 brew "neovim"
 brew "starship"
 brew "tmux"
