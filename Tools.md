@@ -240,7 +240,7 @@ harlequin "postgres://..."    # Connect to PostgreSQL
 
 | Key | Action |
 |-----|--------|
-| `Ctrl+Enter` | Run query |
+| `Ctrl+j` | Run query |
 | `Ctrl+n` | New buffer (editor tab) |
 | `Ctrl+w` | Close buffer (editor tab) |
 | `Ctrl+k` | Next buffer (editor tab) |
@@ -254,7 +254,7 @@ harlequin "postgres://..."    # Connect to PostgreSQL
 | `F10` | Toggle fullscreen |
 | `j/k` | Switch tabs (in Results Viewer) |
 
-See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full keybindings reference.
+See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full keybindings reference. Might need `Shift+Ctrl`
 
 **Use cases:** SQL development, database exploration, query testing, data analysis
 
