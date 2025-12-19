@@ -722,6 +722,7 @@ Once you learn this pattern, you stop memorizing commands and start *composing* 
 | `is` | Inner sentence |
 
 > also i" == iq 
+
 **Examples - Composing Commands:**
 
 ```
