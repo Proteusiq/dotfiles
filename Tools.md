@@ -721,6 +721,7 @@ Once you learn this pattern, you stop memorizing commands and start *composing* 
 | `ip` | Inner paragraph |
 | `is` | Inner sentence |
 
+> also i" == iq 
 **Examples - Composing Commands:**
 
 ```
