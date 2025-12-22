@@ -738,7 +738,7 @@ A curated collection of useful CLI commands for macOS, organized by *when* you n
 
 ### Debugging Port Conflicts
 
-**🔑 Tip:** Can't start your server? Something's already using the port.
+> Can't start your server? Something's already using the port.
 
 ```bash
 lsof -i tcp:3000                 # Find what's hogging the port
@@ -750,7 +750,7 @@ lsof -ti tcp:3000 | xargs kill -9
 
 ### Investigating Processes
 
-**🔑 Tip:** What is this process doing? Where is it running from?
+> What is this process doing? Where is it running from?
 
 ```bash
 lsof -p <pid> | grep cwd         # Working directory of a process
@@ -760,7 +760,7 @@ ps aux | grep <name>             # Find process by name
 
 ### Command History Tricks
 
-**🔑 Tip:** Just typed a long command and forgot sudo? Use `sudo !!`
+> Just typed a long command and forgot sudo? Use `sudo !!`
 
 ```bash
 sudo !!                          # Run last command with sudo
@@ -773,7 +773,7 @@ until !!; do :; done             # Retry flaky command until it works
 
 ### FZF Fuzzy Finding
 
-**🔑 Tip:** Can't remember the exact filename? Fuzzy find it.
+> Can't remember the exact filename? Fuzzy find it.
 
 ```bash
 nvim **<TAB>                     # Fuzzy find files to edit
@@ -798,7 +798,7 @@ ssh **<TAB>                      # Fuzzy find SSH hosts
 
 ### Scheduling & Automation
 
-**🔑 Tip:** Schedule tasks or set reminders without leaving the terminal.
+> Schedule tasks or set reminders without leaving the terminal.
 
 ```bash
 echo "backup.sh" | at midnight   # Schedule one-time task
@@ -809,7 +809,7 @@ watch -n 5 "kubectl get pods"    # Monitor every 5 seconds
 
 ### Piping & Process Substitution
 
-**📌 Note:** The power of Unix: chain commands together. Use `<()` to treat command output as a file.
+> The power of Unix: chain commands together. Use `<()` to treat command output as a file.
 
 ```bash
 # Classic pipes: output -> input
@@ -828,7 +828,7 @@ grep "error" <<< "$log_output"   # Search in variable
 
 ### File Search & Cleanup
 
-**🔑 Tip:** Find large files, remove empty directories, clean up the mess.
+> Find large files, remove empty directories, clean up the mess.
 
 ```bash
 # Find files
@@ -845,7 +845,7 @@ touch ./-i                       # Create "-i" file: blocks accidental rm -rf *
 
 ### Batch Renaming
 
-**🔑 Tip:** Rename 100 files from `IMG_001.JPG` to `vacation_001.jpg` in one command.
+> Rename 100 files from `IMG_001.JPG` to `vacation_001.jpg` in one command.
 
 ```bash
 # Pure bash: lowercase + spaces to underscores
@@ -861,7 +861,7 @@ rename 's/\.jpeg$/.jpg/i' *            # Normalize extensions
 
 ### Text Processing
 
-**🔑 Tip:** Parse logs, format data, count occurrences.
+> Parse logs, format data, count occurrences.
 
 ```bash
 less +F app.log                  # Follow log (better than tail -f, can scroll)
@@ -873,7 +873,7 @@ curl -s "$url" | jq .            # Pretty-print JSON (or python3 -m json.tool)
 
 ### Log Monitoring
 
-**🔑 Tip:** Watch logs with timestamps and color-coded severity levels.
+> Watch logs with timestamps and color-coded severity levels.
 
 ```bash
 # Add timestamps to any output
@@ -891,7 +891,7 @@ tail -f app.log | awk '{
 
 ### Archives & Encryption
 
-**📌 Note:** Create encrypted backups. Will prompt for password.
+> Create encrypted backups. Will prompt for password.
 
 ```bash
 # Create encrypted archive (will prompt for password)
@@ -903,7 +903,7 @@ openssl enc -d -aes256 -pbkdf2 -in backup.enc | tar xzf -
 
 ### Git Essentials
 
-**🔑 Tip:** Stage smartly, clean up deleted files, find contributors.
+> Stage smartly, clean up deleted files, find contributors.
 
 ```bash
 git add -u                       # Stage only modified/deleted (not new files)
@@ -914,7 +914,7 @@ git diff --name-only main        # What files changed vs main?
 
 ### Network Debugging
 
-**🔑 Tip:** Is it your network or the server? Test connectivity and ports.
+> Is it your network or the server? Test connectivity and ports.
 
 ```bash
 curl ifconfig.me                 # What's my public IP?
@@ -929,7 +929,7 @@ wget --accept pdf -rl1 url       # Download only PDFs from page
 
 ### Session & Process Management
 
-**🔑 Tip:** Keep jobs running after you disconnect from SSH.
+> Keep jobs running after you disconnect from SSH.
 
 ```bash
 disown -a && exit                # Exit shell, keep background jobs running
@@ -939,7 +939,7 @@ sudo -K                          # Clear sudo password (security habit)
 
 ### Bypassing & Shortcuts
 
-**🔑 Tip:** Alias getting in the way? Bypass it with `\` or `command`.
+> Alias getting in the way? Bypass it with `\` or `command`.
 
 ```bash
 \ls                              # Run real ls, ignore alias
@@ -950,7 +950,7 @@ some_command | :                 # Discard output (faster than >/dev/null)
 
 ### Debugging Scripts
 
-**🔑 Tip:** Script not working? Debug with `-x` or analyze with `shellcheck`.
+> Script not working? Debug with `-x` or analyze with `shellcheck`.
 
 ```bash
 bash -x script.sh                # Print each command as it runs
@@ -969,7 +969,7 @@ printf '%d\n' 0xFF               # Hex to decimal: 255
 
 ### Vim Quick Commands
 
-**🔑 Tip:** Run shell commands and insert output without leaving vim.
+> Run shell commands and insert output without leaving vim.
 
 ```vim
 :r !date                         " Insert current date
@@ -980,7 +980,7 @@ printf '%d\n' 0xFF               # Hex to decimal: 255
 
 ### Security Hygiene
 
-**🚨 Warning:** Running sensitive commands? Disable history for this session.
+> Running sensitive commands? Disable history for this session.
 
 ```bash
 unset HISTFILE                   # Don't save commands this session
@@ -989,7 +989,7 @@ read -s p; echo $p | md5 | base64 | cut -c-16  # Generate password from phrase
 
 ### Getting Help
 
-**📌 Note:** Multiple ways to get help, from official docs to community cheatsheets.
+> Multiple ways to get help, from official docs to community cheatsheets.
 
 ```bash
 man <command>                    # Official manual
@@ -1000,7 +1000,7 @@ apropos "search term"            # Search all man pages
 
 ### Homebrew Maintenance
 
-**🔑 Tip:** Keep macOS tools updated and clean up old versions.
+> Keep macOS tools updated and clean up old versions.
 
 ```bash
 brew update && brew upgrade      # Update everything
@@ -1010,7 +1010,7 @@ brew doctor                      # Diagnose issues
 
 ### Fun Stuff
 
-**📌 Note:** Impress coworkers or pretend to be hacking in a movie.
+> Impress coworkers or pretend to be hacking in a movie.
 
 **ASCII Clock** - Looks cool on a spare monitor
 ```bash
@@ -1031,7 +1031,7 @@ done
 cat /dev/urandom | hexdump -C | grep "ca fe"
 ```
 
-**📌 Note:** Some commands require Homebrew packages: `figlet`, `rename`, `wget`, `jq`
+> Some commands require Homebrew packages: `figlet`, `rename`, `wget`, `jq`
 
 </details>
 
