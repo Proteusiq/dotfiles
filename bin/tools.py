@@ -74,155 +74,128 @@ CATEGORY_META = {
 
 # ═══════════════════════════════════════════════════════════════════════════
 # TOOL DATA
-# Format: (name, command/package, description, install_type)
-# install_type: brew, cask, uv, cargo, npm, script, builtin
+# Format: (name, description, example)
+# Examples should be practical "aha!" moments
 # ═══════════════════════════════════════════════════════════════════════════
 
 SHELL_TOOLS = [
-    ("zsh", "zsh", "Modern shell with plugins", "brew"),
-    ("zplug", "zplug", "Zsh plugin manager", "brew"),
-    ("starship", "starship", "Cross-shell customizable prompt", "brew"),
-    ("tmux", "tmux", "Terminal multiplexer", "brew"),
-    ("sesh", "sesh", "Smart tmux session manager", "brew"),
-    ("ghostty", "ghostty", "GPU-accelerated terminal emulator", "cask"),
+    ("zsh", "Modern shell with plugins & completions", "Tab-complete git branches, kubectl resources, ssh hosts"),
+    ("starship", "Beautiful prompt showing git, python, node status", "See branch, venv, node version at a glance"),
+    ("tmux", "Split terminal into panes, persist sessions", "tmux new -s work → detach → reattach from anywhere"),
+    ("sesh", "Fuzzy-find and switch tmux sessions instantly", "sesh connect → pick project → instant context switch"),
+    ("ghostty", "GPU-rendered terminal, native feel, fast AF", "Smooth scrolling, ligatures, 60fps rendering"),
 ]
 
 EDIT_TOOLS = [
-    ("neovim", "nvim", "Hyperextensible Vim-based editor", "brew"),
-    ("dawn", "dawn", "Distraction-free markdown editor", "brew"),
-    ("glow", "glow", "Terminal markdown viewer", "brew"),
+    ("neovim", "Vim but modern: LSP, Treesitter, Lua config", "Space-f-f to fuzzy find files, gd to go to definition"),
+    ("dawn", "Distraction-free writing, live markdown render", "dawn notes.md → headers scale, math renders inline"),
+    ("glow", "Render markdown beautifully in terminal", "glow README.md → styled output, no browser needed"),
 ]
 
 CLI_TOOLS = [
-    ("bat", "bat", "Cat with syntax highlighting", "brew"),
-    ("eza", "eza", "Modern ls with git integration", "brew"),
-    ("fd", "fd", "Fast find respecting .gitignore", "brew"),
-    ("ripgrep", "rg", "Blazingly fast grep", "brew"),
-    ("zoxide", "z", "Smarter cd that learns", "brew"),
-    ("difftastic", "difft", "Structural diff tool", "brew"),
-    ("httpie", "http", "Human-friendly HTTP client", "brew"),
-    ("tlrc", "tldr", "Simplified man pages", "brew"),
-    ("thefuck", "fuck", "Correct previous command", "brew"),
+    ("bat", "cat with syntax highlighting & line numbers", "bat script.py → colored code, git diff markers"),
+    ("eza", "ls with icons, git status, tree view built-in", "eza -la --git → see file permissions + git status"),
+    ("fd", "find but intuitive, respects .gitignore", "fd 'test.*py' → finds test files, skips node_modules"),
+    ("ripgrep", "grep but 10x faster, smart defaults", "rg 'TODO' → searches code, skips binaries & .git"),
+    ("zoxide", "cd that learns your habits", "z proj → jumps to ~/dev/my-project from anywhere"),
+    ("difftastic", "Diff that understands code structure", "difft old.py new.py → shows semantic changes"),
+    ("httpie", "curl for humans, colored JSON output", "http GET api.github.com/users/octocat → pretty JSON"),
+    ("tldr", "man pages but actually useful examples", "tldr tar → shows common tar commands, not 50 pages"),
+    ("thefuck", "Fix your last typo with one word", "git brach → fuck → runs git branch"),
 ]
 
 FILES_TOOLS = [
-    ("yazi", "yazi", "Blazing fast terminal file manager", "brew"),
-    ("broot", "broot", "Interactive tree navigator", "brew"),
-    ("fzf", "fzf", "Fuzzy finder for everything", "brew"),
-    ("ncdu", "ncdu", "Disk usage analyzer", "brew"),
-    ("btop", "btop", "Beautiful system monitor", "brew"),
-    ("stow", "stow", "Symlink farm manager", "brew"),
-    ("unar", "unar", "Universal archive extractor", "brew"),
-    ("rename", "rename", "Batch file renaming", "brew"),
-    ("rsync", "rsync", "Fast file synchronization", "brew"),
+    ("yazi", "Fastest file manager, vim keys, preview all", "yazi → j/k navigate, l to enter, preview images/PDFs"),
+    ("broot", "Navigate directories as a tree, fuzzy search", "br → type to filter, alt+enter to cd into result"),
+    ("fzf", "Fuzzy find anything: files, history, processes", "ctrl+r → search command history fuzzy"),
+    ("ncdu", "Where's my disk space going? Interactive view", "ncdu ~ → drill down into what's eating your SSD"),
+    ("btop", "htop but prettier, shows CPU/RAM/disk/network", "btop → visual system monitor, kill processes"),
+    ("stow", "Symlink manager for dotfiles", "stow nvim → links nvim/.config/nvim to ~/.config/nvim"),
+    ("rename", "Batch rename with regex", "rename 's/IMG_/photo_/' *.jpg → renames all photos"),
 ]
 
-GIT_TOOLS = [
-    ("git", "git", "Distributed version control", "brew"),
-    ("git-lfs", "git lfs", "Large file storage for Git", "brew"),
-    ("git-filter-repo", "git-filter-repo", "History rewriting tool", "brew"),
-    ("gh", "gh", "GitHub CLI", "brew"),
-    ("lazygit", "lazygit", "Simple terminal UI for git", "brew"),
-    ("serie", "serie", "Rich git commit graph", "brew"),
-    ("gitlogue", "gitlogue", "Cinematic commit replay", "brew"),
+VC_TOOLS = [
+    ("git", "Track code changes, collaborate, time travel", "git log --oneline --graph → visual branch history"),
+    ("git-lfs", "Store large files without bloating repo", "git lfs track '*.psd' → Photoshop files in LFS"),
+    ("gh", "GitHub from terminal: PRs, issues, releases", "gh pr create → create PR without leaving terminal"),
+    ("lazygit", "Git TUI: stage hunks, rebase interactively", "lazygit → space to stage, c to commit, visual rebase"),
+    ("serie", "Beautiful git commit graph in terminal", "serie → see branch topology with colors"),
+    ("gitlogue", "Replay commits like a movie", "gitlogue → watch your project evolve cinematically"),
 ]
 
 DATA_TOOLS = [
-    ("jq", "jq", "JSON processor", "brew"),
-    ("tabiew", "tabiew", "CSV/Parquet/JSON viewer with SQL", "brew"),
-    ("mongosh", "mongosh", "MongoDB shell", "brew"),
-    ("lnav", "lnav", "Log file navigator", "brew"),
-    ("harlequin", "harlequin", "SQL IDE in the terminal", "uv"),
-    ("pgadmin4", "pgadmin4", "PostgreSQL admin GUI", "cask"),
+    ("jq", "Query & transform JSON like a boss", "curl api | jq '.items[].name' → extract nested fields"),
+    ("tabiew", "View CSV/Parquet/JSON with SQL queries", "tabiew data.csv → spreadsheet view, SQL filtering"),
+    ("harlequin", "Full SQL IDE in your terminal", "harlequin db.sqlite → autocomplete, results, export"),
+    ("mongosh", "MongoDB shell with autocomplete", "mongosh → db.users.find({age: {$gt: 21}})"),
+    ("lnav", "Navigate log files with search & filter", "lnav /var/log/*.log → time-synced, filterable"),
 ]
 
 DEV_TOOLS = [
-    ("watchexec", "watchexec", "File watcher for auto-execution", "brew"),
-    ("hyperfine", "hyperfine", "Command-line benchmarking", "brew"),
-    ("act", "act", "Run GitHub Actions locally", "brew"),
-    ("vhs", "vhs", "Record terminal sessions as GIFs", "brew"),
-    ("scooter", "scooter", "Interactive find-and-replace", "brew"),
-    ("direnv", "direnv", "Per-directory environments", "brew"),
-    ("universal-ctags", "ctags", "Code indexing", "brew"),
-    ("postman", "postman", "API development platform", "cask"),
+    ("watchexec", "Run command when files change", "watchexec -e py pytest → auto-test on save"),
+    ("hyperfine", "Benchmark commands scientifically", "hyperfine 'fd' 'find' → compare with statistics"),
+    ("act", "Test GitHub Actions locally before push", "act -j test → run test job without pushing"),
+    ("vhs", "Record terminal as GIF with a script", "vhs demo.tape → reproducible terminal recordings"),
+    ("scooter", "Interactive find & replace across files", "scooter → TUI for project-wide refactoring"),
+    ("direnv", "Auto-load .envrc when entering directory", "cd project → env vars loaded automatically"),
 ]
 
 INFRA_TOOLS = [
-    ("lima", "lima", "Linux VMs on macOS", "brew"),
-    ("lazydocker", "lazydocker", "Docker TUI", "brew"),
-    ("terraform", "terraform", "Infrastructure as code", "brew"),
-    ("azure-cli", "az", "Azure command-line interface", "brew"),
+    ("lima", "Linux VMs on Mac, lightweight Docker alt", "lima → full Linux shell for testing"),
+    ("lazydocker", "Docker TUI: containers, images, logs", "lazydocker → manage Docker without remembering flags"),
+    ("terraform", "Infrastructure as code", "terraform apply → provision cloud resources from HCL"),
+    ("azure-cli", "Manage Azure from terminal", "az vm list → see all your Azure VMs"),
 ]
 
 LANG_TOOLS = [
-    ("uv", "uv", "Fast Python package manager", "brew"),
-    ("pixi", "pixi", "Conda-compatible env manager", "brew"),
-    ("node", "node", "JavaScript runtime", "brew"),
-    ("yarn", "yarn", "Node package manager", "brew"),
-    ("bun", "bun", "Fast JS runtime & bundler", "script"),
-    ("go", "go", "Go programming language", "brew"),
-    ("rust", "cargo", "Rust programming language", "brew"),
-    ("gum", "gum", "Glamorous shell scripts", "brew"),
+    ("uv", "pip but 100x faster, manages venvs too", "uv pip install pandas → installs in milliseconds"),
+    ("pixi", "Conda-compatible, fast, cross-platform", "pixi add numpy → manages Python + system deps"),
+    ("bun", "Node.js but faster: runtime + bundler", "bun run dev → start dev server, 10x faster"),
+    ("gum", "Beautiful shell script prompts & spinners", "gum choose 'opt1' 'opt2' → pretty selection menu"),
 ]
 
 AI_TOOLS = [
-    ("opencode", "opencode", "AI coding agent CLI", "brew"),
-    ("llm", "llm", "CLI for LLMs with plugins", "uv"),
-    ("goose", "goose", "AI agent for development", "script"),
-    ("llama.cpp", "llama", "Local LLM inference", "brew"),
-    ("ollama", "ollama", "Local LLM runner", "cask"),
-    ("lm-studio", "lm-studio", "LLM GUI application", "cask"),
+    ("opencode", "AI coding agent in your terminal", "opencode → Claude helps you code, runs commands"),
+    ("llm", "Chat with any LLM from terminal", "llm 'explain this error' -s cmd → get shell commands"),
+    ("goose", "AI agent that can browse, code, execute", "goose → autonomous agent for complex tasks"),
+    ("ollama", "Run LLMs locally: Llama, Mistral, etc", "ollama run llama2 → chat locally, no API key"),
 ]
 
 GNU_TOOLS = [
-    ("coreutils", "g*", "GNU core utilities", "brew"),
-    ("findutils", "gfind", "GNU find, xargs", "brew"),
-    ("diffutils", "gdiff", "GNU diff, cmp", "brew"),
-    ("binutils", "gobjdump", "GNU binary utilities", "brew"),
-    ("moreutils", "sponge", "Additional Unix utilities", "brew"),
-    ("gnu-sed", "gsed", "GNU stream editor", "brew"),
-    ("gnu-tar", "gtar", "GNU tape archive", "brew"),
-    ("gawk", "gawk", "GNU awk", "brew"),
-    ("grep", "ggrep", "GNU grep with color", "brew"),
-    ("gnupg", "gpg", "GNU privacy guard", "brew"),
-    ("wget", "wget", "Network downloader", "brew"),
+    ("coreutils", "GNU versions: more features than macOS", "gcp --progress file.iso /mnt → see copy progress"),
+    ("gnu-sed", "sed that actually works as expected", "gsed -i 's/old/new/g' file → in-place replace"),
+    ("gawk", "awk with all the features", "gawk '{sum+=$1} END {print sum}' → sum a column"),
+    ("wget", "Download files & mirror websites", "wget -r site.com → mirror entire website"),
+    ("gnupg", "Encrypt files & sign commits", "gpg -c secrets.txt → password-protected encryption"),
 ]
 
 MEDIA_TOOLS = [
-    ("ffmpeg", "ffmpeg", "Media converter", "brew"),
-    ("imagemagick", "convert", "Image manipulation", "brew"),
-    ("poppler", "pdftotext", "PDF rendering utilities", "brew"),
-    ("graphviz", "dot", "Graph visualization", "brew"),
-    ("mermaid-cli", "mmdc", "Diagram rendering", "brew"),
-    ("tectonic", "tectonic", "Modern LaTeX engine", "brew"),
-    ("slides", "slides", "Terminal presentations", "brew"),
-    ("figlet", "figlet", "ASCII art text", "brew"),
-    ("toilet", "toilet", "ASCII art with fonts", "brew"),
+    ("ffmpeg", "Convert any media format to any other", "ffmpeg -i vid.mov out.mp4 → convert video"),
+    ("imagemagick", "Batch process images from CLI", "convert -resize 50% img.png thumb.png → resize"),
+    ("mermaid-cli", "Generate diagrams from text", "mmdc -i diagram.md -o out.png → flowcharts"),
+    ("slides", "Present markdown as slides in terminal", "slides deck.md → terminal presentations"),
+    ("figlet", "BIG ASCII text banners", "figlet 'Hello' → ASCII art text"),
 ]
 
 APPS_TOOLS = [
-    ("1password", "1password", "Password manager", "cask"),
-    ("1password-cli", "op", "1Password CLI", "cask"),
-    ("raycast", "raycast", "Spotlight replacement", "cask"),
-    ("notion", "notion", "Note-taking & docs", "cask"),
-    ("cleanshot", "cleanshot", "Screenshot tool", "cask"),
-    ("espanso", "espanso", "Text expander", "cask"),
-    ("hiddenbar", "hiddenbar", "Menu bar organizer", "cask"),
-    ("shortcat", "shortcat", "Keyboard-driven UI", "cask"),
-    ("arc", "arc", "Modern web browser", "cask"),
+    ("1password", "Password manager with CLI integration", "op item get 'AWS' --fields password → scripts"),
+    ("raycast", "Spotlight but extensible with scripts", "Cmd+Space → clipboard history, snippets, emoji"),
+    ("cleanshot", "Screenshot → annotate → share instantly", "Cmd+Shift+4 → draw → copy/upload in seconds"),
+    ("espanso", "Text expansion everywhere", "Type :sig → expands to full email signature"),
+    ("shortcat", "Click any UI element with keyboard", "Cmd+Shift+Space → type to click buttons"),
+    ("arc", "Chrome but with workspaces & better UX", "Spaces for work/personal, auto-archive tabs"),
 ]
 
 WM_TOOLS = [
-    ("aerospace", "aerospace", "Tiling window manager", "cask"),
-    ("skhd", "skhd", "Hotkey daemon", "brew"),
-    ("alt-tab", "alt-tab", "Windows-style alt-tab", "cask"),
+    ("aerospace", "Tiling WM: auto-arrange windows", "Alt+Enter → new terminal, windows auto-tile"),
+    ("skhd", "Global hotkeys for any action", "Ctrl+Alt+T → open terminal from anywhere"),
+    ("alt-tab", "Windows-style alt-tab with previews", "Alt+Tab → see window previews, not just icons"),
 ]
 
 SYS_TOOLS = [
-    ("wireguard", "wg", "VPN tools", "brew"),
-    ("lulu", "lulu", "macOS firewall", "cask"),
-    ("aldente", "aldente", "Battery management", "cask"),
-    ("flux", "flux", "Night shift for eyes", "cask"),
+    ("wireguard", "Modern VPN, simple & fast", "wg-quick up vpn → connect to VPN instantly"),
+    ("lulu", "See & block outgoing connections", "App tries to phone home → LuLu asks permission"),
+    ("aldente", "Stop charging at 80% for battery health", "Keep MacBook plugged in without damaging battery"),
 ]
 
 
@@ -232,7 +205,7 @@ TOOL_MAP = {
     Category.EDIT: EDIT_TOOLS,
     Category.CLI: CLI_TOOLS,
     Category.FILES: FILES_TOOLS,
-    Category.VC: GIT_TOOLS,
+    Category.VC: VC_TOOLS,
     Category.DATA: DATA_TOOLS,
     Category.DEV: DEV_TOOLS,
     Category.INFRA: INFRA_TOOLS,
@@ -247,39 +220,25 @@ TOOL_MAP = {
 
 ALL_TOOLS = sum(TOOL_MAP.values(), [])
 
-# Install type badges
-TYPE_BADGE = {
-    "brew": "[green]brew[/]",
-    "cask": "[blue]cask[/]",
-    "uv": "[yellow]uv[/]",
-    "cargo": "[red]cargo[/]",
-    "npm": "[cyan]npm[/]",
-    "script": "[magenta]script[/]",
-    "builtin": "[dim]builtin[/]",
-}
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # RICH CLI OUTPUT
 # ═══════════════════════════════════════════════════════════════════════════
 
-def show_tools(category: Category, tools: list[tuple[str, str, str, str]]) -> None:
+def show_tools(category: Category, tools: list[tuple[str, str, str]]) -> None:
     """Display a category of tools in a styled table with pagination if needed."""
     icon, title, desc = CATEGORY_META[category]
     
     table = Table(box=ROUNDED, border_style="blue", expand=True)
-    table.add_column("Tool", style="cyan bold", width=15)
-    table.add_column("Command", style="green", width=20)
-    table.add_column("Description", width=35)
-    table.add_column("Type", justify="right", width=8)
+    table.add_column("Tool", style="cyan bold", no_wrap=True)
+    table.add_column("Description", style="white")
+    table.add_column("Example", style="green dim")
 
-    for name, command, description, install_type in tools:
-        badge = TYPE_BADGE.get(install_type, install_type)
+    for name, description, example in tools:
         table.add_row(
             f"[cyan bold]{name}[/]",
-            f"[green]{command}[/]",
             description,
-            badge
+            f"[green dim]{example}[/]"
         )
 
     panel = Panel(
@@ -322,8 +281,8 @@ def show_category_tools(category: Category):
 
 def show_tool_description(tool_name: str):
     """Show detailed description for a specific tool."""
-    for name, command, description, install_type in ALL_TOOLS:
-        if name == tool_name or command == tool_name:
+    for name, description, example in ALL_TOOLS:
+        if name == tool_name:
             # Find which category this tool belongs to
             cat_name = "Unknown"
             for cat, tools in TOOL_MAP.items():
@@ -337,9 +296,8 @@ def show_tool_description(tool_name: str):
             main_table.add_column("Value", style="white")
 
             main_table.add_row("Tool", f"[cyan bold]{name}[/]")
-            main_table.add_row("Command", f"[green]{command}[/]")
             main_table.add_row("Description", description)
-            main_table.add_row("Install Type", TYPE_BADGE.get(install_type, install_type))
+            main_table.add_row("Example", f"[green]{example}[/]")
             main_table.add_row("Category", cat_name)
 
             console.print()
@@ -353,7 +311,7 @@ def show_tool_description(tool_name: str):
 def show_help():
     """Display help information with category overview."""
     console.print("\n[cyan bold]Usage:[/]")
-    console.print("  [green]tools -s git[/]        Show git tools")
+    console.print("  [green]tools -s vc[/]         Show version control tools")
     console.print("  [green]tools -s cli[/]        Show modern CLI tools")
     console.print("  [green]tools -d lazygit[/]    Describe lazygit")
     console.print("  [green]tools --tui[/]         Interactive browser")
@@ -486,7 +444,7 @@ def run_tui():
 
         def on_mount(self) -> None:
             table = self.query_one("#tool-table", DataTable)
-            table.add_columns("Tool", "Command", "Description", "Type")
+            table.add_columns("Tool", "Description", "Example")
             table.cursor_type = "row"
             self.load_category(self.current_category)
 
@@ -499,8 +457,8 @@ def run_tui():
             tools = TOOL_MAP[category]
             filtered = self.filter_tools(tools)
 
-            for name, command, description, install_type in filtered:
-                table.add_row(name, command, description, install_type)
+            for name, description, example in filtered:
+                table.add_row(name, description, example)
 
             icon, title, desc = CATEGORY_META[category]
             self.query_one("#details", Static).update(
@@ -516,15 +474,15 @@ def run_tui():
             query = self.search_query.lower()
             results = []
             for cat in Category:
-                for name, command, description, install_type in TOOL_MAP[cat]:
+                for name, description, example in TOOL_MAP[cat]:
                     if (query in name.lower() or 
-                        query in command.lower() or 
-                        query in description.lower()):
-                        results.append((name, command, description, install_type, cat))
+                        query in description.lower() or 
+                        query in example.lower()):
+                        results.append((name, description, example, cat))
 
-            for name, command, description, install_type, cat in results:
+            for name, description, example, cat in results:
                 icon = CATEGORY_META[cat][0]
-                table.add_row(name, command, f"{icon} {description}", install_type)
+                table.add_row(name, f"{icon} {description}", example)
 
             self.query_one("#details", Static).update(
                 f"[bold]󰍉  Search Results[/] — {len(results)} matches across all categories"
@@ -550,7 +508,7 @@ def run_tui():
             row_key = event.row_key
             row = table.get_row(row_key)
             if row:
-                name, command, description, install_type = row
+                name, description, example = row
                 # Find the category for this tool
                 cat_info = ""
                 for cat in Category:
@@ -558,8 +516,7 @@ def run_tui():
                         icon, title, _ = CATEGORY_META[cat]
                         cat_info = f" [{title}]"
                         break
-                badge = TYPE_BADGE.get(install_type, install_type)
-                details = f"[cyan bold]{name}[/]{cat_info} → [green]{command}[/] ({badge})\n{description}"
+                details = f"[cyan bold]{name}[/]{cat_info}\n{description}\n[green]→ {example}[/]"
                 self.query_one("#details", Static).update(details)
 
         def on_input_changed(self, event: Input.Changed) -> None:
@@ -616,7 +573,7 @@ def main(
       edit   - Text editors & writing
       cli    - Modern Unix replacements
       files  - File management & navigation
-      git    - Version control tools
+      vc     - Version control tools
       data   - Databases & data processing
       dev    - Development & build tools
       infra  - Infrastructure & cloud
@@ -630,7 +587,7 @@ def main(
 
     Examples:
       tools              # Show categories
-      tools -s git       # Show git tools
+      tools -s vc        # Show version control tools
       tools -d lazygit   # Describe lazygit
       tools --tui        # Interactive browser
     """
