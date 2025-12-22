@@ -1220,13 +1220,55 @@ rustc --version               # Check version
 ## AI & LLM Tools
 
 ### opencode
-AI coding assistant on the CLI. Neovim-inspired interface for AI pair programming.
+Open source AI coding agent with terminal UI, desktop app, and IDE extensions. Neovim-inspired interface for AI pair programming.
 
 ```bash
-opencode                      # Start interactive session
+opencode                      # Start TUI in current project
+opencode -c                   # Continue last session
+opencode -s <id>              # Continue specific session
+opencode -m anthropic/claude  # Use specific model
+opencode run "prompt"         # Non-interactive mode
+opencode run -f file.py "explain this"  # Attach files
+opencode serve                # Start headless server
+opencode models               # List available models
+opencode auth login           # Configure API keys
+opencode upgrade              # Update to latest version
 ```
 
-See README.md for Neovim integration keybindings.
+| Key | Action |
+|-----|--------|
+| `Ctrl+x` | Leader key |
+| `<leader>n` | New session |
+| `<leader>l` | List sessions |
+| `<leader>m` | List models |
+| `<leader>a` | List agents |
+| `<leader>t` | List themes |
+| `<leader>b` | Toggle sidebar |
+| `<leader>u` | Undo changes |
+| `<leader>r` | Redo changes |
+| `<leader>y` | Copy messages |
+| `<leader>c` | Compact context |
+| `Tab` | Cycle agent (Plan/Build mode) |
+| `Escape` | Interrupt |
+| `@` | Fuzzy find files |
+| `Ctrl+p` | Command list |
+
+**Commands:**
+- `/init` - Initialize project (creates AGENTS.md)
+- `/undo` - Undo last changes
+- `/redo` - Redo changes
+- `/share` - Share conversation link
+- `/connect` - Configure provider API keys
+
+**Modes:**
+- **Build mode** - AI makes changes to code
+- **Plan mode** (Tab) - AI suggests implementation without editing
+
+Installed via: `brew install sst/tap/opencode`
+
+Configuration: `~/.config/opencode/opencode.json`
+
+**Use cases:** AI pair programming, code generation, refactoring, learning codebases
 
 ### ollama
 Run large language models locally.
