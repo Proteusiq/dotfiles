@@ -1,3 +1,9 @@
+---
+title: Untitled
+author: Prayson Daniel
+date: 2025-12-22T09:27:13Z
+---
+
 ![dotfiles banner](https://github.com/Proteusiq/dotfiles/assets/14926709/9e3c4c60-43cd-4e47-9711-49eeb1078ae4)
 
 # dotfiles
@@ -151,14 +157,14 @@ aliases
 
 # Show aliases in a specific category
 aliases --show git
-aliases -s shortcuts
+aliases -s modern
 
 # Get details about a specific alias
 aliases --describe ga
 aliases -d gp
 ```
 
-**Available categories:** git, coreutils, yarn, pnpm, shortcuts, special, functions
+**Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
 ## File Structure
 
 ```
@@ -452,6 +458,279 @@ Vim follows **Verb + Noun** grammar for powerful text editing:
 
 </details>
 
+<details><summary>💡 Pragmatic Goodies & Guides</summary>
+
+#### 🔍 Explore File History Over Time
+___
+One of the most powerful features in this setup is the ability to see how a file has changed throughout your git history. This is incredibly useful for:
+- Understanding the evolution of code changes
+- Tracking when bugs were introduced
+- Learning from your own past edits
+- Reviewing refactoring decisions
+
+**Keymap:** `<leader>Gh` or `:Telescope git_file_history`
+
+**How to Use:**
+1. Open any file in your project
+2. Press `<leader>Gh` (or run `:Telescope git_file_history`) to open the git file history picker
+3. Browse through all commits that touched this file
+4. Select a commit to view how the file looked at that point in time
+5. Use Telescope's navigation keys to explore previous versions side-by-side with diffs
+
+**Example Workflow:**
+```vim
+<leader>Gh                   " Open history for current file
+" Browse commits with j/k, preview with ?
+" Press <CR> to view the selected commit version
+" Use Telescope's diff view to see what changed
+```
+
+This integration combines Telescope's powerful fuzzy finding with git-file-history extension to give you instant access to temporal navigation of your codebase.
+
+#### 🎨 Quickly Switch Between Color Themes
+___
+Change editor's appearance instantly without leaving Neovim. Perfect for:
+- Finding the right theme for different times of day (dark mode at night, light mode during day)
+- Testing how code looks in different color schemes
+- Matching your editor theme to your mood or lighting conditions
+- Discovering new themes and comparing them instantly
+
+**Keymap:** `<leader>uC`
+
+**How to Use:**
+1. Press `<leader>uC` to open the colorscheme picker
+2. Type to filter available themes (supports fuzzy search)
+3. Use `j/k` or arrow keys to navigate through themes
+4. Press `<CR>` to apply the selected theme immediately
+5. Press `?` in the picker to see all available actions
+
+**Example Workflow:**
+```vim
+<leader>uC         " Open colorscheme picker
+tokyonight         " Type to filter (fuzzy search)
+<CR>               " Apply selected theme instantly
+```
+
+All installed colorschemes are available with live preview as you browse!
+
+#### 🎯 Multi-Cursor Editing with multicursor.nvim
+___
+Efficient multi-cursor editing directly in Neovim. Perfect for:
+- Simultaneous editing across multiple locations
+- Fast refactoring and bulk text operations
+- Reducing repetitive edits on similar patterns
+- Maintaining productivity without leaving the editor
+
+**Keymaps:** Arrow keys to add cursors, `<leader>n/N` to match word/selection
+
+**How to Use:**
+1. Position cursor on target word/selection
+2. Press `<up>/<down>` to add cursor above/below current line
+3. Or press `<leader>n` to add cursor at next match of word under cursor
+4. Edit normally - changes apply to all cursor locations simultaneously
+5. Press `<Esc>` to clear all cursors
+
+**Example Workflow:**
+```vim
+<down>             " Add cursor below current line
+<down>             " Add another cursor below
+i                  " Enter insert mode
+new_text           " Type - applies to all cursor positions
+<Esc>              " Exit and clear cursors
+
+" Or match-based:
+<leader>n          " Add cursor at next match of word
+<leader>n          " Add another cursor at next match
+```
+
+**Pro Tips:**
+- All cursors are **bufwin-local** - they persist when switching between windows with the same buffer
+- Use `<leader><up>/<down>` to skip a line when adding cursors
+- Use `<leader>N` to match previous occurrence (backwards)
+- Use `<C-q>` to toggle (disable/enable) cursors
+- Use `<left>/<right>` to select different cursor as main (when multiple cursors active)
+- Use `<leader>x` to delete the main cursor
+
+**Use cases:** Variable renaming across file, bulk find-and-replace, consistent formatting updates, batch code modifications
+
+#### 🛠️ Essential CLI Tools
+___
+Command-line tools for various tasks. Here are quick how-tos for the essential ones:
+
+##### 📋 **lnav** - Log Viewer & Analyzer
+View and analyze log files with an interactive terminal UI. Perfect for debugging and monitoring logs from multiple sources.
+
+```bash
+lnav /var/log/system.log           # View a specific log file
+lnav                               # Interactive log file picker
+# Inside lnav: Use j/k to navigate, / to search, q to quit
+```
+
+**Use cases:** Debug application errors, monitor system logs, analyze multiple log files side-by-side
+
+---
+
+##### 🐙 **lazygit** - Git Management UI
+Interact with Git repositories through an intuitive terminal UI. Also accessible in Neovim via `<leader>gg`.
+
+```bash
+lazygit                            # Open Git UI in current repo
+# Inside: Stage files, commit, branch management with vim-like keybinds
+```
+
+**Use cases:** Visual staging, interactive rebasing, branch management, blame view
+
+---
+
+##### 📚 **serie** - Rich Git Commit Graph
+View a beautiful, rich git commit graph in your terminal with image rendering support.
+
+```bash
+serie                              # Open git commit graph in current repo
+serie --order topo                 # View commits topologically sorted
+serie --order chrono               # View commits chronologically (default)
+serie --preload                    # Preload all graph images for smoother scrolling
+# Inside: j/k navigate, Enter to show details, ? for help, / to search
+```
+
+**Use cases:** Visualizing commit history, understanding branch structure, exploring complex git workflows
+
+---
+
+##### 🎬 **gitlogue** - Cinematic Git Replay
+A cinematic Git commit replay tool that turns your Git history into a living, animated story with realistic typing animations and syntax highlighting.
+
+```bash
+gitlogue                           # Start cinematic screensaver mode
+gitlogue --commit HEAD~5..HEAD     # Replay a range of commits
+gitlogue --commit abc123 --loop    # Loop a specific commit
+gitlogue --author "john"           # Filter commits by author
+gitlogue --theme dracula           # Use a different theme
+gitlogue --speed 20                # Adjust typing speed (ms per char)
+gitlogue theme list                # List available themes
+```
+
+**Use cases:** Screensaver, presentations, content creation, education, visualizing code evolution
+
+---
+
+##### 📊 **gh-dash** - GitHub Dashboard
+Interactive GitHub CLI dashboard for viewing pull requests, issues, and more directly from your terminal.
+
+```bash
+gh-dash                                # Open GitHub dashboard
+# Inside: View PRs, issues, repos with vim-like navigation
+```
+
+**Use cases:** Quick PR review, issue tracking, repository status overview, GitHub activity monitoring
+
+---
+
+##### 🐳 **lazydocker** - Docker Management UI
+Manage Docker containers, images, and networks with an interactive TUI.
+
+```bash
+lazydocker                         # Open Docker UI
+# Inside: View containers, logs, exec commands with vim-like navigation
+```
+
+**Use cases:** Container debugging, quick logs viewing, resource monitoring, container lifecycle management
+
+---
+
+##### 💾 **harlequin** - SQL IDE
+Run and test SQL queries interactively with connection management and results formatting.
+
+```bash
+harlequin                          # Open SQL IDE
+harlequin --dialect duckdb         # Specify SQL dialect (duckdb, sqlite, postgres, etc.)
+# Inside: Write queries, view results, explore databases
+```
+
+**Use cases:** SQL development, database exploration, query testing, data analysis
+
+---
+
+##### ⚡ **hyperfine** - Benchmarking Tool
+Measure and compare command execution time with statistical analysis.
+
+```bash
+hyperfine 'command1' 'command2'    # Compare two commands
+hyperfine --runs 10 'your_command' # Run benchmark 10 times
+hyperfine --show-output 'cmd'      # Show command output while benchmarking
+```
+
+**Use cases:** Performance comparison, optimization validation, CI/CD benchmarking
+
+---
+
+##### 🌐 **httpie** - Better HTTP Client
+Human-friendly HTTP CLI client (better than curl).
+
+```bash
+http GET example.com               # Simple GET request
+http --auth user:pass POST httpbin.org/post name=value  # POST with auth
+http --headers GET github.com      # Show only headers
+http < request.json POST httpbin.org/post  # Send from file
+```
+
+**Use cases:** API testing, REST debugging, quick HTTP requests, webhook testing
+
+---
+
+##### 🔄 **scooter** - Interactive Find-and-Replace
+Interactive terminal UI for find-and-replace operations with preview, regex support, and editor integration.
+
+```bash
+scooter                            # Open scooter in current directory
+scooter ../path/to/dir             # Search in specific directory
+echo "text" | scooter              # Process stdin
+scooter --search-text "old" --replace-text "new" --immediate-search  # Pre-populate fields
+```
+
+**Key features:**
+- **Interactive toggling**: Select which instances to replace using spacebar
+- **Regex & fixed strings**: Switch between regex patterns and literal string matching
+- **Capture groups**: Use `(\d)` in search and `$1` in replacement
+- **Editor integration**: Press `e` to open selected file at the correct line in your `$EDITOR`
+- **Respects .gitignore**: Automatically ignores files per your `.gitignore` and `.ignore`
+- **Glob filtering**: Include/exclude files using glob patterns (e.g., `*.rs,*.py`)
+- **Performance**: Built on ripgrep's file walker for blazing-fast searches
+
+**Workflow example:**
+```vim
+scooter                           " Open scooter
+# Type search pattern, replacement, and toggle desired instances with space
+# Press Enter to execute replacements
+# Press e to open any file in your editor at that line
+```
+
+**Use cases:** Refactoring code, bulk renaming, updating imports, batch text replacements
+
+</details>
+
+<details><summary>🐱 Shortcat - Keyboard-Driven UI Navigation</summary>
+
+Navigate macOS applications entirely with your keyboard using Shortcat. Perfect for:
+- Clicking buttons, links, and UI elements without a mouse
+- Speeding up repetitive GUI tasks
+- Accessibility and RSI prevention
+- Vim-like navigation in any application
+
+**Key Binding:**
+
+| Shortcut | Description |
+|----------|-------------|
+| `Cmd + S` | Activate Shortcat search mode |
+
+**How to Use:**
+1. Press `Cmd + S` to activate Shortcat
+2. Type to filter visible UI elements (buttons, links, menus)
+3. Press `Enter` to click the highlighted element
+4. Use arrow keys to navigate between matches
+
+</details>
+
 <details><summary>🔍 Commands "Here, There and Everywhere"</summary>
 
 # Cool CLI Commands Reference
@@ -735,279 +1014,6 @@ A collection of most common CLI commands.
 - For `wget` parameters: `-m` (mirror), `-k` (convert links), `-E` (adjust extensions), `-p` (page requisites), `-n` (no clobber)
 
 ---
-
-</details>
-
-<details><summary>💡 Pragmatic Goodies & Guides</summary>
-
-#### 🔍 Explore File History Over Time
-___
-One of the most powerful features in this setup is the ability to see how a file has changed throughout your git history. This is incredibly useful for:
-- Understanding the evolution of code changes
-- Tracking when bugs were introduced
-- Learning from your own past edits
-- Reviewing refactoring decisions
-
-**Keymap:** `<leader>Gh` or `:Telescope git_file_history`
-
-**How to Use:**
-1. Open any file in your project
-2. Press `<leader>Gh` (or run `:Telescope git_file_history`) to open the git file history picker
-3. Browse through all commits that touched this file
-4. Select a commit to view how the file looked at that point in time
-5. Use Telescope's navigation keys to explore previous versions side-by-side with diffs
-
-**Example Workflow:**
-```vim
-<leader>Gh                   " Open history for current file
-" Browse commits with j/k, preview with ?
-" Press <CR> to view the selected commit version
-" Use Telescope's diff view to see what changed
-```
-
-This integration combines Telescope's powerful fuzzy finding with git-file-history extension to give you instant access to temporal navigation of your codebase.
-
-#### 🎨 Quickly Switch Between Color Themes
-___
-Change editor's appearance instantly without leaving Neovim. Perfect for:
-- Finding the right theme for different times of day (dark mode at night, light mode during day)
-- Testing how code looks in different color schemes
-- Matching your editor theme to your mood or lighting conditions
-- Discovering new themes and comparing them instantly
-
-**Keymap:** `<leader>uC`
-
-**How to Use:**
-1. Press `<leader>uC` to open the colorscheme picker
-2. Type to filter available themes (supports fuzzy search)
-3. Use `j/k` or arrow keys to navigate through themes
-4. Press `<CR>` to apply the selected theme immediately
-5. Press `?` in the picker to see all available actions
-
-**Example Workflow:**
-```vim
-<leader>uC         " Open colorscheme picker
-tokyonight         " Type to filter (fuzzy search)
-<CR>               " Apply selected theme instantly
-```
-
-All installed colorschemes are available with live preview as you browse!
-
-#### 🎯 Multi-Cursor Editing with multicursor.nvim
-___
-Efficient multi-cursor editing directly in Neovim. Perfect for:
-- Simultaneous editing across multiple locations
-- Fast refactoring and bulk text operations
-- Reducing repetitive edits on similar patterns
-- Maintaining productivity without leaving the editor
-
-**Keymaps:** Arrow keys to add cursors, `<leader>n/N` to match word/selection
-
-**How to Use:**
-1. Position cursor on target word/selection
-2. Press `<up>/<down>` to add cursor above/below current line
-3. Or press `<leader>n` to add cursor at next match of word under cursor
-4. Edit normally - changes apply to all cursor locations simultaneously
-5. Press `<Esc>` to clear all cursors
-
-**Example Workflow:**
-```vim
-<down>             " Add cursor below current line
-<down>             " Add another cursor below
-i                  " Enter insert mode
-new_text           " Type - applies to all cursor positions
-<Esc>              " Exit and clear cursors
-
-" Or match-based:
-<leader>n          " Add cursor at next match of word
-<leader>n          " Add another cursor at next match
-```
-
-**Pro Tips:**
-- All cursors are **bufwin-local** - they persist when switching between windows with the same buffer
-- Use `<leader><up>/<down>` to skip a line when adding cursors
-- Use `<leader>N` to match previous occurrence (backwards)
-- Use `<C-q>` to toggle (disable/enable) cursors
-- Use `<left>/<right>` to select different cursor as main (when multiple cursors active)
-- Use `<leader>x` to delete the main cursor
-
-**Use cases:** Variable renaming across file, bulk find-and-replace, consistent formatting updates, batch code modifications
-
-#### 🛠️ Essential CLI Tools
-___
-Command-line tools for various tasks. Here are quick how-tos for the essential ones:
-
-##### 📋 **lnav** - Log Viewer & Analyzer
-View and analyze log files with an interactive terminal UI. Perfect for debugging and monitoring logs from multiple sources.
-
-```bash
-lnav /var/log/system.log           # View a specific log file
-lnav                               # Interactive log file picker
-# Inside lnav: Use j/k to navigate, / to search, q to quit
-```
-
-**Use cases:** Debug application errors, monitor system logs, analyze multiple log files side-by-side
-
----
-
-##### 🐙 **lazygit** - Git Management UI
-Interact with Git repositories through an intuitive terminal UI. Also accessible in Neovim via `<leader>gg`.
-
-```bash
-lazygit                            # Open Git UI in current repo
-# Inside: Stage files, commit, branch management with vim-like keybinds
-```
-
-**Use cases:** Visual staging, interactive rebasing, branch management, blame view
-
----
-
-##### 📚 **serie** - Rich Git Commit Graph
-View a beautiful, rich git commit graph in your terminal with image rendering support.
-
-```bash
-serie                              # Open git commit graph in current repo
-serie --order topo                 # View commits topologically sorted
-serie --order chrono               # View commits chronologically (default)
-serie --preload                    # Preload all graph images for smoother scrolling
-# Inside: j/k navigate, Enter to show details, ? for help, / to search
-```
-
-**Use cases:** Visualizing commit history, understanding branch structure, exploring complex git workflows
-
----
-
-##### 🎬 **gitlogue** - Cinematic Git Replay
-A cinematic Git commit replay tool that turns your Git history into a living, animated story with realistic typing animations and syntax highlighting.
-
-```bash
-gitlogue                           # Start cinematic screensaver mode
-gitlogue --commit HEAD~5..HEAD     # Replay a range of commits
-gitlogue --commit abc123 --loop    # Loop a specific commit
-gitlogue --author "john"           # Filter commits by author
-gitlogue --theme dracula           # Use a different theme
-gitlogue --speed 20                # Adjust typing speed (ms per char)
-gitlogue theme list                # List available themes
-```
-
-**Use cases:** Screensaver, presentations, content creation, education, visualizing code evolution
-
----
-
-##### 📊 **gh-dash** - GitHub Dashboard
-Interactive GitHub CLI dashboard for viewing pull requests, issues, and more directly from your terminal.
-
-```bash
-gh-dash                                # Open GitHub dashboard
-# Inside: View PRs, issues, repos with vim-like navigation
-```
-
-**Use cases:** Quick PR review, issue tracking, repository status overview, GitHub activity monitoring
-
----
-
-##### 🐳 **lazydocker** - Docker Management UI
-Manage Docker containers, images, and networks with an interactive TUI.
-
-```bash
-lazydocker                         # Open Docker UI
-# Inside: View containers, logs, exec commands with vim-like navigation
-```
-
-**Use cases:** Container debugging, quick logs viewing, resource monitoring, container lifecycle management
-
----
-
-##### 💾 **harlequin** - SQL IDE
-Run and test SQL queries interactively with connection management and results formatting.
-
-```bash
-harlequin                          # Open SQL IDE
-harlequin --dialect duckdb         # Specify SQL dialect (duckdb, sqlite, postgres, etc.)
-# Inside: Write queries, view results, explore databases
-```
-
-**Use cases:** SQL development, database exploration, query testing, data analysis
-
----
-
-##### ⚡ **hyperfine** - Benchmarking Tool
-Measure and compare command execution time with statistical analysis.
-
-```bash
-hyperfine 'command1' 'command2'    # Compare two commands
-hyperfine --runs 10 'your_command' # Run benchmark 10 times
-hyperfine --show-output 'cmd'      # Show command output while benchmarking
-```
-
-**Use cases:** Performance comparison, optimization validation, CI/CD benchmarking
-
----
-
-##### 🌐 **httpie** - Better HTTP Client
-Human-friendly HTTP CLI client (better than curl).
-
-```bash
-http GET example.com               # Simple GET request
-http --auth user:pass POST httpbin.org/post name=value  # POST with auth
-http --headers GET github.com      # Show only headers
-http < request.json POST httpbin.org/post  # Send from file
-```
-
-**Use cases:** API testing, REST debugging, quick HTTP requests, webhook testing
-
----
-
-##### 🔄 **scooter** - Interactive Find-and-Replace
-Interactive terminal UI for find-and-replace operations with preview, regex support, and editor integration.
-
-```bash
-scooter                            # Open scooter in current directory
-scooter ../path/to/dir             # Search in specific directory
-echo "text" | scooter              # Process stdin
-scooter --search-text "old" --replace-text "new" --immediate-search  # Pre-populate fields
-```
-
-**Key features:**
-- **Interactive toggling**: Select which instances to replace using spacebar
-- **Regex & fixed strings**: Switch between regex patterns and literal string matching
-- **Capture groups**: Use `(\d)` in search and `$1` in replacement
-- **Editor integration**: Press `e` to open selected file at the correct line in your `$EDITOR`
-- **Respects .gitignore**: Automatically ignores files per your `.gitignore` and `.ignore`
-- **Glob filtering**: Include/exclude files using glob patterns (e.g., `*.rs,*.py`)
-- **Performance**: Built on ripgrep's file walker for blazing-fast searches
-
-**Workflow example:**
-```vim
-scooter                           " Open scooter
-# Type search pattern, replacement, and toggle desired instances with space
-# Press Enter to execute replacements
-# Press e to open any file in your editor at that line
-```
-
-**Use cases:** Refactoring code, bulk renaming, updating imports, batch text replacements
-
-</details>
-
-<details><summary>🐱 Shortcat - Keyboard-Driven UI Navigation</summary>
-
-Navigate macOS applications entirely with your keyboard using Shortcat. Perfect for:
-- Clicking buttons, links, and UI elements without a mouse
-- Speeding up repetitive GUI tasks
-- Accessibility and RSI prevention
-- Vim-like navigation in any application
-
-**Key Binding:**
-
-| Shortcut | Description |
-|----------|-------------|
-| `Cmd + S` | Activate Shortcat search mode |
-
-**How to Use:**
-1. Press `Cmd + S` to activate Shortcat
-2. Type to filter visible UI elements (buttons, links, menus)
-3. Press `Enter` to click the highlighted element
-4. Use arrow keys to navigate between matches
 
 </details>
 

@@ -26,7 +26,11 @@ class Category(str, Enum):
     YARN = "yarn"
     PNPM = "pnpm"
     SHORTCUTS = "shortcuts"
-    SPECIAL = "special"
+    EDITORS = "editors"
+    NAVIGATION = "navigation"
+    MODERN = "modern"
+    TMUX = "tmux"
+    MACOS = "macos"
     FUNCTIONS = "functions"
 
 
@@ -152,7 +156,6 @@ COREUTILS_ALIASES = [
     ("md5sum", "gmd5sum", "Compute and check MD5 message digest"),
     ("sha1sum", "gsha1sum", "Compute and check SHA1 message digest"),
     ("cut", "gcut", "Remove sections from each line of files"),
-    ("paste", "gpaste", "Merge lines of files"),
     ("join", "gjoin", "Join lines of two files on a common field"),
     ("cp", "gcp -v", "Copy files and directories"),
     ("mv", "gmv -v", "Move files"),
@@ -183,12 +186,14 @@ COREUTILS_ALIASES = [
     ("tee", "gtee", "Read from standard input and write to standard output and files"),
     ("awk", "gawk", "Pattern scanning and processing language"),
     ("grep", "ggrep --color", "Print lines matching a pattern with color"),
+    ("sed", "gsed", "Stream editor for filtering and transforming text"),
     ("ln", "gln", "Make links between files"),
     ("ln-sym", "gln -nsf", "Create symbolic links"),
     ("find", "gfind", "Search for files in a directory hierarchy"),
     ("locate", "glocate", "Find files by name"),
     ("updatedb", "gupdatedb", "Update a database for mlocate"),
     ("xargs", "gxargs", "Build and execute command lines from standard input"),
+    ("tar", "gtar", "Archive utility"),
     ("which", "gwhich", "Locate a command"),
 ]
 
@@ -217,24 +222,26 @@ PNPM_ALIASES = [
 ]
 
 SHORTCUTS = [
-    ("md", "mkdir", "Create directories"),
-    ("t", "touch", "Create empty files"),
-    ("x", "exit", "Exit the shell"),
     ("c", "clear", "Clear the terminal screen"),
+    ("x", "exit", "Exit the shell"),
     ("o", "open .", "Open the current directory"),
-    ("vi", "nvim", "Open Neovim"),
-    ("vim", "nvim", "Open Neovim"),
-    ("v", "nvim", "Open Neovim"),
-    ("n", "nvim", "Open Neovim"),
-    ("x+=", "chmod +x", "Make a file executable"),
-    ("restart", "sudo reboot", "Reboot the system"),
-    ("bye", "sudo shutdown -r now", "Restart the system immediately"),
-    ("get", "curl -O -L", "Download a file using curl"),
+    ("t", "touch", "Create empty files"),
+    ("md", "mkdir", "Create directories"),
+    ("x+", "chmod +x", "Make a file executable"),
     ("reload", "source ~/.zshrc", "Reload the shell configuration"),
+    ("clip", "pbcopy", "Copy to clipboard"),
+    ("paste", "pbpaste", "Paste from clipboard"),
+    ("get", "curl -O -L", "Download a file using curl"),
 ]
 
-SPECIAL_ALIASES = [
-    ("cat", "bat", "Use bat for displaying file contents"),
+EDITORS = [
+    ("v", "nvim", "Open Neovim"),
+    ("vi", "nvim", "Open Neovim"),
+    ("vim", "nvim", "Open Neovim"),
+    ("n", "nvim", "Open Neovim"),
+]
+
+NAVIGATION = [
     ("dev", "cd ~/dev", "Change to development directory"),
     ("work", "cd ~/dev/work", "Change to work directory"),
     ("desk", "cd ~/desktop", "Change to desktop directory"),
@@ -242,106 +249,78 @@ SPECIAL_ALIASES = [
     ("dl", "cd ~/downloads", "Change to downloads directory"),
     ("home", "cd ~", "Change to home directory"),
     ("dots", "cd ~/dotfiles", "Change to dotfiles directory"),
-    ("dotfiles", "cd ~/dotfiles", "Change to dotfiles directory"),
-    ("pip", "uv pip", "Use uv to manage pip"),
-    (
-        "mergepdf",
-        "/System/Library/Automator/Combine\\ PDF\\ Pages.action/Contents/Resources/join.py",
-        "Merge PDFs using Automator",
-    ),
-    ("spotoff", "sudo mdutil -a -i off", "Turn off Spotlight indexing"),
-    ("spoton", "sudo mdutil -a -i on", "Turn on Spotlight indexing"),
-    (
-        "rm_ds",
-        "find . -name '*.DS_Store' -type f -ls -delete",
-        "Remove .DS_Store files",
-    ),
+]
+
+MODERN_CLI = [
+    ("cat", "bat", "Use bat for displaying file contents"),
+    ("ls", "eza --icons=always", "Use eza for directory listing with icons"),
+    ("ll", "eza -l", "Long listing with eza"),
+    ("la", "eza -la", "Long listing including hidden files"),
+    ("tree", "eza --tree", "Tree view with eza"),
+    ("top", "btop", "Use btop for system monitoring"),
+    ("du", "ncdu", "Use ncdu for disk usage analysis"),
+]
+
+TMUX_ALIASES = [
+    ("iexit", "tmux kill-session", "Exit current tmux session"),
+    ("ix", "iexit", "Alias for iexit"),
+    ("ikill", "tmux kill-server", "Kill tmux server (all sessions)"),
+    ("ik", "ikill", "Alias for ikill"),
+    ("iswitch", "tmux choose-session", "Show tmux session picker"),
+    ("ipop", "tmux display-popup", "Open tmux popup in current directory"),
+]
+
+MACOS_ALIASES = [
     (
         "show",
         "defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder",
-        "Show hidden files",
+        "Show hidden files in Finder",
     ),
     (
         "hide",
         "defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder",
-        "Hide hidden files",
-    ),
-    (
-        "hidedesktop",
-        "defaults write com.apple.finder CreateDesktop -bool false && killall Finder",
-        "Hide desktop items",
+        "Hide hidden files in Finder",
     ),
     (
         "showdesktop",
         "defaults write com.apple.finder CreateDesktop -bool true && killall Finder",
-        "Show desktop items",
+        "Show desktop icons",
     ),
     (
-        "chromekill",
-        "ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill",
-        "Kill all Chrome tabs to free memory",
+        "hidedesktop",
+        "defaults write com.apple.finder CreateDesktop -bool false && killall Finder",
+        "Hide desktop icons",
     ),
-    (
-        "afk",
-        "/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend",
-        "Lock screen when going AFK",
-    ),
+    ("spotoff", "sudo mdutil -a -i off", "Turn off Spotlight indexing"),
+    ("spoton", "sudo mdutil -a -i on", "Turn on Spotlight indexing"),
+    ("afk", "CGSession -suspend", "Lock screen when going AFK"),
     ("stfu", "osascript -e 'set volume output muted true'", "Mute the system volume"),
-    (
-        "xcodepurge",
-        "rm -rf ~/Library/Developer/Xcode/DerivedData",
-        "Remove cached Xcode build data",
-    ),
-    ("top", "bpytop", "Use bpytop for system monitoring"),
-    ("du", "ncdu", "Use ncdu for disk usage analysis"),
-    ("ls", "eza --icons=always", "Use eza for better directory listing"),
-    ("tree", "eza --tree", "Use eza for better tree listing"),
+    ("restart", "sudo reboot", "Reboot the system"),
+    ("bye", "sudo shutdown -r now", "Restart the system immediately"),
+    ("rm_ds", "find . -name '*.DS_Store' -type f -ls -delete", "Remove .DS_Store files"),
+    ("xcodepurge", "rm -rf ~/Library/Developer/Xcode/DerivedData", "Remove cached Xcode build data"),
+    ("chromekill", "ps ux | grep ... | xargs kill", "Kill all Chrome tabs to free memory"),
+    ("mergepdf", "join.py", "Merge PDFs using Automator"),
 ]
 
 FUNCTIONS = [
-    ("gi", "generate .gitignore", "Generate .gitignore files"),
-    (
-        "create-repo",
-        "create a GitHub repo",
-        "Create a new GitHub repository and push initial commit",
-    ),
-    ("take", "mkdir and cd", "Create a directory and change into it"),
-    ("up", "cd up", "Change directory to a parent directory"),
-    ("gifify", "convert video to gif", "Create animated gifs from video files"),
-    ("emptytrash", "empty trashes", "Empty system trashes"),
-    ("rename-branch", "rename git branch", "Rename a git branch and update it"),
-    ("git", "smart git clone", "Clone a repository and change into it"),
-    ("yy", "yazi", "Open yazi with a temporary file for cwd"),
-    (
-        "activate",
-        "activate Python virtual environment",
-        "Activate virtual environment in current or parent directory",
-    ),
-    ("setenv", "load .env or -f dotenv file to activate", "Export .env to global PATH"),
-    (
-        "unsetenv",
-        "unload .env or -f dotenv file to activate",
-        "Export .env to global PATH",
-    ),
-    ("clean_pycache", "remove all __pycache__ directories", "Clean Python cache files"),
-    (
-        "cmd",
-        'llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "echo "execute:\\n\\t {}\\n"; eval {}"; }; llm_func',
-        "Productive laziness with llm",
-    ),
-    (
-        "iexit",
-        "tmux kill-session -t $(tmux display-message -p '#S')",
-        "Exit tmux session",
-    ),
-    ("ikill", "tmux kill-server", "Kill tmux server"),
-    ("iswitch", "tmux choose-session", "Show tmux sessions"),
-    (
-        "ipop",
-        'tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"',
-        "Open tmux popup",
-    ),
-    ("f", "thefuck", "Use thefuck for command corrections"),
+    ("take", "mkdir && cd", "Create a directory and change into it"),
+    ("tk", "take", "Alias for take"),
+    ("up", "cd ..", "Go up N parent directories"),
+    ("yy", "yazi wrapper", "Open yazi, cd to dir on exit"),
+    ("git", "smart git clone", "Clone a repository and cd into it"),
+    ("gi", "gitignore.io", "Generate .gitignore from templates"),
+    ("create-repo", "GitHub repo", "Create a new GitHub repository"),
+    ("rename-branch", "git branch -m", "Rename a git branch locally and remotely"),
+    ("gifify", "ffmpeg + gifsicle", "Create animated gifs from video files"),
+    ("emptytrash", "rm -rf ~/.Trash", "Empty system trashes"),
+    ("activate", "source venv/bin/activate", "Activate Python venv in current or parent dir"),
+    ("setenv", "export from .env", "Load .env file into environment"),
+    ("unsetenv", "unset from .env", "Unload .env variables from environment"),
+    ("clean", "clean_pycache", "Remove __pycache__ directories"),
+    ("update", "install.sh", "Run dotfiles install script"),
+    ("f", "fuck", "Use thefuck for command corrections"),
+    ("pip", "uv pip", "Use uv for pip operations"),
 ]
 
 
@@ -404,7 +383,11 @@ def show_category_aliases(category: Category):
         Category.YARN: ("Yarn Aliases", YARN_ALIASES),
         Category.PNPM: ("PNPM Aliases", PNPM_ALIASES),
         Category.SHORTCUTS: ("Shortcuts", SHORTCUTS),
-        Category.SPECIAL: ("Special Aliases", SPECIAL_ALIASES),
+        Category.EDITORS: ("Editors", EDITORS),
+        Category.NAVIGATION: ("Directory Navigation", NAVIGATION),
+        Category.MODERN: ("Modern CLI Replacements", MODERN_CLI),
+        Category.TMUX: ("Tmux", TMUX_ALIASES),
+        Category.MACOS: ("macOS Specific", MACOS_ALIASES),
         Category.FUNCTIONS: ("Functions", FUNCTIONS),
     }
 
@@ -421,7 +404,11 @@ def show_alias_description(alias_name: str):
         + YARN_ALIASES
         + PNPM_ALIASES
         + SHORTCUTS
-        + SPECIAL_ALIASES
+        + EDITORS
+        + NAVIGATION
+        + MODERN_CLI
+        + TMUX_ALIASES
+        + MACOS_ALIASES
         + FUNCTIONS
     )
 
@@ -506,34 +493,37 @@ def show_alias_description(alias_name: str):
 
 def show_help():
     """Display help information with examples."""
-    console.print("\n[cyan bold]🚀 Usage Examples:[/]")
+    console.print("\n[cyan bold]Usage Examples:[/]")
     console.print("  [green]aliases --show git[/]        # Show all Git aliases")
-    console.print("  [green]aliases --show shortcuts[/]  # Show all shortcuts")
+    console.print("  [green]aliases --show modern[/]     # Show modern CLI replacements")
     console.print("  [green]aliases --describe ga[/]     # Show details for 'ga' alias")
-    console.print("  [green]aliases --show yarn[/]       # Show Yarn package manager commands")
     console.print("  [green]aliases --show functions[/]  # Show useful shell functions")
 
-    table = Table(title="📚 Available Categories", show_header=True, box=ROUNDED)
-    table.add_column("Category 📂", style="green")
-    table.add_column("Description 📝")
-    table.add_column("Examples ✨", style="cyan")
+    table = Table(title="Available Categories", show_header=True, box=ROUNDED)
+    table.add_column("Category", style="green")
+    table.add_column("Description")
+    table.add_column("Examples", style="cyan")
 
-    table.add_row("git", "Git version control shortcuts", "g (git), ga (add), gp (push)")
-    table.add_row("coreutils", "Enhanced Unix commands", "ls (list), cp (copy), mv (move)")
-    table.add_row("yarn", "Yarn package manager", "y (yarn), yi (init), ya (add)")
-    table.add_row("pnpm", "PNPM package manager", "pn (pnpm), pna (add), pni (install)")
-    table.add_row("shortcuts", "Quick command shortcuts", "c (clear), x (exit), o (open)")
-    table.add_row("special", "Special system commands", "cat (bat), dev (cd ~/dev)")
-    table.add_row("functions", "Useful shell functions", "gi (gitignore), take (mkdir+cd)")
+    table.add_row("git", "Git version control shortcuts", "g, ga, gp, gs")
+    table.add_row("coreutils", "GNU coreutils (macOS)", "cp, mv, rm, grep, sed")
+    table.add_row("yarn", "Yarn package manager", "y, ya, yr, ys")
+    table.add_row("pnpm", "PNPM package manager", "pn, pna, pni")
+    table.add_row("shortcuts", "Quick command shortcuts", "c, x, o, clip, paste")
+    table.add_row("editors", "Editor shortcuts", "v, vi, vim, n")
+    table.add_row("navigation", "Directory navigation", "dev, work, dots, dl")
+    table.add_row("modern", "Modern CLI replacements", "cat, ls, tree, top, du")
+    table.add_row("tmux", "Tmux session management", "ix, ik, iswitch, ipop")
+    table.add_row("macos", "macOS specific commands", "show, hide, afk, stfu")
+    table.add_row("functions", "Shell functions", "take, yy, activate, setenv")
 
-    console.print("\n[yellow bold]🗂️  Categories:[/]")
+    console.print("\n[yellow bold]Categories:[/]")
     console.print(table)
 
-    console.print("\n[yellow bold]⚙️  Options:[/]")
+    console.print("\n[yellow bold]Options:[/]")
     console.print("[green]--show, -s CATEGORY[/]    Show all aliases in a category")
-    console.print("[green]--describe, -d ALIAS[/]    Show detailed description of an alias")
+    console.print("[green]--describe, -d ALIAS[/]   Show detailed description of an alias")
     
-    console.print("\n[cyan]💡 Tip:[/] Use [green]aliases --describe <alias>[/] to learn more about any command!")
+    console.print("\n[cyan]Tip:[/] Use [green]aliases --describe <alias>[/] to learn more about any command!")
 
 
 if __name__ == "__main__":

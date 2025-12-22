@@ -1,15 +1,46 @@
 #!/usr/bin/env bash
 
-# # use `hub` as git wrapper
-# # http://defunkt.github.com/hub/
-# hub_path=$(which hub)
-# if (($ + commands[hub])); then
-# 	alias git=$hub_path
-# fi
+###############################################################################
+# SHELL SHORTCUTS
+###############################################################################
+
+alias c="clear"
+alias x="exit"
+alias o="open ."
+alias t="touch"
+alias md="mkdir"
+alias x+="chmod +x"
+alias reload="source ~/.zshrc"
+alias clip='pbcopy'
+alias paste='pbpaste'
+alias get="curl -O -L"
+
+###############################################################################
+# EDITORS
+###############################################################################
+
+alias v="nvim"
+alias vi="nvim"
+alias vim="nvim"
+alias n="nvim"
+
+###############################################################################
+# MODERN CLI REPLACEMENTS
+###############################################################################
+
+alias cat="bat"
+alias ls="eza --icons=always"
+alias ll="eza -l"
+alias la="eza -la"
+alias tree="eza --tree"
+alias top="btop"
+alias du="ncdu"
+
+###############################################################################
+# GIT - BASICS
+###############################################################################
 
 alias g="git"
-
-# one letter aliases w/o options
 alias ga="git add"
 alias gb="git branch"
 alias gf="git fetch"
@@ -19,13 +50,6 @@ alias gm="git merge"
 alias gr="git remote"
 alias gs="git status"
 alias gw="git whatchanged"
-
-# merge
-alias gmc="git merge --continue"
-alias gma="git merge --abort"
-
-# pull
-alias gpl="git pull"
 
 # adding
 alias gaa="git add ."
@@ -52,8 +76,8 @@ alias gc="git commit -am"
 alias gcm="git commit --amend --message"
 
 # diff
-alias gdt="git difftool"
 alias gd="git diff --color"
+alias gdt="git difftool"
 alias gitfix="git diff --name-only | uniq | xargs code"
 
 # grep
@@ -63,9 +87,14 @@ alias ggg="git grep --break --heading --line-number"
 # log
 alias glg="git log --graph"
 alias glo="git log --oneline"
-
-# changelog
 alias changelog='git log --pretty=format:"%h %ad%x09%an%x09%s" --date=short'
+
+# merge
+alias gmc="git merge --continue"
+alias gma="git merge --abort"
+
+# pull
+alias gpl="git pull"
 
 # push
 alias gp="git push"
@@ -84,107 +113,25 @@ alias gsa="git stash apply"
 alias gsp="git stash pop"
 alias gsd="git stash drop"
 
-# view issues
+# github (hub)
 alias gbi="git browse -- issues"
-
-# pull-request
 alias gpr="git pull-request"
 
-# better cd
-# alias cd="z"
+###############################################################################
+# DIRECTORY NAVIGATION
+###############################################################################
 
-# better ls
-# alias ls="echo; colorls -A --group-directories-first"
+alias dev="cd ~/dev"
+alias work="cd ~/dev/work"
+alias desk="cd ~/desktop"
+alias docs="cd ~/documents"
+alias dl="cd ~/downloads"
+alias home="cd ~"
+alias dots="cd ~/dotfiles"
 
-###
-# coreutils
-###
-
-# files output
-alias tail="gtail -F" # follows log rotations
-alias split="gsplit"
-alias csplit="gcsplit"
-
-# summarizing files
-alias sum="gsum"
-alias cksum="cksum"
-alias md5sum="gmd5sum"
-alias sha1sum="gsha1sum"
-
-# operating on fields
-alias cut="gcut"
-alias paste="gpaste"
-alias join="gjoin"
-
-# basic ops
-alias cp="gcp -v"
-alias mv="gmv -v"
-alias rm="grm -v"
-alias shred="gshred"
-
-# special filetypes
-alias link="glink"
-alias unlink="gunlink"
-alias mkdir="gmkdir -v"
-alias rmdir="grmdir -v"
-alias readlink="greadlink"
-
-# changing file attributes
-alias chmod="gchmod -v"
-alias chown="gchown -v"
-alias chgrp="gchgrp -v"
-alias touch="gtouch"
-
-# disk usage
-alias df="gdf"
-# alias du="gdu"
-alias stat="gstat"
-alias sync="gsync"
-alias truncate="gtruncate"
-
-# printing text
-alias echo="gecho"
-# alias printf="gprintf"
-
-# redirection
-alias tee="gtee"
-
-# the rest
-alias awk="gawk"
-alias grep="ggrep --color"
-
-alias ln="gln"
-alias ln-sym="gln -nsf" # symlinks
-
-# findutils
-alias find="gfind"
-alias locate="glocate"
-alias updatedb="gupdatedb"
-alias xargs="gxargs"
-
-# binutils
-alias addr2line="gaddr2line"
-alias ar="gar"
-alias c++filt="gc++filt"
-alias dlltool="gdlltool"
-alias nlmconv="gnlmconv"
-alias nm="gnm"
-alias objcopy="gobjcopy"
-alias objdump="gobjdump"
-alias ranlib="granlib"
-alias readelf="greadelf"
-alias size="gsize"
-alias strings="gstrings" # lol
-alias strip="gstrip"
-
-# tar
-alias tar="gtar"
-
-# sed
-alias sed="gsed"
-
-# which
-alias which="gwhich"
+###############################################################################
+# PACKAGE MANAGERS
+###############################################################################
 
 # yarn
 alias y="yarn"
@@ -208,120 +155,160 @@ alias pna="pnpm add"
 alias pnr="pnpm run"
 alias pni="pnpm install"
 
-# shortcuts
-alias md="mkdir"
-alias t="touch"
-alias x="exit"
-alias c="clear"
-alias o="open ."
-alias vi="nvim"
-alias vim="nvim"
-alias v="nvim"
-alias n="nvim"
-alias x+="chmod +x"
-alias restart="sudo reboot"
-alias bye="sudo shutdown -r now"
-alias get="curl -O -L"
-alias vi="vim"
-alias reload="source ~/.zshrc"
-
-# use bat
-alias cat="bat" # bat --paging=never activated in: | clip
-
-# commonly used dirs
-alias dev="cd ~/dev"
-alias work="cd ~/dev/work"
-alias desk="cd ~/desktop"
-alias docs="cd ~/documents"
-alias dl="cd ~/downloads"
-alias home="cd ~"
-alias dots="cd ~/dotfiles"
-alias dotfiles="cd ~/dotfiles"
-
-# better pip
+# python (uv)
 alias pip="uv pip"
 
-# make a pdf
-alias mergepdf="/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py"
+###############################################################################
+# GNU COREUTILS (macOS replacements)
+###############################################################################
+
+# file output
+alias tail="gtail -F"
+alias split="gsplit"
+alias csplit="gcsplit"
+
+# checksums
+alias sum="gsum"
+alias cksum="cksum"
+alias md5sum="gmd5sum"
+alias sha1sum="gsha1sum"
+
+# field operations
+alias cut="gcut"
+alias join="gjoin"
+
+# basic file ops
+alias cp="gcp -v"
+alias mv="gmv -v"
+alias rm="grm -v"
+alias shred="gshred"
+
+# special filetypes
+alias link="glink"
+alias unlink="gunlink"
+alias mkdir="gmkdir -v"
+alias rmdir="grmdir -v"
+alias readlink="greadlink"
+
+# file attributes
+alias chmod="gchmod -v"
+alias chown="gchown -v"
+alias chgrp="gchgrp -v"
+alias touch="gtouch"
+
+# disk usage
+alias df="gdf"
+alias stat="gstat"
+alias sync="gsync"
+alias truncate="gtruncate"
+
+# printing text
+alias echo="gecho"
+
+# redirection
+alias tee="gtee"
+
+# text processing
+alias awk="gawk"
+alias grep="ggrep --color"
+alias sed="gsed"
+
+# links
+alias ln="gln"
+alias ln-sym="gln -nsf"
+
+# findutils
+alias find="gfind"
+alias locate="glocate"
+alias updatedb="gupdatedb"
+alias xargs="gxargs"
+
+# binutils
+alias addr2line="gaddr2line"
+alias ar="gar"
+alias c++filt="gc++filt"
+alias dlltool="gdlltool"
+alias nlmconv="gnlmconv"
+alias nm="gnm"
+alias objcopy="gobjcopy"
+alias objdump="gobjdump"
+alias ranlib="granlib"
+alias readelf="greadelf"
+alias size="gsize"
+alias strings="gstrings"
+alias strip="gstrip"
+
+# archive
+alias tar="gtar"
+
+# which
+alias which="gwhich"
+
+###############################################################################
+# TMUX
+###############################################################################
+
+alias iexit='tmux kill-session -t $(tmux display-message -p "#S")'
+alias ix=iexit
+alias ikill='tmux kill-server'
+alias ik=ikill
+alias iswitch='tmux choose-session'
+alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
+
+###############################################################################
+# macOS SPECIFIC
+###############################################################################
+
+# finder
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 
 # spotlight
 alias spotoff="sudo mdutil -a -i off"
 alias spoton="sudo mdutil -a -i on"
 
-# remove DS_Store
+# system
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias stfu="osascript -e 'set volume output muted true'"
+alias restart="sudo reboot"
+alias bye="sudo shutdown -r now"
+
+# cleanup
 alias rm_ds="find . -name '*.DS_Store' -type f -ls -delete"
-
-# show/hide files
-alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-
-# show/hide desktop items
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
-
-# kill all chrome tabs to free memory
+alias xcodepurge="rm -rf ~/Library/Developer/Xcode/DerivedData"
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
-# lock scren when going afk
-alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+# pdf
+alias mergepdf="/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py"
 
-# 🔇
-alias stfu="osascript -e 'set volume output muted true'"
+###############################################################################
+# MISC ALIASES
+###############################################################################
 
-# remove cached xcode build data
-alias xcodepurge="rm -rf ~/Library/Developer/Xcode/DerivedData"
+alias f=fuck
+alias tk="take"
+alias clean=clean_pycache
+alias activate=activate_venv
 
-# use gitignore.io cmd line tool
-gi() {
-    curl -L -s https://www.gitignore.io/api/$@
-}
-
-# create a remote repo
-create-repo() {
-    # Get user input
-    echo "Enter name for new repo"
-    read -r REPONAME
-    echo "Do you want to make it private? (y/n)"
-    read -r -n PRIVATE_ANSWER
-
-    if [[ "$PRIVATE_ANSWER" =~ ^[Yy]$ ]]; then
-        PRIVATE_TF=true
-    else
-        PRIVATE_TF=false
-    fi
-
-    # Curl some json to the github API oh damn we so fancy
-    curl -u proteusiq https://api.github.com/user/repos -d "{\"name\": \"$REPONAME\", \"private\": $PRIVATE_TF}" >/dev/null
-
-    # first commit
-    git init 1>/dev/null
-    gi macos,visualstudiocode >>.gitignore 1>/dev/null
-    print_success ".gitignore added"
-    git add . 1>/dev/null
-    git commit -m "initial commit" 1>/dev/null
-    print_success "initial commit"
-    git remote add origin https://github.com/proteusiq/$REPONAME.git 1>/dev/null
-    git push -u origin main --force 1>/dev/null
-
-    sleep 0.5
-    print_success "\nRepo created"
-    print_in_cyan "You can view your new repo at https://github.com/proteusiq/$REPONAME.git"
-}
+###############################################################################
+# FUNCTIONS
+###############################################################################
 
 # make new dir and cd into it
 take() {
     mkdir -p $1
     cd $1 || exit
 }
-alias tk="take"
 
-# change dir
+# go up N directories
 up() {
     local cdir="$(pwd)"
     if [[ "${1}" == "" ]]; then
-        cdir="$(dirname) "${cdir}")"
+        cdir="$(dirname "${cdir}")"
     elif ! [[ "${1}" =~ ^[0-9]+$ ]]; then
-        echo "🛂  Arg must be a number"
+        echo "Arg must be a number"
     elif ! [[ "${1}" -gt "0" ]]; then
         echo "a POSITIVE number"
     else
@@ -337,8 +324,68 @@ up() {
     cd "${cdir}" || exit
 }
 
-# animated gifs from any video
-# https://gist.github.com/SlexAxton/4989674
+# yazi wrapper - cd to dir on exit
+yy() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        cd -- "$cwd" || exit
+    fi
+    rm -f -- "$tmp"
+}
+
+# git clone and cd into repo
+git() {
+    if [ $1 = "clone" ]; then
+        command git $@ && cd "$(basename "$_" .git)"
+    else
+        command git $@
+    fi
+}
+
+# gitignore.io
+gi() {
+    curl -L -s https://www.gitignore.io/api/$@
+}
+
+# create a remote repo
+create-repo() {
+    echo "Enter name for new repo"
+    read -r REPONAME
+    echo "Do you want to make it private? (y/n)"
+    read -r -n PRIVATE_ANSWER
+
+    if [[ "$PRIVATE_ANSWER" =~ ^[Yy]$ ]]; then
+        PRIVATE_TF=true
+    else
+        PRIVATE_TF=false
+    fi
+
+    curl -u proteusiq https://api.github.com/user/repos -d "{\"name\": \"$REPONAME\", \"private\": $PRIVATE_TF}" >/dev/null
+
+    git init 1>/dev/null
+    gi macos,visualstudiocode >>.gitignore 1>/dev/null
+    print_success ".gitignore added"
+    git add . 1>/dev/null
+    git commit -m "initial commit" 1>/dev/null
+    git remote add origin https://github.com/proteusiq/$REPONAME.git 1>/dev/null
+    git push -u origin main --force 1>/dev/null
+
+    sleep 0.5
+    print_success "\nRepo created"
+    print_in_cyan "You can view your new repo at https://github.com/proteusiq/$REPONAME.git"
+}
+
+# rename a remote git branch
+rename-branch() {
+    current_name=$1
+    new_name=$2
+    git branch -m $current_name $new_name
+    git push origin :$current_name $new_name
+    git push origin -u $new_name
+}
+
+# animated gifs from video
 gifify() {
     if [[ -n "$1" ]]; then
         if [[ $2 == '--good' ]]; then
@@ -349,68 +396,19 @@ gifify() {
             ffmpeg -i "$1" -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 >"$1.gif"
         fi
     else
-        echo "✋  proper usage: gifify <input_movie.mov>. You DO need to include extension."
+        echo "Usage: gifify <input_movie.mov>"
     fi
 }
 
-# defaulting tree
-# tree() {
-# 	tree -aC -I '.git|node_modules|build|dist' --dirsfirst "$@"
-# }
-
-# 🗑
+# empty trash
 emptytrash() {
-    print_header "🗑  Emptying trashes..."
+    print_header "Emptying trashes..."
     sudo rm -rfv /Volumes/*/.Trashes 1>/dev/null
     rm -rfv ~/.Trash/* 1>/dev/null
     sudo rm -v /private/var/vm/sleepimage 1>/dev/null
-
 }
 
-# rename a remote git branch and update it
-rename-branch() {
-    current_name=$1
-    new_name=$2
-    # rename the branch
-    git branch -m $current_name $new_name
-    # delete the old branch from remote and push the new name
-    git push origin :$current_name $new_name
-    # reset the upstream branch for the new_name local branch
-    git push origin -u $new_name
-}
-
-# - clone and cd
-git() {
-    if [ $1 = "clone" ]; then
-        command git $@ && cd "$(basename "$_" .git)"
-    else
-        command git $@
-    fi
-}
-
-function yy() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        cd -- "$cwd" || exit
-    fi
-    rm -f -- "$tmp"
-}
-
-# aliases
-alias top="btop"
-alias du="ncdu"
-alias ls="eza --icons=always"
-alias tree="eza --tree"
-alias ls='eza'
-alias ll='eza -l'
-alias la='eza -la'
- 
-
-# uv
-alias pip='uv pip'
-
-# activate venv or .venv projects similar to deactivate
+# activate venv or .venv
 activate_venv() {
     local dir=$PWD
     local found=0
@@ -434,27 +432,24 @@ activate_venv() {
     fi
 }
 
-alias activate=activate_venv
-
+# load .env file
 setenv() {
     local env_file=".env"
     local use_op=false
 
-    # Parse arguments
     while [[ "$#" -gt 0 ]]; do
         case $1 in
         --key) use_op=true ;;
         *)
-            echo "❌ Unknown parameter: $1"
+            echo "Unknown parameter: $1"
             return 1
             ;;
         esac
         shift
     done
 
-    # Check if .env exists
     if [[ ! -f "$env_file" ]]; then
-        echo "❌ $env_file not found"
+        echo "$env_file not found"
         return 1
     fi
 
@@ -463,9 +458,7 @@ setenv() {
         local var_name="${line%%=*}"
         local var_value="${line#*=}"
 
-        # Handle 1Password URIs
         if $use_op && [[ $var_value =~ op://.*$ ]]; then
-            # Clean URI and fetch value
             var_value="${var_value//[\"\']/}"
             var_value="$(op read "$var_value")"
         fi
@@ -473,80 +466,44 @@ setenv() {
         export "$var_name=$var_value"
     }
 
-    # Process each line in .env
     while IFS= read -r line || [[ -n "$line" ]]; do
-        # Skip comments and empty lines
         [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
-
         process_env_line "$line"
     done < <(grep -v '^[[:space:]]*$' "$env_file")
 
-    echo "✅ Environment variables loaded from $env_file"
+    echo "Environment variables loaded from $env_file"
 }
 
+# unload .env file
 unsetenv() {
     local env_file=".env"
 
-    # Check if .env exists
     if [[ ! -f "$env_file" ]]; then
-        echo "❌ $env_file not found"
+        echo "$env_file not found"
         return 1
     fi
 
-    # Process each line in .env
     while IFS= read -r line || [[ -n "$line" ]]; do
-        # Skip comments and empty lines
         [[ "$line" =~ ^[[:space:]]*# || -z "$line" ]] && continue
-
-        # Extract variable name before the = sign
         local var_name="${line%%=*}"
-        # Unset the variable
         unset "$var_name"
     done < <(grep -v '^[[:space:]]*$' "$env_file")
 
-    echo "✅ Environment variables unset from $env_file"
+    echo "Environment variables unset from $env_file"
 }
 
-# remove all __pycache__ directories under a specified path
+# remove __pycache__ directories
 clean_pycache() {
     local target_dir=$1
 
-    # Confirm target directory
     if [ -z "$target_dir" ]; then
         echo "Usage: clean_pycache <directory>"
         return 1
     fi
 
-    # Find and remove __pycache__ directories
     echo "Searching for __pycache__ directories under $target_dir..."
     find $target_dir -type d -name '__pycache__' -exec rm -rf {} +
 }
 
-alias clean=clean_pycache
-
-# Productive Laziness
-# llm --system 'Reply with linux terminal commands only, no extra information' --save cmd
-# replaced by a rust similar function in bin/
-# alias cmd='llm_func() { command llm -t cmd "$@" | xargs -I {} sh -c "echo \"execute:\n\t {}\n\"; eval {}"; }; llm_func'
-
-# tmux
-alias iexit='tmux kill-session -t $(tmux display-message -p '#S')' # session exit
-alias ix=iexit
-
-alias ikill='tmux kill-server' # tmux server exit: kill all sessions
-alias ik=ikill
-
-alias iswitch='tmux choose-session' # show sessions
-alias ipop='tmux display-popup -E "cd $(tmux display -p -F "#{pane_current_path}") && tmux new-session -A -s scratch"'
-
-alias f=fuck
-update_() {
-    zsh ~/dotfiles/install.sh "$@"
-}
-alias update=update_
-
-alias clip='pbcopy'
-alias paste='pbpaste'
-
-# tlrc package installs binary as 'tldr' - no alias needed
-
+# run dotfiles install script
+alias update='zsh ~/dotfiles/install.sh'
