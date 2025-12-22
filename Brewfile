@@ -1,4 +1,10 @@
-# Taps (package repositories)
+# ═══════════════════════════════════════════════════════════════════════════
+#                                 BREWFILE
+#                     Dotfiles Package Management
+# ═══════════════════════════════════════════════════════════════════════════
+
+# TAPS (Package Repositories)
+# ───────────────────────────────────────────────────────────────────────────
 tap "andrewmd5/tap"
 tap "espanso/espanso"
 tap "homebrew/bundle"
@@ -10,168 +16,184 @@ tap "koekeishiya/formulae"
 tap "wix/brew"
 tap "sst/tap"
 
-# Global configuration for casks
 cask_args appdir: "/Applications"
 
-# Development Tools
-# CLI Tools for software development
-brew "act"
-brew "azure-cli"
-brew "difftastic"
-brew "gh" # github cli use by plenary
+# CORE TERMINAL
+# ───────────────────────────────────────────────────────────────────────────
+# Shell, Prompt, Multiplexer, Emulator
+brew "zsh"
+brew "zplug"
+brew "starship"                          # Cross-shell prompt
+brew "tmux"
+brew "joshmedeski/sesh/sesh"             # Session manager for tmux
+cask "ghostty"                           # GPU-accelerated terminal
+
+# EDITORS
+# ───────────────────────────────────────────────────────────────────────────
+brew "neovim"
+brew "vim"
+brew "andrewmd5/tap/dawn"                # Distraction-free markdown editor
+brew "glow"                              # Terminal markdown viewer
+
+# MODERN CLI REPLACEMENTS
+# ───────────────────────────────────────────────────────────────────────────
+# Modern alternatives to classic Unix tools (mostly Rust-based)
+brew "bat"                               # cat with syntax highlighting
+brew "eza"                               # ls with git integration
+brew "fd"                                # find that respects .gitignore
+brew "ripgrep"                           # grep but faster
+brew "zoxide"                            # cd that learns your habits
+brew "difftastic"                        # diff with syntax awareness
+brew "httpie"                            # curl for humans
+brew "tlrc"                              # tldr pages client
+brew "thefuck"                           # command correction
+
+# FILE MANAGEMENT
+# ───────────────────────────────────────────────────────────────────────────
+brew "yazi"                              # Terminal file manager
+brew "broot"                             # Interactive tree navigator
+brew "fzf"                               # Fuzzy finder
+brew "ncdu"                              # Disk usage analyzer
+brew "stow"                              # Symlink farm manager
+brew "unar"                              # Archive extractor (yazi requirement)
+brew "rename"                            # Batch file renaming
+brew "rsync"                             # File synchronization
+
+# GIT & VERSION CONTROL
+# ───────────────────────────────────────────────────────────────────────────
 brew "git"
-brew "git-lfs"
-brew "git-filter-repo"
+brew "git-lfs"                           # Large file storage
+brew "git-filter-repo"                   # History rewriting
+brew "gh"                                # GitHub CLI
+brew "lazygit"                           # Git TUI
+brew "serie"                             # Rich git commit graph
+brew "gitlogue"                          # Cinematic commit replay
+
+# DATA & DATABASES
+# ───────────────────────────────────────────────────────────────────────────
+brew "jq"                                # JSON processor
+brew "tabiew"                            # CSV/Parquet/JSON viewer with SQL
+brew "mongosh"                           # MongoDB shell
+brew "lnav"                              # Log file viewer
+cask "pgadmin4"                          # PostgreSQL admin
+
+# DEVELOPMENT & BUILD
+# ───────────────────────────────────────────────────────────────────────────
+brew "watchexec"                         # File watcher for auto-execution
+brew "hyperfine"                         # Benchmarking tool
+brew "act"                               # Run GitHub Actions locally
+brew "vhs"                               # Record terminal sessions as GIFs
+brew "scooter"                           # Interactive find-and-replace
+brew "direnv"                            # Per-directory environment
+brew "universal-ctags"                   # Code indexing (for aider)
+cask "postman"                           # API testing
+
+# INFRASTRUCTURE & CLOUD
+# ───────────────────────────────────────────────────────────────────────────
+brew "lima"                              # Linux VMs on macOS
+brew "lazydocker"                        # Docker TUI
 brew "terraform"
-brew "lazygit"
-brew "serie" # rich git commit graph in terminal
-brew "gitlogue" # cinematic git commit replay tool
-brew "lazydocker"
-brew "lima" # Linux VMs on macOS (Docker alternative)
-brew "mongosh"
+brew "azure-cli"
 
+# PROGRAMMING LANGUAGES
+# ───────────────────────────────────────────────────────────────────────────
+# Python
+brew "uv"                                # Fast package manager
+brew "pixi"                              # Conda-compatible environment manager
 
-# UI Tools for software development
+# JavaScript/Node
+brew "node"
+brew "yarn"
 
-cask "pgadmin4"
-cask "postman"
-cask "lm-studio" # LM Studio a better ollama + open-webui in one
+# Go
+brew "go"
 
-# Command Line Utilities
-# Enhancements and utilities for better terminal experience
-brew "ack"
-brew "bat"
-brew "binutils"
-brew "broot" # a better tree
-brew "btop"
-brew "coreutils"
-brew "diffutils"
-brew "direnv"
-brew "eza"
-brew "fd"
-brew "ffmpeg"
-brew "ffmpegthumbnailer" #  video thumbnailer requirement yazi
-brew "figlet" # ascii fonts similar to toilet but better fonts
-brew "ghostscript" # required to render PDF files in snacks.nvim
-brew "findutils"
-brew "fzf"
-brew "gawk"
+# Rust
+brew "rust"
+
+# Shell scripting
+brew "gum"                               # Glamorous shell scripts
+
+# Ruby (for some tools)
+brew "ruby"
+
+# AI & LLM
+# ───────────────────────────────────────────────────────────────────────────
+brew "sst/tap/opencode"                  # AI coding agent CLI
+brew "llama.cpp"                         # Local LLM inference
+cask "ollama-app"                        # Local LLM runner
+cask "lm-studio"                         # LLM GUI (ollama + open-webui)
+
+# GNU COREUTILS
+# ───────────────────────────────────────────────────────────────────────────
+# GNU versions of standard Unix tools (more features than macOS defaults)
+brew "coreutils"                         # cp, mv, rm, mkdir, etc.
+brew "findutils"                         # find, xargs
+brew "diffutils"                         # diff, cmp
+brew "binutils"                          # ar, nm, objdump
+brew "moreutils"                         # sponge, parallel, etc.
 brew "gnu-sed"
 brew "gnu-tar"
 brew "gnu-time"
 brew "gnu-which"
-brew "gnupg"
-brew "graphviz" # use by PyMC vizuation graph
+brew "gawk"
 brew "grep"
-brew "imagemagick" # required to convert images in snacks.nvim
 brew "gzip"
-brew "httpie" # better curl
-brew "hyperfine"
-brew "jq"
-brew "lnav" # log file viewer and analyzer
-brew "tabiew" # TUI for viewing CSV, Parquet, JSON tabular data with SQL
-brew "moreutils"
-brew "ncdu"
-brew "rename"
-brew "ripgrep"
-brew "rsync"
-brew "ruby"
-brew "scooter" # interactive find-and-replace in the terminal
-brew "screen"
-brew "slides"
-brew "stow"
-brew "vhs" # record terminal sessions as GIFs
-brew "watchexec" # file watcher that executes commands on changes
-brew "thefuck"
-brew "tlrc"
-brew "toilet" # ascii art fonts
-brew "unar" # opens archieve yazi requirement
+brew "gnupg"
 brew "wget"
-brew "yarn"
-brew "yazi"
-brew "zlib"
-brew "zoxide"
-brew "zplug"
-brew "zsh"
+brew "screen"
+brew "ack"                               # Programmer's grep
 
+# MEDIA & DOCUMENTS
+# ───────────────────────────────────────────────────────────────────────────
+brew "ffmpeg"
+brew "ffmpegthumbnailer"                 # Video thumbnails (yazi requirement)
+brew "imagemagick"                       # Image manipulation (snacks.nvim)
+brew "poppler"                           # PDF rendering (yazi requirement)
+brew "ghostscript"                       # PDF rendering (snacks.nvim)
+brew "graphviz"                          # Graph visualization (PyMC)
+brew "mermaid-cli"                       # Diagram rendering (snacks.nvim)
+brew "tectonic"                          # LaTeX rendering (snacks.nvim)
+brew "slides"                            # Terminal presentations
+brew "figlet"                            # ASCII art text
+brew "toilet"                            # ASCII art fonts
 
-# Terminal Editors and Emulator
-brew "andrewmd5/tap/dawn" # distraction-free markdown writing environment
-brew "glow" # terminal markdown viewer
-brew "neovim"
-brew "starship"
-brew "tmux"
-brew "vim"
-cask "ghostty"
-
-
-
-# Programming Languages
-
-# 🐍 Python Development
-# Tools specifically for Python programming
-brew "pixi" # Faster Pyenv+Poetry/mamba. Conda world  written in Rust
-brew "uv" # Faster none conda package manager
-
-# 🕸️ Node Development
-brew "node"
-
-# 👽 Golang Development
-brew "go"
-
-# 🦀 Rustlang Development
-brew "rust"
-
-# 🎀 Gum shell scripting
-brew "gum"
-
-# Productivity Applications
-# Applications to enhance productivity
-
-cask "1password-cli"
+# PRODUCTIVITY APPS
+# ───────────────────────────────────────────────────────────────────────────
 cask "1password"
-cask "alt-tab"
-cask "cleanshot"
-cask "espanso"
-cask "hiddenbar"
+cask "1password-cli"
+cask "raycast"                           # Spotlight replacement
 cask "notion"
-cask "raycast"
-cask "shortcat" # Vimium C for Applications. Path to Mouseless world
+cask "cleanshot"                         # Screenshot tool
+cask "espanso"                           # Text expander
+cask "hiddenbar"                         # Menu bar organizer
+cask "shortcat"                          # Keyboard-driven UI navigation
 
-# LLM Development
-cask "ollama-app" # Running Large Language Model Locally
-brew "llama.cpp"
-brew "poppler" # PDF preview requirement for yazi
-brew "portaudio" # Needed of pyaudio
-brew "mermaid-cli" # required to render Mermaid diagrams in snacks.nvim
-brew "tectonic" # required to render LaTeX math expressions in snacks.nvim
-brew "universal-ctags" # Needed for aider
-brew "sst/tap/opencode" # Agents on CLI inspired by neovim
-# Utilities
-# General utilities for everyday use
+# WINDOW MANAGEMENT
+# ───────────────────────────────────────────────────────────────────────────
+cask "nikitabobko/tap/aerospace"         # Tiling window manager
+brew "koekeishiya/formulae/skhd"         # Hotkey daemon
+cask "alt-tab"                           # Windows-style alt-tab
 
-brew "wireguard-tools"
-cask "flux-app"
-cask "lulu"
+# SYSTEM & SECURITY
+# ───────────────────────────────────────────────────────────────────────────
+brew "wireguard-tools"                   # VPN
+cask "lulu"                              # Firewall
+cask "aldente"                           # Battery management
+cask "flux-app"                          # Night shift
 
-# Fonts
-# Font installations for design and development
-cask "font-hack"
-cask "font-hack-nerd-font"
-cask "font-symbols-only-nerd-font" # yazi requirement
-
-# Browsers
+# BROWSERS
+# ───────────────────────────────────────────────────────────────────────────
 cask "arc"
 
-# Window Management
-# Tools for managing application windows
-brew "koekeishiya/formulae/skhd" # Simple hotkey daemon for macOS
-cask "nikitabobko/tap/aerospace" # inplace of yabai
+# FONTS
+# ───────────────────────────────────────────────────────────────────────────
+cask "font-hack"
+cask "font-hack-nerd-font"
+cask "font-symbols-only-nerd-font"       # Icons (yazi requirement)
 
-# Misc Tools
-# Miscellaneous tools and utilities
-brew "applesimutils"
-cask "aldente"
-#brew "jstkdng/programs/ueberzugpp" # preview media in terminal yazi requirement
-brew "joshmedeski/sesh/sesh" # session manager for tmux
-
+# MISC
+# ───────────────────────────────────────────────────────────────────────────
+brew "applesimutils"                     # iOS simulator utils
+brew "portaudio"                         # Audio I/O (pyaudio)
+brew "zlib"                              # Compression library
