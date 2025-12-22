@@ -381,6 +381,8 @@ def run_tui():
 
     class AliasApp(App):
         """Interactive alias browser TUI."""
+        
+        TITLE = "Fox's Aliases"
 
         CSS = """
         Screen {
