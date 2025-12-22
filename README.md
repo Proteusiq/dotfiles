@@ -40,7 +40,7 @@ curl -L https://bit.ly/42YwVdi | sh
 - **Session Management**: [sesh](https://github.com/joshmedeski/sesh)
 
 ### Development Languages & Tools
-- **Python**: [uv](https://github.com/astral-sh/uv), [pixi](https://pixi.sh/), [aider](https://github.com/paul-gauthier/aider) with Python 3.13
+- **Python**: [uv](https://github.com/astral-sh/uv), [pixi](https://pixi.sh/) with Python 3.13
 - **Rust**: Full toolchain with cargo
 - **Go**: Latest stable version
 - **Node.js**: Managed via [n](https://github.com/tj/n)

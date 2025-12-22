@@ -367,7 +367,6 @@ setup_utils() {
     # UV tools installation with error handling
     local uv_tools=(
         "llm"
-        "aider-chat --python 3.13"
         "harlequin"
     )
 
@@ -384,7 +383,7 @@ setup_utils() {
          done
          log "✅ UV tools configured"
     elif [[ "$DRY_RUN" == true ]]; then
-        echo "[DRY RUN] Would install/upgrade UV tools: llm, aider-chat, harlequin"
+        echo "[DRY RUN] Would install/upgrade UV tools: llm, harlequin"
     else
         log_warn "UV not found, skipping tool installations"
     fi

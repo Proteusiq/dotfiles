@@ -86,7 +86,7 @@ brew "act"                               # Run GitHub Actions locally
 brew "vhs"                               # Record terminal sessions as GIFs
 brew "scooter"                           # Interactive find-and-replace
 brew "direnv"                            # Per-directory environment
-brew "universal-ctags"                   # Code indexing (for aider)
+brew "universal-ctags"                   # Code indexing
 cask "postman"                           # API testing
 
 # INFRASTRUCTURE & CLOUD

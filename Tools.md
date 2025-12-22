@@ -1257,19 +1257,6 @@ Configured templates:
 - `cmd` - Linux terminal commands
 - `nvim` - Neovim commands
 
-### aider
-AI pair programming in the terminal. Edits code directly in your repo.
-
-```bash
-aider                         # Start with current repo
-aider file1.py file2.py       # Add specific files
-aider --model gpt-4           # Specify model
-```
-
-Installed via: `uv tool install aider-chat`
-
-**Use cases:** AI-assisted coding, refactoring, implementing features
-
 ### llama.cpp
 LLM inference in C/C++. Run models efficiently on CPU.
 
