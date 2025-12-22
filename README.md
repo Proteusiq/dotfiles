@@ -647,6 +647,21 @@ harlequin --dialect duckdb         # Specify SQL dialect (duckdb, sqlite, postgr
 
 ---
 
+##### 📊 **tabiew** - Tabular Data Viewer
+View and query CSV, Parquet, JSON, Arrow, and Excel files with SQL support and vim-style keybindings.
+
+```bash
+tw data.csv                        # Open CSV file
+tw data.parquet                    # Open Parquet file
+tw *.csv                           # Open multiple files as tabs
+curl -s "url/data.csv" | tw        # Pipe data from curl
+# Inside: Use SQL with :Q SELECT * FROM df WHERE col > 100
+```
+
+**Use cases:** Data exploration, quick CSV/Parquet viewing, SQL queries on files, data analysis
+
+---
+
 ##### ⚡ **hyperfine** - Benchmarking Tool
 Measure and compare command execution time with statistical analysis.
 

@@ -68,6 +68,7 @@ brew "httpie" # better curl
 brew "hyperfine"
 brew "jq"
 brew "lnav" # log file viewer and analyzer
+brew "tabiew" # TUI for viewing CSV, Parquet, JSON tabular data with SQL
 brew "moreutils"
 brew "ncdu"
 brew "rename"

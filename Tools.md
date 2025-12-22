@@ -258,6 +258,42 @@ See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full ke
 
 **Use cases:** SQL development, database exploration, query testing, data analysis
 
+#### tabiew
+Lightweight TUI for viewing and querying tabular data files (CSV, Parquet, JSON, Arrow, Excel) with SQL support and vim-style keybindings.
+
+```bash
+tw data.csv                   # Open CSV file
+tw data.parquet               # Open Parquet file
+tw *.csv                      # Open multiple files as tabs
+tw data.csv --separator '|'   # Custom delimiter
+tw data.csv --no-header       # No header row
+curl -s "url/data.csv" | tw   # Pipe from curl
+```
+
+| Key | Action |
+|-----|--------|
+| `h/j/k/l` | Navigate |
+| `b/w` | Previous/next column |
+| `g/G` | First/last row |
+| `Ctrl+u/d` | Half page up/down |
+| `e` | Toggle auto-fit |
+| `/` | Fuzzy search |
+| `:` | Command palette |
+| `q` | Close tab |
+| `Q` | Quit |
+
+**Commands:**
+```
+:Q SELECT * FROM df WHERE price > 100    # SQL query
+:S column1, column2                       # Select columns
+:F price < 1000 AND qty > 5              # Filter rows
+:O column DESC                            # Order by column
+:schema                                   # Show loaded tables
+:reset                                    # Reset to original data
+```
+
+**Use cases:** Data exploration, quick CSV/Parquet viewing, SQL queries on files, data analysis
+
 ---
 
 ## Command Line Utilities
