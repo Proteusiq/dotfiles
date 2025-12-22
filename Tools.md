@@ -650,6 +650,30 @@ rename 'y/A-Z/a-z/' *         # Lowercase filenames
 rename 's/ /_/g' *            # Replace spaces with underscores
 ```
 
+### aliases CLI
+Built-in CLI tool to view and manage shell aliases. Supports quick lookups and interactive TUI browsing.
+
+```bash
+aliases                       # Show help and categories
+aliases -s git                # Show git aliases
+aliases -s modern             # Show modern CLI replacements
+aliases -d ga                 # Describe specific alias
+aliases --tui                 # Launch interactive TUI browser
+aliases -t                    # Short form for TUI
+```
+
+| Key (TUI) | Action |
+|-----------|--------|
+| `/` | Search aliases |
+| `j/k` or `↓/↑` | Navigate |
+| `Enter` | Select |
+| `Escape` | Clear search |
+| `q` | Quit |
+
+**Categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+
+**Use cases:** Learning aliases, quick reference, discovering available shortcuts
+
 ---
 
 ## Terminal & Editors

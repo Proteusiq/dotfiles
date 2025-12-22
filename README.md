@@ -95,13 +95,15 @@ The install script supports several flags:
 
 **Run individual functions:**
 ```bash
-# Use the `update` alias or run install.sh directly
-update --list                    # List available functions
-update --only stow               # Only stow dotfiles
-update --only cleanup            # Only run cleanup
-update --only utils              # Only setup utilities
-update --only brew               # Only install Homebrew packages
+./install.sh --list              # List available functions
+./install.sh --only stow         # Only stow dotfiles
+./install.sh --only cleanup      # Only run cleanup
+./install.sh --only utils        # Only setup utilities
+./install.sh --only brew         # Only install Homebrew packages
 ```
+
+> [!TIP]
+> After installation, you can use the `update` alias instead of `./install.sh`
 
 > [!NOTE]
 > Available functions: `dirs`, `xcode`, `brew`, `node`, `venv`, `tmux`, `yazi`, `utils`, `stow`, `cleanup`
@@ -156,10 +158,16 @@ aliases -s modern
 # Get details about a specific alias
 aliases --describe ga
 aliases -d gp
+
+# Launch interactive TUI browser
+aliases --tui
+aliases -t
 ```
 
 > [!TIP]
-> **Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+> Use `aliases --tui` for an interactive browser with search, category navigation, and keyboard shortcuts (`/` search, `j/k` navigate, `q` quit).
+
+**Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
 
 ## File Structure
 
