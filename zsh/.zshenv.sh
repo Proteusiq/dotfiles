@@ -10,7 +10,7 @@ fi
 [ ! -d ~/.virtualenvs/neovim ] && python -m ~/.virtualenvs/neovim
 
 # set editors
-export VISUAL=vim
+export VISUAL=nvim
 export EDITOR="$VISUAL"
 export PAGER='less'
 

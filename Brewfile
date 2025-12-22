@@ -31,7 +31,6 @@ cask "ghostty"                           # GPU-accelerated terminal
 # EDITORS
 # ───────────────────────────────────────────────────────────────────────────
 brew "neovim"
-brew "vim"
 brew "andrewmd5/tap/dawn"                # Distraction-free markdown editor
 brew "glow"                              # Terminal markdown viewer
 
@@ -115,9 +114,6 @@ brew "rust"
 # Shell scripting
 brew "gum"                               # Glamorous shell scripts
 
-# Ruby (for some tools)
-brew "ruby"
-
 # AI & LLM
 # ───────────────────────────────────────────────────────────────────────────
 brew "sst/tap/opencode"                  # AI coding agent CLI
@@ -195,6 +191,5 @@ cask "font-symbols-only-nerd-font"       # Icons (yazi requirement)
 
 # MISC
 # ───────────────────────────────────────────────────────────────────────────
-brew "applesimutils"                     # iOS simulator utils
 brew "portaudio"                         # Audio I/O (pyaudio)
 brew "zlib"                              # Compression library
