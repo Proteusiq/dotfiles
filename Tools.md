@@ -1264,8 +1264,6 @@ opencode upgrade              # Update to latest version
 - **Build mode** - AI makes changes to code
 - **Plan mode** (Tab) - AI suggests implementation without editing
 
-Installed via: `brew install sst/tap/opencode`
-
 Configuration: `~/.config/opencode/opencode.json`
 
 **Use cases:** AI pair programming, code generation, refactoring, learning codebases
