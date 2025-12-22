@@ -27,14 +27,11 @@ Modern macOS dotfiles for developers focused on Rust 🦀, Python 🐍, and data
 
 ## Quick Start
 
-**One-line install:**
+> [!TIP]
+> Preview the script before running: `curl -LsSf https://bit.ly/42YwVdi | less`
+
 ```bash
 curl -L https://bit.ly/42YwVdi | sh
-```
-
-**Preview before running:**
-```bash
-curl -LsSf https://bit.ly/42YwVdi | less
 ```
 
 ## What's Included
@@ -63,11 +60,10 @@ curl -LsSf https://bit.ly/42YwVdi | less
 
 ## Prerequisites
 
-**Required:**
-- macOS (tested on recent versions)
-- Full Disk Access for Terminal (`System Preferences → Privacy → Full Disk Access`)
+> [!IMPORTANT]
+> Grant **Full Disk Access** to your terminal before installation: `System Preferences → Privacy → Full Disk Access`
 
-**Recommended:**
+- macOS (tested on recent versions)
 - Stable internet connection for initial setup
 
 ## Installation
@@ -113,7 +109,8 @@ update --only utils              # Only setup utilities
 update --only brew               # Only install Homebrew packages
 ```
 
-Available functions: `dirs`, `xcode`, `brew`, `node`, `venv`, `tmux`, `yazi`, `utils`, `stow`, `cleanup`
+> [!NOTE]
+> Available functions: `dirs`, `xcode`, `brew`, `node`, `venv`, `tmux`, `yazi`, `utils`, `stow`, `cleanup`
 
 ## Configuration
 
@@ -129,7 +126,10 @@ git config --global user.email "your.email@example.com"
 ```
 
 ### SSH for GitHub
-After first installation, configure SSH for GitHub:
+
+> [!NOTE]
+> After first installation, configure SSH for passwordless GitHub access.
+
 ```bash
 # Generate SSH key (follow GitHub's guide)
 ssh-keygen -t ed25519 -C "your.email@example.com"
@@ -141,11 +141,11 @@ git remote set-url origin git@github.com:Proteusiq/dotfiles.git
 ```
 
 ### Color Scheme
-All tools use **Catppuccin Mocha** [theme](https://catppuccin.com/):
-- Ghostty
-- Tmux  
-- Neovim
-- fzf
+
+> [!NOTE]
+> All tools use the **Catppuccin Mocha** [theme](https://catppuccin.com/) for a consistent look.
+
+Ghostty • Tmux • Neovim • fzf
 
 ## Managing Aliases
 
@@ -164,7 +164,8 @@ aliases --describe ga
 aliases -d gp
 ```
 
-**Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+> [!TIP]
+> **Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
 ## File Structure
 
 ```
@@ -1036,22 +1037,23 @@ cat /dev/urandom | hexdump -C | grep "ca fe"
 
 ## Troubleshooting
 
-**Common issues:**
+> [!WARNING]
+> Running into issues? Check these common problems first.
 
-1. **Homebrew installation fails**: Ensure Xcode Command Line Tools are installed first
-2. **Stow conflicts**: Remove existing dotfiles before running stow
-3. **Permission errors**: Grant Full Disk Access to your terminal
-4. **Python/Node issues**: Check that uv and n are properly installed
-5. **Terminal theme issues**: Restart terminal after font installation
+| Problem | Solution |
+|---------|----------|
+| Homebrew installation fails | Ensure Xcode Command Line Tools are installed first |
+| Stow conflicts | Remove existing dotfiles before running stow |
+| Permission errors | Grant Full Disk Access to your terminal |
+| Python/Node issues | Check that uv and n are properly installed |
+| Terminal theme issues | Restart terminal after font installation |
 
-**Need help?**
-- Check the [install log](~/macos-setup.log) for detailed error information
-- Run install script with `--verbose` flag for debugging
-- Ensure all prerequisites are met before installation
+> [!TIP]
+> Run `./install.sh --verbose` for detailed debugging output, or check `~/macos-setup.log` for error details.
 
 **Useful resources:**
 - [cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<command>`
-- Command reference: `tlrc <command>`
+- Command reference: `tldr <command>` (install with `brew install tlrc`)
 - Vim help: `:help <topic>` or `:Telescope help_tags`
 
 
