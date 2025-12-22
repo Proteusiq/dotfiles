@@ -1,9 +1,3 @@
----
-title: Untitled
-author: Prayson Daniel
-date: 2025-12-22T09:27:13Z
----
-
 ![dotfiles banner](https://github.com/Proteusiq/dotfiles/assets/14926709/9e3c4c60-43cd-4e47-9711-49eeb1078ae4)
 
 # dotfiles
@@ -160,6 +154,7 @@ aliases -d gp
 ```
 
 > **Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+
 ## File Structure
 
 ```
@@ -1047,8 +1042,6 @@ cat /dev/urandom | hexdump -C | grep "ca fe"
 - [cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<command>`
 - Command reference: `tldr <command>` (install with `brew install tlrc`)
 - Vim help: `:help <topic>` or `:Telescope help_tags`
-
-
 
 ## Acknowledgements
 
