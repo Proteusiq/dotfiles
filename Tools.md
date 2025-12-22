@@ -294,6 +294,31 @@ See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full ke
 
 **Use cases:** SQL development, database exploration, query testing, data analysis
 
+#### sqlit
+The lazygit of SQL databases - connect and query any database from your terminal in seconds. Supports SQL Server, PostgreSQL, MySQL, SQLite, DuckDB, and more.
+
+```bash
+sqlit                         # Launch TUI, pick a connection
+sqlit --mock=sqlite-demo      # Try without a real database
+sqlit query -c "MyDB" -q "SELECT * FROM users"  # CLI mode
+sqlit connections add sqlite --name "Local" --file-path "./db.sqlite"
+```
+
+| Key | Action |
+|-----|--------|
+| `i` | Enter INSERT mode (typing) |
+| `Esc` | Back to NORMAL mode |
+| `e/q/r` | Focus Explorer/Query/Results |
+| `s` | SELECT TOP 100 from table |
+| `h` | Query history |
+| `d` | Clear query |
+| `y` | Copy query |
+| `<space>c` | Connect to database |
+| `<space>t` | Change theme |
+| `Ctrl+Q` | Quit |
+
+**Use cases:** Quick database queries, connection management, SQL development without heavy IDE
+
 #### tabiew
 Lightweight TUI for viewing and querying tabular data files (CSV, Parquet, JSON, Arrow, Excel) with SQL support and vim-style keybindings.
 

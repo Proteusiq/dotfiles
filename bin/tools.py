@@ -127,6 +127,7 @@ DATA_TOOLS = [
     ("jq", "Query & transform JSON like a boss", "curl api | jq '.items[].name' → extract nested fields"),
     ("tabiew", "View CSV/Parquet/JSON with SQL queries", "tabiew data.csv → spreadsheet view, SQL filtering"),
     ("harlequin", "Full SQL IDE in your terminal", "harlequin db.sqlite → autocomplete, results, export"),
+    ("sqlit", "Lazygit for databases, connect & query fast", "sqlit → pick connection, run queries, vim keys"),
     ("mongosh", "MongoDB shell with autocomplete", "mongosh → db.users.find({age: {$gt: 21}})"),
     ("lnav", "Navigate log files with search & filter", "lnav /var/log/*.log → time-synced, filterable"),
 ]

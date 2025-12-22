@@ -368,6 +368,7 @@ setup_utils() {
     local uv_tools=(
         "llm"
         "harlequin"
+        "sqlit-tui"
     )
 
     if [[ "$DRY_RUN" == false ]] && command -v uv &>/dev/null; then
@@ -383,7 +384,7 @@ setup_utils() {
          done
          log "✅ UV tools configured"
     elif [[ "$DRY_RUN" == true ]]; then
-        echo "[DRY RUN] Would install/upgrade UV tools: llm, harlequin"
+        echo "[DRY RUN] Would install/upgrade UV tools: llm, harlequin, sqlit-tui"
     else
         log_warn "UV not found, skipping tool installations"
     fi
