@@ -258,7 +258,9 @@ ALL_ALIASES = sum(ALIAS_MAP.values(), [])
 # ═══════════════════════════════════════════════════════════════════════════
 
 def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None:
-    """Display a category of aliases in a styled table."""
+    """Display a category of aliases in a styled table with pagination if needed."""
+    import shutil
+    
     icon, title, desc = CATEGORY_META[category]
     
     table = Table(box=ROUNDED, border_style="blue", expand=True)
@@ -269,15 +271,28 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
     for name, command, description in aliases:
         table.add_row(f"[cyan bold]{name}[/]", f"[green]{command}[/]", description)
 
-    console.print()
-    console.print(Panel(
+    panel = Panel(
         table,
         title=f"[blue bold]{icon}  {title}[/]",
         subtitle=f"[dim]{desc}[/]",
         title_align="center",
         border_style="blue"
-    ))
-    console.print()
+    )
+    
+    # Use pager if content exceeds terminal height
+    terminal_height = shutil.get_terminal_size().lines
+    # Estimate: ~2 lines per alias + 6 for panel borders/header
+    estimated_lines = len(aliases) * 2 + 6
+    
+    if estimated_lines > terminal_height:
+        with console.pager(styles=True):
+            console.print()
+            console.print(panel)
+            console.print()
+    else:
+        console.print()
+        console.print(panel)
+        console.print()
 
 
 def show_category_aliases(category: Category):
@@ -427,6 +442,7 @@ def run_tui():
             super().__init__()
             self.current_category = Category.GIT
             self.search_query = ""
+            self.showing_all = False  # True when showing cross-category search results
 
         def compose(self) -> ComposeResult:
             yield Header(show_clock=True)
@@ -454,6 +470,7 @@ def run_tui():
 
         def load_category(self, category: Category) -> None:
             self.current_category = category
+            self.showing_all = False
             table = self.query_one("#alias-table", DataTable)
             table.clear()
 
@@ -466,6 +483,27 @@ def run_tui():
             icon, title, desc = CATEGORY_META[category]
             self.query_one("#details", Static).update(
                 f"[bold]{icon}  {title}[/] — {desc} ({len(filtered)} aliases)"
+            )
+
+        def load_all_matching(self) -> None:
+            """Load aliases from ALL categories matching the search query."""
+            self.showing_all = True
+            table = self.query_one("#alias-table", DataTable)
+            table.clear()
+
+            query = self.search_query.lower()
+            results = []
+            for cat in Category:
+                for name, command, description in ALIAS_MAP[cat]:
+                    if query in name.lower() or query in command.lower() or query in description.lower():
+                        results.append((name, command, description, cat))
+
+            for name, command, description, cat in results:
+                icon = CATEGORY_META[cat][0]
+                table.add_row(name, command, f"{icon} {description}")
+
+            self.query_one("#details", Static).update(
+                f"[bold]󰍉  Search Results[/] — {len(results)} matches across all categories"
             )
 
         def filter_aliases(self, aliases: list) -> list:
@@ -489,14 +527,23 @@ def run_tui():
             row = table.get_row(row_key)
             if row:
                 name, command, description = row
-                icon, title, _ = CATEGORY_META[self.current_category]
-                details = f"[cyan bold]{name}[/] → [green]{command}[/]\n{description}"
+                # Find the category for this alias
+                cat_info = ""
+                for cat in Category:
+                    if any(a[0] == name for a in ALIAS_MAP[cat]):
+                        icon, title, _ = CATEGORY_META[cat]
+                        cat_info = f" [{title}]"
+                        break
+                details = f"[cyan bold]{name}[/]{cat_info} → [green]{command}[/]\n{description}"
                 self.query_one("#details", Static).update(details)
 
         def on_input_changed(self, event: Input.Changed) -> None:
             if event.input.id == "search":
                 self.search_query = event.value
-                self.load_category(self.current_category)
+                if self.search_query:
+                    self.load_all_matching()
+                else:
+                    self.load_category(self.current_category)
 
         def action_focus_search(self) -> None:
             self.query_one("#search", Input).focus()
@@ -505,6 +552,7 @@ def run_tui():
             search = self.query_one("#search", Input)
             search.value = ""
             self.search_query = ""
+            self.showing_all = False
             self.load_category(self.current_category)
 
         def action_cursor_down(self) -> None:
