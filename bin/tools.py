@@ -39,7 +39,7 @@ class Category(str, Enum):
     EDIT = "edit"
     CLI = "cli"
     FILES = "files"
-    GIT = "git"
+    VC = "vc"
     DATA = "data"
     DEV = "dev"
     INFRA = "infra"
@@ -58,7 +58,7 @@ CATEGORY_META = {
     Category.EDIT: ("󰷈", "Editors", "Text editors & writing"),
     Category.CLI: ("󰘳", "Modern CLI", "Modern Unix replacements"),
     Category.FILES: ("󰉋", "Files", "File management & navigation"),
-    Category.GIT: ("󰊢", "Git", "Version control tools"),
+    Category.VC: ("󰊢", "VC", "Version control tools"),
     Category.DATA: ("󰆼", "Data", "Databases & data processing"),
     Category.DEV: ("󰅩", "Dev", "Development & build tools"),
     Category.INFRA: ("󰒋", "Infra", "Infrastructure & cloud"),
@@ -232,7 +232,7 @@ TOOL_MAP = {
     Category.EDIT: EDIT_TOOLS,
     Category.CLI: CLI_TOOLS,
     Category.FILES: FILES_TOOLS,
-    Category.GIT: GIT_TOOLS,
+    Category.VC: GIT_TOOLS,
     Category.DATA: DATA_TOOLS,
     Category.DEV: DEV_TOOLS,
     Category.INFRA: INFRA_TOOLS,
