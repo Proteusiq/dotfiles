@@ -1,9 +1,3 @@
----
-title: Untitled
-author: Prayson Daniel
-date: 2025-12-22T09:27:13Z
----
-
 ![dotfiles banner](https://github.com/Proteusiq/dotfiles/assets/14926709/9e3c4c60-43cd-4e47-9711-49eeb1078ae4)
 
 # dotfiles
@@ -11,19 +5,6 @@ date: 2025-12-22T09:27:13Z
 Modern macOS dotfiles for developers focused on Rust 🦀, Python 🐍, and data workflows. Optimized for MLOps and Data Science work.
 
 ![Terminal Screenshot](https://github.com/Proteusiq/dotfiles/assets/14926709/b5374cdb-753c-4559-ad8e-920d9653de34)
-
-## Table of Contents
-
-- [Quick Start](#quick-start)
-- [What's Included](#whats-included)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Managing Aliases](#managing-aliases)
-- [File Structure](#file-structure)
-- [Usage Tips](#usage-tips)
-- [Troubleshooting](#troubleshooting)
-- [Acknowledgements](#acknowledgements)
 
 ## Quick Start
 
@@ -36,26 +17,34 @@ curl -L https://bit.ly/42YwVdi | sh
 ## What's Included
 
 ### Core Tools
-- **Terminal**: [Ghostty](https://github.com/ghostty-org/ghostty) with zsh & [Starship prompt](https://starship.rs/)
-- **Window Management**: [AeroSpace](https://github.com/nikitabobko/AeroSpace)
-- **File Manager**: [Yazi](https://github.com/sxyazi/yazi)
-- **Hotkeys**: [skhd](https://github.com/koekeishiya/skhd)
-- **Editor**: [Neovim](https://neovim.io/) with [LazyVim](https://github.com/LazyVim/LazyVim)
-- **Terminal Multiplexer**: [tmux](https://github.com/tmux/tmux)
-- **Session Management**: [sesh](https://github.com/joshmedeski/sesh)
 
-### Development Languages & Tools
-- **Python**: [uv](https://github.com/astral-sh/uv), [pixi](https://pixi.sh/), [aider](https://github.com/paul-gauthier/aider) with Python 3.13
-- **Rust**: Full toolchain with cargo
-- **Go**: Latest stable version
-- **Node.js**: Managed via [n](https://github.com/tj/n)
-- **JavaScript/TypeScript**: [Bun](https://bun.sh/) toolkit
+| Tool | Description |
+|------|-------------|
+| [Ghostty](https://github.com/ghostty-org/ghostty) | Terminal with zsh & [Starship](https://starship.rs/) prompt |
+| [AeroSpace](https://github.com/nikitabobko/AeroSpace) | Window management |
+| [Yazi](https://github.com/sxyazi/yazi) | File manager |
+| [Neovim](https://neovim.io/) | Editor with [LazyVim](https://github.com/LazyVim/LazyVim) |
+| [tmux](https://github.com/tmux/tmux) | Terminal multiplexer |
+| [sesh](https://github.com/joshmedeski/sesh) | Session management |
 
-### Enhanced CLI Experience
-- **Navigation**: [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf)
-- **File Operations**: [eza](https://github.com/eza-community/eza), [fd](https://github.com/sharkdp/fd), [ripgrep](https://github.com/BurntSushi/ripgrep)
-- **Git**: [lazygit](https://github.com/jesseduffield/lazygit), [serie](https://github.com/lusingander/serie) for rich git logs, [gitlogue](https://github.com/unhappychoice/gitlogue) for cinematic commit replay, enhanced aliases
-- **AI**: [OpenCode](https://opencode.ai/), [LLM](https://llm.datasette.io/), local models via [Ollama](https://ollama.ai/)
+### Development Languages
+
+| Language | Tools |
+|----------|-------|
+| Python | [uv](https://github.com/astral-sh/uv), [pixi](https://pixi.sh/), [aider](https://github.com/paul-gauthier/aider) |
+| Rust | Full toolchain with cargo |
+| Go | Latest stable version |
+| Node.js | Managed via [n](https://github.com/tj/n) |
+| JavaScript/TypeScript | [Bun](https://bun.sh/) toolkit |
+
+### Enhanced CLI
+
+| Category | Tools |
+|----------|-------|
+| Navigation | [zoxide](https://github.com/ajeetdsouza/zoxide), [fzf](https://github.com/junegunn/fzf) |
+| File Operations | [eza](https://github.com/eza-community/eza), [fd](https://github.com/sharkdp/fd), [ripgrep](https://github.com/BurntSushi/ripgrep) |
+| Git | [lazygit](https://github.com/jesseduffield/lazygit), [serie](https://github.com/lusingander/serie), [gitlogue](https://github.com/unhappychoice/gitlogue) |
+| AI | [OpenCode](https://opencode.ai/), [LLM](https://llm.datasette.io/), [Ollama](https://ollama.ai/) |
 
 ## Prerequisites
 
@@ -160,6 +149,7 @@ aliases -d gp
 ```
 
 > **Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+
 ## File Structure
 
 ```
@@ -1047,8 +1037,6 @@ cat /dev/urandom | hexdump -C | grep "ca fe"
 - [cheat.sh](https://cheat.sh/) - `curl https://cheat.sh/<command>`
 - Command reference: `tldr <command>` (install with `brew install tlrc`)
 - Vim help: `:help <topic>` or `:Telescope help_tags`
-
-
 
 ## Acknowledgements
 
