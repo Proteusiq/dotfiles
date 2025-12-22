@@ -81,6 +81,7 @@ brew "screen"
 brew "slides"
 brew "stow"
 brew "vhs" # record terminal sessions as GIFs
+brew "watchexec" # file watcher that executes commands on changes
 brew "thefuck"
 brew "tlrc"
 brew "toilet" # ascii art fonts

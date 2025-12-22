@@ -557,6 +557,32 @@ hyperfine --export-json r.json 'cmd'  # Export results
 
 **Use cases:** Performance comparison, optimization validation, CI benchmarking
 
+#### watchexec
+File watcher that executes commands on changes. Respects `.gitignore`, supports debouncing, handles process restarts.
+
+```bash
+watchexec -e py -- pytest             # Run tests on .py changes
+watchexec -e rs -- cargo build        # Rebuild on Rust changes
+watchexec --restart -- python app.py  # Restart long-running process
+watchexec -w src -w tests -- make     # Watch multiple directories
+watchexec -c -e js,ts -- npm test     # Clear screen between runs
+watchexec -f '*.md' -- glow README.md # Watch specific pattern
+watchexec --ignore dist -- npm build  # Ignore directory
+```
+
+| Flag | Description |
+|------|-------------|
+| `-e ext` | Filter by extension |
+| `-w path` | Watch specific path |
+| `-f pattern` | Filter by glob pattern |
+| `--ignore` | Ignore paths |
+| `-c` | Clear screen before each run |
+| `--restart` | Restart process on change |
+| `--debounce ms` | Debounce time (default 50ms) |
+| `-n` | No default ignores |
+
+**Use cases:** Auto-testing, live reload, build automation, development workflow
+
 ### Text Processing
 
 #### GNU coreutils

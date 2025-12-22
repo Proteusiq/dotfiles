@@ -695,6 +695,21 @@ hyperfine --show-output 'cmd'      # Show command output while benchmarking
 
 ---
 
+##### 👁️ **watchexec** - File Watcher
+Execute commands when files change. Auto-run tests, rebuild projects, restart servers.
+
+```bash
+watchexec -e py -- pytest              # Run tests on .py changes
+watchexec -e rs -- cargo build         # Rebuild on Rust file changes
+watchexec --restart -- python server.py # Restart server on changes
+watchexec -w src -w tests -- make      # Watch multiple directories
+watchexec -c -e js,ts -- npm test      # Clear screen, watch js/ts
+```
+
+**Use cases:** Auto-testing, live reload, build automation, development workflow
+
+---
+
 ##### 🌐 **httpie** - Better HTTP Client
 Human-friendly HTTP CLI client (better than curl).
 
