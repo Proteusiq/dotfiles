@@ -475,7 +475,7 @@ stow_dotfiles() {
     fi
     
     local stow_packages=(
-        fzf git ghostty nvim sesh starship tmux vim zsh yazi aerospace
+        fzf git ghostty nvim sesh starship tmux zsh yazi aerospace
     )
     
     # Check which packages exist
