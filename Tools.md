@@ -593,7 +593,7 @@ rename 's/ /_/g' *            # Replace spaces with underscores
 ## Terminal & Editors
 
 ### dawn
-Distraction-free writing environment with live markdown rendering. Renders markdown as you type: headers scale up, math becomes Unicode art, images appear inline.
+Distraction-free writing environment with live markdown rendering. Renders markdown as you type: headers scale up, math becomes Unicode art, images appear inline. Pairs with [glow](#glow) for reading.
 
 ```bash
 dawn                          # Start new writing session
@@ -623,6 +623,32 @@ dawn -P document.md           # Print rendered output to stdout
 - Light and dark themes
 
 **Use cases:** Distraction-free writing, drafting documents, markdown editing, focused writing sessions
+
+### glow
+Terminal markdown viewer. Renders markdown beautifully in the terminal - the reader complement to dawn's writer.
+
+```bash
+glow README.md                # Render markdown with styling
+glow -p README.md             # Pager mode (scrollable like less)
+glow -w 80 README.md          # Set max width
+glow .                        # Browse and select markdown files
+glow -s dark README.md        # Use dark style
+glow -s light README.md       # Use light style
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` or `↓/↑` | Scroll down/up |
+| `d/u` | Half page down/up |
+| `g/G` | Go to top/bottom |
+| `/` | Search |
+| `q` | Quit |
+
+**glow vs dawn:**
+- **glow** = Read markdown (viewer, like `less` for markdown)
+- **dawn** = Write markdown (editor with live preview)
+
+**Use cases:** Reading READMEs in terminal, browsing documentation, quick markdown preview
 
 ### ghostty
 GPU-accelerated terminal emulator. Fast, feature-rich, and highly configurable.

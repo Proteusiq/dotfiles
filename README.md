@@ -662,6 +662,26 @@ curl -s "url/data.csv" | tw        # Pipe data from curl
 
 ---
 
+##### 📝 **glow & dawn** - Markdown Tools
+**glow** renders markdown beautifully in the terminal. **dawn** is a distraction-free markdown editor with live preview.
+
+```bash
+# glow - Read/view markdown
+glow README.md                     # Render markdown with styling
+glow -p README.md                  # Pager mode (scrollable)
+glow -w 80 README.md               # Set width
+glow .                             # Browse markdown files in directory
+
+# dawn - Write markdown
+dawn                               # Open editor
+dawn notes.md                      # Edit specific file
+# Inside: Split-pane with editor on left, live preview on right
+```
+
+**Use cases:** Reading docs in terminal, writing notes, distraction-free writing, markdown preview
+
+---
+
 ##### ⚡ **hyperfine** - Benchmarking Tool
 Measure and compare command execution time with statistical analysis.
 

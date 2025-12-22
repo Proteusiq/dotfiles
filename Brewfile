@@ -95,6 +95,7 @@ brew "zsh"
 
 # Terminal Editors and Emulator
 brew "andrewmd5/tap/dawn" # distraction-free markdown writing environment
+brew "glow" # terminal markdown viewer
 brew "neovim"
 brew "starship"
 brew "tmux"
