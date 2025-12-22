@@ -27,7 +27,6 @@ Modern macOS dotfiles for developers focused on Rust 🦀, Python 🐍, and data
 
 ## Quick Start
 
-> [!TIP]
 > Preview the script before running: `curl -LsSf https://bit.ly/42YwVdi | less`
 
 ```bash
@@ -60,7 +59,6 @@ curl -L https://bit.ly/42YwVdi | sh
 
 ## Prerequisites
 
-> [!IMPORTANT]
 > Grant **Full Disk Access** to your terminal before installation: `System Preferences → Privacy → Full Disk Access`
 
 - macOS (tested on recent versions)
@@ -109,7 +107,6 @@ update --only utils              # Only setup utilities
 update --only brew               # Only install Homebrew packages
 ```
 
-> [!NOTE]
 > Available functions: `dirs`, `xcode`, `brew`, `node`, `venv`, `tmux`, `yazi`, `utils`, `stow`, `cleanup`
 
 ## Configuration
@@ -127,7 +124,6 @@ git config --global user.email "your.email@example.com"
 
 ### SSH for GitHub
 
-> [!NOTE]
 > After first installation, configure SSH for passwordless GitHub access.
 
 ```bash
@@ -142,7 +138,6 @@ git remote set-url origin git@github.com:Proteusiq/dotfiles.git
 
 ### Color Scheme
 
-> [!NOTE]
 > All tools use the **Catppuccin Mocha** [theme](https://catppuccin.com/) for a consistent look.
 
 Ghostty • Tmux • Neovim • fzf
@@ -164,7 +159,6 @@ aliases --describe ga
 aliases -d gp
 ```
 
-> [!TIP]
 > **Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
 ## File Structure
 
@@ -1037,7 +1031,6 @@ cat /dev/urandom | hexdump -C | grep "ca fe"
 
 ## Troubleshooting
 
-> [!WARNING]
 > Running into issues? Check these common problems first.
 
 | Problem | Solution |
@@ -1048,7 +1041,6 @@ cat /dev/urandom | hexdump -C | grep "ca fe"
 | Python/Node issues | Check that uv and n are properly installed |
 | Terminal theme issues | Restart terminal after font installation |
 
-> [!TIP]
 > Run `./install.sh --verbose` for detailed debugging output, or check `~/macos-setup.log` for error details.
 
 **Useful resources:**
