@@ -4,6 +4,7 @@
 # dependencies = [
 #     "rich",
 #     "typer",
+#     "textual",
 # ]
 # ///
 
@@ -34,29 +35,9 @@ class Category(str, Enum):
     FUNCTIONS = "functions"
 
 
-def print_alias(name: str, command: str, description: str, table: Table) -> None:
-    """Add an alias to the table."""
-    table.add_row(
-        f"[cyan bold]{name}[/]",
-        f"[green]{command}[/]",
-        description
-    )
-
-
-def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
-    """Display a category of aliases in a single table."""
-    table = Table(box=ROUNDED, border_style="blue", expand=True)
-    table.add_column("Alias", style="cyan bold", width=15)
-    table.add_column("Command", style="green", width=30)
-    table.add_column("Description")
-    
-    for name, command, description in aliases:
-        print_alias(name, command, description, table)
-    
-    console.print()
-    console.print(Panel(table, title=f"[blue bold]{category}[/]", title_align="center", border_style="blue"))
-    console.print()
-
+# ═══════════════════════════════════════════════════════════════════════════
+# ALIAS DATA
+# ═══════════════════════════════════════════════════════════════════════════
 
 GIT_ALIASES = [
     ("g", "git", "Use git"),
@@ -71,18 +52,10 @@ GIT_ALIASES = [
     ("gw", "git whatchanged", "Show logs with difference each commit introduces"),
     ("gmc", "git merge --continue", "Continue the merge process"),
     ("gma", "git merge --abort", "Abort the merge process"),
-    (
-        "gpl",
-        "git pull",
-        "Fetch from and integrate with another repository or a local branch",
-    ),
+    ("gpl", "git pull", "Fetch from and integrate with another repository or a local branch"),
     ("gaa", "git add .", "Add current directory contents to the index"),
     ("gap", "git add --patch", "Interactively add changes to the index"),
-    (
-        "gau",
-        "git add --update",
-        "Update the index with the current content found in the working tree",
-    ),
+    ("gau", "git add --update", "Update the index with the current content found in the working tree"),
     ("gbe", "git branch --edit-description", "Edit the description for the branch"),
     ("gbd", "git branch -d", "Delete a branch"),
     ("gbdd", "git branch -D", "Force delete a branch"),
@@ -90,42 +63,18 @@ GIT_ALIASES = [
     ("gcb", "git checkout -b", "Create and switch to a new branch"),
     ("gbm", "git branch --merged", "List branches that have been merged"),
     ("gbnm", "git branch --no-merged", "List branches that have not been merged"),
-    (
-        "gchp",
-        "git cherry-pick",
-        "Apply the changes introduced by some existing commits",
-    ),
+    ("gchp", "git cherry-pick", "Apply the changes introduced by some existing commits"),
     ("gcl", "git clone", "Clone a repository into a new directory"),
     ("gc", "git commit -am", "Commit changes with message"),
     ("gcm", "git commit --amend --message", "Amend the last commit with a new message"),
     ("gdt", "git difftool", "Show changes using common diff tools"),
-    (
-        "gd",
-        "git diff --color",
-        "Show changes between commits, commit and working tree, etc",
-    ),
-    (
-        "gitfix",
-        "git diff --name-only | uniq | xargs code",
-        "Open changed files in VSCode",
-    ),
-    (
-        "ggl",
-        "git grep --line-number",
-        "Print lines matching a pattern with line numbers",
-    ),
-    (
-        "ggg",
-        "git grep --break --heading --line-number",
-        "Print lines matching a pattern with breaks and headings",
-    ),
+    ("gd", "git diff --color", "Show changes between commits, commit and working tree, etc"),
+    ("gitfix", "git diff --name-only | uniq | xargs code", "Open changed files in VSCode"),
+    ("ggl", "git grep --line-number", "Print lines matching a pattern with line numbers"),
+    ("ggg", "git grep --break --heading --line-number", "Print lines matching a pattern with breaks and headings"),
     ("glg", "git log --graph", "Show commit logs with a graph"),
     ("glo", "git log --oneline", "Show commit logs as a single line per commit"),
-    (
-        "changelog",
-        'git log --pretty=format:"%h %ad%x09%an%x09%s" --date=short',
-        "Generate a changelog",
-    ),
+    ("changelog", 'git log --pretty=format:"%h %ad%x09%an%x09%s" --date=short', "Generate a changelog"),
     ("gp", "git push", "Update remote refs along with associated objects"),
     ("gpu", "git push -u origin", "Push the branch and set remote as upstream"),
     ("undopush", "git push -f origin HEAD^:master", "Undo the last push"),
@@ -133,17 +82,9 @@ GIT_ALIASES = [
     ("gra", "git remote add origin", "Add a new remote"),
     ("gst", "git stash", "Stash the changes in a dirty working directory away"),
     ("gsa", "git stash apply", "Apply the changes recorded in a stash"),
-    (
-        "gsp",
-        "git stash pop",
-        "Apply the changes recorded in a stash and remove it from the stash list",
-    ),
+    ("gsp", "git stash pop", "Apply the changes recorded in a stash and remove it from the stash list"),
     ("gsd", "git stash drop", "Remove a single stash entry from the list"),
-    (
-        "gbi",
-        "git browse -- issues",
-        "Open the issues page of the repository in the browser",
-    ),
+    ("gbi", "git browse -- issues", "Open the issues page of the repository in the browser"),
     ("gpr", "git pull-request", "Create a pull request"),
 ]
 
@@ -160,11 +101,7 @@ COREUTILS_ALIASES = [
     ("cp", "gcp -v", "Copy files and directories"),
     ("mv", "gmv -v", "Move files"),
     ("rm", "grm -v", "Remove files or directories"),
-    (
-        "shred",
-        "gshred",
-        "Overwrite a file to hide its contents and optionally delete it",
-    ),
+    ("shred", "gshred", "Overwrite a file to hide its contents and optionally delete it"),
     ("link", "glink", "Make a hard link between files"),
     ("unlink", "gunlink", "Call the unlink function to remove the specified file"),
     ("mkdir", "gmkdir -v", "Create directories"),
@@ -177,11 +114,7 @@ COREUTILS_ALIASES = [
     ("df", "gdf", "Report file system disk space usage"),
     ("stat", "gstat", "Display file or file system status"),
     ("sync", "gsync", "Synchronize cached writes to persistent storage"),
-    (
-        "truncate",
-        "gtruncate",
-        "Shrink or extend the size of a file to the specified size",
-    ),
+    ("truncate", "gtruncate", "Shrink or extend the size of a file to the specified size"),
     ("echo", "gecho", "Display a line of text"),
     ("tee", "gtee", "Read from standard input and write to standard output and files"),
     ("awk", "gawk", "Pattern scanning and processing language"),
@@ -271,26 +204,10 @@ TMUX_ALIASES = [
 ]
 
 MACOS_ALIASES = [
-    (
-        "show",
-        "defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder",
-        "Show hidden files in Finder",
-    ),
-    (
-        "hide",
-        "defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder",
-        "Hide hidden files in Finder",
-    ),
-    (
-        "showdesktop",
-        "defaults write com.apple.finder CreateDesktop -bool true && killall Finder",
-        "Show desktop icons",
-    ),
-    (
-        "hidedesktop",
-        "defaults write com.apple.finder CreateDesktop -bool false && killall Finder",
-        "Hide desktop icons",
-    ),
+    ("show", "defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder", "Show hidden files in Finder"),
+    ("hide", "defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder", "Hide hidden files in Finder"),
+    ("showdesktop", "defaults write com.apple.finder CreateDesktop -bool true && killall Finder", "Show desktop icons"),
+    ("hidedesktop", "defaults write com.apple.finder CreateDesktop -bool false && killall Finder", "Hide desktop icons"),
     ("spotoff", "sudo mdutil -a -i off", "Turn off Spotlight indexing"),
     ("spoton", "sudo mdutil -a -i on", "Turn on Spotlight indexing"),
     ("afk", "CGSession -suspend", "Lock screen when going AFK"),
@@ -323,98 +240,63 @@ FUNCTIONS = [
     ("pip", "uv pip", "Use uv for pip operations"),
 ]
 
+# Mapping for easy access
+ALIAS_MAP = {
+    Category.GIT: ("Git Aliases", GIT_ALIASES),
+    Category.COREUTILS: ("Coreutils Aliases", COREUTILS_ALIASES),
+    Category.YARN: ("Yarn Aliases", YARN_ALIASES),
+    Category.PNPM: ("PNPM Aliases", PNPM_ALIASES),
+    Category.SHORTCUTS: ("Shortcuts", SHORTCUTS),
+    Category.EDITORS: ("Editors", EDITORS),
+    Category.NAVIGATION: ("Directory Navigation", NAVIGATION),
+    Category.MODERN: ("Modern CLI Replacements", MODERN_CLI),
+    Category.TMUX: ("Tmux", TMUX_ALIASES),
+    Category.MACOS: ("macOS Specific", MACOS_ALIASES),
+    Category.FUNCTIONS: ("Functions", FUNCTIONS),
+}
 
-@app.command()
-def main(
-    show: Optional[Category] = typer.Option(
-        None, "--show", "-s", help="Show aliases for a specific category"
-    ),
-    describe: str = typer.Option(
-        None, "--describe", "-d", help="Describe a specific alias"
-    ),
-):
-    """
-    CLI tool to display and manage shell aliases and functions
+ALL_ALIASES = (
+    GIT_ALIASES + COREUTILS_ALIASES + YARN_ALIASES + PNPM_ALIASES +
+    SHORTCUTS + EDITORS + NAVIGATION + MODERN_CLI + TMUX_ALIASES +
+    MACOS_ALIASES + FUNCTIONS
+)
 
-    Examples:
-        List all available categories:
-            aliases
 
-        Show all Git aliases:
-            aliases --show git
-            aliases -s git
+# ═══════════════════════════════════════════════════════════════════════════
+# RICH CLI OUTPUT (default mode)
+# ═══════════════════════════════════════════════════════════════════════════
 
-        Show all shortcuts:
-            aliases --show shortcuts
-            aliases -s shortcuts
+def print_alias(name: str, command: str, description: str, table: Table) -> None:
+    """Add an alias to the table."""
+    table.add_row(f"[cyan bold]{name}[/]", f"[green]{command}[/]", description)
 
-        Show details for a specific alias:
-            aliases --describe ga
-            aliases -d ga
 
-        Get help with yarn commands:
-            aliases --show yarn
-            aliases -s yarn
+def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
+    """Display a category of aliases in a single table."""
+    table = Table(box=ROUNDED, border_style="blue", expand=True)
+    table.add_column("Alias", style="cyan bold", width=15)
+    table.add_column("Command", style="green", width=30)
+    table.add_column("Description")
 
-        Learn about special commands:
-            aliases --show special
-            aliases -s special
+    for name, command, description in aliases:
+        print_alias(name, command, description, table)
 
-        Discover useful functions:
-            aliases --show functions
-            aliases -s functions
-    """
-    if describe:
-        show_alias_description(describe)
-        return
-
-    if show:
-        show_category_aliases(show)
-        return
-
-    show_help()
+    console.print()
+    console.print(Panel(table, title=f"[blue bold]{category}[/]", title_align="center", border_style="blue"))
+    console.print()
 
 
 def show_category_aliases(category: Category):
     """Display aliases for a specific category."""
-    alias_map = {
-        Category.GIT: ("Git Aliases", GIT_ALIASES),
-        Category.COREUTILS: ("Coreutils Aliases", COREUTILS_ALIASES),
-        Category.YARN: ("Yarn Aliases", YARN_ALIASES),
-        Category.PNPM: ("PNPM Aliases", PNPM_ALIASES),
-        Category.SHORTCUTS: ("Shortcuts", SHORTCUTS),
-        Category.EDITORS: ("Editors", EDITORS),
-        Category.NAVIGATION: ("Directory Navigation", NAVIGATION),
-        Category.MODERN: ("Modern CLI Replacements", MODERN_CLI),
-        Category.TMUX: ("Tmux", TMUX_ALIASES),
-        Category.MACOS: ("macOS Specific", MACOS_ALIASES),
-        Category.FUNCTIONS: ("Functions", FUNCTIONS),
-    }
-
-    if category in alias_map:
-        title, aliases = alias_map[category]
+    if category in ALIAS_MAP:
+        title, aliases = ALIAS_MAP[category]
         add_aliases(title, aliases)
 
 
 def show_alias_description(alias_name: str):
     """Show detailed description for a specific alias with examples."""
-    all_aliases = (
-        GIT_ALIASES
-        + COREUTILS_ALIASES
-        + YARN_ALIASES
-        + PNPM_ALIASES
-        + SHORTCUTS
-        + EDITORS
-        + NAVIGATION
-        + MODERN_CLI
-        + TMUX_ALIASES
-        + MACOS_ALIASES
-        + FUNCTIONS
-    )
-
-    for name, command, description in all_aliases:
+    for name, command, description in ALL_ALIASES:
         if name == alias_name:
-            # Create a single container with all details
             main_table = Table(
                 box=HEAVY,
                 title="[blue bold]Alias Information[/]",
@@ -437,7 +319,6 @@ def show_alias_description(alias_name: str):
             examples_content = Table(show_header=False, box=None)
             examples_content.add_column("", style="yellow")
 
-            # Generate contextual examples
             if name in [a[0] for a in GIT_ALIASES]:
                 examples_content.add_row(f"$ {name} # Run basic command")
                 if "add" in command:
@@ -462,14 +343,14 @@ def show_alias_description(alias_name: str):
                 examples_content.add_row(f"$ {name} path/to/dir")
             else:
                 examples_content.add_row(f"$ {name}")
-            
+
             main_table.add_row("[yellow]Examples[/]", examples_content)
 
-            # Tips section if available
+            # Tips section
             if any(keyword in command for keyword in ["git", "yarn", "pnpm", "nvim"]):
                 tips_content = Table(show_header=False, box=None)
                 tips_content.add_column("", style="green")
-                
+
                 if "git" in command:
                     tips_content.add_row("• Use --help to see all available options")
                     tips_content.add_row("• Add -v for verbose output")
@@ -479,10 +360,9 @@ def show_alias_description(alias_name: str):
                 elif "nvim" in command:
                     tips_content.add_row("• Press :help for built-in documentation")
                     tips_content.add_row("• Use :checkhealth to verify setup")
-                
+
                 main_table.add_row("[green]Tips[/]", tips_content)
 
-            # Print the single container
             console.print()
             console.print(Panel(main_table, border_style="blue"))
             console.print()
@@ -497,7 +377,7 @@ def show_help():
     console.print("  [green]aliases --show git[/]        # Show all Git aliases")
     console.print("  [green]aliases --show modern[/]     # Show modern CLI replacements")
     console.print("  [green]aliases --describe ga[/]     # Show details for 'ga' alias")
-    console.print("  [green]aliases --show functions[/]  # Show useful shell functions")
+    console.print("  [green]aliases --tui[/]             # Launch interactive TUI")
 
     table = Table(title="Available Categories", show_header=True, box=ROUNDED)
     table.add_column("Category", style="green")
@@ -522,8 +402,231 @@ def show_help():
     console.print("\n[yellow bold]Options:[/]")
     console.print("[green]--show, -s CATEGORY[/]    Show all aliases in a category")
     console.print("[green]--describe, -d ALIAS[/]   Show detailed description of an alias")
-    
-    console.print("\n[cyan]Tip:[/] Use [green]aliases --describe <alias>[/] to learn more about any command!")
+    console.print("[green]--tui, -t[/]              Launch interactive TUI browser")
+
+    console.print("\n[cyan]Tip:[/] Use [green]aliases --tui[/] for an interactive browsing experience!")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TEXTUAL TUI MODE
+# ═══════════════════════════════════════════════════════════════════════════
+
+def run_tui():
+    """Launch the Textual TUI application."""
+    from textual.app import App, ComposeResult
+    from textual.binding import Binding
+    from textual.containers import Container, Horizontal, Vertical
+    from textual.widgets import DataTable, Footer, Header, Input, Static, ListView, ListItem, Label
+
+    class AliasApp(App):
+        """Interactive alias browser TUI."""
+
+        CSS = """
+        Screen {
+            layout: grid;
+            grid-size: 2;
+            grid-columns: 1fr 3fr;
+        }
+
+        #sidebar {
+            width: 100%;
+            height: 100%;
+            border: solid $primary;
+            padding: 1;
+        }
+
+        #main {
+            width: 100%;
+            height: 100%;
+            border: solid $secondary;
+        }
+
+        #search {
+            dock: top;
+            margin: 1;
+        }
+
+        #category-list {
+            height: 100%;
+        }
+
+        .category-item {
+            padding: 0 1;
+        }
+
+        .category-item:hover {
+            background: $boost;
+        }
+
+        #table-container {
+            height: 100%;
+            padding: 1;
+        }
+
+        DataTable {
+            height: 100%;
+        }
+
+        #details {
+            dock: bottom;
+            height: 6;
+            border-top: solid $primary;
+            padding: 1;
+        }
+
+        .title {
+            text-style: bold;
+            color: $text;
+            padding: 1;
+            text-align: center;
+        }
+        """
+
+        BINDINGS = [
+            Binding("q", "quit", "Quit"),
+            Binding("/", "focus_search", "Search"),
+            Binding("escape", "clear_search", "Clear"),
+            Binding("j", "cursor_down", "Down", show=False),
+            Binding("k", "cursor_up", "Up", show=False),
+        ]
+
+        def __init__(self):
+            super().__init__()
+            self.current_category = Category.GIT
+            self.search_query = ""
+
+        def compose(self) -> ComposeResult:
+            yield Header(show_clock=True)
+            with Container(id="sidebar"):
+                yield Static("Categories", classes="title")
+                yield ListView(
+                    *[ListItem(Label(cat.value), id=f"cat-{cat.value}") for cat in Category],
+                    id="category-list"
+                )
+            with Container(id="main"):
+                yield Input(placeholder="Search aliases... (press /)", id="search")
+                with Container(id="table-container"):
+                    yield DataTable(id="alias-table")
+                yield Static("Select an alias to see details", id="details")
+            yield Footer()
+
+        def on_mount(self) -> None:
+            table = self.query_one("#alias-table", DataTable)
+            table.add_columns("Alias", "Command", "Description")
+            table.cursor_type = "row"
+            self.load_category(self.current_category)
+
+        def load_category(self, category: Category) -> None:
+            self.current_category = category
+            table = self.query_one("#alias-table", DataTable)
+            table.clear()
+
+            title, aliases = ALIAS_MAP[category]
+            filtered = self.filter_aliases(aliases)
+
+            for name, command, description in filtered:
+                table.add_row(name, command, description)
+
+            self.query_one("#details", Static).update(f"[bold]{title}[/] - {len(filtered)} aliases")
+
+        def filter_aliases(self, aliases: list) -> list:
+            if not self.search_query:
+                return aliases
+            query = self.search_query.lower()
+            return [
+                (n, c, d) for n, c, d in aliases
+                if query in n.lower() or query in c.lower() or query in d.lower()
+            ]
+
+        def on_list_view_selected(self, event: ListView.Selected) -> None:
+            item_id = event.item.id
+            if item_id and item_id.startswith("cat-"):
+                cat_name = item_id.replace("cat-", "")
+                self.load_category(Category(cat_name))
+
+        def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
+            table = self.query_one("#alias-table", DataTable)
+            row_key = event.row_key
+            row = table.get_row(row_key)
+            if row:
+                name, command, description = row
+                details = f"[cyan bold]{name}[/] → [green]{command}[/]\n{description}"
+                self.query_one("#details", Static).update(details)
+
+        def on_input_changed(self, event: Input.Changed) -> None:
+            if event.input.id == "search":
+                self.search_query = event.value
+                self.load_category(self.current_category)
+
+        def action_focus_search(self) -> None:
+            self.query_one("#search", Input).focus()
+
+        def action_clear_search(self) -> None:
+            search = self.query_one("#search", Input)
+            search.value = ""
+            self.search_query = ""
+            self.load_category(self.current_category)
+
+        def action_cursor_down(self) -> None:
+            table = self.query_one("#alias-table", DataTable)
+            table.action_cursor_down()
+
+        def action_cursor_up(self) -> None:
+            table = self.query_one("#alias-table", DataTable)
+            table.action_cursor_up()
+
+    app = AliasApp()
+    app.run()
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# MAIN CLI
+# ═══════════════════════════════════════════════════════════════════════════
+
+@app.command()
+def main(
+    show: Optional[Category] = typer.Option(
+        None, "--show", "-s", help="Show aliases for a specific category"
+    ),
+    describe: str = typer.Option(
+        None, "--describe", "-d", help="Describe a specific alias"
+    ),
+    tui: bool = typer.Option(
+        False, "--tui", "-t", help="Launch interactive TUI browser"
+    ),
+):
+    """
+    CLI tool to display and manage shell aliases and functions
+
+    Examples:
+        List all available categories:
+            aliases
+
+        Show all Git aliases:
+            aliases --show git
+            aliases -s git
+
+        Launch interactive TUI:
+            aliases --tui
+            aliases -t
+
+        Show details for a specific alias:
+            aliases --describe ga
+            aliases -d ga
+    """
+    if tui:
+        run_tui()
+        return
+
+    if describe:
+        show_alias_description(describe)
+        return
+
+    if show:
+        show_category_aliases(show)
+        return
+
+    show_help()
 
 
 if __name__ == "__main__":
