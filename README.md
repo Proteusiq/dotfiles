@@ -167,7 +167,7 @@ aliases -t
 > [!TIP]
 > Use `aliases --tui` for an interactive browser with search, category navigation, and keyboard shortcuts (`/` search, `j/k` navigate, `q` quit).
 
-**Available categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+**Categories:** `git` `files` `nav` `term` `pkg` `sys` `gnu` `fn`
 
 ## File Structure
 
@@ -182,7 +182,6 @@ dotfiles/
 ├── sesh/            # Session manager config
 ├── starship/        # Shell prompt config
 ├── tmux/            # Terminal multiplexer config
-├── vim/             # Basic vim config
 ├── yazi/            # File manager config
 ├── zsh/             # Shell configuration
 │   ├── .aliases     # Command aliases

@@ -651,12 +651,12 @@ rename 's/ /_/g' *            # Replace spaces with underscores
 ```
 
 ### aliases CLI
-Built-in CLI tool to view and manage shell aliases. Supports quick lookups and interactive TUI browsing.
+Built-in CLI tool to view and manage shell aliases. Supports quick lookups and interactive TUI browsing with Nerd Font icons.
 
 ```bash
 aliases                       # Show help and categories
-aliases -s git                # Show git aliases
-aliases -s modern             # Show modern CLI replacements
+aliases -s git                # Show git aliases (󰊢)
+aliases -s files              # Show file operation aliases (󰉋)
 aliases -d ga                 # Describe specific alias
 aliases --tui                 # Launch interactive TUI browser
 aliases -t                    # Short form for TUI
@@ -670,7 +670,7 @@ aliases -t                    # Short form for TUI
 | `Escape` | Clear search |
 | `q` | Quit |
 
-**Categories:** git, coreutils, yarn, pnpm, shortcuts, editors, navigation, modern, tmux, macos, functions
+**Categories:** `git` `files` `nav` `term` `pkg` `sys` `gnu` `fn`
 
 **Use cases:** Learning aliases, quick reference, discovering available shortcuts
 

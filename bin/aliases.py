@@ -21,18 +21,32 @@ console = Console()
 app = typer.Typer(help="CLI tool to display and manage aliases")
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# CATEGORIES with Nerd Font Icons
+# ═══════════════════════════════════════════════════════════════════════════
+
 class Category(str, Enum):
     GIT = "git"
-    COREUTILS = "coreutils"
-    YARN = "yarn"
-    PNPM = "pnpm"
-    SHORTCUTS = "shortcuts"
-    EDITORS = "editors"
-    NAVIGATION = "navigation"
-    MODERN = "modern"
-    TMUX = "tmux"
-    MACOS = "macos"
-    FUNCTIONS = "functions"
+    FILES = "files"
+    NAV = "nav"
+    TERM = "term"
+    PKG = "pkg"
+    SYS = "sys"
+    GNU = "gnu"
+    FN = "fn"
+
+
+# Category metadata: (icon, title, description)
+CATEGORY_META = {
+    Category.GIT: ("󰊢", "Git", "Version control shortcuts"),
+    Category.FILES: ("󰉋", "Files", "Modern file operations"),
+    Category.NAV: ("󰉖", "Navigation", "Directory jumping"),
+    Category.TERM: ("󰆍", "Terminal", "Terminal & shell"),
+    Category.PKG: ("󰏗", "Packages", "Package managers"),
+    Category.SYS: ("󰒓", "System", "macOS & system"),
+    Category.GNU: ("󰌽", "GNU", "GNU coreutils"),
+    Category.FN: ("󰊕", "Functions", "Shell functions"),
+}
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -40,331 +54,261 @@ class Category(str, Enum):
 # ═══════════════════════════════════════════════════════════════════════════
 
 GIT_ALIASES = [
-    ("g", "git", "Use git"),
-    ("ga", "git add", "Add file contents to the index"),
-    ("gb", "git branch", "List, create, or delete branches"),
-    ("gf", "git fetch", "Download objects and refs from another repository"),
-    ("gg", "git grep", "Print lines matching a pattern"),
+    ("g", "git", "Git command"),
+    ("ga", "git add", "Add file contents to index"),
+    ("gaa", "git add .", "Add all changes"),
+    ("gap", "git add --patch", "Interactively stage changes"),
+    ("gau", "git add --update", "Update tracked files"),
+    ("gb", "git branch", "List/create branches"),
+    ("gbd", "git branch -d", "Delete branch"),
+    ("gbdd", "git branch -D", "Force delete branch"),
+    ("gbm", "git branch --merged", "List merged branches"),
+    ("gbnm", "git branch --no-merged", "List unmerged branches"),
+    ("gc", "git commit -am", "Commit with message"),
+    ("gcm", "git commit --amend --message", "Amend last commit"),
+    ("gcb", "git checkout -b", "Create and switch branch"),
+    ("gch", "git checkout", "Switch branches"),
+    ("gchp", "git cherry-pick", "Apply commits"),
+    ("gcl", "git clone", "Clone repository"),
+    ("gd", "git diff --color", "Show changes"),
+    ("gdt", "git difftool", "Diff with tool"),
+    ("gf", "git fetch", "Download objects/refs"),
+    ("gg", "git grep", "Search patterns"),
+    ("ggl", "git grep --line-number", "Search with line numbers"),
     ("gl", "git log", "Show commit logs"),
-    ("gm", "git merge", "Join two or more development histories together"),
-    ("gr", "git remote", "Manage set of tracked repositories"),
-    ("gs", "git status", "Show the working tree status"),
-    ("gw", "git whatchanged", "Show logs with difference each commit introduces"),
-    ("gmc", "git merge --continue", "Continue the merge process"),
-    ("gma", "git merge --abort", "Abort the merge process"),
-    ("gpl", "git pull", "Fetch from and integrate with another repository or a local branch"),
-    ("gaa", "git add .", "Add current directory contents to the index"),
-    ("gap", "git add --patch", "Interactively add changes to the index"),
-    ("gau", "git add --update", "Update the index with the current content found in the working tree"),
-    ("gbe", "git branch --edit-description", "Edit the description for the branch"),
-    ("gbd", "git branch -d", "Delete a branch"),
-    ("gbdd", "git branch -D", "Force delete a branch"),
-    ("gch", "git checkout", "Switch branches or restore working tree files"),
-    ("gcb", "git checkout -b", "Create and switch to a new branch"),
-    ("gbm", "git branch --merged", "List branches that have been merged"),
-    ("gbnm", "git branch --no-merged", "List branches that have not been merged"),
-    ("gchp", "git cherry-pick", "Apply the changes introduced by some existing commits"),
-    ("gcl", "git clone", "Clone a repository into a new directory"),
-    ("gc", "git commit -am", "Commit changes with message"),
-    ("gcm", "git commit --amend --message", "Amend the last commit with a new message"),
-    ("gdt", "git difftool", "Show changes using common diff tools"),
-    ("gd", "git diff --color", "Show changes between commits, commit and working tree, etc"),
-    ("gitfix", "git diff --name-only | uniq | xargs code", "Open changed files in VSCode"),
-    ("ggl", "git grep --line-number", "Print lines matching a pattern with line numbers"),
-    ("ggg", "git grep --break --heading --line-number", "Print lines matching a pattern with breaks and headings"),
-    ("glg", "git log --graph", "Show commit logs with a graph"),
-    ("glo", "git log --oneline", "Show commit logs as a single line per commit"),
-    ("changelog", 'git log --pretty=format:"%h %ad%x09%an%x09%s" --date=short', "Generate a changelog"),
-    ("gp", "git push", "Update remote refs along with associated objects"),
-    ("gpu", "git push -u origin", "Push the branch and set remote as upstream"),
-    ("undopush", "git push -f origin HEAD^:master", "Undo the last push"),
-    ("gre", "git rebase", "Reapply commits on top of another base tip"),
-    ("gra", "git remote add origin", "Add a new remote"),
-    ("gst", "git stash", "Stash the changes in a dirty working directory away"),
-    ("gsa", "git stash apply", "Apply the changes recorded in a stash"),
-    ("gsp", "git stash pop", "Apply the changes recorded in a stash and remove it from the stash list"),
-    ("gsd", "git stash drop", "Remove a single stash entry from the list"),
-    ("gbi", "git browse -- issues", "Open the issues page of the repository in the browser"),
-    ("gpr", "git pull-request", "Create a pull request"),
+    ("glg", "git log --graph", "Log with graph"),
+    ("glo", "git log --oneline", "Compact log"),
+    ("gm", "git merge", "Merge branches"),
+    ("gma", "git merge --abort", "Abort merge"),
+    ("gmc", "git merge --continue", "Continue merge"),
+    ("gp", "git push", "Push to remote"),
+    ("gpu", "git push -u origin", "Push and set upstream"),
+    ("gpl", "git pull", "Pull from remote"),
+    ("gr", "git remote", "Manage remotes"),
+    ("gra", "git remote add origin", "Add remote"),
+    ("gre", "git rebase", "Rebase commits"),
+    ("gs", "git status", "Show status"),
+    ("gst", "git stash", "Stash changes"),
+    ("gsa", "git stash apply", "Apply stash"),
+    ("gsp", "git stash pop", "Pop stash"),
+    ("gsd", "git stash drop", "Drop stash"),
+    ("gw", "git whatchanged", "Show change logs"),
+    ("changelog", "git log --pretty=format:...", "Generate changelog"),
+    ("undopush", "git push -f origin HEAD^:master", "Undo last push"),
+    ("gitfix", "git diff --name-only | xargs code", "Open changed files"),
 ]
 
-COREUTILS_ALIASES = [
-    ("tail", "gtail -F", "Follow log rotations"),
-    ("split", "gsplit", "Split a file into pieces"),
-    ("csplit", "gcsplit", "Split a file into context-determined pieces"),
-    ("sum", "gsum", "Checksum and count the blocks in a file"),
-    ("cksum", "cksum", "Checksum and count the bytes in a file"),
-    ("md5sum", "gmd5sum", "Compute and check MD5 message digest"),
-    ("sha1sum", "gsha1sum", "Compute and check SHA1 message digest"),
-    ("cut", "gcut", "Remove sections from each line of files"),
-    ("join", "gjoin", "Join lines of two files on a common field"),
-    ("cp", "gcp -v", "Copy files and directories"),
-    ("mv", "gmv -v", "Move files"),
-    ("rm", "grm -v", "Remove files or directories"),
-    ("shred", "gshred", "Overwrite a file to hide its contents and optionally delete it"),
-    ("link", "glink", "Make a hard link between files"),
-    ("unlink", "gunlink", "Call the unlink function to remove the specified file"),
+FILES_ALIASES = [
+    ("cat", "bat", "View files with syntax highlighting"),
+    ("ls", "eza --icons=always", "List with icons"),
+    ("ll", "eza -l", "Long listing"),
+    ("la", "eza -la", "Long listing with hidden"),
+    ("tree", "eza --tree", "Tree view"),
+    ("top", "btop", "System monitor"),
+    ("du", "ncdu", "Disk usage analyzer"),
+    ("fd", "fd", "Find files (fast)"),
+    ("rg", "ripgrep", "Search file contents"),
+    ("cp", "gcp -v", "Copy files (verbose)"),
+    ("mv", "gmv -v", "Move files (verbose)"),
+    ("rm", "grm -v", "Remove files (verbose)"),
     ("mkdir", "gmkdir -v", "Create directories"),
-    ("rmdir", "grmdir -v", "Remove empty directories"),
-    ("readlink", "greadlink", "Print value of a symbolic link or canonical file name"),
-    ("chmod", "gchmod -v", "Change file modes or Access Control Lists"),
-    ("chown", "gchown -v", "Change file owner and group"),
-    ("chgrp", "gchgrp -v", "Change group ownership"),
-    ("touch", "gtouch", "Change file timestamps"),
-    ("df", "gdf", "Report file system disk space usage"),
-    ("stat", "gstat", "Display file or file system status"),
-    ("sync", "gsync", "Synchronize cached writes to persistent storage"),
-    ("truncate", "gtruncate", "Shrink or extend the size of a file to the specified size"),
-    ("echo", "gecho", "Display a line of text"),
-    ("tee", "gtee", "Read from standard input and write to standard output and files"),
-    ("awk", "gawk", "Pattern scanning and processing language"),
-    ("grep", "ggrep --color", "Print lines matching a pattern with color"),
-    ("sed", "gsed", "Stream editor for filtering and transforming text"),
-    ("ln", "gln", "Make links between files"),
-    ("ln-sym", "gln -nsf", "Create symbolic links"),
-    ("find", "gfind", "Search for files in a directory hierarchy"),
-    ("locate", "glocate", "Find files by name"),
-    ("updatedb", "gupdatedb", "Update a database for mlocate"),
-    ("xargs", "gxargs", "Build and execute command lines from standard input"),
-    ("tar", "gtar", "Archive utility"),
-    ("which", "gwhich", "Locate a command"),
+    ("rmdir", "grmdir -v", "Remove directories"),
+    ("chmod", "gchmod -v", "Change permissions"),
+    ("chown", "gchown -v", "Change ownership"),
+    ("ln", "gln", "Create links"),
+    ("ln-sym", "gln -nsf", "Create symlinks"),
+    ("touch", "gtouch", "Update timestamps"),
+    ("rename", "rename", "Batch rename files"),
 ]
 
-YARN_ALIASES = [
-    ("y", "yarn", "Manage JavaScript projects"),
-    ("yi", "yarn init", "Create a new Yarn project"),
-    ("ya", "yarn add", "Add a package"),
-    ("yad", "yarn add --dev", "Add a dev package"),
-    ("yga", "yarn global add", "Add a global package"),
-    ("yr", "yarn run", "Run a defined package script"),
-    ("ys", "yarn start", "Start a project"),
-    ("yis", "yarn install && yarn start", "Install dependencies and start the project"),
-    ("yrm", "yarn remove", "Remove a package"),
-    ("yup", "yarn upgrade", "Upgrade dependencies"),
-    ("ycl", "yarn clean", "Clean the project"),
-    ("ych", "yarn check", "Check for outdated or missing dependencies"),
-    ("yt", "yarn test", "Run tests"),
-    ("ycc", "yarn cache clean", "Clean the yarn cache"),
+NAV_ALIASES = [
+    ("dev", "cd ~/dev", "Development directory"),
+    ("work", "cd ~/dev/work", "Work directory"),
+    ("desk", "cd ~/desktop", "Desktop"),
+    ("docs", "cd ~/documents", "Documents"),
+    ("dl", "cd ~/downloads", "Downloads"),
+    ("home", "cd ~", "Home directory"),
+    ("dots", "cd ~/dotfiles", "Dotfiles directory"),
+    ("..", "cd ..", "Parent directory"),
+    ("...", "cd ../..", "Two levels up"),
+    ("z", "zoxide", "Smart directory jump"),
 ]
 
-PNPM_ALIASES = [
-    ("pn", "pnpm", "Manage JavaScript projects with pnpm"),
-    ("pna", "pnpm add", "Add a package with pnpm"),
-    ("pnr", "pnpm run", "Run a script with pnpm"),
-    ("pni", "pnpm install", "Install dependencies with pnpm"),
-]
-
-SHORTCUTS = [
-    ("c", "clear", "Clear the terminal screen"),
-    ("x", "exit", "Exit the shell"),
-    ("o", "open .", "Open the current directory"),
-    ("t", "touch", "Create empty files"),
-    ("md", "mkdir", "Create directories"),
-    ("x+", "chmod +x", "Make a file executable"),
-    ("reload", "source ~/.zshrc", "Reload the shell configuration"),
+TERM_ALIASES = [
+    ("c", "clear", "Clear screen"),
+    ("x", "exit", "Exit shell"),
+    ("reload", "source ~/.zshrc", "Reload shell config"),
+    ("iexit", "tmux kill-session", "Kill tmux session"),
+    ("ix", "iexit", "Kill tmux session (short)"),
+    ("ikill", "tmux kill-server", "Kill tmux server"),
+    ("ik", "ikill", "Kill tmux server (short)"),
+    ("iswitch", "tmux choose-session", "Switch tmux session"),
+    ("ipop", "tmux display-popup", "Tmux popup"),
+    ("f", "fuck", "Correct last command"),
     ("clip", "pbcopy", "Copy to clipboard"),
     ("paste", "pbpaste", "Paste from clipboard"),
-    ("get", "curl -O -L", "Download a file using curl"),
 ]
 
-EDITORS = [
+PKG_ALIASES = [
+    # Yarn
+    ("y", "yarn", "Yarn command"),
+    ("ya", "yarn add", "Add package"),
+    ("yad", "yarn add --dev", "Add dev package"),
+    ("yga", "yarn global add", "Add global package"),
+    ("yr", "yarn run", "Run script"),
+    ("ys", "yarn start", "Start project"),
+    ("yt", "yarn test", "Run tests"),
+    ("yup", "yarn upgrade", "Upgrade packages"),
+    ("yrm", "yarn remove", "Remove package"),
+    # PNPM
+    ("pn", "pnpm", "PNPM command"),
+    ("pna", "pnpm add", "Add package"),
+    ("pnr", "pnpm run", "Run script"),
+    ("pni", "pnpm install", "Install packages"),
+    # Python
+    ("pip", "uv pip", "Python packages (via uv)"),
+    ("pixi", "pixi", "Conda-compatible env manager"),
+]
+
+SYS_ALIASES = [
+    ("show", "defaults write ... AppleShowAllFiles true", "Show hidden files"),
+    ("hide", "defaults write ... AppleShowAllFiles false", "Hide hidden files"),
+    ("showdesktop", "defaults write ... CreateDesktop true", "Show desktop icons"),
+    ("hidedesktop", "defaults write ... CreateDesktop false", "Hide desktop icons"),
+    ("spotoff", "sudo mdutil -a -i off", "Disable Spotlight"),
+    ("spoton", "sudo mdutil -a -i on", "Enable Spotlight"),
+    ("afk", "CGSession -suspend", "Lock screen"),
+    ("stfu", "osascript -e 'set volume output muted true'", "Mute volume"),
+    ("restart", "sudo reboot", "Reboot system"),
+    ("bye", "sudo shutdown -r now", "Shutdown now"),
+    ("rm_ds", "find . -name '*.DS_Store' -delete", "Remove .DS_Store files"),
+    ("emptytrash", "rm -rf ~/.Trash/*", "Empty trash"),
+    ("clean", "clean_pycache", "Remove __pycache__"),
+]
+
+GNU_ALIASES = [
+    ("tail", "gtail -F", "Follow log files"),
+    ("split", "gsplit", "Split files"),
+    ("sum", "gsum", "Checksum files"),
+    ("md5sum", "gmd5sum", "MD5 checksum"),
+    ("sha1sum", "gsha1sum", "SHA1 checksum"),
+    ("cut", "gcut", "Cut columns"),
+    ("join", "gjoin", "Join files"),
+    ("shred", "gshred", "Secure delete"),
+    ("readlink", "greadlink", "Read symlinks"),
+    ("df", "gdf", "Disk free space"),
+    ("stat", "gstat", "File statistics"),
+    ("sync", "gsync", "Sync filesystem"),
+    ("truncate", "gtruncate", "Truncate files"),
+    ("echo", "gecho", "Echo text"),
+    ("tee", "gtee", "Pipe to file and stdout"),
+    ("awk", "gawk", "Pattern processing"),
+    ("grep", "ggrep --color", "Search with color"),
+    ("sed", "gsed", "Stream editor"),
+    ("find", "gfind", "Find files"),
+    ("xargs", "gxargs", "Build command lines"),
+    ("tar", "gtar", "Archive files"),
+    ("which", "gwhich", "Locate command"),
+]
+
+FN_ALIASES = [
+    # Editors
     ("v", "nvim", "Open Neovim"),
     ("vi", "nvim", "Open Neovim"),
     ("vim", "nvim", "Open Neovim"),
     ("n", "nvim", "Open Neovim"),
+    # Functions
+    ("take", "mkdir && cd", "Create and enter directory"),
+    ("tk", "take", "Create and enter (short)"),
+    ("up", "cd ..", "Go up N directories"),
+    ("yy", "yazi wrapper", "File manager with cd on exit"),
+    ("gi", "gitignore.io", "Generate .gitignore"),
+    ("create-repo", "gh repo create", "Create GitHub repo"),
+    ("rename-branch", "git branch -m", "Rename git branch"),
+    ("gifify", "ffmpeg + gifsicle", "Create GIFs from video"),
+    ("activate", "source venv/bin/activate", "Activate Python venv"),
+    ("setenv", "export from .env", "Load .env file"),
+    ("unsetenv", "unset from .env", "Unload .env file"),
+    ("update", "install.sh", "Run dotfiles installer"),
+    ("o", "open .", "Open current directory"),
+    ("t", "touch", "Create empty file"),
+    ("md", "mkdir", "Create directory"),
+    ("x+", "chmod +x", "Make executable"),
+    ("get", "curl -O -L", "Download file"),
 ]
 
-NAVIGATION = [
-    ("dev", "cd ~/dev", "Change to development directory"),
-    ("work", "cd ~/dev/work", "Change to work directory"),
-    ("desk", "cd ~/desktop", "Change to desktop directory"),
-    ("docs", "cd ~/documents", "Change to documents directory"),
-    ("dl", "cd ~/downloads", "Change to downloads directory"),
-    ("home", "cd ~", "Change to home directory"),
-    ("dots", "cd ~/dotfiles", "Change to dotfiles directory"),
-]
 
-MODERN_CLI = [
-    ("cat", "bat", "Use bat for displaying file contents"),
-    ("ls", "eza --icons=always", "Use eza for directory listing with icons"),
-    ("ll", "eza -l", "Long listing with eza"),
-    ("la", "eza -la", "Long listing including hidden files"),
-    ("tree", "eza --tree", "Tree view with eza"),
-    ("top", "btop", "Use btop for system monitoring"),
-    ("du", "ncdu", "Use ncdu for disk usage analysis"),
-]
-
-TMUX_ALIASES = [
-    ("iexit", "tmux kill-session", "Exit current tmux session"),
-    ("ix", "iexit", "Alias for iexit"),
-    ("ikill", "tmux kill-server", "Kill tmux server (all sessions)"),
-    ("ik", "ikill", "Alias for ikill"),
-    ("iswitch", "tmux choose-session", "Show tmux session picker"),
-    ("ipop", "tmux display-popup", "Open tmux popup in current directory"),
-]
-
-MACOS_ALIASES = [
-    ("show", "defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder", "Show hidden files in Finder"),
-    ("hide", "defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder", "Hide hidden files in Finder"),
-    ("showdesktop", "defaults write com.apple.finder CreateDesktop -bool true && killall Finder", "Show desktop icons"),
-    ("hidedesktop", "defaults write com.apple.finder CreateDesktop -bool false && killall Finder", "Hide desktop icons"),
-    ("spotoff", "sudo mdutil -a -i off", "Turn off Spotlight indexing"),
-    ("spoton", "sudo mdutil -a -i on", "Turn on Spotlight indexing"),
-    ("afk", "CGSession -suspend", "Lock screen when going AFK"),
-    ("stfu", "osascript -e 'set volume output muted true'", "Mute the system volume"),
-    ("restart", "sudo reboot", "Reboot the system"),
-    ("bye", "sudo shutdown -r now", "Restart the system immediately"),
-    ("rm_ds", "find . -name '*.DS_Store' -type f -ls -delete", "Remove .DS_Store files"),
-    ("xcodepurge", "rm -rf ~/Library/Developer/Xcode/DerivedData", "Remove cached Xcode build data"),
-    ("chromekill", "ps ux | grep ... | xargs kill", "Kill all Chrome tabs to free memory"),
-    ("mergepdf", "join.py", "Merge PDFs using Automator"),
-]
-
-FUNCTIONS = [
-    ("take", "mkdir && cd", "Create a directory and change into it"),
-    ("tk", "take", "Alias for take"),
-    ("up", "cd ..", "Go up N parent directories"),
-    ("yy", "yazi wrapper", "Open yazi, cd to dir on exit"),
-    ("git", "smart git clone", "Clone a repository and cd into it"),
-    ("gi", "gitignore.io", "Generate .gitignore from templates"),
-    ("create-repo", "GitHub repo", "Create a new GitHub repository"),
-    ("rename-branch", "git branch -m", "Rename a git branch locally and remotely"),
-    ("gifify", "ffmpeg + gifsicle", "Create animated gifs from video files"),
-    ("emptytrash", "rm -rf ~/.Trash", "Empty system trashes"),
-    ("activate", "source venv/bin/activate", "Activate Python venv in current or parent dir"),
-    ("setenv", "export from .env", "Load .env file into environment"),
-    ("unsetenv", "unset from .env", "Unload .env variables from environment"),
-    ("clean", "clean_pycache", "Remove __pycache__ directories"),
-    ("update", "install.sh", "Run dotfiles install script"),
-    ("f", "fuck", "Use thefuck for command corrections"),
-    ("pip", "uv pip", "Use uv for pip operations"),
-]
-
-# Mapping for easy access
+# Mapping categories to their data
 ALIAS_MAP = {
-    Category.GIT: ("Git Aliases", GIT_ALIASES),
-    Category.COREUTILS: ("Coreutils Aliases", COREUTILS_ALIASES),
-    Category.YARN: ("Yarn Aliases", YARN_ALIASES),
-    Category.PNPM: ("PNPM Aliases", PNPM_ALIASES),
-    Category.SHORTCUTS: ("Shortcuts", SHORTCUTS),
-    Category.EDITORS: ("Editors", EDITORS),
-    Category.NAVIGATION: ("Directory Navigation", NAVIGATION),
-    Category.MODERN: ("Modern CLI Replacements", MODERN_CLI),
-    Category.TMUX: ("Tmux", TMUX_ALIASES),
-    Category.MACOS: ("macOS Specific", MACOS_ALIASES),
-    Category.FUNCTIONS: ("Functions", FUNCTIONS),
+    Category.GIT: GIT_ALIASES,
+    Category.FILES: FILES_ALIASES,
+    Category.NAV: NAV_ALIASES,
+    Category.TERM: TERM_ALIASES,
+    Category.PKG: PKG_ALIASES,
+    Category.SYS: SYS_ALIASES,
+    Category.GNU: GNU_ALIASES,
+    Category.FN: FN_ALIASES,
 }
 
-ALL_ALIASES = (
-    GIT_ALIASES + COREUTILS_ALIASES + YARN_ALIASES + PNPM_ALIASES +
-    SHORTCUTS + EDITORS + NAVIGATION + MODERN_CLI + TMUX_ALIASES +
-    MACOS_ALIASES + FUNCTIONS
-)
+ALL_ALIASES = sum(ALIAS_MAP.values(), [])
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# RICH CLI OUTPUT (default mode)
+# RICH CLI OUTPUT
 # ═══════════════════════════════════════════════════════════════════════════
 
-def print_alias(name: str, command: str, description: str, table: Table) -> None:
-    """Add an alias to the table."""
-    table.add_row(f"[cyan bold]{name}[/]", f"[green]{command}[/]", description)
-
-
-def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
-    """Display a category of aliases in a single table."""
+def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None:
+    """Display a category of aliases in a styled table."""
+    icon, title, desc = CATEGORY_META[category]
+    
     table = Table(box=ROUNDED, border_style="blue", expand=True)
     table.add_column("Alias", style="cyan bold", width=15)
-    table.add_column("Command", style="green", width=30)
+    table.add_column("Command", style="green", width=35)
     table.add_column("Description")
 
     for name, command, description in aliases:
-        print_alias(name, command, description, table)
+        table.add_row(f"[cyan bold]{name}[/]", f"[green]{command}[/]", description)
 
     console.print()
-    console.print(Panel(table, title=f"[blue bold]{category}[/]", title_align="center", border_style="blue"))
+    console.print(Panel(
+        table,
+        title=f"[blue bold]{icon}  {title}[/]",
+        subtitle=f"[dim]{desc}[/]",
+        title_align="center",
+        border_style="blue"
+    ))
     console.print()
 
 
 def show_category_aliases(category: Category):
     """Display aliases for a specific category."""
     if category in ALIAS_MAP:
-        title, aliases = ALIAS_MAP[category]
-        add_aliases(title, aliases)
+        add_aliases(category, ALIAS_MAP[category])
 
 
 def show_alias_description(alias_name: str):
-    """Show detailed description for a specific alias with examples."""
+    """Show detailed description for a specific alias."""
     for name, command, description in ALL_ALIASES:
         if name == alias_name:
-            main_table = Table(
-                box=HEAVY,
-                title="[blue bold]Alias Information[/]",
-                border_style="blue",
-                show_header=True,
-                width=100
-            )
-            main_table.add_column("Category", style="cyan bold", width=30)
-            main_table.add_column("Details", style="white")
+            # Find which category this alias belongs to
+            cat_name = "Unknown"
+            for cat, aliases in ALIAS_MAP.items():
+                if any(a[0] == alias_name for a in aliases):
+                    icon, title, _ = CATEGORY_META[cat]
+                    cat_name = f"{icon}  {title}"
+                    break
 
-            # Details section
-            details_content = Table(show_header=False, box=None)
-            details_content.add_column("", style="green")
-            details_content.add_row(f"[cyan bold]Alias:[/] {name}")
-            details_content.add_row(f"[green]Command:[/] {command}")
-            details_content.add_row(f"Description: {description}")
-            main_table.add_row("[blue]Details[/]", details_content)
+            main_table = Table(box=HEAVY, border_style="blue", show_header=False, width=80)
+            main_table.add_column("Key", style="cyan bold", width=15)
+            main_table.add_column("Value", style="white")
 
-            # Examples section
-            examples_content = Table(show_header=False, box=None)
-            examples_content.add_column("", style="yellow")
-
-            if name in [a[0] for a in GIT_ALIASES]:
-                examples_content.add_row(f"$ {name} # Run basic command")
-                if "add" in command:
-                    examples_content.add_row(f"$ {name} file.txt # Add specific file")
-                    examples_content.add_row(f"$ {name} . # Add all changes")
-                elif "commit" in command:
-                    examples_content.add_row(f'$ {name} "feat: add new feature"')
-                elif "checkout" in command:
-                    examples_content.add_row(f"$ {name} main # Switch to main branch")
-                    examples_content.add_row(f"$ {name} -b feature # Create new branch")
-            elif name in [a[0] for a in YARN_ALIASES]:
-                examples_content.add_row(f"$ {name} # Basic command")
-                if "add" in command:
-                    examples_content.add_row(f"$ {name} react # Add package")
-                    examples_content.add_row(f"$ {name} @types/react # Add types")
-            elif name in [a[0] for a in PNPM_ALIASES]:
-                examples_content.add_row(f"$ {name} # Basic command")
-                if "add" in command:
-                    examples_content.add_row(f"$ {name} -D typescript # Add dev dependency")
-            elif "mkdir" in command or "cd" in command:
-                examples_content.add_row(f"$ {name} new-project")
-                examples_content.add_row(f"$ {name} path/to/dir")
-            else:
-                examples_content.add_row(f"$ {name}")
-
-            main_table.add_row("[yellow]Examples[/]", examples_content)
-
-            # Tips section
-            if any(keyword in command for keyword in ["git", "yarn", "pnpm", "nvim"]):
-                tips_content = Table(show_header=False, box=None)
-                tips_content.add_column("", style="green")
-
-                if "git" in command:
-                    tips_content.add_row("• Use --help to see all available options")
-                    tips_content.add_row("• Add -v for verbose output")
-                elif "yarn" in command or "pnpm" in command:
-                    tips_content.add_row("• Check package.json for available scripts")
-                    tips_content.add_row("• Use --help to see all options")
-                elif "nvim" in command:
-                    tips_content.add_row("• Press :help for built-in documentation")
-                    tips_content.add_row("• Use :checkhealth to verify setup")
-
-                main_table.add_row("[green]Tips[/]", tips_content)
+            main_table.add_row("Alias", f"[cyan bold]{name}[/]")
+            main_table.add_row("Command", f"[green]{command}[/]")
+            main_table.add_row("Description", description)
+            main_table.add_row("Category", cat_name)
 
             console.print()
-            console.print(Panel(main_table, border_style="blue"))
+            console.print(Panel(main_table, title="[blue bold]Alias Details[/]", border_style="blue"))
             console.print()
             return
 
@@ -372,39 +316,28 @@ def show_alias_description(alias_name: str):
 
 
 def show_help():
-    """Display help information with examples."""
-    console.print("\n[cyan bold]Usage Examples:[/]")
-    console.print("  [green]aliases --show git[/]        # Show all Git aliases")
-    console.print("  [green]aliases --show modern[/]     # Show modern CLI replacements")
-    console.print("  [green]aliases --describe ga[/]     # Show details for 'ga' alias")
-    console.print("  [green]aliases --tui[/]             # Launch interactive TUI")
+    """Display help information with category overview."""
+    console.print("\n[cyan bold]Usage:[/]")
+    console.print("  [green]aliases -s git[/]       Show git aliases")
+    console.print("  [green]aliases -s files[/]    Show file operation aliases")
+    console.print("  [green]aliases -d ga[/]       Describe 'ga' alias")
+    console.print("  [green]aliases --tui[/]       Interactive browser")
 
-    table = Table(title="Available Categories", show_header=True, box=ROUNDED)
-    table.add_column("Category", style="green")
+    table = Table(title="[bold]Categories[/]", show_header=True, box=ROUNDED, border_style="blue")
+    table.add_column("", style="cyan", width=3)
+    table.add_column("Name", style="green bold")
     table.add_column("Description")
-    table.add_column("Examples", style="cyan")
+    table.add_column("Count", style="dim", justify="right")
 
-    table.add_row("git", "Git version control shortcuts", "g, ga, gp, gs")
-    table.add_row("coreutils", "GNU coreutils (macOS)", "cp, mv, rm, grep, sed")
-    table.add_row("yarn", "Yarn package manager", "y, ya, yr, ys")
-    table.add_row("pnpm", "PNPM package manager", "pn, pna, pni")
-    table.add_row("shortcuts", "Quick command shortcuts", "c, x, o, clip, paste")
-    table.add_row("editors", "Editor shortcuts", "v, vi, vim, n")
-    table.add_row("navigation", "Directory navigation", "dev, work, dots, dl")
-    table.add_row("modern", "Modern CLI replacements", "cat, ls, tree, top, du")
-    table.add_row("tmux", "Tmux session management", "ix, ik, iswitch, ipop")
-    table.add_row("macos", "macOS specific commands", "show, hide, afk, stfu")
-    table.add_row("functions", "Shell functions", "take, yy, activate, setenv")
+    for cat in Category:
+        icon, title, desc = CATEGORY_META[cat]
+        count = len(ALIAS_MAP[cat])
+        table.add_row(icon, cat.value, desc, str(count))
 
-    console.print("\n[yellow bold]Categories:[/]")
+    console.print()
     console.print(table)
-
-    console.print("\n[yellow bold]Options:[/]")
-    console.print("[green]--show, -s CATEGORY[/]    Show all aliases in a category")
-    console.print("[green]--describe, -d ALIAS[/]   Show detailed description of an alias")
-    console.print("[green]--tui, -t[/]              Launch interactive TUI browser")
-
-    console.print("\n[cyan]Tip:[/] Use [green]aliases --tui[/] for an interactive browsing experience!")
+    console.print()
+    console.print("[dim]Tip: Use [green]aliases --tui[/] for interactive browsing![/]")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -415,7 +348,7 @@ def run_tui():
     """Launch the Textual TUI application."""
     from textual.app import App, ComposeResult
     from textual.binding import Binding
-    from textual.containers import Container, Horizontal, Vertical
+    from textual.containers import Container
     from textual.widgets import DataTable, Footer, Header, Input, Static, ListView, ListItem, Label
 
     class AliasApp(App):
@@ -498,9 +431,12 @@ def run_tui():
         def compose(self) -> ComposeResult:
             yield Header(show_clock=True)
             with Container(id="sidebar"):
-                yield Static("Categories", classes="title")
+                yield Static("󰘳  Categories", classes="title")
                 yield ListView(
-                    *[ListItem(Label(cat.value), id=f"cat-{cat.value}") for cat in Category],
+                    *[ListItem(
+                        Label(f"{CATEGORY_META[cat][0]}  {cat.value}"),
+                        id=f"cat-{cat.value}"
+                    ) for cat in Category],
                     id="category-list"
                 )
             with Container(id="main"):
@@ -521,13 +457,16 @@ def run_tui():
             table = self.query_one("#alias-table", DataTable)
             table.clear()
 
-            title, aliases = ALIAS_MAP[category]
+            aliases = ALIAS_MAP[category]
             filtered = self.filter_aliases(aliases)
 
             for name, command, description in filtered:
                 table.add_row(name, command, description)
 
-            self.query_one("#details", Static).update(f"[bold]{title}[/] - {len(filtered)} aliases")
+            icon, title, desc = CATEGORY_META[category]
+            self.query_one("#details", Static).update(
+                f"[bold]{icon}  {title}[/] — {desc} ({len(filtered)} aliases)"
+            )
 
         def filter_aliases(self, aliases: list) -> list:
             if not self.search_query:
@@ -550,6 +489,7 @@ def run_tui():
             row = table.get_row(row_key)
             if row:
                 name, command, description = row
+                icon, title, _ = CATEGORY_META[self.current_category]
                 details = f"[cyan bold]{name}[/] → [green]{command}[/]\n{description}"
                 self.query_one("#details", Static).update(details)
 
@@ -596,23 +536,23 @@ def main(
     ),
 ):
     """
-    CLI tool to display and manage shell aliases and functions
+    CLI tool to display and manage shell aliases and functions.
+
+    Categories:
+      git    - Version control shortcuts
+      files  - Modern file operations  
+      nav    - Directory jumping
+      term   - Terminal & shell
+      pkg    - Package managers
+      sys    - macOS & system
+      gnu    - GNU coreutils
+      fn     - Shell functions
 
     Examples:
-        List all available categories:
-            aliases
-
-        Show all Git aliases:
-            aliases --show git
-            aliases -s git
-
-        Launch interactive TUI:
-            aliases --tui
-            aliases -t
-
-        Show details for a specific alias:
-            aliases --describe ga
-            aliases -d ga
+      aliases              # Show categories
+      aliases -s git       # Show git aliases
+      aliases -d ga        # Describe 'ga' alias
+      aliases --tui        # Interactive browser
     """
     if tui:
         run_tui()
