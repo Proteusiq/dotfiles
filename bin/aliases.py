@@ -259,7 +259,10 @@ ALL_ALIASES = sum(ALIAS_MAP.values(), [])
 
 def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None:
     """Display a category of aliases in a styled table with pagination if needed."""
+    import os
     import shutil
+    import subprocess
+    from io import StringIO
     
     icon, title, desc = CATEGORY_META[category]
     
@@ -279,16 +282,26 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
         border_style="blue"
     )
     
-    # Use pager if content exceeds terminal height
+    # Use pager if content exceeds terminal height and we're in a TTY
     terminal_height = shutil.get_terminal_size().lines
-    # Estimate: ~2 lines per alias + 6 for panel borders/header
     estimated_lines = len(aliases) * 2 + 6
     
-    if estimated_lines > terminal_height:
-        with console.pager(styles=True):
-            console.print()
-            console.print(panel)
-            console.print()
+    if estimated_lines > terminal_height and os.isatty(1):
+        # Render to string with ANSI codes
+        string_io = StringIO()
+        temp_console = Console(file=string_io, force_terminal=True)
+        temp_console.print()
+        temp_console.print(panel)
+        temp_console.print()
+        output = string_io.getvalue()
+        
+        # Pipe through less with ANSI support
+        pager = subprocess.Popen(
+            ["less", "-R", "-S"],
+            stdin=subprocess.PIPE,
+            text=True
+        )
+        pager.communicate(input=output)
     else:
         console.print()
         console.print(panel)
