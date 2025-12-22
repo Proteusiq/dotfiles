@@ -13,7 +13,7 @@ Modern macOS dotfiles for developers focused on Rust 🦀, Python 🐍, and data
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Configuration](#configuration)
-- [Managing Aliases](#managing-aliases)
+- [Fox's Toolbox](#foxs-toolbox)
 - [File Structure](#file-structure)
 - [Usage Tips](#usage-tips)
 - [Troubleshooting](#troubleshooting)
@@ -143,38 +143,41 @@ git remote set-url origin git@github.com:Proteusiq/dotfiles.git
 
 Ghostty • Tmux • Neovim • fzf
 
-## Managing Aliases
+## Fox's Toolbox
 
-View and manage comprehensive aliases using the built-in CLI:
+Two built-in CLI/TUI tools to explore your shell aliases and installed packages:
+
+### Fox's Aliases — Shell Shortcuts
 
 ```bash
-# Show all alias categories
-aliases
-
-# Show aliases in a specific category
-aliases --show git
-aliases -s modern
-
-# Get details about a specific alias
-aliases --describe ga
-aliases -d gp
-
-# Launch interactive TUI browser
-aliases --tui
-aliases -t
+aliases                # Show all categories
+aliases -s git         # Show git aliases  
+aliases -d ga          # Describe 'ga' alias
+aliases --tui          # Interactive TUI browser
 ```
 
-> [!TIP]
-> Use `aliases --tui` for an interactive browser with search, category navigation, and keyboard shortcuts (`/` search, `j/k` navigate, `q` quit).
-
 **Categories:** `git` `files` `nav` `term` `pkg` `sys` `gnu` `fn`
+
+### Fox's Den — Installed Tools
+
+```bash
+tools                  # Show all categories
+tools -s cli           # Show modern CLI tools
+tools -d lazygit       # Describe lazygit with examples
+tools --tui            # Interactive TUI browser
+```
+
+**Categories:** `shell` `edit` `cli` `files` `vc` `data` `dev` `infra` `lang` `ai` `gnu` `media` `apps` `wm` `sys`
+
+> [!TIP]
+> Both tools support `--tui` for interactive browsing with cross-category search (`/`), vim navigation (`j/k`), and instant filtering. Each tool in Fox's Den shows practical "aha!" examples.
 
 ## File Structure
 
 ```
 dotfiles/
 ├── aerospace/       # Window management config
-├── bin/             # Custom scripts (aliases, peak)
+├── bin/             # Custom scripts (aliases, tools, peak)
 ├── fzf/             # Fuzzy finder config
 ├── ghostty/         # Terminal emulator config
 ├── git/             # Git configuration
