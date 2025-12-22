@@ -345,7 +345,7 @@ fzf                           # Interactive file finder
 cat file | fzf                # Filter any input
 
 # Integration with other commands
-vim $(fzf)                    # Open selected file in vim
+nvim $(fzf)                   # Open selected file in nvim
 cd $(find . -type d | fzf)    # cd to selected directory
 
 # Shortcuts (with shell integration)
