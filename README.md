@@ -737,7 +737,7 @@ A curated collection of useful CLI commands for macOS, organized by *when* you n
 
 ### Debugging Port Conflicts
 
-[!TIP]
+> [!TIP]
 > Can't start your server? Something's already using the port.
 
 ```bash
@@ -750,7 +750,7 @@ lsof -ti tcp:3000 | xargs kill -9
 
 ### Investigating Processes
 
-[!TIP]
+> [!TIP]
 > What is this process doing? Where is it running from?
 
 ```bash
@@ -761,7 +761,7 @@ ps aux | grep <name>             # Find process by name
 
 ### Command History Tricks
 
-[!TIP]
+> [!TIP]
 > Just typed a long command and forgot sudo? Use `sudo !!`
 
 ```bash
@@ -775,7 +775,7 @@ until !!; do :; done             # Retry flaky command until it works
 
 ### FZF Fuzzy Finding
 
-[!TIP]
+> [!TIP]
 > Can't remember the exact filename? Fuzzy find it.
 
 ```bash
@@ -801,7 +801,7 @@ ssh **<TAB>                      # Fuzzy find SSH hosts
 
 ### Scheduling & Automation
 
-[!TIP]
+> [!TIP]
 > Schedule tasks or set reminders without leaving the terminal.
 
 ```bash
@@ -813,7 +813,7 @@ watch -n 5 "kubectl get pods"    # Monitor every 5 seconds
 
 ### Piping & Process Substitution
 
-[!NOTE]
+> [!NOTE]
 > The power of Unix: chain commands together. Use `<()` to treat command output as a file.
 
 ```bash
@@ -833,7 +833,7 @@ grep "error" <<< "$log_output"   # Search in variable
 
 ### File Search & Cleanup
 
-[!TIP]
+> [!TIP]
 > Find large files, remove empty directories, clean up the mess.
 
 ```bash
@@ -851,7 +851,7 @@ touch ./-i                       # Create "-i" file: blocks accidental rm -rf *
 
 ### Batch Renaming
 
-[!TIP]
+> [!TIP]
 > Rename 100 files from `IMG_001.JPG` to `vacation_001.jpg` in one command.
 
 ```bash
@@ -868,7 +868,7 @@ rename 's/\.jpeg$/.jpg/i' *            # Normalize extensions
 
 ### Text Processing
 
-[!TIP]
+> [!TIP]
 > Parse logs, format data, count occurrences.
 
 ```bash
@@ -881,7 +881,7 @@ curl -s "$url" | jq .            # Pretty-print JSON (or python3 -m json.tool)
 
 ### Log Monitoring
 
-[!TIP]
+> [!TIP]
 > Watch logs with timestamps and color-coded severity levels.
 
 ```bash
@@ -900,7 +900,7 @@ tail -f app.log | awk '{
 
 ### Archives & Encryption
 
-[!NOTE]
+> [!NOTE]
 > Create encrypted backups. Will prompt for password.
 
 ```bash
@@ -913,7 +913,7 @@ openssl enc -d -aes256 -pbkdf2 -in backup.enc | tar xzf -
 
 ### Git Essentials
 
-[!TIP]
+> [!TIP]
 > Stage smartly, clean up deleted files, find contributors.
 
 ```bash
@@ -925,7 +925,7 @@ git diff --name-only main        # What files changed vs main?
 
 ### Network Debugging
 
-[!TIP]
+> [!TIP]
 > Is it your network or the server? Test connectivity and ports.
 
 ```bash
@@ -941,7 +941,7 @@ wget --accept pdf -rl1 url       # Download only PDFs from page
 
 ### Session & Process Management
 
-[!TIP]
+> [!TIP]
 > Keep jobs running after you disconnect from SSH.
 
 ```bash
@@ -952,7 +952,7 @@ sudo -K                          # Clear sudo password (security habit)
 
 ### Bypassing & Shortcuts
 
-[!TIP]
+> [!TIP]
 > Alias getting in the way? Bypass it with `\` or `command`.
 
 ```bash
@@ -964,7 +964,7 @@ some_command | :                 # Discard output (faster than >/dev/null)
 
 ### Debugging Scripts
 
-[!TIP]
+> [!TIP]
 > Script not working? Debug with `-x` or analyze with `shellcheck`.
 
 ```bash
@@ -984,7 +984,7 @@ printf '%d\n' 0xFF               # Hex to decimal: 255
 
 ### Vim Quick Commands
 
-[!TIP]
+> [!TIP]
 > Run shell commands and insert output without leaving vim.
 
 ```vim
@@ -996,7 +996,7 @@ printf '%d\n' 0xFF               # Hex to decimal: 255
 
 ### Security Hygiene
 
-[!WARNING]
+> [!WARNING]
 > Running sensitive commands? Disable history for this session.
 
 ```bash
@@ -1006,7 +1006,7 @@ read -s p; echo $p | md5 | base64 | cut -c-16  # Generate password from phrase
 
 ### Getting Help
 
-[!NOTE]
+> [!NOTE]
 > Multiple ways to get help, from official docs to community cheatsheets.
 
 ```bash
@@ -1018,7 +1018,7 @@ apropos "search term"            # Search all man pages
 
 ### Homebrew Maintenance
 
-[!TIP]
+> [!TIP]
 > Keep macOS tools updated and clean up old versions.
 
 ```bash
@@ -1029,7 +1029,7 @@ brew doctor                      # Diagnose issues
 
 ### Fun Stuff
 
-[!NOTE]
+> [!NOTE]
 > Impress coworkers or pretend to be hacking in a movie.
 
 **ASCII Clock** - Looks cool on a spare monitor
@@ -1051,7 +1051,7 @@ done
 cat /dev/urandom | hexdump -C | grep "ca fe"
 ```
 
-[!NOTE]
+> [!NOTE]
 > Some commands require Homebrew packages: `figlet`, `rename`, `wget`, `jq`
 
 </details>
