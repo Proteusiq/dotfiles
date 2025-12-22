@@ -832,7 +832,6 @@ A collection of most common CLI commands.
 | `find . -iname '*.jpg' -exec echo '<img src="{}">' \; > gallery.html` | Create HTML gallery from JPGs |
 | `cp file.txt{,.bak}` | Quick backup (creates file.txt.bak) |
 | `chmod $(stat -f%A file1) file2` | Copy permissions from file1 to file2 (macOS alternative) |
-| `ls -Q` | List files with quotes around names |
 | `touch ./-i` | Create file that blocks 'rm -rf *' |
 
 ---
@@ -844,8 +843,7 @@ A collection of most common CLI commands.
 | `for f in *; do mv "$f" "$(echo "$f" \| tr '[:upper:]' '[:lower:]' \| tr ' ' '_')"; done` | Lowercase and replace spaces with underscores |
 | `rename 'y/ /_/' *` | Replace spaces with underscores (Perl rename) |
 | `rename 'y/A-Z/a-z/' *` | Convert to lowercase |
-| `rename 'y/A-Z /a-z_/' *` | Both operations at once |
-| `rename --version` | Check which version of rename you have |
+| `rename 'y/A-Z /a-z_/' *` | Both operations at once (note: case conversion may not work on case-insensitive filesystems) |
 
 ---
 
@@ -865,7 +863,7 @@ A collection of most common CLI commands.
 
 | Command | Description |
 |---------|-------------|
-| `tail -f file \| while read; do echo "$(date +%T.%3N) $REPLY"; done` | Add timestamps to log output (macOS uses %3N for milliseconds) |
+| `tail -f file \| while read; do echo "$(date +%T) $REPLY"; done` | Add timestamps to log output |
 | `tail -f file \| awk '{ printf "\033[1;90m%s\033[0m  \033[1;32m%s\033[0m\n", strftime("%T"), $0 }'` | Add colored timestamps |
 | `tail -f file \| awk '{ts = strftime("%T"); if ($0 ~ /ERROR/) color="\033[1;31m"; else if ($0 ~ /WARN/) color="\033[1;33m"; else color="\033[1;32m"; printf "\033[1;90m%s\033[0m  %s%s\033[0m\n", ts, color, $0}'` | Color-coded log levels (ERROR=red, WARN=yellow) |
 | `cat /var/log/system.log \| awk '{print substr($0,0,12)}' \| uniq -c \| sort -nr \| awk '{printf("\n%s ",$0); for (i = 0; i<$1; i++) {printf("*")};}'` | Generate ASCII histogram from logs (macOS uses system.log instead of secure.log) |
@@ -877,8 +875,8 @@ A collection of most common CLI commands.
 | Command | Description |
 |---------|-------------|
 | `tar -cf - . \| pv -s $(du -s . \| awk '{print $1 * 512}') \| gzip > out.tgz` | Create tar with progress bar (macOS: du -s returns 512-byte blocks) |
-| `tar --create --file - --posix --gzip -- <dir> \| openssl enc -e -aes256 -out <file>` | Create encrypted archive |
-| `openssl enc -d -aes256 -in <file> \| tar --extract --file - --gzip` | Decrypt and extract archive |
+| `tar --create --file - --posix --gzip -- <dir> \| openssl enc -e -aes256 -pbkdf2 -out <file>` | Create encrypted archive |
+| `openssl enc -d -aes256 -pbkdf2 -in <file> \| tar --extract --file - --gzip` | Decrypt and extract archive |
 
 ---
 
@@ -889,7 +887,6 @@ A collection of most common CLI commands.
 | `git add -u` | Stage all modified and deleted files |
 | `git rm $(git ls-files --deleted)` | Remove deleted files from git |
 | `git log --format='%aN' \| sort -u` | List all contributors |
-| `git commit -m "$(curl -s http://whatthecommit.com/index.txt)"` | Random commit message (fun!) |
 
 ---
 
@@ -898,14 +895,13 @@ A collection of most common CLI commands.
 | Command | Description |
 |---------|-------------|
 | `curl ifconfig.me` | Get your public IP address |
-| `curl wttr.in/copenhagen` | Check weather for Copenhagen |
+| `curl 'wttr.in/copenhagen'` | Check weather for Copenhagen (quote the URL) |
 | `nc -v -l 80 < file.ext` | Send file over network (simple server) |
 | `ssh-copy-id username@hostname` | Copy SSH public key to remote host |
 | `wget --reject html,htm --accept pdf,zip -rl1 --no-check-certificate https://url` | Download all PDFs and ZIPs (HTTPS) |
 | `wget --reject html,htm --accept pdf,zip -rl1 url` | Download all PDFs and ZIPs (HTTP) |
 | `wget --random-wait -r -p -e robots=off -U mozilla http://example.com` | Download entire website |
 | `wget -mkEpnp example.com` | Mirror website (shorter syntax) |
-| `lynx -dump http://domain.com \| awk '/http/{print $2}'` | Extract all URLs from webpage |
 
 ---
 
@@ -939,7 +935,7 @@ A collection of most common CLI commands.
 | `bash -x ./script.sh` | Run script in debug mode |
 | `bc <<< 'obase=60;299'` | Convert seconds to minutes (base 60) |
 | `command \| figlet` | Display command output in large ASCII text |
-| `history \| awk '{print $2}' \| sort \| uniq -c \| sort -rn \| head` | Most frequently used commands |
+| `history \| awk '{print $2}' \| sort \| uniq -c \| sort -rn \| head` | Most frequently used commands (interactive shell only) |
 | `mkdir -p data/{validation/,train/{examples/,tests/}}` | Create nested directory structure |
 | `command <<< word` | Pass single word to stdin (instead of echo word \| command) |
 | `rm !(*.foo\|*.bar\|*.baz)` | Remove everything except specified patterns |
@@ -962,7 +958,7 @@ A collection of most common CLI commands.
 | Command | Description |
 |---------|-------------|
 | `unset HISTFILE` | Don't save commands in history (current session) |
-| `read -s pass; echo $pass \| md5sum \| base64 \| cut -c -16` | Generate password from passphrase |
+| `read -s pass; echo $pass \| md5 \| base64 \| cut -c -16` | Generate password from passphrase (use `md5` on macOS) |
 
 ---
 
@@ -1008,9 +1004,8 @@ A collection of most common CLI commands.
 ## Notes
 
 - Commands tested on macOS with standard Unix utilities
-- Some require Homebrew packages: `pv`, `figlet`, `sox`, `rename`, `wget`
+- Some require Homebrew packages: `pv`, `figlet`, `rename`, `wget`
 - Always test destructive commands (`rm`, `kill`) carefully
-- Check `rename --version` - behavior differs between Perl and util-linux versions
 - For `wget` parameters: `-m` (mirror), `-k` (convert links), `-E` (adjust extensions), `-p` (page requisites), `-n` (no clobber)
 
 ---
