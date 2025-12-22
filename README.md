@@ -709,6 +709,29 @@ http < request.json POST httpbin.org/post  # Send from file
 
 ---
 
+##### 🐧 **lima** - Linux VMs on macOS
+Run Linux virtual machines natively on macOS. Lighter than Docker Desktop, uses Apple's Virtualization.framework.
+
+```bash
+limactl start                      # Start default Ubuntu VM
+limactl start --name=arch archlinux # Start Arch Linux VM
+lima                               # Open shell in default VM
+lima nerdctl run -it alpine        # Run containers (like docker)
+lima nerdctl compose up            # Docker Compose equivalent
+limactl list                       # List VMs
+limactl stop default               # Stop VM
+```
+
+**Why lima over Docker Desktop:**
+- Native Apple virtualization (fast, low overhead)
+- Automatic file sharing and port forwarding
+- No Docker Desktop license needed
+- `nerdctl` is Docker-compatible CLI
+
+**Use cases:** Running Linux tools, container development, testing Linux-specific code, Docker alternative
+
+---
+
 ##### 🔄 **scooter** - Interactive Find-and-Replace
 Interactive terminal UI for find-and-replace operations with preview, regex support, and editor integration.
 

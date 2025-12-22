@@ -210,6 +210,42 @@ act pull_request              # Simulate PR event
 
 **Use cases:** Testing workflows locally, debugging Actions, faster iteration
 
+#### lima
+Linux virtual machines on macOS. Uses Apple's Virtualization.framework for native performance.
+
+```bash
+limactl start                 # Start default Ubuntu VM
+limactl start --name=dev debian  # Start named Debian VM
+lima                          # Open shell in default VM
+lima uname -a                 # Run command in VM
+lima nerdctl run -d nginx     # Run containers (Docker-compatible)
+lima nerdctl compose up       # Docker Compose equivalent
+limactl list                  # List all VMs
+limactl stop default          # Stop VM
+limactl delete default        # Delete VM
+```
+
+| Command | Description |
+|---------|-------------|
+| `limactl start` | Start/create VM |
+| `lima` | Shell into VM |
+| `lima nerdctl` | containerd CLI (Docker-like) |
+| `limactl stop` | Stop VM |
+| `limactl delete` | Remove VM |
+
+**Available templates:**
+- `default` - Ubuntu with containerd
+- `debian`, `archlinux`, `fedora`, `alpine`
+- `docker` - Docker CE instead of containerd
+
+**Why lima over Docker Desktop:**
+- Native Apple virtualization (fast, low memory)
+- No licensing restrictions
+- Automatic file sharing (`~` mounted in VM)
+- Automatic port forwarding
+
+**Use cases:** Container development, Linux testing, Docker alternative, running Linux tools
+
 ### Database Tools
 
 #### mongosh
