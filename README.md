@@ -733,109 +733,153 @@ Navigate macOS applications entirely with your keyboard using Shortcat. Perfect 
 
 <details><summary>🔍 CLI Commands Reference</summary>
 
-A curated collection of useful CLI commands for macOS.
+A curated collection of useful CLI commands for macOS, organized by *when* you need them.
 
-### Process & Port Management
+### Debugging Port Conflicts
 
-**Check what's running on a port**
+> *"Why can't I start my server? Something's already using port 3000!"*
+
 ```bash
-lsof -i tcp:80
+lsof -i tcp:3000                 # Find what's hogging the port
+kill -9 <pid>                    # Kill it
+
+# Or one-liner: find and kill
+lsof -ti tcp:3000 | xargs kill -9
 ```
 
-**List all network connections**
+### Investigating Processes
+
+> *"What is this process doing? Where is it running from?"*
+
 ```bash
-lsof -i -nP                    # All connections, no DNS resolution
-lsof -p <pid> | grep cwd       # Get working directory of a process
+lsof -p <pid> | grep cwd         # Working directory of a process
+lsof -i -nP                      # All network connections (debug connectivity)
+ps aux | grep <name>             # Find process by name
 ```
 
-### Command History & Execution
+### Command History Tricks
+
+> *"I just typed a long command and forgot sudo..."*
 
 ```bash
-!!                   # Repeat last command
-sudo !!              # Run last command with sudo
-!$                   # Last argument from previous command
-!:1-3                # Arguments 1-3 from previous command
-^foo^bar             # Replace foo with bar in last command
-cd !$:h              # cd to parent directory of last file
-until !!; do :; done # Retry until success
+sudo !!                          # Run last command with sudo
+!!                               # Repeat last command
+!$                               # Reuse last argument: mv file.txt !$
+^typo^fixed                      # Fix typo in last command
+cd !$:h                          # cd to directory of last file argument
+until !!; do :; done             # Retry flaky command until it works
 ```
 
-### FZF Interactive Search
+### FZF Fuzzy Finding
+
+> *"I know the file exists somewhere..."*
 
 ```bash
-nvim **<TAB>         # Fuzzy find files to open
-cd **<TAB>           # Fuzzy find directories
-kill -9 **<TAB>      # Fuzzy find process to kill
-<Ctrl-r>             # Search command history
+nvim **<TAB>                     # Fuzzy find files to edit
+cd **<TAB>                       # Fuzzy find directories to jump to
+kill -9 **<TAB>                  # Fuzzy find process to kill
+ssh **<TAB>                      # Fuzzy find SSH hosts
+<Ctrl-r>                         # Search command history
 ```
 
 ### Keyboard Shortcuts
 
-| Key | Action |
-|-----|--------|
-| `Ctrl+C` | Interrupt process |
-| `Ctrl+Z` | Background process |
-| `Ctrl+L` | Clear screen |
-| `Ctrl+R` | Search history |
-| `Ctrl+A/E` | Start/end of line |
-| `Ctrl+U/W` | Clear line/word |
-| `Ctrl+X Ctrl+E` | Edit in $EDITOR |
+| Key | When to Use |
+|-----|-------------|
+| `Ctrl+C` | Stop runaway process |
+| `Ctrl+Z` | Pause to do something else, resume with `fg` |
+| `Ctrl+L` | Clear clutter, keep scrollback |
+| `Ctrl+R` | "What was that command I ran last week?" |
+| `Ctrl+A/E` | Jump to fix start/end of long command |
+| `Ctrl+U` | Clear line and start over |
+| `Ctrl+W` | Delete last word (fix typo faster) |
+| `Ctrl+X Ctrl+E` | Command too complex? Edit in your editor |
 
-### Scheduling & Timing
+### Scheduling & Automation
+
+> *"Run this backup at midnight" or "Remind me before the meeting"*
 
 ```bash
-echo "ls -l" | at midnight       # Schedule command
-leave +15                        # Reminder in 15 min
-timeout 5s <command>             # Kill after 5 seconds
-watch -n 1 "command"             # Repeat every second
+echo "backup.sh" | at midnight   # Schedule one-time task
+leave +15                        # Terminal reminder in 15 min
+timeout 30s ./slow-script        # Kill if takes too long
+watch -n 5 "kubectl get pods"    # Monitor every 5 seconds
 ```
 
-### File Operations
+### Piping & Process Substitution
 
-**Search & Find**
+> *"The power of Unix: chain commands together"*
+
 ```bash
-grep -lir "text" *               # Recursive search, show filenames
+# Classic pipes: output -> input
+cat file | grep error | wc -l
+
+# Process substitution: treat command output as a file
+diff <(ls dir1) <(ls dir2)                    # Compare directory contents
+comm -13 <(sort file1) <(sort file2)          # Lines only in file2
+vimdiff <(curl -s url1) <(curl -s url2)       # Diff two URLs
+paste <(cut -f1 data.tsv) <(cut -f3 data.tsv) # Combine columns
+
+# Here-string: pass string as stdin (no echo pipe needed)
+bc <<< "2^10"                    # Quick math: 1024
+grep "error" <<< "$log_output"   # Search in variable
+```
+
+### File Search & Cleanup
+
+> *"Find all large files" or "Clean up this mess"*
+
+```bash
+# Find files
+grep -lir "TODO" .               # Which files contain "TODO"?
+find . -size +100M               # Files over 100MB
+find . -mtime +30 -delete        # Delete files older than 30 days
 find . -type d -empty -delete    # Remove empty directories
-find . -iname '*.jpg' -exec echo '<img src="{}">' \; > gallery.html
+
+# Quick operations
+cp file{,.bak}                   # Backup: file -> file.bak
+chmod $(stat -f%A src) dest      # Copy permissions from another file
+touch ./-i                       # Create "-i" file: blocks accidental rm -rf *
 ```
 
-**Quick Operations**
-```bash
-cp file.txt{,.bak}               # Create backup (file.txt.bak)
-chmod $(stat -f%A src) dest      # Copy permissions (macOS)
-touch ./-i                       # Safety: blocks 'rm -rf *'
-```
+### Batch Renaming
 
-### File Renaming
+> *"Rename 100 files from 'IMG_001.JPG' to 'vacation_001.jpg'"*
 
 ```bash
-# Lowercase + replace spaces with underscores
+# Pure bash: lowercase + spaces to underscores
 for f in *; do
   mv "$f" "$(echo "$f" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')"
 done
 
-# Using Perl rename (brew install rename)
-rename 'y/ /_/' *                # Spaces to underscores
-rename 'y/A-Z/a-z/' *            # Lowercase (case-sensitive FS only)
+# Perl rename (brew install rename) - more powerful
+rename 's/IMG_/vacation_/' *.JPG       # Prefix replacement
+rename 'y/A-Z/a-z/' *                  # Lowercase all
+rename 's/\.jpeg$/.jpg/i' *            # Normalize extensions
 ```
 
 ### Text Processing
 
+> *"Parse this log" or "Format this data"*
+
 ```bash
-less +F app.log                  # Follow mode (better than tail -f)
-tac file.txt                     # Reverse file contents
-column -s, -t data.csv           # Pretty-print CSV
-curl -s "url" | python3 -m json.tool  # Format JSON
+less +F app.log                  # Follow log (better than tail -f, can scroll)
+tac file.txt                     # Reverse lines (last first)
+column -s, -t data.csv           # Pretty-print CSV as table
+sort file | uniq -c | sort -rn   # Count occurrences, most frequent first
+curl -s "$url" | jq .            # Pretty-print JSON (or python3 -m json.tool)
 ```
 
-### Log Monitoring with Colors
+### Log Monitoring
+
+> *"Watch logs with timestamps and colors"*
 
 ```bash
-# Add timestamps
-tail -f log | while read line; do echo "$(date +%T) $line"; done
+# Add timestamps to any output
+tail -f app.log | while read line; do echo "$(date +%T) $line"; done
 
-# Color-coded by level (ERROR=red, WARN=yellow)
-tail -f log | awk '{
+# Color-coded by severity (ERROR=red, WARN=yellow, rest=green)
+tail -f app.log | awk '{
   ts = strftime("%T")
   if ($0 ~ /ERROR/) color="\033[31m"
   else if ($0 ~ /WARN/) color="\033[33m"
@@ -846,84 +890,133 @@ tail -f log | awk '{
 
 ### Archives & Encryption
 
+> *"Backup sensitive files securely"*
+
 ```bash
-# Create encrypted archive
-tar czf - <dir> | openssl enc -e -aes256 -pbkdf2 -out archive.enc
+# Create encrypted archive (will prompt for password)
+tar czf - secret_folder | openssl enc -e -aes256 -pbkdf2 -out backup.enc
 
 # Decrypt and extract
-openssl enc -d -aes256 -pbkdf2 -in archive.enc | tar xzf -
+openssl enc -d -aes256 -pbkdf2 -in backup.enc | tar xzf -
 ```
 
-### Git Shortcuts
+### Git Essentials
+
+> *"Stage smartly, clean up after yourself"*
 
 ```bash
-git add -u                       # Stage modified + deleted
-git rm $(git ls-files --deleted) # Remove deleted from git
-git log --format='%aN' | sort -u # List contributors
+git add -u                       # Stage only modified/deleted (not new files)
+git rm $(git ls-files --deleted) # Remove all deleted files from git
+git log --format='%aN' | sort -u # Who contributed to this repo?
+git diff --name-only main        # What files changed vs main?
 ```
 
-### Network & Web
+### Network Debugging
+
+> *"Is it my network or the server?"*
 
 ```bash
-curl ifconfig.me                 # Your public IP
-curl 'wttr.in/copenhagen'        # Weather (quote the URL!)
-nc -v -l 8080 < file             # Simple file server
-ssh-copy-id user@host            # Copy SSH key to remote
+curl ifconfig.me                 # What's my public IP?
+curl 'wttr.in/copenhagen'        # Quick weather check
+nc -zv host 443                  # Test if port is open
+ssh-copy-id user@host            # Setup passwordless SSH
+
+# Download stuff
+wget -mkEpnp example.com         # Mirror entire website
+wget --accept pdf -rl1 url       # Download only PDFs from page
 ```
 
-**wget recipes**
+### Session & Process Management
+
+> *"Keep it running after I disconnect"*
+
 ```bash
-wget -mkEpnp example.com         # Mirror entire site
-wget --accept pdf,zip -rl1 url   # Download only PDFs and ZIPs
+disown -a && exit                # Exit shell, keep background jobs running
+nohup ./long-job.sh &            # Run immune to hangups
+sudo -K                          # Clear sudo password (security habit)
 ```
 
-### System Administration
+### Bypassing & Shortcuts
+
+> *"My alias is getting in the way"*
 
 ```bash
-sudo -K                          # Clear sudo credentials
-disown -a && exit                # Exit, keep jobs running
-kill -9 -1                       # Kill all your processes (careful!)
+\ls                              # Run real ls, ignore alias
+command ls                       # Same thing, more explicit
+type ls                          # See what ls actually runs
+some_command | :                 # Discard output (faster than >/dev/null)
 ```
 
-### Aliases & Bypassing
+### Debugging Scripts
+
+> *"Why isn't this script working?"*
 
 ```bash
-\ls                              # Run ls without alias
-command | :                      # Discard output (fast /dev/null)
+bash -x script.sh                # Print each command as it runs
+set -euo pipefail                # Strict mode: fail on errors
+shellcheck script.sh             # Static analysis for bugs
 ```
 
-### Advanced Operations
+### Quick Math & Conversions
 
 ```bash
-bash -x script.sh                # Debug mode
-bc <<< 'obase=60;299'            # 299 seconds = 4:59
-mkdir -p a/{b,c/{d,e}}           # Nested directory structure
-command <<< "input"              # Pass string to stdin
-rm !(*.txt|*.md)                 # Remove all except patterns (extglob)
+bc <<< 'scale=2; 100/3'          # Division with decimals: 33.33
+bc <<< 'obase=16; 255'           # Decimal to hex: FF
+bc <<< 'obase=2; 42'             # Decimal to binary: 101010
+printf '%d\n' 0xFF               # Hex to decimal: 255
 ```
 
 ### Vim Quick Commands
 
+> *"Do more without leaving vim"*
+
 ```vim
-:r !date                         " Insert command output
-:x                               " Save and quit (shorter :wq)
+:r !date                         " Insert current date
+:r !curl -s api.example.com      " Insert API response
+:%!jq .                          " Format entire buffer as JSON
+:x                               " Save and quit (shorter than :wq)
 ```
 
-### Security
+### Security Hygiene
+
+> *"Cover your tracks" or "Generate a quick password"*
 
 ```bash
-unset HISTFILE                   # Don't save history (this session)
-read -s p; echo $p | md5 | base64 | cut -c-16  # Generate password
+unset HISTFILE                   # Don't save commands this session
+read -s p; echo $p | md5 | base64 | cut -c-16  # Generate password from phrase
+```
+
+### Getting Help
+
+> *"How does this command work again?"*
+
+```bash
+man <command>                    # Official manual
+tldr <command>                   # Community examples (brew install tlrc)
+curl cheat.sh/tar                # Cheatsheet from web
+apropos "search term"            # Search all man pages
+```
+
+### Homebrew Maintenance
+
+> *"Keep macOS tools updated"*
+
+```bash
+brew update && brew upgrade      # Update everything
+brew cleanup --prune=all         # Remove old versions, free space
+brew doctor                      # Diagnose issues
 ```
 
 ### Fun Stuff
 
-**ASCII Clock**
+> *"Impress your coworkers" or "Pretend to be hacking"*
+
+**ASCII Clock** - Looks cool on a spare monitor
 ```bash
 while true; do clear; date +%T | figlet; sleep 1; done
 ```
 
-**Matrix Effect**
+**Matrix Effect** - The classic
 ```bash
 printf '\033[32m'; while :; do
   for i in {1..16}; do
@@ -932,27 +1025,12 @@ printf '\033[32m'; while :; do
 done
 ```
 
-**Pretend to be busy**
+**Pretend to be busy** - When the boss walks by
 ```bash
 cat /dev/urandom | hexdump -C | grep "ca fe"
 ```
 
-### Homebrew
-
-```bash
-brew update && brew upgrade      # Update everything
-brew cleanup --prune=all         # Remove old versions
-```
-
-### Getting Help
-
-```bash
-man <command>                    # Manual page
-apropos <keyword>                # Search man pages
-curl cheat.sh/<command>          # Cheatsheet from web
-```
-
-> **Note:** Some commands require Homebrew packages: `pv`, `figlet`, `rename`, `wget`
+> **Note:** Some commands require Homebrew packages: `figlet`, `rename`, `wget`, `jq`
 
 </details>
 
