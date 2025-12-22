@@ -54,6 +54,7 @@ brew "yazi"                              # Terminal file manager
 brew "broot"                             # Interactive tree navigator
 brew "fzf"                               # Fuzzy finder
 brew "ncdu"                              # Disk usage analyzer
+brew "btop"                              # System monitor (better htop)
 brew "stow"                              # Symlink farm manager
 brew "unar"                              # Archive extractor (yazi requirement)
 brew "rename"                            # Batch file renaming
