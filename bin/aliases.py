@@ -45,16 +45,16 @@ def print_alias(name: str, command: str, description: str, table: Table) -> None
 
 def add_aliases(category: str, aliases: list[tuple[str, str, str]]) -> None:
     """Display a category of aliases in a single table."""
-    table = Table(box=ROUNDED, title=f"[blue bold]{category}[/]", border_style="blue", width=300)
+    table = Table(box=ROUNDED, border_style="blue", expand=True)
     table.add_column("Alias", style="cyan bold", width=15)
     table.add_column("Command", style="green", width=30)
-    table.add_column("Description", width=90)
+    table.add_column("Description")
     
     for name, command, description in aliases:
         print_alias(name, command, description, table)
     
     console.print()
-    console.print(Panel(table, border_style="blue"))
+    console.print(Panel(table, title=f"[blue bold]{category}[/]", title_align="center", border_style="blue"))
     console.print()
 
 
