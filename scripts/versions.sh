@@ -49,158 +49,153 @@ track_version() {
 # Version Display (--versions command)
 # =============================================================================
 
-readonly VERSION_GROUPS="brew|cask|uv|cargo|llm|git|other|all"
+readonly VERSION_GROUPS="brew|cask|uv|cargo|llm|git|other"
 
-show_version_group_menu() {
-    echo -e "\n${BOLD}Select a group to view:${NC}\n"
-    echo -e "  ${GREEN}brew${NC}   - Homebrew Formulae"
-    echo -e "  ${GREEN}cask${NC}   - Homebrew Casks"
-    echo -e "  ${GREEN}uv${NC}     - UV Tools (Python)"
-    echo -e "  ${GREEN}cargo${NC}  - Cargo Packages (Rust)"
-    echo -e "  ${GREEN}llm${NC}    - LLM Plugins"
-    echo -e "  ${GREEN}git${NC}    - Git Repositories"
-    echo -e "  ${GREEN}other${NC}  - Other Tools (bun, n, goose)"
-    echo -e "  ${GREEN}all${NC}    - All groups"
-    echo ""
-    echo -e "Usage: ${BOLD}./install.sh --versions <group>${NC}"
-    echo ""
-}
-
-# Helper to collect versions from a command
-collect_versions() {
-    local cmd="$1"
-    local -a items=()
-    while IFS= read -r line; do
-        [[ -z "$line" || "$line" == " "* || "$line" == -* ]] && continue
-        items+=("$line")
-    done < <(eval "$cmd" 2>/dev/null)
-    printf '%s\n' "${items[@]}"
-}
-
-get_brew_versions() {
-    local -a items=()
-    if has_cmd brew; then
+# Collect all versions into a unified list: "group|name|version"
+collect_all_versions() {
+    local filter="${1:-}"
+    
+    # Homebrew formulae
+    if [[ -z "$filter" || "$filter" == "brew" ]] && has_cmd brew; then
         while IFS= read -r line; do
             [[ -z "$line" ]] && continue
             local name ver
             name=$(echo "$line" | awk '{print $1}')
             ver=$(echo "$line" | awk '{print $2}')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
+            [[ -n "$name" && -n "$ver" ]] && echo "brew|$name|$ver"
         done < <(brew list --formula --versions 2>/dev/null)
     fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🍺" "Homebrew Formulae (${#items[@]})" "${items[@]}"
-}
-
-get_cask_versions() {
-    local -a items=()
-    if has_cmd brew; then
+    
+    # Homebrew casks
+    if [[ -z "$filter" || "$filter" == "cask" ]] && has_cmd brew; then
         while IFS= read -r line; do
             [[ -z "$line" ]] && continue
             local name ver
             name=$(echo "$line" | awk '{print $1}')
             ver=$(echo "$line" | awk '{print $2}')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
+            [[ -n "$name" && -n "$ver" ]] && echo "cask|$name|$ver"
         done < <(brew list --cask --versions 2>/dev/null)
     fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🖥️" "Homebrew Casks (${#items[@]})" "${items[@]}"
-}
-
-get_uv_versions() {
-    local -a items=()
-    if has_cmd uv; then
+    
+    # UV tools
+    if [[ -z "$filter" || "$filter" == "uv" ]] && has_cmd uv; then
         while IFS= read -r line; do
             [[ -z "$line" || "$line" == -* ]] && continue
             local name ver
             name=$(echo "$line" | awk '{print $1}')
             ver=$(echo "$line" | awk '{print $2}' | tr -d 'v')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
+            [[ -n "$name" && -n "$ver" ]] && echo "uv|$name|$ver"
         done < <(uv tool list 2>/dev/null)
     fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🐍" "UV Tools (${#items[@]})" "${items[@]}"
-}
-
-get_cargo_versions() {
-    local -a items=()
-    if has_cmd cargo; then
+    
+    # Cargo packages
+    if [[ -z "$filter" || "$filter" == "cargo" ]] && has_cmd cargo; then
         while IFS= read -r line; do
             [[ -z "$line" || "$line" == " "* ]] && continue
             local name ver
             name=$(echo "$line" | awk -F' v' '{print $1}')
             ver=$(echo "$line" | awk -F' v' '{print $2}' | tr -d ':')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
+            [[ -n "$name" && -n "$ver" ]] && echo "cargo|$name|$ver"
         done < <(cargo install --list 2>/dev/null)
     fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🦀" "Cargo Packages (${#items[@]})" "${items[@]}"
-}
-
-get_llm_versions() {
-    local -a items=()
-    if has_cmd llm && has_cmd jq; then
+    
+    # LLM plugins
+    if [[ -z "$filter" || "$filter" == "llm" ]] && has_cmd llm && has_cmd jq; then
         while IFS= read -r line; do
-            [[ -n "$line" ]] && items+=("$line")
+            [[ -n "$line" ]] && echo "llm|$line"
         done < <(llm plugins 2>/dev/null | jq -r '.[] | "\(.name)|\(.version)"' 2>/dev/null)
     fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🤖" "LLM Plugins (${#items[@]})" "${items[@]}"
+    
+    # Git repos
+    if [[ -z "$filter" || "$filter" == "git" ]]; then
+        local tpm_dir="$HOME/.tmux/plugins/tpm"
+        local yazi_dir="$HOME/.config/yazi/flavors"
+        [[ -d "$tpm_dir/.git" ]] && echo "git|tpm|$(git -C "$tpm_dir" rev-parse --short HEAD 2>/dev/null)"
+        [[ -d "$yazi_dir/.git" ]] && echo "git|yazi-flavors|$(git -C "$yazi_dir" rev-parse --short HEAD 2>/dev/null)"
+    fi
+    
+    # Other tools
+    if [[ -z "$filter" || "$filter" == "other" ]]; then
+        [[ -f "$HOME/.bun/bin/bun" ]] && echo "other|bun|$("$HOME/.bun/bin/bun" --version 2>/dev/null)"
+        has_cmd npm && {
+            local n_ver
+            n_ver=$(npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p')
+            [[ -n "$n_ver" ]] && echo "other|n|$n_ver"
+        }
+        has_cmd goose && echo "other|goose|$(goose --version 2>/dev/null | tr -d ' ')"
+    fi
 }
 
-get_git_versions() {
-    local -a items=()
-    local tpm_dir="$HOME/.tmux/plugins/tpm"
-    local yazi_dir="$HOME/.config/yazi/flavors"
+# Print unified table with Group | Tool | Version columns
+print_version_table() {
+    local filter="${1:-}"
+    local -a rows=()
     
-    [[ -d "$tpm_dir/.git" ]] && items+=("tpm|$(git -C "$tpm_dir" rev-parse --short HEAD 2>/dev/null)")
-    [[ -d "$yazi_dir/.git" ]] && items+=("yazi-flavors|$(git -C "$yazi_dir" rev-parse --short HEAD 2>/dev/null)")
+    # Collect versions
+    while IFS= read -r line; do
+        [[ -n "$line" ]] && rows+=("$line")
+    done < <(collect_all_versions "$filter")
     
-    [[ ${#items[@]} -gt 0 ]] && print_section "📦" "Git Repositories (${#items[@]})" "${items[@]}"
-}
-
-get_other_versions() {
-    local -a items=()
+    [[ ${#rows[@]} -eq 0 ]] && { echo -e "${YELLOW}No tools found${NC}"; return; }
     
-    [[ -f "$HOME/.bun/bin/bun" ]] && items+=("bun|$("$HOME/.bun/bin/bun" --version 2>/dev/null)")
-    has_cmd npm && {
-        local n_ver
-        n_ver=$(npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p')
-        [[ -n "$n_ver" ]] && items+=("n|$n_ver")
-    }
-    has_cmd goose && items+=("goose|$(goose --version 2>/dev/null | tr -d ' ')")
+    # Calculate column widths
+    local w_group=7 w_tool=6 w_ver=9
+    for row in "${rows[@]}"; do
+        IFS='|' read -r grp name ver <<< "$row"
+        (( ${#grp} + 2 > w_group )) && w_group=$((${#grp} + 2))
+        (( ${#name} + 2 > w_tool )) && w_tool=$((${#name} + 2))
+        (( ${#ver} + 2 > w_ver )) && w_ver=$((${#ver} + 2))
+    done
     
-    [[ ${#items[@]} -gt 0 ]] && print_section "⚙️" "Other Tools (${#items[@]})" "${items[@]}"
+    local hc="─" vc="│"
+    local total_w=$((w_group + w_tool + w_ver + 4))
+    
+    # Title
+    local title="Installed Tools"
+    [[ -n "$filter" ]] && title="Installed Tools ($filter)"
+    echo -e "\n${BOLD}$title${NC} (${#rows[@]} packages)\n"
+    
+    # Top border
+    printf "${BLUE}┌%${w_group}s┬%${w_tool}s┬%${w_ver}s┐${NC}\n" "" "" "" | tr ' ' "$hc"
+    
+    # Header
+    printf "${BLUE}${vc}${NC} ${BOLD}%-$((w_group-1))s${NC}${BLUE}${vc}${NC} ${BOLD}%-$((w_tool-1))s${NC}${BLUE}${vc}${NC} ${BOLD}%-$((w_ver-1))s${NC}${BLUE}${vc}${NC}\n" "Group" "Tool" "Version"
+    
+    # Header separator
+    printf "${BLUE}├%${w_group}s┼%${w_tool}s┼%${w_ver}s┤${NC}\n" "" "" "" | tr ' ' "$hc"
+    
+    # Data rows
+    local prev_group=""
+    for row in "${rows[@]}"; do
+        IFS='|' read -r grp name ver <<< "$row"
+        # Show group only on first occurrence
+        local display_grp="$grp"
+        [[ "$grp" == "$prev_group" ]] && display_grp=""
+        prev_group="$grp"
+        printf "${BLUE}${vc}${NC} ${YELLOW}%-$((w_group-1))s${NC}${BLUE}${vc}${NC} %-$((w_tool-1))s${BLUE}${vc}${NC} ${GREEN}%-$((w_ver-1))s${NC}${BLUE}${vc}${NC}\n" "$display_grp" "$name" "$ver"
+    done
+    
+    # Bottom border
+    printf "${BLUE}└%${w_group}s┴%${w_tool}s┴%${w_ver}s┘${NC}\n" "" "" "" | tr ' ' "$hc"
+    echo ""
 }
 
 show_installed_versions() {
     local group="${1:-}"
     
-    if [[ -z "$group" ]]; then
-        show_version_group_menu
-        return 0
+    # Validate group if specified
+    if [[ -n "$group" ]]; then
+        case "$group" in
+            brew|cask|uv|cargo|llm|git|other) ;;
+            *)
+                echo -e "${RED}Unknown group: $group${NC}"
+                echo -e "Valid groups: ${GREEN}${VERSION_GROUPS}${NC}"
+                return 1
+                ;;
+        esac
     fi
     
-    echo -e "\n${BOLD}Installed Tool Versions${NC}\n"
-    
-    case "$group" in
-        brew)  get_brew_versions ;;
-        cask)  get_cask_versions ;;
-        uv)    get_uv_versions ;;
-        cargo) get_cargo_versions ;;
-        llm)   get_llm_versions ;;
-        git)   get_git_versions ;;
-        other) get_other_versions ;;
-        all)
-            get_brew_versions
-            get_cask_versions
-            get_uv_versions
-            get_cargo_versions
-            get_llm_versions
-            get_git_versions
-            get_other_versions
-            ;;
-        *)
-            echo -e "${RED}Unknown group: $group${NC}"
-            echo -e "Valid groups: ${GREEN}${VERSION_GROUPS}${NC}"
-            return 1
-            ;;
-    esac
+    print_version_table "$group"
 }
 
 print_version_summary() {

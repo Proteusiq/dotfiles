@@ -124,13 +124,13 @@ ${YELLOW}Note:${NC} If 'update' alias is unavailable, run ~/dotfiles/install.sh 
 }
 
 list_functions() {
-    echo "Available functions for --only flag:"
+    echo -e "${BOLD}Available functions for --only flag:${NC}"
     echo ""
     for entry in "${AVAILABLE_FUNCTIONS[@]}"; do
-        printf "  %-12s -> %s\n" "${entry%%:*}" "${entry##*:}"
+        printf "  ${BLUE}%-12s${NC} %s\n" "${entry%%:*}" "${entry##*:}"
     done
     echo ""
-    echo "Usage: $0 --only <name>"
+    echo -e "Usage: ${GREEN}update --only <name>${NC}"
 }
 
 get_function_by_name() {
