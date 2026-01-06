@@ -2,6 +2,125 @@
 # Version detection and display utilities
 
 # =============================================================================
+# Tool Update (update <tool> command)
+# =============================================================================
+
+# Update a single tool using the appropriate package manager
+update_tool() {
+    local tool="$1"
+    local source=""
+    
+    # Detect package manager
+    if has_cmd brew && brew list --formula "$tool" &>/dev/null; then
+        source="brew"
+    elif has_cmd brew && brew list --cask "$tool" &>/dev/null; then
+        source="cask"
+    elif has_cmd uv && uv tool list 2>/dev/null | grep -q "^$tool "; then
+        source="uv"
+    elif has_cmd cargo && cargo install --list 2>/dev/null | grep -q "^$tool "; then
+        source="cargo"
+    elif has_cmd npm && npm list -g --depth=0 2>/dev/null | grep -q " $tool@"; then
+        source="npm"
+    elif has_cmd llm && has_cmd jq && llm plugins 2>/dev/null | jq -e ".[] | select(.name==\"$tool\")" &>/dev/null; then
+        source="llm"
+    elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
+        source="bun"
+    elif [[ "$tool" == "goose" ]] && has_cmd goose; then
+        source="goose"
+    elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
+        source="git-tpm"
+    elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
+        source="git-yazi"
+    fi
+    
+    if [[ -z "$source" ]]; then
+        echo -e "${RED}Tool '$tool' not found${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, llm, bun, goose${NC}"
+        return 1
+    fi
+    
+    echo -e "${BLUE}Updating${NC} ${BOLD}$tool${NC} ${DIM}($source)${NC}"
+    
+    # Get version before update
+    local old_ver=""
+    case "$source" in
+        brew)      old_ver=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
+        cask)      old_ver=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
+        uv)        old_ver=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v') ;;
+        cargo)     old_ver=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:') ;;
+        npm)       old_ver=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p") ;;
+        llm)       old_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
+        bun)       old_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
+        goose)     old_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
+        git-tpm)   old_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
+        git-yazi)  old_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
+    esac
+    
+    # Run update command
+    local rc=0
+    case "$source" in
+        brew)
+            brew upgrade "$tool" 2>&1 || rc=$?
+            ;;
+        cask)
+            brew upgrade --cask "$tool" 2>&1 || rc=$?
+            ;;
+        uv)
+            uv tool upgrade "$tool" 2>&1 || rc=$?
+            ;;
+        cargo)
+            cargo install "$tool" 2>&1 || rc=$?
+            ;;
+        npm)
+            npm update -g "$tool" 2>&1 || rc=$?
+            ;;
+        llm)
+            llm install --upgrade "$tool" 2>&1 || rc=$?
+            ;;
+        bun)
+            "$HOME/.bun/bin/bun" upgrade 2>&1 || rc=$?
+            ;;
+        goose)
+            echo -e "${YELLOW}Goose update: re-run install script${NC}"
+            curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash 2>&1 || rc=$?
+            ;;
+        git-tpm)
+            git -C "$HOME/.tmux/plugins/tpm" pull --quiet 2>&1 || rc=$?
+            ;;
+        git-yazi)
+            git -C "$HOME/.config/yazi/flavors" pull --quiet 2>&1 || rc=$?
+            ;;
+    esac
+    
+    if [[ $rc -ne 0 ]]; then
+        echo -e "${RED}Update failed${NC}"
+        return $rc
+    fi
+    
+    # Get version after update
+    local new_ver=""
+    case "$source" in
+        brew)      new_ver=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
+        cask)      new_ver=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
+        uv)        new_ver=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v') ;;
+        cargo)     new_ver=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:') ;;
+        npm)       new_ver=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p") ;;
+        llm)       new_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
+        bun)       new_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
+        goose)     new_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
+        git-tpm)   new_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
+        git-yazi)  new_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
+    esac
+    
+    # Report result
+    if [[ "$old_ver" == "$new_ver" ]]; then
+        echo -e "${GREEN}✓${NC} $tool ${DIM}already at $new_ver${NC}"
+    else
+        echo -e "${GREEN}✓${NC} $tool ${DIM}$old_ver${NC} → ${GREEN}$new_ver${NC}"
+    fi
+}
+
+# =============================================================================
 # Tool Info (--info command)
 # =============================================================================
 

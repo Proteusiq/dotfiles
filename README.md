@@ -117,6 +117,7 @@ dotfiles/
 | Command | Description |
 |---------|-------------|
 | `update` | Full installation (quiet mode) |
+| `update <tool>` | Update a single tool (auto-detects package manager) |
 | `update -v` | Verbose output with timestamps |
 | `update -vv` | Debug mode (show all commands) |
 | `update --dry-run` | Preview changes without executing |

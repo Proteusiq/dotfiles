@@ -82,7 +82,7 @@ git_install() {
 show_help() {
     echo -e "Modern macOS dotfiles installer
 
-${BOLD}Usage:${NC} update [OPTIONS]
+${BOLD}Usage:${NC} update [OPTIONS] [TOOL]
 
 ${BOLD}Options:${NC}
     ${GREEN}-h${NC}, ${GREEN}--help${NC}            Show this help message
@@ -111,9 +111,10 @@ ${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}
 
 ${BOLD}Examples:${NC}
     update                        Full install (quiet mode)
+    update bat                    Update only bat (auto-detects brew)
+    update harlequin              Update only harlequin (auto-detects uv)
     update -v                     Full install with detailed output
     update --only brew            Install only Homebrew packages
-    update --only stow            Re-link dotfiles
     update --dry-run -v           Preview all changes
     update --versions uv          Show Python UV tool versions
     update --info bat             Show info about bat
@@ -199,10 +200,15 @@ parse_args() {
             show_help
             exit 0
             ;;
-        *)
+        -*)
             echo "Unknown option: $1" >&2
             show_help
             exit 1
+            ;;
+        *)
+            # Positional argument - treat as tool name to update
+            update_tool "$1"
+            exit $?
             ;;
         esac
     done
