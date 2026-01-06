@@ -14,53 +14,38 @@
 These rules apply **to all languages**, regardless of tooling.
 
 ### Code Design
-- Prefer **pure functions** over stateful abstractions.
-- Keep **side effects at the boundaries** (I/O, network, filesystem).
-- Make **data flow explicit** — avoid hidden mutation.
-- Prefer **simple, linear control flow** over clever abstractions.
-- Readability and maintainability **beat micro-optimizations**.
+- Prefer **pure functions** where feasible; isolate side effects.
+- Organize code so changes are easy and predictable.
+- Avoid hidden state and mutable globals.
 
 ### Types & Data
-- Prefer **explicit types** over inference when crossing boundaries.
-- Model **invalid states as unrepresentable** where the language allows it.
-- Avoid "stringly-typed" APIs; use enums / unions / tagged types.
-- Validate external input at the boundary, not deep in the system.
+- Declare types explicitly at *module boundaries*.
+- Use language-specific type features to model domain constraints (e.g., Rust enums, TS `zod` schemas).
 
-### Errors & Failures
-- Errors are **data**, not exceptional control flow.
-- Handle errors **where they can be meaningfully acted upon**.
-- Propagate errors with **context**, not just messages.
-- Never silently ignore failures.
+### Error Handling
+- Treat errors as structured data, not control flow.
+- Add contextual information when propagating errors.
+- Avoid swallowing errors silently.
 
 ### Testing
-- Test **behavior**, not implementation details.
-- Favor **unit tests** for pure logic and **integration tests** at boundaries.
-- Avoid excessive mocking; prefer real data and realistic flows.
-- A change is not done until it is **verified by tests**.
+- Prefer **unit tests** for pure logic and **integration tests** for I/O boundaries.
+- Assert behavior, not implementation details.
+- Aim for reproducibility and determinism.
 
-### Comments & Documentation
-- Code should be readable **without comments**.
-- Comments explain **why**, trade-offs, or constraints — never **what**.
-- Public APIs must have clear, minimal documentation.
-- If code needs heavy commenting, **refactor it**.
+### Comments & Docs
+- Use comments to explain *why* something is needed.
+- Public APIs must have documentation; internal helper functions usually do not.
+- If code needs lots of comments, **refactor** instead.
 
-### Tooling & Automation
-- Let tools enforce style; **do not fight the formatter**.
-- Run linters, type checkers, and tests **before every commit**.
-- Fix warnings immediately — warnings are future bugs.
+### Git & Collaboration
+- Use a *feature-branch workflow* with clear naming (e.g., `feat/…`, `fix/…`, `refactor/…`).
+- Rebase or squash commits to maintain clean history.
+- Use PRs with reviews, tests, and clear descriptions.
 
-### Non-Goals
-- No clever metaprogramming.
-- No unnecessary abstractions.
-- No framework-driven architecture.
-- No hidden magic.
-
-### Project Documentation
-For non-trivial projects, add an `ARCHITECTURE.md`:
-- Keep it short and high-level (not API docs).
-- Answer "where's the thing that does X?" (codemap).
-- Name important files/types but don't link (links go stale).
-- Call out architectural invariants explicitly.
+### Architecture & Boundaries
+- Divide code into *layers* (core logic, side effects, interfaces).
+- Keep modules small and focused.
+- Separate business logic from runtime and framework concerns.
 
 ---
 
