@@ -198,19 +198,48 @@ draw_table() {
 }
 
 show_installed_versions() {
-    local rows=""
+    local -a tools=() versions=()
     for entry in "${TRACKED_TOOLS[@]}"; do
-        IFS='|' read -r name tool type <<< "$entry"
+        IFS='|' read -r name _ _ <<< "$entry"
         local ver
         ver=$(get_version "$name")
-        [[ -n "$ver" ]] && rows+="$name|$ver;"
+        if [[ -n "$ver" ]]; then
+            tools+=("$name")
+            versions+=("$ver")
+        fi
     done
-    rows="${rows%;}"
     
-    [[ -z "$rows" ]] && { echo "No tracked tools installed."; return; }
+    [[ ${#tools[@]} -eq 0 ]] && { echo "No tracked tools installed."; return; }
+    
+    # Calculate max widths
+    local w1=4 w2=7  # minimum: "Tool", "Version"
+    for i in "${!tools[@]}"; do
+        (( ${#tools[$i]} > w1 )) && w1=${#tools[$i]}
+        (( ${#versions[$i]} > w2 )) && w2=${#versions[$i]}
+    done
+    ((w1 += 2)); ((w2 += 2))
+    
+    local hc="─" vc="│"
     
     echo -e "\n${BOLD}Installed Tool Versions${NC}\n"
-    draw_table --headers "Tool,Version" --widths "20,20" --rows "$rows"
+    
+    # Top border
+    printf "${BLUE}┌%${w1}s┬%${w2}s┐${NC}\n" "" "" | tr ' ' "$hc"
+    
+    # Header
+    printf "${BLUE}${vc}${NC} ${BOLD}%-$((w1-1))s${NC}${BLUE}${vc}${NC} ${BOLD}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "Tool" "Version"
+    
+    # Separator
+    printf "${BLUE}├%${w1}s┼%${w2}s┤${NC}\n" "" "" | tr ' ' "$hc"
+    
+    # Data rows
+    for i in "${!tools[@]}"; do
+        printf "${BLUE}${vc}${NC} %-$((w1-1))s${BLUE}${vc}${NC} ${GREEN}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "${tools[$i]}" "${versions[$i]}"
+    done
+    
+    # Bottom border
+    printf "${BLUE}└%${w1}s┴%${w2}s┘${NC}\n" "" "" | tr ' ' "$hc"
+    echo ""
 }
 
 print_version_summary() {
