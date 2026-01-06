@@ -1,32 +1,36 @@
-set -e
+#!/bin/bash
+# Bootstrap script for dotfiles installation
+# Usage: curl -L https://bit.ly/42YwVdi | sh
 
-if [ -d "$HOME/dotfiles" ]; then
-    echo "Repository already exists. Updating..."
-    cd ~/dotfiles
-    git pull
+set -euo pipefail
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+log() { echo -e "${GREEN}▶ $*${NC}"; }
+error() { echo -e "${RED}✗ $*${NC}" >&2; exit 1; }
+
+DOTFILES_DIR="$HOME/dotfiles"
+
+if [[ -d "$DOTFILES_DIR" ]]; then
+    log "Dotfiles found. Updating..."
+    cd "$DOTFILES_DIR"
+    git pull || error "Failed to update repository"
 else
-    if type git > /dev/null; then
-        if ! git clone https://github.com/proteusiq/dotfiles ~/dotfiles; then
-            echo "Error: Failed to clone the repository using git."
-            exit 1
-        fi
+    log "Cloning dotfiles..."
+    if command -v git &>/dev/null; then
+        git clone https://github.com/proteusiq/dotfiles "$DOTFILES_DIR" || error "Failed to clone repository"
     else
-        if ! curl -LO https://github.com/proteusiq/dotfiles/archive/master.zip; then
-            echo "Error: Failed to download the repository using curl."
-            exit 1
-        fi
-        if ! unzip master.zip; then
-            echo "Error: Failed to unzip the downloaded file."
-            exit 1
-        fi
-        rm -rf master.zip
-        mv dotfiles-master ~/dotfiles
+        log "Git not found, downloading zip..."
+        curl -fsSL https://github.com/proteusiq/dotfiles/archive/main.zip -o /tmp/dotfiles.zip || error "Failed to download"
+        unzip -q /tmp/dotfiles.zip -d /tmp || error "Failed to unzip"
+        mv /tmp/dotfiles-main "$DOTFILES_DIR"
+        rm -f /tmp/dotfiles.zip
     fi
-    chmod +x ~/dotfiles
-    cd ~/dotfiles
+    cd "$DOTFILES_DIR"
 fi
 
-if ! ./install.sh; then
-    echo "Error: Failed to execute the install script."
-    exit 1
-fi
+log "Running install script..."
+chmod +x "$DOTFILES_DIR/install.sh"
+exec "$DOTFILES_DIR/install.sh"
