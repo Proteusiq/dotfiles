@@ -506,4 +506,4 @@ clean_pycache() {
 }
 
 # run dotfiles install script
-alias update='zsh ~/dotfiles/install.sh'
+alias update='~/dotfiles/install.sh'
