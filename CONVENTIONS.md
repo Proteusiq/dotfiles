@@ -11,56 +11,56 @@
 
 ## Cross-Language Design Principles
 
+These rules apply **to all languages**, regardless of tooling.
+
 ### Code Design
-- Prefer **pure functions** over stateful abstractions
-- Keep **side effects at the boundaries** (I/O, network, filesystem)
-- Make **data flow explicit** — avoid hidden mutation
-- Prefer **simple, linear control flow** over clever abstractions
-- Readability and maintainability **beat micro-optimizations**
+- Prefer **pure functions** over stateful abstractions.
+- Keep **side effects at the boundaries** (I/O, network, filesystem).
+- Make **data flow explicit** — avoid hidden mutation.
+- Prefer **simple, linear control flow** over clever abstractions.
+- Readability and maintainability **beat micro-optimizations**.
 
 ### Types & Data
-- Prefer **explicit types** over inference when crossing boundaries
-- Model **invalid states as unrepresentable** where the language allows
-- Avoid "stringly-typed" APIs; use enums / unions / tagged types
-- Validate external input at the boundary, not deep in the system
+- Prefer **explicit types** over inference when crossing boundaries.
+- Model **invalid states as unrepresentable** where the language allows it.
+- Avoid "stringly-typed" APIs; use enums / unions / tagged types.
+- Validate external input at the boundary, not deep in the system.
 
 ### Errors & Failures
-- Errors are **data**, not exceptional control flow
-- Handle errors **where they can be meaningfully acted upon**
-- Propagate errors with **context**, not just messages
-- Never silently ignore failures
+- Errors are **data**, not exceptional control flow.
+- Handle errors **where they can be meaningfully acted upon**.
+- Propagate errors with **context**, not just messages.
+- Never silently ignore failures.
 
 ### Testing
-- Test **behavior**, not implementation details
-- **Unit tests** for pure logic, **integration tests** at boundaries
-- Avoid excessive mocking; prefer real data and realistic flows
-- **Snapshot tests** for output-heavy code (formatters, CLI, serialization)
-- **Property tests** find edge cases humans miss (hypothesis, proptest, fast-check)
-- A change is not done until it is **verified by tests**
+- Test **behavior**, not implementation details.
+- Favor **unit tests** for pure logic and **integration tests** at boundaries.
+- Avoid excessive mocking; prefer real data and realistic flows.
+- A change is not done until it is **verified by tests**.
 
 ### Comments & Documentation
-- Code should be readable **without comments**
-- Comments explain **why**, trade-offs, or constraints — never **what**
-- Public APIs must have clear, minimal documentation
-- If code needs heavy commenting, **refactor it**
+- Code should be readable **without comments**.
+- Comments explain **why**, trade-offs, or constraints — never **what**.
+- Public APIs must have clear, minimal documentation.
+- If code needs heavy commenting, **refactor it**.
 
 ### Tooling & Automation
-- Let tools enforce style; **do not fight the formatter**
-- Run linters, type checkers, and tests **before every commit**
-- Fix warnings immediately — warnings are future bugs
+- Let tools enforce style; **do not fight the formatter**.
+- Run linters, type checkers, and tests **before every commit**.
+- Fix warnings immediately — warnings are future bugs.
 
 ### Non-Goals
-- No clever metaprogramming
-- No unnecessary abstractions
-- No framework-driven architecture
-- No hidden magic
+- No clever metaprogramming.
+- No unnecessary abstractions.
+- No framework-driven architecture.
+- No hidden magic.
 
 ### Project Documentation
 For non-trivial projects, add an `ARCHITECTURE.md`:
-- Keep it short and high-level (not API docs)
-- Answer "where's the thing that does X?" (codemap)
-- Name important files/types but don't link (links go stale)
-- Call out architectural invariants explicitly
+- Keep it short and high-level (not API docs).
+- Answer "where's the thing that does X?" (codemap).
+- Name important files/types but don't link (links go stale).
+- Call out architectural invariants explicitly.
 
 ---
 
