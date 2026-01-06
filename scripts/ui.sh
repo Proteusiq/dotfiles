@@ -48,7 +48,7 @@ draw_table() {
         printf "\n"
     }
 
-    [[ -n "$title" ]] && { echo ""; log "$title"; echo ""; }
+    [[ -n "$title" ]] && { echo ""; echo -e "${GREEN}$title${NC}"; echo ""; }
     
     draw_hline "$tl" "$tm" "$tr"
     

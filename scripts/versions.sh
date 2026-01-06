@@ -618,7 +618,7 @@ show_installed_versions() {
 }
 
 print_version_summary() {
-    [[ ${#VERSION_CHANGES[@]} -eq 0 ]] && { log_info "No version changes detected."; return; }
+    [[ ${#VERSION_CHANGES[@]} -eq 0 ]] && return
     
     local -a changes=()
     for entry in "${VERSION_CHANGES[@]}"; do
@@ -626,7 +626,7 @@ print_version_summary() {
         [[ "$status" == "New" || "$status" == "Updated" ]] && changes+=("$entry")
     done
     
-    [[ ${#changes[@]} -eq 0 ]] && { log_info "No version changes detected."; return; }
+    [[ ${#changes[@]} -eq 0 ]] && return
 
     local w_tool=6 w_prev=10 w_new=9 w_status=8
     for entry in "${changes[@]}"; do
@@ -640,8 +640,12 @@ print_version_summary() {
     local rows=""
     for entry in "${changes[@]}"; do rows+="$entry;"; done
     
+    # Always show version changes table (not just in verbose mode)
+    echo ""
+    echo -e "${GREEN}📊 Version Changes:${NC}"
+    echo ""
+    
     draw_table \
-        --title "📊 Version Changes Summary:" \
         --headers "Tool,Previous,Current,Status" \
         --widths "$w_tool,$w_prev,$w_new,$w_status" \
         --rows "${rows%;}"
