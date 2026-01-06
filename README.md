@@ -189,6 +189,12 @@ update --only utils
 # Full install with verbose output
 update -v
 
+# Update a single tool (auto-detects package manager)
+update bat              # brew formula
+update zen              # brew cask
+update harlequin        # uv tool
+update repgrep          # cargo
+
 # Check tool versions and info
 update --versions
 update --info fzf
