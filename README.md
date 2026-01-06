@@ -118,6 +118,8 @@ dotfiles/
 |---------|-------------|
 | `update` | Full installation (quiet mode) |
 | `update <tool>` | Update a single tool (auto-detects package manager) |
+| `update --outdated` | Show packages with available updates |
+| `update --all` | Update all packages (brew, uv, cargo, git) |
 | `update -v` | Verbose output with timestamps |
 | `update -vv` | Debug mode (show all commands) |
 | `update --dry-run` | Preview changes without executing |

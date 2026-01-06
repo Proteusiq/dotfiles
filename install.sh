@@ -93,6 +93,8 @@ ${BOLD}Options:${NC}
     ${GREEN}--list${NC}                List functions with full descriptions
     ${GREEN}--versions${NC} [group]    Show installed versions
     ${GREEN}--info${NC} <tool>         Show info about an installed tool
+    ${GREEN}--outdated${NC}            Show packages with available updates
+    ${GREEN}--all${NC}                 Update all packages (brew, uv, cargo, git)
     ${GREEN}--interactive${NC}         Enable interactive prompts
 
 ${BOLD}Functions:${NC}
@@ -113,9 +115,10 @@ ${BOLD}Examples:${NC}
     update                        Full install (quiet mode)
     update bat                    Update only bat (auto-detects brew)
     update harlequin              Update only harlequin (auto-detects uv)
+    update --outdated             Check for available updates
+    update --all                  Update all packages
     update -v                     Full install with detailed output
     update --only brew            Install only Homebrew packages
-    update --dry-run -v           Preview all changes
     update --versions uv          Show Python UV tool versions
     update --info bat             Show info about bat
 
@@ -195,6 +198,14 @@ parse_args() {
             fi
             get_tool_info "$2"
             exit $?
+            ;;
+        --outdated)
+            show_outdated
+            exit 0
+            ;;
+        --all)
+            update_all
+            exit 0
             ;;
         -h | --help)
             show_help

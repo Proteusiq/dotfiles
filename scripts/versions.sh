@@ -2,6 +2,138 @@
 # Version detection and display utilities
 
 # =============================================================================
+# Outdated Tools (--outdated command)
+# =============================================================================
+
+show_outdated() {
+    echo -e "${BOLD}Checking for outdated packages...${NC}\n"
+    
+    local has_outdated=false
+    
+    # Homebrew formulae
+    if has_cmd brew; then
+        echo -e "${CYAN}Homebrew formulae:${NC}"
+        local brew_outdated
+        brew_outdated=$(brew outdated --formula 2>/dev/null)
+        if [[ -n "$brew_outdated" ]]; then
+            has_outdated=true
+            echo "$brew_outdated" | while read -r line; do
+                echo -e "  ${YELLOW}$line${NC}"
+            done
+        else
+            echo -e "  ${GREEN}All up to date${NC}"
+        fi
+        echo ""
+        
+        echo -e "${CYAN}Homebrew casks:${NC}"
+        local cask_outdated
+        cask_outdated=$(brew outdated --cask 2>/dev/null)
+        if [[ -n "$cask_outdated" ]]; then
+            has_outdated=true
+            echo "$cask_outdated" | while read -r line; do
+                echo -e "  ${YELLOW}$line${NC}"
+            done
+        else
+            echo -e "  ${GREEN}All up to date${NC}"
+        fi
+        echo ""
+    fi
+    
+    # UV tools
+    if has_cmd uv; then
+        echo -e "${CYAN}UV tools:${NC}"
+        # uv doesn't have a built-in outdated check, so we check PyPI
+        local uv_tools
+        uv_tools=$(uv tool list 2>/dev/null | grep -v "^-" | awk '{print $1, $2}')
+        local uv_has_outdated=false
+        while read -r name ver; do
+            [[ -z "$name" ]] && continue
+            ver=$(echo "$ver" | tr -d 'v')
+            local latest
+            latest=$(curl -s "https://pypi.org/pypi/$name/json" 2>/dev/null | jq -r '.info.version // empty' 2>/dev/null)
+            if [[ -n "$latest" && "$ver" != "$latest" ]]; then
+                has_outdated=true
+                uv_has_outdated=true
+                echo -e "  ${YELLOW}$name $ver → $latest${NC}"
+            fi
+        done <<< "$uv_tools"
+        [[ "$uv_has_outdated" == false ]] && echo -e "  ${GREEN}All up to date${NC}"
+        echo ""
+    fi
+    
+    # Summary
+    if [[ "$has_outdated" == true ]]; then
+        echo -e "${DIM}Run 'update --all' to update everything, or 'update <tool>' for specific tools${NC}"
+    else
+        echo -e "${GREEN}Everything is up to date!${NC}"
+    fi
+}
+
+# =============================================================================
+# Update All (--all command)
+# =============================================================================
+
+update_all() {
+    echo -e "${BOLD}Updating all packages...${NC}\n"
+    
+    # Homebrew
+    if has_cmd brew; then
+        echo -e "${CYAN}Updating Homebrew...${NC}"
+        brew update --quiet
+        
+        echo -e "${CYAN}Upgrading formulae...${NC}"
+        brew upgrade --formula 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All formulae up to date${NC}"
+        
+        echo -e "${CYAN}Upgrading casks...${NC}"
+        brew upgrade --cask 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All casks up to date${NC}"
+        echo ""
+    fi
+    
+    # UV tools
+    if has_cmd uv; then
+        echo -e "${CYAN}Upgrading UV tools...${NC}"
+        uv tool list 2>/dev/null | grep -v "^-" | awk '{print $1}' | while read -r tool; do
+            [[ -z "$tool" ]] && continue
+            uv tool upgrade "$tool" 2>&1 | grep -v "^$" || true
+        done
+        echo ""
+    fi
+    
+    # Cargo
+    if has_cmd cargo; then
+        echo -e "${CYAN}Upgrading Cargo packages...${NC}"
+        # Only update packages we explicitly track
+        for pkg in repgrep; do
+            if cargo install --list 2>/dev/null | grep -q "^$pkg "; then
+                cargo install "$pkg" 2>&1 | tail -1
+            fi
+        done
+        echo ""
+    fi
+    
+    # Git repos
+    echo -e "${CYAN}Updating git repos...${NC}"
+    [[ -d "$HOME/.tmux/plugins/tpm" ]] && {
+        echo -n "  tpm: "
+        git -C "$HOME/.tmux/plugins/tpm" pull --quiet 2>&1 && echo -e "${GREEN}updated${NC}" || echo -e "${YELLOW}unchanged${NC}"
+    }
+    [[ -d "$HOME/.config/yazi/flavors" ]] && {
+        echo -n "  yazi-flavors: "
+        git -C "$HOME/.config/yazi/flavors" pull --quiet 2>&1 && echo -e "${GREEN}updated${NC}" || echo -e "${YELLOW}unchanged${NC}"
+    }
+    echo ""
+    
+    # Cleanup
+    if has_cmd brew; then
+        echo -e "${CYAN}Cleaning up...${NC}"
+        brew cleanup --prune=all --quiet 2>/dev/null
+        brew autoremove --quiet 2>/dev/null
+    fi
+    
+    echo -e "\n${GREEN}✓ All updates complete${NC}"
+}
+
+# =============================================================================
 # Tool Update (update <tool> command)
 # =============================================================================
 
