@@ -82,7 +82,7 @@ git_install() {
 show_help() {
     echo -e "Modern macOS dotfiles installer
 
-${BOLD}Usage:${NC} ./install.sh [OPTIONS]
+${BOLD}Usage:${NC} update [OPTIONS]
 
 ${BOLD}Options:${NC}
     ${GREEN}-h${NC}, ${GREEN}--help${NC}            Show this help message
@@ -109,16 +109,18 @@ ${BOLD}Functions:${NC}
 ${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}uv${NC} | ${YELLOW}cargo${NC} | ${YELLOW}llm${NC} | ${YELLOW}git${NC} | ${YELLOW}other${NC} | ${YELLOW}all${NC}
 
 ${BOLD}Examples:${NC}
-    ./install.sh                  Full install (quiet mode)
-    ./install.sh -v               Full install with detailed output
-    ./install.sh --only brew      Install only Homebrew packages
-    ./install.sh --only stow      Re-link dotfiles
-    ./install.sh --dry-run -v     Preview all changes
-    ./install.sh --versions uv    Show Python UV tool versions
+    update                        Full install (quiet mode)
+    update -v                     Full install with detailed output
+    update --only brew            Install only Homebrew packages
+    update --only stow            Re-link dotfiles
+    update --dry-run -v           Preview all changes
+    update --versions uv          Show Python UV tool versions
 
 ${BOLD}Environment:${NC}
     ${GREEN}DOTFILES_DIR${NC}    Dotfiles path (default: \$HOME/dotfiles)
-    ${GREEN}LOG_FILE${NC}        Log path (default: \$HOME/macos-setup.log)"
+    ${GREEN}LOG_FILE${NC}        Log path (default: \$HOME/macos-setup.log)
+
+${YELLOW}Note:${NC} If 'update' alias is unavailable, run ~/dotfiles/install.sh directly"
 }
 
 list_functions() {

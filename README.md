@@ -116,15 +116,17 @@ dotfiles/
 
 | Command | Description |
 |---------|-------------|
-| `./install.sh` | Full installation (quiet mode) |
-| `./install.sh -v` | Verbose output with timestamps |
-| `./install.sh -vv` | Debug mode (show all commands) |
-| `./install.sh --dry-run` | Preview changes without executing |
-| `./install.sh --versions` | Show installed tool versions |
-| `./install.sh --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|llm\|git\|other\|all) |
-| `./install.sh --list` | List available functions |
-| `./install.sh --only <fn>` | Run only a specific function |
-| `./install.sh --help` | Show help message |
+| `update` | Full installation (quiet mode) |
+| `update -v` | Verbose output with timestamps |
+| `update -vv` | Debug mode (show all commands) |
+| `update --dry-run` | Preview changes without executing |
+| `update --versions` | Show installed tool versions |
+| `update --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|llm\|git\|other\|all) |
+| `update --list` | List available functions |
+| `update --only <fn>` | Run only a specific function |
+| `update --help` | Show help message |
+
+> **Note:** If `update` alias is unavailable, use `~/dotfiles/install.sh` directly.
 
 ### Verbosity Levels
 
@@ -165,26 +167,26 @@ The script tracks versions before and after installation, showing a summary of w
 
 **Check installed versions anytime:**
 ```bash
-./install.sh --versions
+update --versions
 ```
 
 ### Examples
 
 ```bash
 # Preview what would happen
-./install.sh --dry-run
+update --dry-run
 
 # Run only Homebrew installation
-./install.sh --only brew
+update --only brew
 
 # Update just the utilities
-./install.sh --only utils
+update --only utils
 
 # Full install with verbose output
-./install.sh --verbose
+update -v
 
 # Check current tool versions
-./install.sh --versions
+update --versions
 ```
 
 ### Environment Variables
@@ -195,9 +197,6 @@ The script tracks versions before and after installation, showing a summary of w
 | `LOG_FILE` | `$HOME/macos-setup.log` | Path to installation log |
 
 </details>
-
-> [!TIP]
-> After installation, you can use the `update` alias instead of `./install.sh`
 
 ## Configuration
 
