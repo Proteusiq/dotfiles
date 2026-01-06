@@ -197,49 +197,148 @@ draw_table() {
     echo ""
 }
 
-show_installed_versions() {
-    local -a tools=() versions=()
-    for entry in "${TRACKED_TOOLS[@]}"; do
-        IFS='|' read -r name _ _ <<< "$entry"
-        local ver
-        ver=$(get_version "$name")
-        if [[ -n "$ver" ]]; then
-            tools+=("$name")
-            versions+=("$ver")
-        fi
-    done
+print_section() {
+    local icon="$1" title="$2"
+    shift 2
+    local -a items=()
+    [[ $# -gt 0 ]] && items=("$@")
     
-    [[ ${#tools[@]} -eq 0 ]] && { echo "No tracked tools installed."; return; }
+    [[ ${#items[@]} -eq 0 ]] && return
     
     # Calculate max widths
-    local w1=4 w2=7  # minimum: "Tool", "Version"
-    for i in "${!tools[@]}"; do
-        (( ${#tools[$i]} > w1 )) && w1=${#tools[$i]}
-        (( ${#versions[$i]} > w2 )) && w2=${#versions[$i]}
+    local w1=4 w2=7
+    for item in "${items[@]}"; do
+        IFS='|' read -r name ver <<< "$item"
+        (( ${#name} > w1 )) && w1=${#name}
+        (( ${#ver} > w2 )) && w2=${#ver}
     done
     ((w1 += 2)); ((w2 += 2))
     
     local hc="─" vc="│"
     
-    echo -e "\n${BOLD}Installed Tool Versions${NC}\n"
+    # Section header
+    echo -e "${BOLD}${icon} ${title}${NC}"
     
     # Top border
     printf "${BLUE}┌%${w1}s┬%${w2}s┐${NC}\n" "" "" | tr ' ' "$hc"
     
-    # Header
+    # Column headers
     printf "${BLUE}${vc}${NC} ${BOLD}%-$((w1-1))s${NC}${BLUE}${vc}${NC} ${BOLD}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "Tool" "Version"
     
     # Separator
     printf "${BLUE}├%${w1}s┼%${w2}s┤${NC}\n" "" "" | tr ' ' "$hc"
     
     # Data rows
-    for i in "${!tools[@]}"; do
-        printf "${BLUE}${vc}${NC} %-$((w1-1))s${BLUE}${vc}${NC} ${GREEN}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "${tools[$i]}" "${versions[$i]}"
+    for item in "${items[@]}"; do
+        IFS='|' read -r name ver <<< "$item"
+        printf "${BLUE}${vc}${NC} %-$((w1-1))s${BLUE}${vc}${NC} ${GREEN}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "$name" "$ver"
     done
     
     # Bottom border
     printf "${BLUE}└%${w1}s┴%${w2}s┘${NC}\n" "" "" | tr ' ' "$hc"
     echo ""
+}
+
+show_installed_versions() {
+    echo -e "\n${BOLD}Installed Tool Versions${NC}\n"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # Homebrew Formulae
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a brew_items=()
+    if has_cmd brew; then
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && continue
+            local name ver
+            name=$(echo "$line" | awk '{print $1}')
+            ver=$(echo "$line" | awk '{print $2}')
+            [[ -n "$name" && -n "$ver" ]] && brew_items+=("$name|$ver")
+        done < <(brew list --formula --versions 2>/dev/null)
+    fi
+    [[ ${#brew_items[@]} -gt 0 ]] && print_section "🍺" "Homebrew Formulae (${#brew_items[@]})" "${brew_items[@]}"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # Homebrew Casks
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a cask_items=()
+    if has_cmd brew; then
+        while IFS= read -r line; do
+            [[ -z "$line" ]] && continue
+            local name ver
+            name=$(echo "$line" | awk '{print $1}')
+            ver=$(echo "$line" | awk '{print $2}')
+            [[ -n "$name" && -n "$ver" ]] && cask_items+=("$name|$ver")
+        done < <(brew list --cask --versions 2>/dev/null)
+    fi
+    [[ ${#cask_items[@]} -gt 0 ]] && print_section "🖥️ " "Homebrew Casks (${#cask_items[@]})" "${cask_items[@]}"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # UV Tools
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a uv_items=()
+    if has_cmd uv; then
+        while IFS= read -r line; do
+            [[ -z "$line" || "$line" == -* ]] && continue
+            local name ver
+            name=$(echo "$line" | awk '{print $1}')
+            ver=$(echo "$line" | awk '{print $2}' | tr -d 'v')
+            [[ -n "$name" && -n "$ver" ]] && uv_items+=("$name|$ver")
+        done < <(uv tool list 2>/dev/null)
+    fi
+    [[ ${#uv_items[@]} -gt 0 ]] && print_section "🐍" "UV Tools (${#uv_items[@]})" "${uv_items[@]}"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # Cargo Packages
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a cargo_items=()
+    if has_cmd cargo; then
+        while IFS= read -r line; do
+            [[ -z "$line" || "$line" == " "* ]] && continue
+            local name ver
+            name=$(echo "$line" | awk -F' v' '{print $1}')
+            ver=$(echo "$line" | awk -F' v' '{print $2}' | tr -d ':')
+            [[ -n "$name" && -n "$ver" ]] && cargo_items+=("$name|$ver")
+        done < <(cargo install --list 2>/dev/null)
+    fi
+    [[ ${#cargo_items[@]} -gt 0 ]] && print_section "🦀" "Cargo Packages (${#cargo_items[@]})" "${cargo_items[@]}"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # LLM Plugins
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a llm_items=()
+    if has_cmd llm && has_cmd jq; then
+        while IFS= read -r line; do
+            [[ -n "$line" ]] && llm_items+=("$line")
+        done < <(llm plugins 2>/dev/null | jq -r '.[] | "\(.name)|\(.version)"' 2>/dev/null)
+    fi
+    [[ ${#llm_items[@]} -gt 0 ]] && print_section "🤖" "LLM Plugins (${#llm_items[@]})" "${llm_items[@]}"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # Git Repositories
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a git_items=()
+    local tpm_dir="$HOME/.tmux/plugins/tpm"
+    local yazi_dir="$HOME/.config/yazi/flavors"
+    
+    [[ -d "$tpm_dir/.git" ]] && git_items+=("tpm|$(git -C "$tpm_dir" rev-parse --short HEAD 2>/dev/null)")
+    [[ -d "$yazi_dir/.git" ]] && git_items+=("yazi-flavors|$(git -C "$yazi_dir" rev-parse --short HEAD 2>/dev/null)")
+    
+    [[ ${#git_items[@]} -gt 0 ]] && print_section "📦" "Git Repositories (${#git_items[@]})" "${git_items[@]}"
+    
+    # ─────────────────────────────────────────────────────────────────────────
+    # Other Tools
+    # ─────────────────────────────────────────────────────────────────────────
+    local -a other_items=()
+    
+    [[ -f "$HOME/.bun/bin/bun" ]] && other_items+=("bun|$("$HOME/.bun/bin/bun" --version 2>/dev/null)")
+    has_cmd npm && {
+        local n_ver
+        n_ver=$(npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p')
+        [[ -n "$n_ver" ]] && other_items+=("n|$n_ver")
+    }
+    has_cmd goose && other_items+=("goose|$(goose --version 2>/dev/null | tr -d ' ')")
+    
+    [[ ${#other_items[@]} -gt 0 ]] && print_section "⚙️ " "Other Tools (${#other_items[@]})" "${other_items[@]}"
 }
 
 print_version_summary() {
