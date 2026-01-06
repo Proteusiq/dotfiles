@@ -121,7 +121,8 @@ dotfiles/
 | `update -vv` | Debug mode (show all commands) |
 | `update --dry-run` | Preview changes without executing |
 | `update --versions` | Show installed tool versions |
-| `update --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|llm\|git\|other\|all) |
+| `update --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|llm\|git\|other) |
+| `update --info <tool>` | Show info about a specific tool |
 | `update --list` | List available functions |
 | `update --only <fn>` | Run only a specific function |
 | `update --help` | Show help message |
@@ -167,7 +168,9 @@ The script tracks versions before and after installation, showing a summary of w
 
 **Check installed versions anytime:**
 ```bash
-update --versions
+update --versions          # All tools
+update --versions brew     # Filter by group
+update --info bat          # Info about specific tool
 ```
 
 ### Examples
@@ -185,8 +188,9 @@ update --only utils
 # Full install with verbose output
 update -v
 
-# Check current tool versions
+# Check tool versions and info
 update --versions
+update --info fzf
 ```
 
 ### Environment Variables

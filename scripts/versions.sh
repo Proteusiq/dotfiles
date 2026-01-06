@@ -80,27 +80,55 @@ get_tool_info() {
         return 1
     fi
     
-    # Display info box
-    local w=60
-    local hc="─"
+    # Display info box - simpler approach with fixed strings
+    local w=58  # Inner content width
+    
+    # Pad string to width
+    pad() {
+        local str="$1" len="$2"
+        printf "%-${len}s" "$str"
+    }
+    
+    # Truncate/pad value to fit
+    fit() {
+        local str="$1" len="$2"
+        if [[ ${#str} -gt $len ]]; then
+            echo "${str:0:$len}"
+        else
+            printf "%-${len}s" "$str"
+        fi
+    }
+    
+    local hline="───────────────────────────────────────────────────────────"
     
     echo ""
-    printf "${BLUE}┌%${w}s┐${NC}\n" "" | tr ' ' "$hc"
-    printf "${BLUE}│${NC} ${BOLD}%-$((w-2))s${NC} ${BLUE}│${NC}\n" "$tool"
-    printf "${BLUE}├%${w}s┤${NC}\n" "" | tr ' ' "$hc"
-    printf "${BLUE}│${NC}  ${CYAN}%-12s${NC} %-$((w-16))s ${BLUE}│${NC}\n" "Source:" "$source"
-    printf "${BLUE}│${NC}  ${CYAN}%-12s${NC} ${GREEN}%-$((w-16))s${NC} ${BLUE}│${NC}\n" "Version:" "$version"
-    printf "${BLUE}│${NC}  ${CYAN}%-12s${NC} %-$((w-16))s ${BLUE}│${NC}\n" "Description:" ""
+    echo -e "${BLUE}┌${hline}┐${NC}"
+    echo -e "${BLUE}│${NC} ${BOLD}$(fit "$tool" 57)${NC} ${BLUE}│${NC}"
+    echo -e "${BLUE}├${hline}┤${NC}"
+    echo -e "${BLUE}│${NC} ${CYAN}Source:     ${NC} $(fit "$source" 44) ${BLUE}│${NC}"
+    echo -e "${BLUE}│${NC} ${CYAN}Version:    ${NC} ${GREEN}$(fit "$version" 44)${NC} ${BLUE}│${NC}"
     
-    # Word wrap description
-    local desc_width=$((w - 6))
-    while [[ ${#description} -gt 0 ]]; do
-        local chunk="${description:0:$desc_width}"
-        description="${description:$desc_width}"
-        printf "${BLUE}│${NC}    %-$((w-4))s ${BLUE}│${NC}\n" "$chunk"
-    done
+    # Description with word wrap (44 char width)
+    local desc_w=44
+    if [[ -n "$description" ]]; then
+        local first=true
+        while [[ ${#description} -gt 0 ]]; do
+            local chunk="${description:0:$desc_w}"
+            description="${description:$desc_w}"
+            # Trim leading space from continuation chunks
+            description="${description# }"
+            if [[ "$first" == true ]]; then
+                echo -e "${BLUE}│${NC} ${CYAN}Description:${NC} $(fit "$chunk" 44) ${BLUE}│${NC}"
+                first=false
+            else
+                echo -e "${BLUE}│${NC}              $(fit "$chunk" 44) ${BLUE}│${NC}"
+            fi
+        done
+    else
+        echo -e "${BLUE}│${NC} ${CYAN}Description:${NC} $(fit "-" 44) ${BLUE}│${NC}"
+    fi
     
-    printf "${BLUE}└%${w}s┘${NC}\n" "" | tr ' ' "$hc"
+    echo -e "${BLUE}└${hline}┘${NC}"
     echo ""
 }
 
