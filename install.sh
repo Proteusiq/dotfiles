@@ -94,19 +94,38 @@ OPTIONS:
     -v, --verbose         Show detailed output (timestamps, status messages)
     -vv                   Show debug output (executed commands)
     --interactive         Enable interactive prompts (disabled by default)
-    --only <function>     Run only the specified function
-    --list                List all available functions
+    --only <function>     Run only the specified function (see below)
+    --list                List all available functions with descriptions
     --versions [group]    Show installed versions (brew|cask|uv|cargo|llm|git|other|all)
     -h, --help            Show this help message
 
-VERBOSITY LEVELS:
-    (default)             Section headers + final summary only
-    -v                    Detailed progress + warnings
-    -vv                   Debug: show all executed commands
+FUNCTIONS:
+    dirs      Create directories (~/Codes, ~/Documents/Screenshots)
+    xcode     Install Xcode Command Line Tools
+    brew      Install Homebrew and Brewfile packages
+    node      Install Node.js tools (n, bun)
+    venv      Create Python virtual environments
+    tmux      Install tmux plugin manager
+    yazi      Install Yazi themes
+    utils     Install CLI utilities (git-lfs, gh-dash, goose, llm, etc.)
+    stow      Link dotfiles with GNU Stow
+    cleanup   Run Homebrew cleanup
+
+VERBOSITY:
+    (default)   Section headers + spinner only
+    -v          Detailed progress + timestamps
+    -vv         Debug: show all executed commands
 
 ENVIRONMENT VARIABLES:
-    DOTFILES_DIR        Path to dotfiles directory (default: $HOME/dotfiles)
-    LOG_FILE            Path to log file (default: $HOME/macos-setup.log)
+    DOTFILES_DIR    Path to dotfiles (default: $HOME/dotfiles)
+    LOG_FILE        Path to log file (default: $HOME/macos-setup.log)
+
+EXAMPLES:
+    ./install.sh                  # Full install (quiet)
+    ./install.sh -v               # Full install (verbose)
+    ./install.sh --only brew      # Just Homebrew packages
+    ./install.sh --dry-run        # Preview without changes
+    ./install.sh --versions uv    # Show UV tool versions
 EOF
 }
 
