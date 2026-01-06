@@ -5,22 +5,22 @@ This document explains how the dotfiles installation system works, for future re
 ## Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              install.sh                                      │
-│                         (Main Entry Point)                                   │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  CLI Parser  │  Config  │  Setup Functions  │  Orchestration                │
-└──────┬───────┴────┬─────┴────────┬──────────┴──────────┬────────────────────┘
-       │            │              │                     │
-       ▼            ▼              ▼                     ▼
-┌────────────┐ ┌──────────┐ ┌─────────────┐ ┌─────────────────────────────────┐
-│ logging.sh │ │  ui.sh   │ │ versions.sh │ │        External Tools           │
-├────────────┤ ├──────────┤ ├─────────────┤ ├─────────────────────────────────┤
-│ • Colors   │ │ • Tables │ │ • --versions│ │ brew, uv, cargo, npm, stow, git │
-│ • log_*()  │ │ • Boxes  │ │ • --info    │ │                                 │
-│ • Spinner  │ │ • Format │ │ • --outdated│ │                                 │
-│ • execute()│ │          │ │ • --all     │ │                                 │
-└────────────┘ └──────────┘ └─────────────┘ └─────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                             install.sh                                    │
+│                        (Main Entry Point)                                 │
+├───────────────────────────────────────────────────────────────────────────┤
+│  CLI Parser  │  Config  │  Setup Functions  │  Orchestration              │
+└──────┬───────┴────┬─────┴────────┬──────────┴────────┬────────────────────┘
+       │            │              │                   │
+       ▼            ▼              ▼                   ▼
+┌────────────┐ ┌──────────┐ ┌─────────────┐ ┌───────────────────────────────┐
+│ logging.sh │ │  ui.sh   │ │ versions.sh │ │       External Tools          │
+├────────────┤ ├──────────┤ ├─────────────┤ ├───────────────────────────────┤
+│ • Colors   │ │ • Tables │ │ • --versions│ │ brew, uv, cargo, npm, stow,   │
+│ • log_*()  │ │ • Boxes  │ │ • --info    │ │ git                           │
+│ • Spinner  │ │ • Format │ │ • --outdated│ │                               │
+│ • execute()│ │          │ │ • --all     │ │                               │
+└────────────┘ └──────────┘ └─────────────┘ └───────────────────────────────┘
 ```
 
 ## File Structure
@@ -81,63 +81,63 @@ Tool version management and queries.
 ## Installation Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            update (install.sh)                               │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                           update (install.sh)                             │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. Parse Arguments                                                           │
-│    • Handle flags: --dry-run, -v, --only, --versions, --info, etc.          │
-│    • Single tool update: update <tool> → update_tool() → exit               │
-│    • Query commands: --versions, --info, --outdated → handler → exit        │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 1. Parse Arguments                                                        │
+│    • Handle flags: --dry-run, -v, --only, --versions, --info, etc.        │
+│    • Single tool update: update <tool> → update_tool() → exit             │
+│    • Query commands: --versions, --info, --outdated → handler → exit      │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 2. Prerequisites                                                             │
-│    • check_macos() - Verify running on macOS                                │
-│    • check_prerequisites() - Verify dotfiles directory exists               │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 2. Prerequisites                                                          │
+│    • check_macos() - Verify running on macOS                              │
+│    • check_prerequisites() - Verify dotfiles directory exists             │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 3. Setup Functions (in order)                                                │
-│                                                                              │
-│    ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐         │
-│    │   create_dirs    │  │ install_xcode    │  │   install_brew   │         │
-│    │ ~/Codes          │  │ CLI tools        │  │ Homebrew +       │         │
-│    │ ~/Documents/...  │  │                  │  │ Brewfile         │         │
-│    └──────────────────┘  └──────────────────┘  └──────────────────┘         │
-│             │                    │                      │                    │
-│             ▼                    ▼                      ▼                    │
-│    ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐         │
-│    │  configure_node  │  │create_virtualenvs│  │install_tmux_plug │         │
-│    │ n, bun           │  │ neovim, debugpy  │  │ tpm (git clone)  │         │
-│    └──────────────────┘  └──────────────────┘  └──────────────────┘         │
-│             │                    │                      │                    │
-│             ▼                    ▼                      ▼                    │
-│    ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐         │
-│    │install_yazi_theme│  │   setup_utils    │  │  stow_dotfiles   │         │
-│    │ flavors (git)    │  │ gh-dash, goose,  │  │ Symlink configs  │         │
-│    │                  │  │ llm, repgrep,    │  │                  │         │
-│    │                  │  │ harlequin, sqlit │  │                  │         │
-│    └──────────────────┘  └──────────────────┘  └──────────────────┘         │
-│             │                    │                      │                    │
-│             └────────────────────┼──────────────────────┘                    │
-│                                  ▼                                           │
-│                        ┌──────────────────┐                                  │
-│                        │     cleanup      │                                  │
-│                        │ brew cleanup     │                                  │
-│                        │ brew autoremove  │                                  │
-│                        └──────────────────┘                                  │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 3. Setup Functions (in order)                                             │
+│                                                                           │
+│   ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│   │   create_dirs    │  │  install_xcode   │  │   install_brew   │        │
+│   │ ~/Codes          │  │  CLI tools       │  │ Homebrew +       │        │
+│   │ ~/Documents/...  │  │                  │  │ Brewfile         │        │
+│   └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
+│            │                     │                     │                  │
+│            ▼                     ▼                     ▼                  │
+│   ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│   │  configure_node  │  │create_virtualenvs│  │install_tmux_plug │        │
+│   │ n, bun           │  │ neovim, debugpy  │  │ tpm (git clone)  │        │
+│   └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
+│            │                     │                     │                  │
+│            ▼                     ▼                     ▼                  │
+│   ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│   │install_yazi_theme│  │   setup_utils    │  │  stow_dotfiles   │        │
+│   │ flavors (git)    │  │ gh-dash, goose,  │  │ Symlink configs  │        │
+│   │                  │  │ llm, repgrep,    │  │                  │        │
+│   │                  │  │ harlequin, sqlit │  │                  │        │
+│   └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
+│            │                     │                     │                  │
+│            └─────────────────────┼─────────────────────┘                  │
+│                                  ▼                                        │
+│                        ┌──────────────────┐                               │
+│                        │     cleanup      │                               │
+│                        │ brew cleanup     │                               │
+│                        │ brew autoremove  │                               │
+│                        └──────────────────┘                               │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 4. Summary                                                                   │
-│    • print_version_summary() - Show what was installed/updated              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│ 4. Summary                                                                │
+│    • print_version_summary() - Show what was installed/updated            │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Package Manager Detection
@@ -145,39 +145,39 @@ Tool version management and queries.
 The `update <tool>` command auto-detects the package manager:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           update_tool("bat")                                 │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                          update_tool("bat")                               │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          Detection Order                                     │
-│                                                                              │
-│   1. brew list --formula "bat"  ─────────────────────▶ Found? → brew        │
-│   2. brew list --cask "bat"     ─────────────────────▶ Found? → cask        │
-│   3. uv tool list | grep "bat"  ─────────────────────▶ Found? → uv          │
-│   4. cargo install --list       ─────────────────────▶ Found? → cargo       │
-│   5. npm list -g | grep "bat"   ─────────────────────▶ Found? → npm         │
-│   6. llm plugins | jq           ─────────────────────▶ Found? → llm         │
-│   7. Special cases (bun, goose, tpm, yazi-flavors)   ▶ Found? → standalone  │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                          Detection Order                                  │
+│                                                                           │
+│   1. brew list --formula "bat"  ───────────────────▶ Found? → brew        │
+│   2. brew list --cask "bat"     ───────────────────▶ Found? → cask        │
+│   3. uv tool list | grep "bat"  ───────────────────▶ Found? → uv          │
+│   4. cargo install --list       ───────────────────▶ Found? → cargo       │
+│   5. npm list -g | grep "bat"   ───────────────────▶ Found? → npm         │
+│   6. llm plugins | jq           ───────────────────▶ Found? → llm         │
+│   7. Special cases (bun, goose, tpm, yazi-flavors) ▶ Found? → standalone  │
+│                                                                           │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          Run Update Command                                  │
-│                                                                              │
-│   brew   → brew upgrade "bat"                                               │
-│   cask   → brew upgrade --cask "bat"                                        │
-│   uv     → uv tool upgrade "bat"                                            │
-│   cargo  → cargo install "bat"                                              │
-│   npm    → npm update -g "bat"                                              │
-│   llm    → llm install --upgrade "bat"                                      │
-│   bun    → bun upgrade                                                      │
-│   goose  → curl ... | bash                                                  │
-│   git    → git pull                                                         │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                          Run Update Command                               │
+│                                                                           │
+│   brew   → brew upgrade "bat"                                             │
+│   cask   → brew upgrade --cask "bat"                                      │
+│   uv     → uv tool upgrade "bat"                                          │
+│   cargo  → cargo install "bat"                                            │
+│   npm    → npm update -g "bat"                                            │
+│   llm    → llm install --upgrade "bat"                                    │
+│   bun    → bun upgrade                                                    │
+│   goose  → curl ... | bash                                                │
+│   git    → git pull                                                       │
+│                                                                           │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## CLI Commands Reference
@@ -230,9 +230,9 @@ update --help             # Show help
 The `--info` command checks `bin/tools.py` first for curated descriptions:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                          get_tool_info("bat")                                │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                         get_tool_info("bat")                              │
+└───────────────────────────────────────────────────────────────────────────┘
                                     │
               ┌─────────────────────┴─────────────────────┐
               ▼                                           ▼
@@ -248,18 +248,20 @@ The `--info` command checks `bin/tools.py` first for curated descriptions:
               │                                           │
               └─────────────────────┬─────────────────────┘
                                     ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              Display Box                                     │
-│  ┌───────────────────────────────────────────────────────────┐              │
-│  │ bat                                                        │              │
-│  ├───────────────────────────────────────────────────────────┤              │
-│  │ Source:      brew                                          │              │
-│  │ Version:     0.24.0                                        │              │
-│  │ Description: cat with syntax highlighting & line numbers   │  ◄─ tools.py│
-│  │ Example:     bat script.py → colored code, git markers     │  ◄─ tools.py│
-│  │ Category:    Modern CLI                                    │  ◄─ tools.py│
-│  └───────────────────────────────────────────────────────────┘              │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────┐
+│                              Display Box                                  │
+│                                                                           │
+│  ┌─────────────────────────────────────────────────────────────┐          │
+│  │ bat                                                         │          │
+│  ├─────────────────────────────────────────────────────────────┤          │
+│  │ Source:      brew                                           │          │
+│  │ Version:     0.24.0                                         │          │
+│  │ Description: cat with syntax highlighting & line numbers    │ ◄ tools  │
+│  │ Example:     bat script.py → colored code, git markers      │ ◄ tools  │
+│  │ Category:    Modern CLI                                     │ ◄ tools  │
+│  └─────────────────────────────────────────────────────────────┘          │
+│                                                                           │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Environment Variables
