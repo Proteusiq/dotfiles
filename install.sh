@@ -67,7 +67,7 @@ dry_run_msg() { [[ "$DRY_RUN" == true ]] && echo "[DRY RUN] $*"; }
 
 has_cmd() { command -v "$1" &>/dev/null; }
 
-# Clone or update a git repository
+# Clone or update a git repository. Returns 0 if cloned, 1 if already existed (but always succeeds)
 git_clone_or_pull() {
     local url="$1" folder="$2"
     if [[ ! -d "$folder" ]]; then
@@ -75,7 +75,13 @@ git_clone_or_pull() {
         return 0
     fi
     [[ "$DRY_RUN" == false ]] && git -C "$folder" pull --quiet 2>/dev/null || true
-    return 1  # Already existed
+    return 0
+}
+
+# Check if repo was freshly cloned (folder didn't exist before)
+is_new_clone() {
+    local folder="$1"
+    [[ ! -d "$folder" ]]
 }
 
 # =============================================================================
@@ -300,17 +306,21 @@ parse_args() {
 # =============================================================================
 
 check_macos() {
-    [[ "$(uname)" != "Darwin" ]] && { log_error "This script is designed for macOS only."; exit 1; }
+    if [[ "$(uname)" != "Darwin" ]]; then
+        log_error "This script is designed for macOS only."
+        exit 1
+    fi
 }
 
 check_prerequisites() {
     log "🔍 Checking prerequisites..."
-    [[ ! -d "$DOTFILES_DIR" ]] && {
+    if [[ ! -d "$DOTFILES_DIR" ]]; then
         log_error "Dotfiles directory not found at $DOTFILES_DIR"
         log_info "Please clone your dotfiles repository first"
         exit 1
-    }
+    fi
     [[ ! -f "$DOTFILES_DIR/Brewfile" ]] && log_warn "Brewfile not found at $DOTFILES_DIR/Brewfile"
+    return 0
 }
 
 create_dirs() {
@@ -393,31 +403,41 @@ configure_node() {
 
 install_tmux_plugins() {
     log "🖥 Installing tmux plugin manager..."
+    local folder="$HOME/.tmux/plugins/tpm"
     local old_ver
     old_ver=$(get_version "tpm")
+    local was_missing=false
+    [[ ! -d "$folder" ]] && was_missing=true
     
-    if git_clone_or_pull "https://github.com/tmux-plugins/tpm" "$HOME/.tmux/plugins/tpm"; then
+    git_clone_or_pull "https://github.com/tmux-plugins/tpm" "$folder"
+    
+    if [[ "$was_missing" == true ]]; then
         log "✅ TMux plugin manager installed"
     else
         log "✅ TMux plugin manager already installed"
     fi
-    
     [[ "$DRY_RUN" == false ]] && track_version "tpm" "$old_ver"
+    return 0
 }
 
 install_yazi_themes() {
     log "🎨 Installing Yazi themes..."
+    local folder="$HOME/.config/yazi/flavors"
     local old_ver
     old_ver=$(get_version "yazi-flavors")
+    local was_missing=false
+    [[ ! -d "$folder" ]] && was_missing=true
     
     execute mkdir -p "$HOME/.config/yazi"
-    if git_clone_or_pull "https://github.com/yazi-rs/flavors.git" "$HOME/.config/yazi/flavors"; then
+    git_clone_or_pull "https://github.com/yazi-rs/flavors.git" "$folder"
+    
+    if [[ "$was_missing" == true ]]; then
         log "✅ Yazi themes installed"
     else
         log "✅ Yazi themes already installed"
     fi
-    
     [[ "$DRY_RUN" == false ]] && track_version "yazi-flavors" "$old_ver"
+    return 0
 }
 
 setup_utils() {
@@ -493,14 +513,15 @@ setup_utils() {
     fi
     
     # Track changes
-    [[ "$DRY_RUN" == false ]] && {
+    if [[ "$DRY_RUN" == false ]]; then
         track_version "goose" "$old_goose"
         track_version "repgrep" "$old_repgrep"
         track_version "harlequin" "$old_harlequin"
         track_version "sqlit-tui" "$old_sqlit"
         track_version "llm-anthropic" "$old_llm_anthropic"
         track_version "llm-ollama" "$old_llm_ollama"
-    }
+    fi
+    return 0
 }
 
 create_virtualenvs() {
