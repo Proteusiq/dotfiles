@@ -2,36 +2,58 @@
 
 ## Philosophy
 
-### Simplicity is King
-- The simplest solution that works is the best solution
-- If code needs step-by-step comments, it's too complex—refactor it
-- Clear logic over clever tricks
+- **Simplicity is king** — the simplest solution that works is the best solution
+- **Self-documenting code** — if it needs comments, refactor it
+- **Functional over OOP** — pure functions, composition, immutability
+- **Commit early, commit often** — small, focused, verified commits
 
-### Self-Documenting Code
-- **No tutorial comments**: never `# loop through items` or `// increment counter`
-- Descriptive names: `calculate_total_price()` not `calc()`, `user_ids` not `ids`
-- If you must comment, explain **why**, never **what**
+---
 
-### Functional Over OOP (Pragmatically)
-- Prefer pure functions and immutability
-- Composition over inheritance
-- Use classes when they genuinely simplify (state machines, resource management)
-- Data: dataclasses, structs, plain objects—not class hierarchies
+## Cross-Language Design Principles
 
-### Commit Early, Commit Often
-- Small, focused commits after each logical change
-- One commit = one coherent unit of work
-- Format: `type: description`
+### Code Design
+- Prefer **pure functions** over stateful abstractions
+- Keep **side effects at the boundaries** (I/O, network, filesystem)
+- Make **data flow explicit** — avoid hidden mutation
+- Prefer **simple, linear control flow** over clever abstractions
+- Readability and maintainability **beat micro-optimizations**
 
-### Verify Before Commit
-- Always verify changes work before committing
-- If it's not tested, it's not done
+### Types & Data
+- Prefer **explicit types** over inference when crossing boundaries
+- Model **invalid states as unrepresentable** where the language allows
+- Avoid "stringly-typed" APIs; use enums / unions / tagged types
+- Validate external input at the boundary, not deep in the system
 
-### Testing Philosophy
-- **Snapshot tests**: great for output-heavy code (formatters, CLI output, serialization)
-- **Property tests**: find edge cases humans miss (hypothesis, proptest, fast-check)
-- **Integration over mocks**: test real behavior, mock only external services
-- **Test names describe behavior**: `test_empty_input_returns_none` not `test1`
+### Errors & Failures
+- Errors are **data**, not exceptional control flow
+- Handle errors **where they can be meaningfully acted upon**
+- Propagate errors with **context**, not just messages
+- Never silently ignore failures
+
+### Testing
+- Test **behavior**, not implementation details
+- **Unit tests** for pure logic, **integration tests** at boundaries
+- Avoid excessive mocking; prefer real data and realistic flows
+- **Snapshot tests** for output-heavy code (formatters, CLI, serialization)
+- **Property tests** find edge cases humans miss (hypothesis, proptest, fast-check)
+- A change is not done until it is **verified by tests**
+
+### Comments & Documentation
+- Code should be readable **without comments**
+- Comments explain **why**, trade-offs, or constraints — never **what**
+- Public APIs must have clear, minimal documentation
+- If code needs heavy commenting, **refactor it**
+
+### Tooling & Automation
+- Let tools enforce style; **do not fight the formatter**
+- Run linters, type checkers, and tests **before every commit**
+- Fix warnings immediately — warnings are future bugs
+
+### Non-Goals
+- No clever metaprogramming
+- No unnecessary abstractions
+- No framework-driven architecture
+- No hidden magic
 
 ### Project Documentation
 For non-trivial projects, add an `ARCHITECTURE.md`:
