@@ -17,6 +17,7 @@ readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m'
+readonly BOLD='\033[1m'
 readonly NC='\033[0m' # No Color
 
 # Flags
@@ -24,6 +25,193 @@ DRY_RUN=false
 VERBOSE=false
 SKIP_INTERACTIVE=true
 ONLY_FUNCTION=""
+
+# Version tracking array - stores "tool|old_version|new_version|status"
+declare -a VERSION_CHANGES=()
+
+# ============================================================================
+# Version Detection Functions
+# ============================================================================
+
+get_tool_version() {
+    local tool="$1"
+    case "$tool" in
+        bun)
+            [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null || echo ""
+            ;;
+        goose)
+            command -v goose &>/dev/null && goose --version 2>/dev/null | tr -d ' ' || echo ""
+            ;;
+        llm)
+            command -v llm &>/dev/null && llm --version 2>/dev/null | awk '{print $3}' || echo ""
+            ;;
+        repgrep)
+            command -v rgr &>/dev/null && cargo install --list 2>/dev/null | grep "^repgrep" | awk '{print $2}' | tr -d 'v:' || echo ""
+            ;;
+        tpm)
+            local folder="$HOME/.tmux/plugins/tpm"
+            [[ -d "$folder/.git" ]] && git -C "$folder" rev-parse --short HEAD 2>/dev/null || echo ""
+            ;;
+        yazi-flavors)
+            local folder="$HOME/.config/yazi/flavors"
+            [[ -d "$folder/.git" ]] && git -C "$folder" rev-parse --short HEAD 2>/dev/null || echo ""
+            ;;
+        n)
+            command -v npm &>/dev/null && npm list -g --depth=0 2>/dev/null | grep " n@" | sed 's/.*n@//' || echo ""
+            ;;
+        *)
+            echo ""
+            ;;
+    esac
+}
+
+get_brew_package_version() {
+    local package="$1"
+    brew list --versions "$package" 2>/dev/null | awk '{print $2}' || echo ""
+}
+
+get_uv_tool_version() {
+    local tool="$1"
+    uv tool list 2>/dev/null | grep "^$tool " | awk '{print $2}' | tr -d 'v' || echo ""
+}
+
+get_llm_plugin_version() {
+    local plugin="$1"
+    llm plugins 2>/dev/null | jq -r ".[] | select(.name == \"$plugin\") | .version" 2>/dev/null || echo ""
+}
+
+# Record a version change (only if actually changed)
+record_change() {
+    local tool="$1"
+    local old_version="$2"
+    local new_version="$3"
+    
+    # Skip if no change
+    [[ "$old_version" == "$new_version" ]] && return
+    
+    # Skip if both empty
+    [[ -z "$old_version" && -z "$new_version" ]] && return
+    
+    local status
+    if [[ -z "$old_version" || "$old_version" == "" ]]; then
+        status="New"
+        old_version="-"
+    else
+        status="Updated"
+    fi
+    
+    VERSION_CHANGES+=("$tool|$old_version|$new_version|$status")
+}
+
+# Track a tool's version change
+track_version() {
+    local tool="$1"
+    local old_version="$2"
+    local new_version
+    new_version=$(get_tool_version "$tool")
+    record_change "$tool" "$old_version" "$new_version"
+}
+
+# ============================================================================
+# Summary Table Functions
+# ============================================================================
+
+print_version_summary() {
+    # Filter to only show changes (New or Updated)
+    local -a changes=()
+    for entry in "${VERSION_CHANGES[@]}"; do
+        IFS='|' read -r tool old new status <<< "$entry"
+        if [[ "$status" == "New" || "$status" == "Updated" ]]; then
+            changes+=("$entry")
+        fi
+    done
+    
+    # If no changes, skip the table
+    if [[ ${#changes[@]} -eq 0 ]]; then
+        log_info "No version changes detected."
+        return 0
+    fi
+    
+    # Calculate column widths
+    local -i w_tool=4 w_prev=8 w_new=7 w_status=6
+    for entry in "${changes[@]}"; do
+        IFS='|' read -r tool old new status <<< "$entry"
+        (( ${#tool} > w_tool )) && w_tool=${#tool}
+        (( ${#old} > w_prev )) && w_prev=${#old}
+        (( ${#new} > w_new )) && w_new=${#new}
+        (( ${#status} > w_status )) && w_status=${#status}
+    done
+    
+    # Add padding
+    ((w_tool += 2))
+    ((w_prev += 2))
+    ((w_new += 2))
+    ((w_status += 2))
+    
+    # Box drawing characters
+    local h="─" v="│"
+    local tl="┌" tr="┐" bl="└" br="┘"
+    local ml="├" mr="┤" tm="┬" bm="┴" x="┼"
+    
+    # Helper to draw horizontal line
+    draw_line() {
+        local left="$1" mid="$2" right="$3"
+        printf "${BLUE}%s" "$left"
+        printf '%*s' "$w_tool" '' | tr ' ' "$h"
+        printf "%s" "$mid"
+        printf '%*s' "$w_prev" '' | tr ' ' "$h"
+        printf "%s" "$mid"
+        printf '%*s' "$w_new" '' | tr ' ' "$h"
+        printf "%s" "$mid"
+        printf '%*s' "$w_status" '' | tr ' ' "$h"
+        printf "%s${NC}\n" "$right"
+    }
+    
+    echo ""
+    log "📊 Version Changes Summary:"
+    echo ""
+    
+    # Top border
+    draw_line "$tl" "$tm" "$tr"
+    
+    # Header row
+    printf "${BLUE}%s${NC}" "$v"
+    printf " ${BOLD}%-*s${NC}" "$((w_tool - 1))" "Tool"
+    printf "${BLUE}%s${NC}" "$v"
+    printf " ${BOLD}%-*s${NC}" "$((w_prev - 1))" "Previous"
+    printf "${BLUE}%s${NC}" "$v"
+    printf " ${BOLD}%-*s${NC}" "$((w_new - 1))" "Current"
+    printf "${BLUE}%s${NC}" "$v"
+    printf " ${BOLD}%-*s${NC}" "$((w_status - 1))" "Status"
+    printf "${BLUE}%s${NC}\n" "$v"
+    
+    # Header separator
+    draw_line "$ml" "$x" "$mr"
+    
+    # Data rows
+    for entry in "${changes[@]}"; do
+        IFS='|' read -r tool old new status <<< "$entry"
+        
+        # Color for status
+        local status_color="$NC"
+        [[ "$status" == "New" ]] && status_color="$GREEN"
+        [[ "$status" == "Updated" ]] && status_color="$YELLOW"
+        
+        printf "${BLUE}%s${NC}" "$v"
+        printf " %-*s" "$((w_tool - 1))" "$tool"
+        printf "${BLUE}%s${NC}" "$v"
+        printf " ${RED}%-*s${NC}" "$((w_prev - 1))" "$old"
+        printf "${BLUE}%s${NC}" "$v"
+        printf " ${GREEN}%-*s${NC}" "$((w_new - 1))" "$new"
+        printf "${BLUE}%s${NC}" "$v"
+        printf " ${status_color}%-*s${NC}" "$((w_status - 1))" "$status"
+        printf "${BLUE}%s${NC}\n" "$v"
+    done
+    
+    # Bottom border
+    draw_line "$bl" "$bm" "$br"
+    echo ""
+}
 
 # Parse command line arguments
 parse_args() {
@@ -284,6 +472,11 @@ install_brew() {
 configure_node() {
     log "📦 Configuring Node..."
     
+    # Capture versions before
+    local old_n_version old_bun_version
+    old_n_version=$(get_tool_version "n")
+    old_bun_version=$(get_tool_version "bun")
+    
     if [[ "$DRY_RUN" == false ]] && command -v npm &>/dev/null; then
         execute npm install -g n
     elif [[ "$DRY_RUN" == true ]]; then
@@ -303,6 +496,12 @@ configure_node() {
     elif [[ "$DRY_RUN" == true ]]; then
         echo "[DRY RUN] Would install Bun if not present"
     fi
+    
+    # Track version changes
+    if [[ "$DRY_RUN" == false ]]; then
+        track_version "n" "$old_n_version"
+        track_version "bun" "$old_bun_version"
+    fi
 }
 
 # Function to install tmux plugin manager
@@ -310,12 +509,25 @@ install_tmux_plugins() {
     log "🖥 Installing tmux plugin manager..."
     local folder="$HOME/.tmux/plugins/tpm"
     local url="https://github.com/tmux-plugins/tpm"
+    
+    # Capture version before
+    local old_version
+    old_version=$(get_tool_version "tpm")
 
     if [[ ! -d "$folder" ]]; then
         execute git clone "$url" "$folder"
         log "✅ TMux plugin manager installed"
     else
+        # Pull latest changes
+        if [[ "$DRY_RUN" == false ]]; then
+            git -C "$folder" pull --quiet 2>/dev/null || true
+        fi
         log "✅ TMux plugin manager already installed"
+    fi
+    
+    # Track version changes
+    if [[ "$DRY_RUN" == false ]]; then
+        track_version "tpm" "$old_version"
     fi
 }
 
@@ -324,19 +536,52 @@ install_yazi_themes() {
     log "🎨 Installing Yazi themes..."
     local folder="$HOME/.config/yazi/flavors"
     local url="https://github.com/yazi-rs/flavors.git"
+    
+    # Capture version before
+    local old_version
+    old_version=$(get_tool_version "yazi-flavors")
 
     execute mkdir -p "$(dirname "$folder")"
     if [[ ! -d "$folder" ]]; then
         execute git clone "$url" "$folder"
         log "✅ Yazi themes installed"
     else
+        # Pull latest changes
+        if [[ "$DRY_RUN" == false ]]; then
+            git -C "$folder" pull --quiet 2>/dev/null || true
+        fi
         log "✅ Yazi themes already installed"
+    fi
+    
+    # Track version changes
+    if [[ "$DRY_RUN" == false ]]; then
+        track_version "yazi-flavors" "$old_version"
     fi
 }
 
 # Function for additional setups with better error handling
 setup_utils() {
     log "🔧 Setting up additional utilities..."
+    
+    # Capture versions before
+    local old_goose_version old_repgrep_version old_llm_version
+    local old_llm_anthropic_version old_llm_ollama_version
+    old_goose_version=$(get_tool_version "goose")
+    old_repgrep_version=$(get_tool_version "repgrep")
+    old_llm_version=$(get_tool_version "llm")
+    old_llm_anthropic_version=$(get_llm_plugin_version "llm-anthropic")
+    old_llm_ollama_version=$(get_llm_plugin_version "llm-ollama")
+    
+    # Capture UV tool versions before
+    declare -A old_uv_versions
+    local uv_tools=(
+        "llm"
+        "harlequin"
+        "sqlit-tui"
+    )
+    for tool in "${uv_tools[@]}"; do
+        old_uv_versions["$tool"]=$(get_uv_tool_version "$tool")
+    done
 
     # Git LFS
      if command -v git &>/dev/null; then
@@ -363,13 +608,6 @@ setup_utils() {
         log "Installing Goose..."
         execute bash -c "$(curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash)"
     fi
-
-    # UV tools installation with error handling
-    local uv_tools=(
-        "llm"
-        "harlequin"
-        "sqlit-tui"
-    )
 
     if [[ "$DRY_RUN" == false ]] && command -v uv &>/dev/null; then
         log "🔧 Installing/updating UV tools..."
@@ -426,6 +664,26 @@ setup_utils() {
                 execute chmod +x "$HOME/.local/bin/$basename_no_ext"
             fi
         done
+    fi
+    
+    # Track version changes
+    if [[ "$DRY_RUN" == false ]]; then
+        track_version "goose" "$old_goose_version"
+        track_version "repgrep" "$old_repgrep_version"
+        
+        # Track UV tools
+        for tool in "${uv_tools[@]}"; do
+            local new_version
+            new_version=$(get_uv_tool_version "$tool")
+            record_change "$tool" "${old_uv_versions[$tool]}" "$new_version"
+        done
+        
+        # Track LLM plugins
+        local new_llm_anthropic new_llm_ollama
+        new_llm_anthropic=$(get_llm_plugin_version "llm-anthropic")
+        new_llm_ollama=$(get_llm_plugin_version "llm-ollama")
+        record_change "llm-anthropic" "$old_llm_anthropic_version" "$new_llm_anthropic"
+        record_change "llm-ollama" "$old_llm_ollama_version" "$new_llm_ollama"
     fi
 }
 
@@ -567,6 +825,11 @@ main() {
             exit 1
         fi
     done
+    
+    # Print version changes summary
+    if [[ "$DRY_RUN" == false ]]; then
+        print_version_summary
+    fi
 
     log "🦊 The World is restored. Setup completed successfully!"
     log "📋 Log file available at: $LOG_FILE"
