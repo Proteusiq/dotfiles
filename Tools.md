@@ -46,6 +46,7 @@ A comprehensive guide to all tools, utilities, and applications included in this
 - [Productivity Applications](#productivity-applications)
 - [Window Management](#window-management)
 - [System Utilities](#system-utilities)
+- [Dotfiles Management](#dotfiles-management)
 
 ---
 
@@ -1409,6 +1410,11 @@ Screenshot and screen recording tool with annotation.
 ### Alt-Tab
 Windows-style alt-tab window switcher for macOS.
 
+### Zen Browser
+Privacy-focused Firefox-based browser with a clean, minimal UI. Emphasizes distraction-free browsing with vertical tabs and workspace organization.
+
+**Use cases:** Privacy-conscious browsing, distraction-free web, Firefox extension compatibility
+
 ---
 
 ## Window Management
@@ -1525,6 +1531,40 @@ rgr pattern                   # Interactive search
 ```
 
 Installed via: `cargo install repgrep`
+
+---
+
+## Dotfiles Management
+
+### update (install.sh CLI)
+The primary CLI for managing this dotfiles setup. Installs, updates, and queries tools.
+
+```bash
+update                        # Full dotfiles install (idempotent)
+update <tool>                 # Update single tool (auto-detects package manager)
+update --versions             # Show all installed tool versions
+update --versions brew        # Show versions for specific group
+update --info <tool>          # Show tool info, examples, and category
+update --outdated             # Show packages with available updates
+update --all                  # Update everything (brew, uv, cargo, git repos)
+update --only <function>      # Run specific install function
+update --list                 # List available install functions
+update --help                 # Show help
+```
+
+**Version groups:** `brew`, `cask`, `uv`, `cargo`, `node`, `go`
+
+**Examples:**
+```bash
+update bat                    # Update bat (detects: brew)
+update ruff                   # Update ruff (detects: uv tool)
+update --info fzf             # Show fzf description and examples
+update --outdated             # Check what needs updating
+update --all                  # Update all package managers
+update --only install_nvim    # Re-run just nvim setup
+```
+
+**Use cases:** Dotfiles installation, tool updates, version management, system maintenance
 
 ---
 
