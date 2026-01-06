@@ -15,7 +15,7 @@ readonly RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m' BOLD='\033[1m' NC='\033[0m'
 
 DRY_RUN=false
-VERBOSE=false
+VERBOSITY=0  # 0=quiet, 1=normal, 2=debug
 SKIP_INTERACTIVE=true
 ONLY_FUNCTION=""
 VERSION_CHANGES=()
@@ -52,18 +52,69 @@ readonly AVAILABLE_FUNCTIONS=(
 # Core Utilities
 # =============================================================================
 
-log()       { echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $*${NC}" | tee -a "$LOG_FILE"; }
+# Logging levels: step (always), log (v>=1), info (v>=1), debug (v>=2)
+# Errors and warnings always shown
+log_step()  { echo -e "${GREEN}$*${NC}" | tee -a "$LOG_FILE"; }
+log()       { [[ $VERBOSITY -ge 1 ]] && echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $*${NC}" | tee -a "$LOG_FILE" || echo "$*" >> "$LOG_FILE"; }
 log_error() { echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $*${NC}" | tee -a "$LOG_FILE" >&2; }
 log_warn()  { echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $*${NC}" | tee -a "$LOG_FILE"; }
-log_info()  { echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $*${NC}" | tee -a "$LOG_FILE"; }
+log_info()  { [[ $VERBOSITY -ge 1 ]] && echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $*${NC}" | tee -a "$LOG_FILE" || echo "INFO: $*" >> "$LOG_FILE"; }
+log_debug() { [[ $VERBOSITY -ge 2 ]] && echo -e "${BLUE}[DEBUG] $*${NC}" | tee -a "$LOG_FILE" || true; }
+
+# Progress indicator for long-running commands in quiet mode
+SPINNER_PID=""
+spin() {
+    local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+    local i=0
+    tput civis 2>/dev/null  # hide cursor
+    while true; do
+        printf "\r  ${BLUE}%s${NC}  " "${chars:$i:1}"
+        i=$(( (i + 1) % ${#chars} ))
+        sleep 0.1
+    done
+}
+
+start_spinner() {
+    [[ $VERBOSITY -ge 1 || "$DRY_RUN" == true ]] && return
+    if [[ -t 1 ]]; then
+        # Real terminal: animated spinner
+        spin &
+        SPINNER_PID=$!
+        disown
+    fi
+}
+
+stop_spinner() {
+    if [[ -n "$SPINNER_PID" ]]; then
+        kill "$SPINNER_PID" 2>/dev/null
+        wait "$SPINNER_PID" 2>/dev/null
+        printf "\r      \r"
+        tput cnorm 2>/dev/null  # show cursor
+        SPINNER_PID=""
+    fi
+}
+
+# Run command: quiet mode suppresses output + shows spinner, verbose shows output
+run_quiet() {
+    [[ "$DRY_RUN" == true ]] && { dry_run_msg "Would run: $*"; return 0; }
+    if [[ $VERBOSITY -ge 1 ]]; then
+        "$@"
+    else
+        start_spinner
+        "$@" >> "$LOG_FILE" 2>&1
+        local rc=$?
+        stop_spinner
+        return $rc
+    fi
+}
 
 execute() {
-    [[ "$VERBOSE" == true ]] && log_info "Executing: $*"
-    [[ "$DRY_RUN" == true ]] && { echo "[DRY RUN] Would execute: $*"; return 0; }
+    log_debug "Executing: $*"
+    [[ "$DRY_RUN" == true ]] && { [[ $VERBOSITY -ge 1 ]] && echo "[DRY RUN] Would execute: $*"; return 0; }
     "$@"
 }
 
-dry_run_msg() { [[ "$DRY_RUN" == true ]] && echo "[DRY RUN] $*"; }
+dry_run_msg() { [[ "$DRY_RUN" == true && $VERBOSITY -ge 1 ]] && echo "[DRY RUN] $*" || true; }
 
 has_cmd() { command -v "$1" &>/dev/null; }
 
@@ -71,10 +122,10 @@ has_cmd() { command -v "$1" &>/dev/null; }
 git_clone_or_pull() {
     local url="$1" folder="$2"
     if [[ ! -d "$folder" ]]; then
-        execute git clone "$url" "$folder"
+        run_quiet git clone "$url" "$folder"
         return 0
     fi
-    [[ "$DRY_RUN" == false ]] && git -C "$folder" pull --quiet 2>/dev/null || true
+    [[ "$DRY_RUN" == false ]] && run_quiet git -C "$folder" pull --quiet 2>/dev/null || true
     return 0
 }
 
@@ -425,12 +476,18 @@ Usage: ./install.sh [OPTIONS]
 
 OPTIONS:
     --dry-run             Show what would be done without executing
-    --verbose             Show detailed output
+    -v, --verbose         Show detailed output (timestamps, status messages)
+    -vv                   Show debug output (executed commands)
     --interactive         Enable interactive prompts (disabled by default)
     --only <function>     Run only the specified function
     --list                List all available functions
     --versions [group]    Show installed versions (brew|cask|uv|cargo|llm|git|other|all)
     -h, --help            Show this help message
+
+VERBOSITY LEVELS:
+    (default)             Section headers + final summary only
+    -v                    Detailed progress + warnings
+    -vv                   Debug: show all executed commands
 
 ENVIRONMENT VARIABLES:
     DOTFILES_DIR        Path to dotfiles directory (default: $HOME/dotfiles)
@@ -459,7 +516,8 @@ parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
             --dry-run)          DRY_RUN=true; shift ;;
-            --verbose)          VERBOSE=true; shift ;;
+            -v|--verbose)       VERBOSITY=1; shift ;;
+            -vv)                VERBOSITY=2; shift ;;
             --interactive)      SKIP_INTERACTIVE=false; shift ;;
             --skip-interactive) SKIP_INTERACTIVE=true; shift ;;
             --only)             ONLY_FUNCTION="$2"; shift 2 ;;
@@ -492,7 +550,7 @@ check_macos() {
 }
 
 check_prerequisites() {
-    log "🔍 Checking prerequisites..."
+    log_step "📋 Checking prerequisites"
     if [[ ! -d "$DOTFILES_DIR" ]]; then
         log_error "Dotfiles directory not found at $DOTFILES_DIR"
         log_info "Please clone your dotfiles repository first"
@@ -503,7 +561,7 @@ check_prerequisites() {
 }
 
 create_dirs() {
-    log "🗄 Creating directories..."
+    log_step "📁 Creating directories"
     local dirs=("$HOME/Codes" "$HOME/Documents/Screenshots")
     for dir in "${dirs[@]}"; do
         [[ ! -d "$dir" ]] && { execute mkdir -p "$dir"; log "Created $dir"; } || log_info "$dir already exists"
@@ -511,10 +569,10 @@ create_dirs() {
 }
 
 install_xcode_tools() {
-    log "🛠 Installing Xcode Command Line Tools..."
+    log_step "🔨 Installing Xcode CLI"
     
     if [[ "$DRY_RUN" == false ]] && xcode-select --print-path &>/dev/null; then
-        log "✅ Xcode Command Line Tools already installed."
+        log_info "✅ Xcode Command Line Tools already installed."
         return 0
     fi
     dry_run_msg "Would check/install Xcode Command Line Tools"
@@ -536,11 +594,11 @@ install_xcode_tools() {
             execute sudo xcodebuild -license accept
         }
     fi
-    log "✅ Xcode Command Line Tools installed successfully"
+    log_info "✅ Xcode Command Line Tools installed successfully"
 }
 
 install_brew() {
-    log "🍺 Installing Homebrew and packages..."
+    log_step "🍺 Installing Homebrew packages"
     
     if [[ "$DRY_RUN" == false ]] && ! has_cmd brew; then
         log "Installing Homebrew..."
@@ -548,29 +606,41 @@ install_brew() {
         [[ -f "$HOME/.zprofile" ]] && echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
     else
-        [[ "$DRY_RUN" == false ]] && log "✅ Homebrew already installed"
+        [[ "$DRY_RUN" == false ]] && log_info "✅ Homebrew already installed"
         dry_run_msg "Would install/check Homebrew"
     fi
 
-    execute brew update --force --quiet
-    [[ -f "$DOTFILES_DIR/Brewfile" ]] && execute brew bundle --file="$DOTFILES_DIR/Brewfile" || log_warn "Brewfile not found"
+    if [[ "$DRY_RUN" == false ]]; then
+        run_quiet brew update --force --quiet
+        if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
+            run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile"
+        else
+            log_warn "Brewfile not found"
+        fi
+    else
+        dry_run_msg "Would run: brew update && brew bundle"
+    fi
 }
 
 configure_node() {
-    log "📦 Configuring Node..."
+    log_step "📦 Installing Node.js tools"
     local old_n old_bun
     old_n=$(get_version "n")
     old_bun=$(get_version "bun")
     
     if [[ "$DRY_RUN" == false ]]; then
-        has_cmd npm && execute npm install -g n || log_warn "npm not found, skipping n"
+        if has_cmd npm; then
+            run_quiet npm install -g n
+        else
+            log_warn "npm not found, skipping n"
+        fi
         
         if [[ ! -f "$HOME/.bun/bin/bun" ]]; then
             log "Installing Bun..."
-            bash -c "$(curl -fsSL https://bun.sh/install)"
-            [[ -f "$HOME/.bun/bin/bun" ]] && log "🍞 Baked bun v$("$HOME/.bun/bin/bun" --version)"
+            run_quiet bash -c "$(curl -fsSL https://bun.sh/install)"
+            [[ -f "$HOME/.bun/bin/bun" ]] && log_info "🍞 Baked bun v$("$HOME/.bun/bin/bun" --version)"
         else
-            log "✅ Bun already installed: $("$HOME/.bun/bin/bun" --version)"
+            log_info "✅ Bun already installed: $("$HOME/.bun/bin/bun" --version)"
         fi
         
         track_version "n" "$old_n"
@@ -581,7 +651,7 @@ configure_node() {
 }
 
 install_tmux_plugins() {
-    log "🖥 Installing tmux plugin manager..."
+    log_step "💻 Installing tmux plugins"
     local folder="$HOME/.tmux/plugins/tpm"
     local old_ver
     old_ver=$(get_version "tpm")
@@ -591,16 +661,16 @@ install_tmux_plugins() {
     git_clone_or_pull "https://github.com/tmux-plugins/tpm" "$folder"
     
     if [[ "$was_missing" == true ]]; then
-        log "✅ TMux plugin manager installed"
+        log_info "✅ TMux plugin manager installed"
     else
-        log "✅ TMux plugin manager already installed"
+        log_info "✅ TMux plugin manager already installed"
     fi
     [[ "$DRY_RUN" == false ]] && track_version "tpm" "$old_ver"
     return 0
 }
 
 install_yazi_themes() {
-    log "🎨 Installing Yazi themes..."
+    log_step "🎨 Installing Yazi themes"
     local folder="$HOME/.config/yazi/flavors"
     local old_ver
     old_ver=$(get_version "yazi-flavors")
@@ -611,16 +681,16 @@ install_yazi_themes() {
     git_clone_or_pull "https://github.com/yazi-rs/flavors.git" "$folder"
     
     if [[ "$was_missing" == true ]]; then
-        log "✅ Yazi themes installed"
+        log_info "✅ Yazi themes installed"
     else
-        log "✅ Yazi themes already installed"
+        log_info "✅ Yazi themes already installed"
     fi
     [[ "$DRY_RUN" == false ]] && track_version "yazi-flavors" "$old_ver"
     return 0
 }
 
 setup_utils() {
-    log "🔧 Setting up additional utilities..."
+    log_step "🔧 Installing CLI utilities"
     
     # Capture versions before
     local old_goose old_repgrep old_harlequin old_sqlit old_llm_anthropic old_llm_ollama
@@ -632,31 +702,33 @@ setup_utils() {
     old_llm_ollama=$(get_version "llm-ollama")
 
     # Git LFS
-    has_cmd git && execute git lfs install
+    has_cmd git && run_quiet git lfs install
 
     # GitHub CLI extensions
     if has_cmd gh; then
         log "📊 Installing GitHub CLI extensions..."
         gh extension list 2>/dev/null | grep -q "dlvhdr/gh-dash" \
-            && log "✅ gh-dash already installed" \
-            || { execute gh extension install dlvhdr/gh-dash; log "✅ gh-dash installed"; }
+            && log_info "✅ gh-dash already installed" \
+            || { run_quiet gh extension install dlvhdr/gh-dash; log_info "✅ gh-dash installed"; }
     fi
 
     # Goose
     has_cmd goose || {
         log "Installing Goose..."
-        execute bash -c "$(curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash)"
+        run_quiet bash -c "$(curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash)"
     }
 
     # UV tools
     if [[ "$DRY_RUN" == false ]] && has_cmd uv; then
         log "🔧 Installing/updating UV tools..."
+        start_spinner
         for tool in llm harlequin sqlit-tui; do
             uv tool list 2>/dev/null | grep -q "^$tool " \
-                && uv tool upgrade "$tool" &>/dev/null \
-                || uv tool install "$tool" &>/dev/null
+                && uv tool upgrade "$tool" >> "$LOG_FILE" 2>&1 \
+                || uv tool install "$tool" >> "$LOG_FILE" 2>&1
         done
-        log "✅ UV tools configured"
+        stop_spinner
+        log_info "✅ UV tools configured"
     else
         dry_run_msg "Would install/upgrade UV tools"
         [[ "$DRY_RUN" == false ]] && log_warn "UV not found, skipping tool installations"
@@ -665,17 +737,21 @@ setup_utils() {
     # LLM configuration
     if [[ "$DRY_RUN" == false ]] && has_cmd llm; then
         export PATH="$HOME/.local/bin:$PATH"
-        llm install llm-anthropic llm-ollama &>/dev/null
-        llm --system 'Reply with linux terminal commands only, no extra information' --save cmd &>/dev/null
-        llm --system 'Reply with neovim commands only, no extra information' --save nvim &>/dev/null
-        llm models default claude-haiku-4.5 &>/dev/null
-        log "✅ LLM configured"
+        start_spinner
+        llm install llm-anthropic llm-ollama >> "$LOG_FILE" 2>&1
+        llm --system 'Reply with linux terminal commands only, no extra information' --save cmd >> "$LOG_FILE" 2>&1
+        llm --system 'Reply with neovim commands only, no extra information' --save nvim >> "$LOG_FILE" 2>&1
+        llm models default claude-haiku-4.5 >> "$LOG_FILE" 2>&1
+        stop_spinner
+        log_info "✅ LLM configured"
     else
         dry_run_msg "Would configure LLM"
     fi
 
     # Repgrep
-    ! has_cmd rgr && has_cmd cargo && execute cargo install repgrep
+    if ! has_cmd rgr && has_cmd cargo; then
+        run_quiet cargo install repgrep
+    fi
     execute touch "$HOME/.rgrc"
 
     # Custom scripts
@@ -704,7 +780,7 @@ setup_utils() {
 }
 
 create_virtualenvs() {
-    log "🐍 Creating Python Virtual Environments..."
+    log_step "🐍 Creating Python virtual environments"
     
     if ! has_cmd uv; then
         [[ "$DRY_RUN" == true ]] && dry_run_msg "Would skip (UV not found)" || log_warn "UV not found"
@@ -720,15 +796,15 @@ create_virtualenvs() {
     execute mkdir -p "$HOME/.virtualenvs"
     for env in "${envs[@]}"; do
         IFS='|' read -r dir packages <<< "$env"
-        [[ ! -d "$dir" ]] && { log "Creating venv: $(basename "$dir")"; execute uv venv "$dir"; }
+        [[ ! -d "$dir" ]] && { log "Creating venv: $(basename "$dir")"; run_quiet uv venv "$dir"; }
         log "Installing in $(basename "$dir"): $packages"
-        bash -c "source $dir/bin/activate && uv pip install --upgrade $packages && deactivate"
+        run_quiet bash -c "source $dir/bin/activate && uv pip install --upgrade $packages && deactivate"
     done
-    log "✅ Virtual environments configured"
+    log_info "✅ Virtual environments configured"
 }
 
 stow_dotfiles() {
-    log "🐗 Stowing dotfiles..."
+    log_step "🔗 Linking dotfiles"
     has_cmd stow || { log_error "GNU Stow not found. Install: brew install stow"; return 1; }
     
     local packages=(fzf git ghostty nvim sesh starship tmux zsh yazi aerospace)
@@ -738,20 +814,23 @@ stow_dotfiles() {
         [[ -d "$DOTFILES_DIR/$pkg" ]] && existing+=("$pkg") || log_warn "Not found: $pkg"
     done
     
-    [[ ${#existing[@]} -gt 0 ]] \
-        && { execute stow --adopt -d "$DOTFILES_DIR" -t "$HOME" "${existing[@]}"; log "✅ Dotfiles stowed"; } \
-        || log_warn "No valid stow packages"
+    if [[ ${#existing[@]} -gt 0 ]]; then
+        run_quiet stow --adopt -d "$DOTFILES_DIR" -t "$HOME" "${existing[@]}"
+        log_info "✅ Dotfiles stowed"
+    else
+        log_warn "No valid stow packages"
+    fi
 }
 
 cleanup() {
-    log "🧹 Performing cleanup..."
+    log_step "🧹 Cleaning up"
     if [[ "$DRY_RUN" == false ]] && has_cmd brew; then
-        brew cleanup --prune=all --quiet &>/dev/null
-        brew autoremove --quiet &>/dev/null
+        run_quiet brew cleanup --prune=all --quiet
+        run_quiet brew autoremove --quiet
     else
         dry_run_msg "Would run Homebrew cleanup"
     fi
-    log "✅ Cleanup completed"
+    log_info "✅ Cleanup completed"
 }
 
 # =============================================================================
@@ -762,7 +841,7 @@ main() {
     parse_args "$@"
     echo "macOS Setup Script - $(date)" > "$LOG_FILE"
     
-    [[ "$DRY_RUN" == true ]] && log_info "DRY RUN MODE - No changes will be made"
+    [[ "$DRY_RUN" == true ]] && log_step "DRY RUN MODE - No changes will be made"
     
     if [[ -n "$ONLY_FUNCTION" ]]; then
         local target_func
@@ -771,14 +850,14 @@ main() {
             list_functions
             exit 1
         }
-        log "Running only: $target_func"
+        log_step "Running only: $target_func"
         $target_func || { log_error "Failed: $target_func"; exit 1; }
         [[ "$DRY_RUN" == false ]] && print_version_summary
-        log "✅ $target_func completed!"
+        log_step "✅ $target_func completed!"
         return 0
     fi
     
-    log "🐌 The World Changed! Beginning MacOS setup..."
+    log_step "🐌 The World Changed! Beginning MacOS setup..."
     log "Log file: $LOG_FILE"
     
     local functions=(
@@ -792,7 +871,7 @@ main() {
     done
     
     [[ "$DRY_RUN" == false ]] && print_version_summary
-    log "🦊 The World is restored. Setup completed successfully!"
+    log_step "🦊 The World is restored. Setup completed successfully!"
     log "📋 Log file: $LOG_FILE"
 }
 
