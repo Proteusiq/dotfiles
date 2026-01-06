@@ -27,7 +27,7 @@ SKIP_INTERACTIVE=true
 ONLY_FUNCTION=""
 
 # Version tracking array - stores "tool|old_version|new_version|status"
-declare -a VERSION_CHANGES=()
+VERSION_CHANGES=()
 
 # ============================================================================
 # Version Detection Functions
@@ -116,9 +116,93 @@ track_version() {
 # Summary Table Functions
 # ============================================================================
 
+show_installed_versions() {
+    echo ""
+    echo -e "${BOLD}Installed Tool Versions${NC}"
+    echo ""
+    
+    # Box drawing characters
+    local h="─" v="│"
+    local tl="┌" tr="┐" bl="└" br="┘"
+    local ml="├" mr="┤" tm="┬" bm="┴" x="┼"
+    
+    local w_tool=20
+    local w_ver=20
+    
+    # Draw top border
+    printf "${BLUE}%s" "$tl"
+    printf '%*s' "$w_tool" '' | tr ' ' "$h"
+    printf "%s" "$tm"
+    printf '%*s' "$w_ver" '' | tr ' ' "$h"
+    printf "%s${NC}\n" "$tr"
+    
+    # Header
+    printf "${BLUE}%s${NC}" "$v"
+    printf " ${BOLD}%-*s${NC}" "$((w_tool - 1))" "Tool"
+    printf "${BLUE}%s${NC}" "$v"
+    printf " ${BOLD}%-*s${NC}" "$((w_ver - 1))" "Version"
+    printf "${BLUE}%s${NC}\n" "$v"
+    
+    # Header separator
+    printf "${BLUE}%s" "$ml"
+    printf '%*s' "$w_tool" '' | tr ' ' "$h"
+    printf "%s" "$x"
+    printf '%*s' "$w_ver" '' | tr ' ' "$h"
+    printf "%s${NC}\n" "$mr"
+    
+    # Print each tool version
+    print_version_row() {
+        local tool="$1"
+        local version="$2"
+        local color="${3:-$NC}"
+        
+        if [[ -n "$version" ]]; then
+            printf "${BLUE}%s${NC}" "$v"
+            printf " %-*s" "$((w_tool - 1))" "$tool"
+            printf "${BLUE}%s${NC}" "$v"
+            printf " ${color}%-*s${NC}" "$((w_ver - 1))" "$version"
+            printf "${BLUE}%s${NC}\n" "$v"
+        fi
+    }
+    
+    # Core tools
+    print_version_row "bun" "$(get_tool_version bun)" "$GREEN"
+    print_version_row "n" "$(get_tool_version n)" "$GREEN"
+    print_version_row "goose" "$(get_tool_version goose)" "$GREEN"
+    print_version_row "repgrep" "$(get_tool_version repgrep)" "$GREEN"
+    print_version_row "llm" "$(get_tool_version llm)" "$GREEN"
+    
+    # UV tools
+    print_version_row "harlequin" "$(get_uv_tool_version harlequin)" "$GREEN"
+    print_version_row "sqlit-tui" "$(get_uv_tool_version sqlit-tui)" "$GREEN"
+    
+    # LLM plugins
+    print_version_row "llm-anthropic" "$(get_llm_plugin_version llm-anthropic)" "$YELLOW"
+    print_version_row "llm-ollama" "$(get_llm_plugin_version llm-ollama)" "$YELLOW"
+    
+    # Git repos (show short hash)
+    print_version_row "tpm" "$(get_tool_version tpm)" "$BLUE"
+    print_version_row "yazi-flavors" "$(get_tool_version yazi-flavors)" "$BLUE"
+    
+    # Bottom border
+    printf "${BLUE}%s" "$bl"
+    printf '%*s' "$w_tool" '' | tr ' ' "$h"
+    printf "%s" "$bm"
+    printf '%*s' "$w_ver" '' | tr ' ' "$h"
+    printf "%s${NC}\n" "$br"
+    echo ""
+}
+
 print_version_summary() {
     # Filter to only show changes (New or Updated)
     local -a changes=()
+    
+    # Handle empty array case
+    if [[ ${#VERSION_CHANGES[@]} -eq 0 ]]; then
+        log_info "No version changes detected."
+        return 0
+    fi
+    
     for entry in "${VERSION_CHANGES[@]}"; do
         IFS='|' read -r tool old new status <<< "$entry"
         if [[ "$status" == "New" || "$status" == "Updated" ]]; then
@@ -245,6 +329,10 @@ parse_args() {
                 list_functions
                 exit 0
                 ;;
+            --versions)
+                show_installed_versions
+                exit 0
+                ;;
             *)
                 echo "Unknown option: $1" >&2
                 show_help
@@ -267,6 +355,7 @@ OPTIONS:
     --skip-interactive  Disable interactive prompts (default behavior)
     --only <function>   Run only the specified function
     --list              List all available functions
+    --versions          Show installed versions of tracked tools
     -h, --help          Show this help message
 
 ENVIRONMENT VARIABLES:
@@ -573,15 +662,16 @@ setup_utils() {
     old_llm_ollama_version=$(get_llm_plugin_version "llm-ollama")
     
     # Capture UV tool versions before
-    declare -A old_uv_versions
+    local old_uv_llm old_uv_harlequin old_uv_sqlit_tui
+    old_uv_llm=$(get_uv_tool_version "llm")
+    old_uv_harlequin=$(get_uv_tool_version "harlequin")
+    old_uv_sqlit_tui=$(get_uv_tool_version "sqlit-tui")
+    
     local uv_tools=(
         "llm"
         "harlequin"
         "sqlit-tui"
     )
-    for tool in "${uv_tools[@]}"; do
-        old_uv_versions["$tool"]=$(get_uv_tool_version "$tool")
-    done
 
     # Git LFS
      if command -v git &>/dev/null; then
@@ -672,11 +762,9 @@ setup_utils() {
         track_version "repgrep" "$old_repgrep_version"
         
         # Track UV tools
-        for tool in "${uv_tools[@]}"; do
-            local new_version
-            new_version=$(get_uv_tool_version "$tool")
-            record_change "$tool" "${old_uv_versions[$tool]}" "$new_version"
-        done
+        record_change "llm (uv)" "$old_uv_llm" "$(get_uv_tool_version "llm")"
+        record_change "harlequin" "$old_uv_harlequin" "$(get_uv_tool_version "harlequin")"
+        record_change "sqlit-tui" "$old_uv_sqlit_tui" "$(get_uv_tool_version "sqlit-tui")"
         
         # Track LLM plugins
         local new_llm_anthropic new_llm_ollama
@@ -796,6 +884,12 @@ main() {
             log_error "Failed during: $target_func"
             exit 1
         fi
+        
+        # Print version changes summary for --only runs too
+        if [[ "$DRY_RUN" == false ]]; then
+            print_version_summary
+        fi
+        
         log "✅ $target_func completed successfully!"
         return 0
     fi
