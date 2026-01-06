@@ -11,14 +11,16 @@ set -euo pipefail
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly LOG_FILE="${LOG_FILE:-$HOME/macos-setup.log}"
 
-readonly RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m' BOLD='\033[1m' NC='\033[0m'
-
 DRY_RUN=false
 VERBOSITY=0  # 0=quiet, 1=normal, 2=debug
 SKIP_INTERACTIVE=true
 ONLY_FUNCTION=""
 VERSION_CHANGES=()
+
+# Source modules
+source "$DOTFILES_DIR/scripts/logging.sh"
+source "$DOTFILES_DIR/scripts/ui.sh"
+source "$DOTFILES_DIR/scripts/versions.sh"
 
 # Tools to track: name|version_cmd|type (type: cmd, git, uv, llm-plugin)
 readonly TRACKED_TOOLS=(
@@ -48,421 +50,34 @@ readonly AVAILABLE_FUNCTIONS=(
     "cleanup:cleanup"
 )
 
-# =============================================================================
-# Core Utilities
-# =============================================================================
 
-# Logging levels: step (always), log (v>=1), info (v>=1), debug (v>=2)
-# Errors and warnings always shown
-log_step()  { echo -e "${GREEN}$*${NC}" | tee -a "$LOG_FILE"; }
-log()       { [[ $VERBOSITY -ge 1 ]] && echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $*${NC}" | tee -a "$LOG_FILE" || echo "$*" >> "$LOG_FILE"; }
-log_error() { echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $*${NC}" | tee -a "$LOG_FILE" >&2; }
-log_warn()  { echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $*${NC}" | tee -a "$LOG_FILE"; }
-log_info()  { [[ $VERBOSITY -ge 1 ]] && echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $*${NC}" | tee -a "$LOG_FILE" || echo "INFO: $*" >> "$LOG_FILE"; }
-log_debug() { [[ $VERBOSITY -ge 2 ]] && echo -e "${BLUE}[DEBUG] $*${NC}" | tee -a "$LOG_FILE" || true; }
 
-# Progress indicator for long-running commands in quiet mode
-SPINNER_PID=""
-spin() {
-    local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-    local i=0
-    tput civis 2>/dev/null  # hide cursor
-    while true; do
-        printf "\r  ${BLUE}%s${NC}  " "${chars:$i:1}"
-        i=$(( (i + 1) % ${#chars} ))
-        sleep 0.1
-    done
-}
-
-start_spinner() {
-    [[ $VERBOSITY -ge 1 || "$DRY_RUN" == true ]] && return
-    if [[ -t 1 ]]; then
-        # Real terminal: animated spinner
-        spin &
-        SPINNER_PID=$!
-        disown
-    fi
-}
-
-stop_spinner() {
-    if [[ -n "$SPINNER_PID" ]]; then
-        kill "$SPINNER_PID" 2>/dev/null
-        wait "$SPINNER_PID" 2>/dev/null
-        printf "\r      \r"
-        tput cnorm 2>/dev/null  # show cursor
-        SPINNER_PID=""
-    fi
-}
-
-# Run command: quiet mode suppresses output + shows spinner, verbose shows output
-run_quiet() {
-    [[ "$DRY_RUN" == true ]] && { dry_run_msg "Would run: $*"; return 0; }
-    if [[ $VERBOSITY -ge 1 ]]; then
-        "$@"
-    else
-        start_spinner
-        "$@" >> "$LOG_FILE" 2>&1
-        local rc=$?
-        stop_spinner
-        return $rc
-    fi
-}
-
-execute() {
-    log_debug "Executing: $*"
-    [[ "$DRY_RUN" == true ]] && { [[ $VERBOSITY -ge 1 ]] && echo "[DRY RUN] Would execute: $*"; return 0; }
-    "$@"
-}
-
-dry_run_msg() { [[ "$DRY_RUN" == true && $VERBOSITY -ge 1 ]] && echo "[DRY RUN] $*" || true; }
-
-has_cmd() { command -v "$1" &>/dev/null; }
-
-# Clone or update a git repository. Returns 0 if cloned, 1 if already existed (but always succeeds)
-git_clone_or_pull() {
-    local url="$1" folder="$2"
+# Clone or update a git repository, track version changes
+# Usage: git_install "tool_name" "url" "folder" "friendly_name"
+git_install() {
+    local tool="$1" url="$2" folder="$3" name="$4"
+    local old_ver was_missing=false
+    
+    old_ver=$(get_version "$tool")
+    [[ ! -d "$folder" ]] && was_missing=true
+    
     if [[ ! -d "$folder" ]]; then
         run_quiet git clone "$url" "$folder"
-        return 0
+    else
+        [[ "$DRY_RUN" == false ]] && run_quiet git -C "$folder" pull --quiet 2>/dev/null || true
     fi
-    [[ "$DRY_RUN" == false ]] && run_quiet git -C "$folder" pull --quiet 2>/dev/null || true
+    
+    if [[ "$was_missing" == true ]]; then
+        log_info "✅ $name installed"
+    else
+        log_info "✅ $name already installed"
+    fi
+    
+    [[ "$DRY_RUN" == false ]] && track_version "$tool" "$old_ver"
     return 0
 }
 
-# Check if repo was freshly cloned (folder didn't exist before)
-is_new_clone() {
-    local folder="$1"
-    [[ ! -d "$folder" ]]
-}
 
-# =============================================================================
-# Version Detection
-# =============================================================================
-
-get_version() {
-    local tool="$1"
-    case "$tool" in
-        bun)         [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null ;;
-        goose)       has_cmd goose && goose --version 2>/dev/null | tr -d ' ' ;;
-        llm)         has_cmd llm && llm --version 2>/dev/null | awk '{print $3}' ;;
-        repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
-        n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
-        tpm)         [[ -d "$HOME/.tmux/plugins/tpm/.git" ]] && git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
-        yazi-flavors) [[ -d "$HOME/.config/yazi/flavors/.git" ]] && git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null ;;
-        *)           get_version_by_type "$tool" ;;
-    esac
-}
-
-get_version_by_type() {
-    local tool="$1"
-    for entry in "${TRACKED_TOOLS[@]}"; do
-        IFS='|' read -r name _ type <<< "$entry"
-        [[ "$name" != "$tool" ]] && continue
-        case "$type" in
-            uv)         uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v' ;;
-            llm-plugin) has_cmd llm && llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version" 2>/dev/null ;;
-        esac
-        return
-    done
-}
-
-record_change() {
-    local tool="$1" old="$2" new="$3"
-    [[ "$old" == "$new" || (-z "$old" && -z "$new") ]] && return
-    local status="Updated"
-    [[ -z "$old" ]] && { status="New"; old="-"; }
-    VERSION_CHANGES+=("$tool|$old|$new|$status")
-}
-
-track_version() {
-    local tool="$1" old="$2"
-    record_change "$tool" "$old" "$(get_version "$tool")"
-}
-
-# =============================================================================
-# Table Drawing
-# =============================================================================
-
-draw_table() {
-    local -a headers=() widths=() rows=()
-    local title=""
-    
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            --title)   title="$2"; shift 2 ;;
-            --headers) IFS=',' read -ra headers <<< "$2"; shift 2 ;;
-            --widths)  IFS=',' read -ra widths <<< "$2"; shift 2 ;;
-            --rows)    IFS=';' read -ra rows <<< "$2"; shift 2 ;;
-            *) shift ;;
-        esac
-    done
-
-    [[ ${#rows[@]} -eq 0 ]] && return 1
-
-    local hc="─" vc="│" tl="┌" tr="┐" bl="└" br="┘" ml="├" mr="┤" tm="┬" bm="┴" xc="┼"
-
-    draw_hline() {
-        local l="$1" m="$2" r="$3"
-        local last_idx=$((${#widths[@]} - 1))
-        local idx=0
-        printf "${BLUE}%s" "$l"
-        for w in "${widths[@]}"; do
-            printf '%*s' "$w" '' | tr ' ' "$hc"
-            [[ $idx -lt $last_idx ]] && printf "%s" "$m"
-            ((idx++))
-        done
-        printf "%s${NC}\n" "$r"
-    }
-
-    draw_row() {
-        local -a cells
-        IFS='|' read -ra cells <<< "$1"
-        local colors=("${@:2}")
-        printf "${BLUE}%s${NC}" "$vc"
-        for i in "${!cells[@]}"; do
-            local color="${colors[$i]:-$NC}"
-            printf " ${color}%-*s${NC}${BLUE}%s${NC}" "$((${widths[$i]} - 2))" "${cells[$i]}" "$vc"
-        done
-        printf "\n"
-    }
-
-    [[ -n "$title" ]] && { echo ""; log "$title"; echo ""; }
-    
-    draw_hline "$tl" "$tm" "$tr"
-    
-    local header_str="" hdr
-    for hdr in "${headers[@]}"; do header_str+="$hdr|"; done
-    draw_row "${header_str%|}" "$BOLD" "$BOLD" "$BOLD" "$BOLD"
-    
-    draw_hline "$ml" "$xc" "$mr"
-    
-    for row in "${rows[@]}"; do
-        IFS='|' read -r _ _ _ status <<< "$row"
-        local sc="$NC"
-        [[ "$status" == "New" ]] && sc="$GREEN"
-        [[ "$status" == "Updated" ]] && sc="$YELLOW"
-        draw_row "$row" "$NC" "$RED" "$GREEN" "$sc"
-    done
-    
-    draw_hline "$bl" "$bm" "$br"
-    echo ""
-}
-
-print_section() {
-    local icon="$1" title="$2"
-    shift 2
-    local -a items=()
-    [[ $# -gt 0 ]] && items=("$@")
-    
-    [[ ${#items[@]} -eq 0 ]] && return
-    
-    # Calculate max widths
-    local w1=4 w2=7
-    for item in "${items[@]}"; do
-        IFS='|' read -r name ver <<< "$item"
-        (( ${#name} > w1 )) && w1=${#name}
-        (( ${#ver} > w2 )) && w2=${#ver}
-    done
-    ((w1 += 2)); ((w2 += 2))
-    
-    local hc="─" vc="│"
-    
-    # Section header
-    echo -e "${BOLD}${icon} ${title}${NC}"
-    
-    # Top border
-    printf "${BLUE}┌%${w1}s┬%${w2}s┐${NC}\n" "" "" | tr ' ' "$hc"
-    
-    # Column headers
-    printf "${BLUE}${vc}${NC} ${BOLD}%-$((w1-1))s${NC}${BLUE}${vc}${NC} ${BOLD}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "Tool" "Version"
-    
-    # Separator
-    printf "${BLUE}├%${w1}s┼%${w2}s┤${NC}\n" "" "" | tr ' ' "$hc"
-    
-    # Data rows
-    for item in "${items[@]}"; do
-        IFS='|' read -r name ver <<< "$item"
-        printf "${BLUE}${vc}${NC} %-$((w1-1))s${BLUE}${vc}${NC} ${GREEN}%-$((w2-1))s${NC}${BLUE}${vc}${NC}\n" "$name" "$ver"
-    done
-    
-    # Bottom border
-    printf "${BLUE}└%${w1}s┴%${w2}s┘${NC}\n" "" "" | tr ' ' "$hc"
-    echo ""
-}
-
-readonly VERSION_GROUPS="brew|cask|uv|cargo|llm|git|other|all"
-
-show_version_group_menu() {
-    echo -e "\n${BOLD}Select a group to view:${NC}\n"
-    echo -e "  ${GREEN}brew${NC}   - Homebrew Formulae"
-    echo -e "  ${GREEN}cask${NC}   - Homebrew Casks"
-    echo -e "  ${GREEN}uv${NC}     - UV Tools (Python)"
-    echo -e "  ${GREEN}cargo${NC}  - Cargo Packages (Rust)"
-    echo -e "  ${GREEN}llm${NC}    - LLM Plugins"
-    echo -e "  ${GREEN}git${NC}    - Git Repositories"
-    echo -e "  ${GREEN}other${NC}  - Other Tools (bun, n, goose)"
-    echo -e "  ${GREEN}all${NC}    - All groups"
-    echo ""
-    echo -e "Usage: ${BOLD}./install.sh --versions <group>${NC}"
-    echo ""
-}
-
-get_brew_versions() {
-    local -a items=()
-    if has_cmd brew; then
-        while IFS= read -r line; do
-            [[ -z "$line" ]] && continue
-            local name ver
-            name=$(echo "$line" | awk '{print $1}')
-            ver=$(echo "$line" | awk '{print $2}')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
-        done < <(brew list --formula --versions 2>/dev/null)
-    fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🍺" "Homebrew Formulae (${#items[@]})" "${items[@]}"
-}
-
-get_cask_versions() {
-    local -a items=()
-    if has_cmd brew; then
-        while IFS= read -r line; do
-            [[ -z "$line" ]] && continue
-            local name ver
-            name=$(echo "$line" | awk '{print $1}')
-            ver=$(echo "$line" | awk '{print $2}')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
-        done < <(brew list --cask --versions 2>/dev/null)
-    fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🖥️ " "Homebrew Casks (${#items[@]})" "${items[@]}"
-}
-
-get_uv_versions() {
-    local -a items=()
-    if has_cmd uv; then
-        while IFS= read -r line; do
-            [[ -z "$line" || "$line" == -* ]] && continue
-            local name ver
-            name=$(echo "$line" | awk '{print $1}')
-            ver=$(echo "$line" | awk '{print $2}' | tr -d 'v')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
-        done < <(uv tool list 2>/dev/null)
-    fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🐍" "UV Tools (${#items[@]})" "${items[@]}"
-}
-
-get_cargo_versions() {
-    local -a items=()
-    if has_cmd cargo; then
-        while IFS= read -r line; do
-            [[ -z "$line" || "$line" == " "* ]] && continue
-            local name ver
-            name=$(echo "$line" | awk -F' v' '{print $1}')
-            ver=$(echo "$line" | awk -F' v' '{print $2}' | tr -d ':')
-            [[ -n "$name" && -n "$ver" ]] && items+=("$name|$ver")
-        done < <(cargo install --list 2>/dev/null)
-    fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🦀" "Cargo Packages (${#items[@]})" "${items[@]}"
-}
-
-get_llm_versions() {
-    local -a items=()
-    if has_cmd llm && has_cmd jq; then
-        while IFS= read -r line; do
-            [[ -n "$line" ]] && items+=("$line")
-        done < <(llm plugins 2>/dev/null | jq -r '.[] | "\(.name)|\(.version)"' 2>/dev/null)
-    fi
-    [[ ${#items[@]} -gt 0 ]] && print_section "🤖" "LLM Plugins (${#items[@]})" "${items[@]}"
-}
-
-get_git_versions() {
-    local -a items=()
-    local tpm_dir="$HOME/.tmux/plugins/tpm"
-    local yazi_dir="$HOME/.config/yazi/flavors"
-    
-    [[ -d "$tpm_dir/.git" ]] && items+=("tpm|$(git -C "$tpm_dir" rev-parse --short HEAD 2>/dev/null)")
-    [[ -d "$yazi_dir/.git" ]] && items+=("yazi-flavors|$(git -C "$yazi_dir" rev-parse --short HEAD 2>/dev/null)")
-    
-    [[ ${#items[@]} -gt 0 ]] && print_section "📦" "Git Repositories (${#items[@]})" "${items[@]}"
-}
-
-get_other_versions() {
-    local -a items=()
-    
-    [[ -f "$HOME/.bun/bin/bun" ]] && items+=("bun|$("$HOME/.bun/bin/bun" --version 2>/dev/null)")
-    has_cmd npm && {
-        local n_ver
-        n_ver=$(npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p')
-        [[ -n "$n_ver" ]] && items+=("n|$n_ver")
-    }
-    has_cmd goose && items+=("goose|$(goose --version 2>/dev/null | tr -d ' ')")
-    
-    [[ ${#items[@]} -gt 0 ]] && print_section "⚙️ " "Other Tools (${#items[@]})" "${items[@]}"
-}
-
-show_installed_versions() {
-    local group="${1:-}"
-    
-    # No group specified - show menu
-    if [[ -z "$group" ]]; then
-        show_version_group_menu
-        return 0
-    fi
-    
-    echo -e "\n${BOLD}Installed Tool Versions${NC}\n"
-    
-    case "$group" in
-        brew)  get_brew_versions ;;
-        cask)  get_cask_versions ;;
-        uv)    get_uv_versions ;;
-        cargo) get_cargo_versions ;;
-        llm)   get_llm_versions ;;
-        git)   get_git_versions ;;
-        other) get_other_versions ;;
-        all)
-            get_brew_versions
-            get_cask_versions
-            get_uv_versions
-            get_cargo_versions
-            get_llm_versions
-            get_git_versions
-            get_other_versions
-            ;;
-        *)
-            echo -e "${RED}Unknown group: $group${NC}"
-            echo -e "Valid groups: ${GREEN}${VERSION_GROUPS}${NC}"
-            return 1
-            ;;
-    esac
-}
-
-print_version_summary() {
-    [[ ${#VERSION_CHANGES[@]} -eq 0 ]] && { log_info "No version changes detected."; return; }
-    
-    local -a changes=()
-    for entry in "${VERSION_CHANGES[@]}"; do
-        IFS='|' read -r _ _ _ status <<< "$entry"
-        [[ "$status" == "New" || "$status" == "Updated" ]] && changes+=("$entry")
-    done
-    
-    [[ ${#changes[@]} -eq 0 ]] && { log_info "No version changes detected."; return; }
-
-    local w_tool=6 w_prev=10 w_new=9 w_status=8
-    for entry in "${changes[@]}"; do
-        IFS='|' read -r tool old new status <<< "$entry"
-        (( ${#tool} + 2 > w_tool )) && w_tool=$((${#tool} + 2))
-        (( ${#old} + 2 > w_prev )) && w_prev=$((${#old} + 2))
-        (( ${#new} + 2 > w_new )) && w_new=$((${#new} + 2))
-        (( ${#status} + 2 > w_status )) && w_status=$((${#status} + 2))
-    done
-
-    local rows=""
-    for entry in "${changes[@]}"; do rows+="$entry;"; done
-    
-    draw_table \
-        --title "📊 Version Changes Summary:" \
-        --headers "Tool,Previous,Current,Status" \
-        --widths "$w_tool,$w_prev,$w_new,$w_status" \
-        --rows "${rows%;}"
-}
 
 # =============================================================================
 # CLI Interface
@@ -652,41 +267,13 @@ configure_node() {
 
 install_tmux_plugins() {
     log_step "💻 Installing tmux plugins"
-    local folder="$HOME/.tmux/plugins/tpm"
-    local old_ver
-    old_ver=$(get_version "tpm")
-    local was_missing=false
-    [[ ! -d "$folder" ]] && was_missing=true
-    
-    git_clone_or_pull "https://github.com/tmux-plugins/tpm" "$folder"
-    
-    if [[ "$was_missing" == true ]]; then
-        log_info "✅ TMux plugin manager installed"
-    else
-        log_info "✅ TMux plugin manager already installed"
-    fi
-    [[ "$DRY_RUN" == false ]] && track_version "tpm" "$old_ver"
-    return 0
+    git_install "tpm" "https://github.com/tmux-plugins/tpm" "$HOME/.tmux/plugins/tpm" "tmux plugin manager"
 }
 
 install_yazi_themes() {
     log_step "🎨 Installing Yazi themes"
-    local folder="$HOME/.config/yazi/flavors"
-    local old_ver
-    old_ver=$(get_version "yazi-flavors")
-    local was_missing=false
-    [[ ! -d "$folder" ]] && was_missing=true
-    
     execute mkdir -p "$HOME/.config/yazi"
-    git_clone_or_pull "https://github.com/yazi-rs/flavors.git" "$folder"
-    
-    if [[ "$was_missing" == true ]]; then
-        log_info "✅ Yazi themes installed"
-    else
-        log_info "✅ Yazi themes already installed"
-    fi
-    [[ "$DRY_RUN" == false ]] && track_version "yazi-flavors" "$old_ver"
-    return 0
+    git_install "yazi-flavors" "https://github.com/yazi-rs/flavors.git" "$HOME/.config/yazi/flavors" "Yazi themes"
 }
 
 setup_utils() {
