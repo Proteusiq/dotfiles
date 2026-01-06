@@ -554,6 +554,22 @@ def run_tui():
 # MAIN CLI
 # ═══════════════════════════════════════════════════════════════════════════
 
+def get_tool_json(tool_name: str) -> Optional[dict]:
+    """Get tool info as a dictionary for machine consumption."""
+    for cat, tools in TOOL_MAP.items():
+        for name, description, example in tools:
+            if name == tool_name:
+                icon, title, _ = CATEGORY_META[cat]
+                return {
+                    "name": name,
+                    "description": description,
+                    "example": example,
+                    "category": cat.value,
+                    "category_title": title,
+                }
+    return None
+
+
 @app.command()
 def main(
     show: Optional[Category] = typer.Option(
@@ -561,6 +577,9 @@ def main(
     ),
     describe: str = typer.Option(
         None, "--describe", "-d", help="Describe a specific tool"
+    ),
+    json_out: str = typer.Option(
+        None, "--json", "-j", help="Output tool info as JSON (for scripts)"
     ),
     tui: bool = typer.Option(
         False, "--tui", "-t", help="Launch interactive TUI browser"
@@ -594,6 +613,16 @@ def main(
     """
     if tui:
         run_tui()
+        return
+
+    if json_out:
+        import json
+        info = get_tool_json(json_out)
+        if info:
+            print(json.dumps(info))
+        else:
+            import sys
+            sys.exit(1)
         return
 
     if describe:

@@ -128,69 +128,83 @@ update_tool() {
 get_tool_info() {
     local tool="$1"
     local found=false
-    local source="" version="" description=""
+    local source="" version="" description="" example="" category=""
+    
+    # Check tools.py for curated description first
+    local tools_script="$DOTFILES_DIR/bin/tools.py"
+    if [[ -x "$tools_script" ]]; then
+        local tools_json
+        tools_json=$("$tools_script" --json "$tool" 2>/dev/null)
+        if [[ -n "$tools_json" ]] && has_cmd jq; then
+            description=$(echo "$tools_json" | jq -r '.description // empty')
+            example=$(echo "$tools_json" | jq -r '.example // empty')
+            category=$(echo "$tools_json" | jq -r '.category_title // empty')
+        fi
+    fi
     
     # Check Homebrew formula
     if has_cmd brew && brew list --formula "$tool" &>/dev/null; then
         found=true
         source="brew"
         version=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}')
-        description=$(brew info "$tool" 2>/dev/null | sed -n '2p')
+        [[ -z "$description" ]] && description=$(brew info "$tool" 2>/dev/null | sed -n '2p')
     # Check Homebrew cask
     elif has_cmd brew && brew list --cask "$tool" &>/dev/null; then
         found=true
         source="cask"
         version=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}')
-        # Casks don't have description line, try to get from JSON
-        description=$(brew info --cask --json=v2 "$tool" 2>/dev/null | jq -r '.casks[0].desc // empty' 2>/dev/null)
-        [[ -z "$description" ]] && description="macOS application"
+        if [[ -z "$description" ]]; then
+            description=$(brew info --cask --json=v2 "$tool" 2>/dev/null | jq -r '.casks[0].desc // empty' 2>/dev/null)
+            [[ -z "$description" ]] && description="macOS application"
+        fi
     # Check UV tools
     elif has_cmd uv && uv tool list 2>/dev/null | grep -q "^$tool "; then
         found=true
         source="uv"
         version=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v')
-        # Fetch from PyPI API
-        description=$(curl -s "https://pypi.org/pypi/$tool/json" 2>/dev/null | jq -r '.info.summary // empty' 2>/dev/null)
-        [[ -z "$description" ]] && description="Python tool installed via uv"
+        if [[ -z "$description" ]]; then
+            description=$(curl -s "https://pypi.org/pypi/$tool/json" 2>/dev/null | jq -r '.info.summary // empty' 2>/dev/null)
+            [[ -z "$description" ]] && description="Python tool installed via uv"
+        fi
     # Check Cargo
     elif has_cmd cargo && cargo install --list 2>/dev/null | grep -q "^$tool "; then
         found=true
         source="cargo"
         version=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:')
-        description=$(cargo search "$tool" --limit 1 2>/dev/null | head -1 | sed 's/.*# //' | sed 's/"$//' || echo "Rust package")
+        [[ -z "$description" ]] && description=$(cargo search "$tool" --limit 1 2>/dev/null | head -1 | sed 's/.*# //' | sed 's/"$//' || echo "Rust package")
     # Check npm global
     elif has_cmd npm && npm list -g --depth=0 2>/dev/null | grep -q " $tool@"; then
         found=true
         source="npm"
         version=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p")
-        description=$(npm info "$tool" description 2>/dev/null || echo "Node.js package")
+        [[ -z "$description" ]] && description=$(npm info "$tool" description 2>/dev/null || echo "Node.js package")
     # Check LLM plugins
     elif has_cmd llm && has_cmd jq && llm plugins 2>/dev/null | jq -e ".[] | select(.name==\"$tool\")" &>/dev/null; then
         found=true
         source="llm"
         version=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version")
-        description="LLM plugin for $(echo "$tool" | sed 's/llm-//')"
+        [[ -z "$description" ]] && description="LLM plugin for $(echo "$tool" | sed 's/llm-//')"
     # Check special tools
     elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
         found=true
         source="standalone"
         version=$("$HOME/.bun/bin/bun" --version 2>/dev/null)
-        description="All-in-one JavaScript runtime & toolkit"
+        [[ -z "$description" ]] && description="All-in-one JavaScript runtime & toolkit"
     elif [[ "$tool" == "goose" ]] && has_cmd goose; then
         found=true
         source="standalone"
         version=$(goose --version 2>/dev/null | tr -d ' ')
-        description="AI developer agent from Block"
+        [[ -z "$description" ]] && description="AI developer agent from Block"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         found=true
         source="git"
         version=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null)
-        description="Tmux Plugin Manager"
+        [[ -z "$description" ]] && description="Tmux Plugin Manager"
     elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
         found=true
         source="git"
         version=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null)
-        description="Color schemes for Yazi file manager"
+        [[ -z "$description" ]] && description="Color schemes for Yazi file manager"
     fi
     
     if [[ "$found" == false ]]; then
@@ -231,11 +245,12 @@ get_tool_info() {
     local desc_w=44
     if [[ -n "$description" ]]; then
         local first=true
-        while [[ ${#description} -gt 0 ]]; do
-            local chunk="${description:0:$desc_w}"
-            description="${description:$desc_w}"
+        local desc_copy="$description"
+        while [[ ${#desc_copy} -gt 0 ]]; do
+            local chunk="${desc_copy:0:$desc_w}"
+            desc_copy="${desc_copy:$desc_w}"
             # Trim leading space from continuation chunks
-            description="${description# }"
+            desc_copy="${desc_copy# }"
             if [[ "$first" == true ]]; then
                 echo -e "${BLUE}│${NC} ${CYAN}Description:${NC} $(fit "$chunk" 44) ${BLUE}│${NC}"
                 first=false
@@ -245,6 +260,28 @@ get_tool_info() {
         done
     else
         echo -e "${BLUE}│${NC} ${CYAN}Description:${NC} $(fit "-" 44) ${BLUE}│${NC}"
+    fi
+    
+    # Show example if from tools.py (curated) with word wrap
+    if [[ -n "$example" ]]; then
+        local first=true
+        local ex_copy="$example"
+        while [[ ${#ex_copy} -gt 0 ]]; do
+            local chunk="${ex_copy:0:$desc_w}"
+            ex_copy="${ex_copy:$desc_w}"
+            ex_copy="${ex_copy# }"
+            if [[ "$first" == true ]]; then
+                echo -e "${BLUE}│${NC} ${CYAN}Example:    ${NC} ${GREEN}$(fit "$chunk" 44)${NC} ${BLUE}│${NC}"
+                first=false
+            else
+                echo -e "${BLUE}│${NC}              ${GREEN}$(fit "$chunk" 44)${NC} ${BLUE}│${NC}"
+            fi
+        done
+    fi
+    
+    # Show category if from tools.py
+    if [[ -n "$category" ]]; then
+        echo -e "${BLUE}│${NC} ${CYAN}Category:   ${NC} $(fit "$category" 44) ${BLUE}│${NC}"
     fi
     
     echo -e "${BLUE}└${hline}┘${NC}"
