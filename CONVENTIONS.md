@@ -1,25 +1,31 @@
 # Development Conventions
 
-## Workflow Philosophy
+## Philosophy
+
+### Simplicity is King
+- The simplest solution that works is the best solution
+- If code needs step-by-step comments, it's too complex—refactor it
+- Clear logic over clever tricks
+
+### Self-Documenting Code
+- **No tutorial comments**: never `# loop through items` or `// increment counter`
+- Descriptive names: `calculate_total_price()` not `calc()`, `user_ids` not `ids`
+- If you must comment, explain **why**, never **what**
+
+### Functional Over OOP (Pragmatically)
+- Prefer pure functions and immutability
+- Composition over inheritance
+- Use classes when they genuinely simplify (state machines, resource management)
+- Data: dataclasses, structs, plain objects—not class hierarchies
 
 ### Commit Early, Commit Often
-- Make small, focused commits after each logical change
-- Each commit should be a single, coherent unit of work
-- Commit messages: `type: description` (e.g., `fix:`, `feat:`, `docs:`, `chore:`)
-- Don't batch multiple unrelated changes into one commit
+- Small, focused commits after each logical change
+- One commit = one coherent unit of work
+- Format: `type: description`
 
 ### Verify Before Commit
 - Always verify changes work before committing
 - If it's not tested, it's not done
-
-### Test After Changes
-- Run the actual commands/scripts to verify behavior
-- Don't just assume code works—execute it
-- Check edge cases when relevant
-
-### Document As You Go
-- Update documentation alongside code changes
-- If you change behavior, update the relevant README/docs in the same commit
 
 ---
 
@@ -28,72 +34,46 @@
 ### Tools
 | Tool | Purpose | Install |
 |------|---------|---------|
-| `uv` | Package manager, project manager, Python version manager | `brew install uv` |
-| `ruff` | Linter & formatter (replaces black, isort, flake8) | `uv tool install ruff` |
-| `ty` | Type checker (from Astral, ruff creators) | `uv tool install ty` |
-| `pytest` | Testing framework | `uv add --dev pytest` |
-| `pytest-asyncio` | Async test support | `uv add --dev pytest-asyncio` |
+| `uv` | Package/project manager, Python versions | `brew install uv` |
+| `ruff` | Linter & formatter | `uv tool install ruff` |
+| `ty` | Type checker (Astral, 10-100x faster than mypy) | `uv tool install ty` |
+| `pytest` | Testing | `uv add --dev pytest` |
 
 ### Workflow
 ```bash
-# Create project
 uv init myproject && cd myproject
-
-# Add dependencies
 uv add requests
-uv add --dev pytest ruff
+uv add --dev pytest
 
-# Run commands in project environment
 uv run python script.py
 uv run pytest
 
-# One-off tool execution (no install)
+# One-off (no install)
 uvx ruff check .
 uvx ty check .
+```
 
-# Before committing
+### Before Commit
+```bash
 uv run ruff format .
 uv run ruff check --fix .
 uv run ty check .
 uv run pytest
 ```
 
-### Verification Checklist
-```bash
-uv run ruff format .          # Format code
-uv run ruff check --fix .     # Lint & auto-fix
-uv run ty check .             # Type check
-uv run pytest                 # Run tests
-```
-
-### Code Style
-- **Type annotations**: Always, using Python 3.12+ syntax
-  ```python
-  def fetch(url: str, timeout: float = 30.0) -> dict[str, Any] | None: ...
-  ```
-- **Docstrings**: Google-style for public APIs
-- **Imports**: stdlib → third-party → local (blank lines between)
-- **Async**: Prefer `async`/`await` for I/O-bound operations
-
-### Example
+### Style
 ```python
-async def fetch_users(ids: list[int]) -> list[User]:
-    """Fetch users by their IDs.
-
-    Args:
-        ids: List of user IDs to fetch.
-
-    Returns:
-        List of User objects.
-
-    Raises:
-        httpx.HTTPError: If the request fails.
-    """
+async def fetch_users(user_ids: list[int]) -> list[User]:
+    """Fetch users by their IDs."""
     async with httpx.AsyncClient() as client:
-        tasks = [client.get(f"/users/{id}") for id in ids]
+        tasks = [client.get(f"/users/{id}") for id in user_ids]
         responses = await asyncio.gather(*tasks)
         return [User(**r.json()) for r in responses]
 ```
+
+- Type annotations: always, Python 3.12+ (`list[T]`, `X | None`)
+- Docstrings: brief, public APIs only
+- Async for I/O
 
 ---
 
@@ -102,43 +82,34 @@ async def fetch_users(ids: list[int]) -> list[User]:
 ### Tools
 | Tool | Purpose | Install |
 |------|---------|---------|
-| `cargo` | Package manager, build tool | `brew install rust` |
-| `rustfmt` | Formatter | Included with rustup |
-| `clippy` | Linter | Included with rustup |
-| `cargo-watch` | Auto-rebuild on changes | `cargo install cargo-watch` |
+| `cargo` | Build, test, package manager | `brew install rust` |
+| `bacon` | Background checker (watches files) | `cargo install bacon` |
+| `rustfmt` | Formatter | included |
+| `clippy` | Linter | included |
 
 ### Workflow
 ```bash
-# Create project
 cargo new myproject && cd myproject
-
-# Add dependencies
 cargo add serde tokio
 
-# Run
-cargo run
-cargo run --release
+# Background watcher (recommended)
+bacon        # watches and runs cargo check
+bacon clippy # watches and runs clippy
+bacon test   # watches and runs tests
 
-# Before committing
+# Manual
+cargo run
+cargo test
+```
+
+### Before Commit
+```bash
 cargo fmt
 cargo clippy -- -D warnings
 cargo test
 ```
 
-### Verification Checklist
-```bash
-cargo fmt                     # Format code
-cargo clippy -- -D warnings   # Lint (treat warnings as errors)
-cargo test                    # Run tests
-cargo build --release         # Verify release build
-```
-
-### Code Style
-- **Error handling**: Use `Result<T, E>` and `?` operator, avoid `.unwrap()` in production
-- **Documentation**: `///` for public items, `//!` for module docs
-- **Naming**: `snake_case` for functions/variables, `PascalCase` for types
-
-### Example
+### Style
 ```rust
 use anyhow::Result;
 use serde::Deserialize;
@@ -149,12 +120,8 @@ pub struct User {
     pub name: String,
 }
 
-/// Fetches a user by ID from the API.
-///
-/// # Errors
-/// Returns an error if the HTTP request fails or response is invalid.
-pub async fn fetch_user(id: u64) -> Result<User> {
-    let url = format!("https://api.example.com/users/{id}");
+pub async fn fetch_user(user_id: u64) -> Result<User> {
+    let url = format!("https://api.example.com/users/{user_id}");
     let user = reqwest::get(&url).await?.json().await?;
     Ok(user)
 }
@@ -164,59 +131,66 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn test_fetch_user() {
+    async fn test_fetch_user_returns_valid_user() {
         let user = fetch_user(1).await.unwrap();
         assert_eq!(user.id, 1);
     }
 }
 ```
 
+- Error handling: `Result<T, E>` and `?`, avoid `.unwrap()` in production
+- No inline comments
+
 ---
 
 ## TypeScript / JavaScript
 
-### Tools
+### Tools (Option A: Bun)
 | Tool | Purpose | Install |
 |------|---------|---------|
-| `bun` | Runtime, package manager, bundler, test runner | `brew install bun` |
-| `biome` | Linter & formatter (replaces eslint + prettier) | `bun add -d @biomejs/biome` |
-| `tsc` | Type checker | `bun add -d typescript` |
+| `bun` | Runtime, bundler, test runner | `brew install bun` |
+| `biome` | Linter & formatter (replaces eslint+prettier) | `bun add -d @biomejs/biome` |
 
-### Workflow
+### Tools (Option B: Deno)
+| Tool | Purpose | Install |
+|------|---------|---------|
+| `deno` | Runtime with built-in fmt, lint, test | `brew install deno` |
+
+### Workflow (Bun + Biome)
 ```bash
-# Create project
 mkdir myproject && cd myproject
 bun init
-
-# Add dependencies
 bun add zod
-bun add -d typescript @biomejs/biome
+bun add -d @biomejs/biome typescript
 
-# Run
 bun run index.ts
-bun run build
+bun test
+```
 
-# Before committing
+### Before Commit (Bun + Biome)
+```bash
 bun biome format --write .
 bun biome check --fix .
 bun tsc --noEmit
 bun test
 ```
 
-### Verification Checklist
+### Workflow (Deno)
 ```bash
-bun biome format --write .    # Format code
-bun biome check --fix .       # Lint & auto-fix
-bun tsc --noEmit              # Type check (no output)
-bun test                      # Run tests
+deno init myproject && cd myproject
+deno run main.ts
+deno test
 ```
 
-### Code Style
-- **Types**: Always use TypeScript, avoid `any`
-- **Imports**: Use ES modules (`import`/`export`)
-- **Async**: Use `async`/`await` over raw promises
+### Before Commit (Deno)
+```bash
+deno fmt
+deno lint
+deno check .
+deno test
+```
 
-### Example
+### Style
 ```typescript
 import { z } from "zod";
 
@@ -227,25 +201,20 @@ const UserSchema = z.object({
 
 type User = z.infer<typeof UserSchema>;
 
-/** Fetches a user by ID from the API. */
-export async function fetchUser(id: number): Promise<User> {
-  const response = await fetch(`https://api.example.com/users/${id}`);
+export async function fetchUser(userId: number): Promise<User> {
+  const response = await fetch(`https://api.example.com/users/${userId}`);
   const data = await response.json();
   return UserSchema.parse(data);
 }
-
-// test
-import { expect, test } from "bun:test";
-
-test("fetchUser returns valid user", async () => {
-  const user = await fetchUser(1);
-  expect(user.id).toBe(1);
-});
 ```
+
+- Always TypeScript, never `any`
+- `async`/`await` over raw promises
+- No inline comments
 
 ---
 
-## Bash / Shell
+## Bash
 
 ### Tools
 | Tool | Purpose | Install |
@@ -253,31 +222,13 @@ test("fetchUser returns valid user", async () => {
 | `shellcheck` | Static analysis | `brew install shellcheck` |
 | `shfmt` | Formatter | `brew install shfmt` |
 
-### Workflow
+### Before Commit
 ```bash
-# Before committing
-bash -n script.sh             # Syntax check
-shellcheck script.sh          # Lint
-shfmt -w script.sh            # Format (optional)
-
-# Run
-bash script.sh
-./script.sh                   # If executable
+bash -n script.sh
+shellcheck script.sh
 ```
 
-### Verification Checklist
-```bash
-bash -n script.sh             # Syntax check (no execution)
-shellcheck script.sh          # Static analysis
-```
-
-### Code Style
-- **Strict mode**: Always start with `set -euo pipefail`
-- **Quoting**: Always quote variables `"$var"`
-- **Conditionals**: Use `[[ ]]` over `[ ]`
-- **Functions**: Use for reusable logic
-
-### Example
+### Style
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -297,49 +248,42 @@ main() {
 main "$@"
 ```
 
+- Always `set -euo pipefail`
+- Quote variables: `"$var"`
+- `[[ ]]` over `[ ]`
+- No inline comments
+
 ---
 
-## Git Conventions
+## Git
 
-### Commit Messages
+### Commit Format
 ```
 type: short description
-
-Optional longer explanation if needed.
 ```
 
-**Types:**
-| Type | Use for |
-|------|---------|
+| Type | Use |
+|------|-----|
 | `feat:` | New feature |
 | `fix:` | Bug fix |
-| `docs:` | Documentation only |
-| `chore:` | Maintenance, cleanup |
-| `refactor:` | Code restructuring (no behavior change) |
-| `test:` | Adding/updating tests |
-
-### Workflow
-```
-1. Make change
-2. Verify (format, lint, type check, test)
-3. Commit with descriptive message
-4. Push when logical unit is complete
-```
+| `docs:` | Documentation |
+| `chore:` | Maintenance |
+| `refactor:` | Restructure (no behavior change) |
+| `test:` | Tests |
 
 ---
 
 ## Quick Reference
 
-| Language | Format | Lint | Type Check | Test |
-|----------|--------|------|------------|------|
-| Python | `uv run ruff format .` | `uv run ruff check --fix .` | `uv run ty check .` | `uv run pytest` |
+| Lang | Format | Lint | Type Check | Test |
+|------|--------|------|------------|------|
+| Python | `ruff format .` | `ruff check --fix .` | `ty check .` | `pytest` |
 | Rust | `cargo fmt` | `cargo clippy` | (built-in) | `cargo test` |
-| TypeScript | `bun biome format --write .` | `bun biome check --fix .` | `bun tsc --noEmit` | `bun test` |
+| TS (Bun) | `biome format --write .` | `biome check --fix .` | `tsc --noEmit` | `bun test` |
+| TS (Deno) | `deno fmt` | `deno lint` | `deno check .` | `deno test` |
 | Bash | `shfmt -w` | `shellcheck` | `bash -n` | - |
 
 ---
-
-## Summary
 
 **The Loop:** Change → Verify → Commit → Repeat
 
