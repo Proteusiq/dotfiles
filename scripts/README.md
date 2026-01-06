@@ -273,12 +273,12 @@ The `--info` command checks `bin/tools.py` first for curated descriptions:
 
 ## Version Tracking
 
-During installation, version changes are tracked and summarized:
+During installation, version changes are tracked and always shown (even in quiet mode):
 
 ```bash
-$ update -v
+$ update
 
-📊 Version Changes Summary:
+📊 Version Changes:
 
 ┌────────────┬──────────┬──────────┬─────────┐
 │ Tool       │ Previous │ Current  │ Status  │

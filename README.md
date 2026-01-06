@@ -157,9 +157,11 @@ dotfiles/
 
 ### Version Tracking
 
-The script tracks versions before and after installation, showing a summary of what changed:
+The script tracks versions before and after installation. Changes are always shown (even in quiet mode):
 
 ```
+📊 Version Changes:
+
 ┌──────────────────┬────────────────┬────────────────┬──────────┐
 │ Tool             │ Previous       │ Current        │ Status   │
 ├──────────────────┼────────────────┼────────────────┼──────────┤
