@@ -248,26 +248,6 @@ limactl delete default        # Delete VM
 
 ### Database Tools
 
-#### peak
-Quick database explorer using DuckDB. Peek at tables in SQLite and PostgreSQL databases with a simple command.
-
-```bash
-peak -s example.db                    # Explore SQLite database
-peak -s example.db -g users           # Show users table
-peak -s example.db -g users -l 10     # Limit to 10 rows
-peak -s "postgres://user:pass@host:5432/db"  # PostgreSQL
-peak -s "postgres://..." -g orders --debug   # Debug mode
-```
-
-| Flag | Description |
-|------|-------------|
-| `-s, --source` | Database connection string (or set `CONNECTION_STRING` env) |
-| `-g, --get` | Table name to query |
-| `-l, --limit` | Number of rows to show (default: 5) |
-| `--debug` | Enable debug logging |
-
-**Use cases:** Quick data exploration, checking table contents, database debugging
-
 #### mongosh
 MongoDB Shell. Interactive JavaScript interface for MongoDB.
 

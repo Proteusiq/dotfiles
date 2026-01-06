@@ -248,7 +248,7 @@ Ghostty • Tmux • Neovim • fzf
 
 ## Fox's Toolbox
 
-Three built-in CLI tools for productivity:
+Two built-in CLI/TUI tools to explore your shell aliases and installed packages:
 
 ### Fox's Aliases — Shell Shortcuts
 
@@ -272,24 +272,15 @@ tools --tui            # Interactive TUI browser
 
 **Categories:** `shell` `edit` `cli` `files` `vc` `data` `dev` `infra` `lang` `ai` `gnu` `media` `apps` `wm` `sys`
 
-### Peak — Quick Database Explorer
-
-```bash
-peak -s data.db                # Explore SQLite database
-peak -s data.db -g users       # Show users table (5 rows)
-peak -s data.db -g users -l 20 # Show 20 rows
-peak -s "postgres://..."       # PostgreSQL support
-```
-
 > [!TIP]
-> `aliases` and `tools` support `--tui` for interactive browsing with cross-category search (`/`), vim navigation (`j/k`), and instant filtering. Each tool in Fox's Den shows practical "aha!" examples.
+> Both tools support `--tui` for interactive browsing with cross-category search (`/`), vim navigation (`j/k`), and instant filtering. Each tool in Fox's Den shows practical "aha!" examples.
 
 ## File Structure
 
 ```
 dotfiles/
 ├── aerospace/       # Window management config
-├── bin/             # Custom scripts (aliases, tools, peak)
+├── bin/             # Custom scripts (aliases, tools)
 ├── fzf/             # Fuzzy finder config
 ├── ghostty/         # Terminal emulator config
 ├── git/             # Git configuration
