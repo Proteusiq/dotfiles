@@ -1,6 +1,40 @@
-# Python Project Conventions
+# Development Conventions
 
-## Development Workflow
+## Workflow Philosophy
+
+### Commit Early, Commit Often
+- Make small, focused commits after each logical change
+- Each commit should be a single, coherent unit of work
+- Commit messages: `type: description` (e.g., `fix:`, `feat:`, `docs:`, `chore:`)
+- Don't batch multiple unrelated changes into one commit
+
+### Verify Before Commit
+- Always verify changes work before committing:
+  ```bash
+  # Shell scripts
+  bash -n script.sh
+  
+  # Python
+  uv run ruff check . && uv run pytest
+  
+  # General
+  run the actual command to verify it works
+  ```
+- If it's not tested, it's not done
+
+### Test After Changes
+- Run the actual commands/scripts to verify behavior
+- Don't just assume code works—execute it
+- Check edge cases when relevant
+
+### Document As You Go
+- Update documentation alongside code changes
+- If you change behavior, update the relevant README/docs in the same commit
+- Keep docs close to the code they describe
+
+---
+
+## Python Conventions
 
 ### Tool Execution
 - Use `uv run` for all script and command execution
@@ -12,9 +46,9 @@
 - Verify all tests pass with `uv run pytest`
 - If tests fail, fix them before proceeding with other changes
 
-## Code Style
+### Code Style
 
-### Documentation
+#### Documentation
 - Use Google-style docstrings for all public functions, classes, and modules
 - Avoid tutorial-style `#` comments that explain what code does
 - Comments should explain **why**, not **what** (the code itself should be self-explanatory)
@@ -35,7 +69,7 @@
       return await batch_process(items)
   ```
 
-### Type Annotations
+#### Type Annotations
 - Fully type-annotate all functions, methods, and variables
 - Target Python 3.12+ syntax:
   - Use `list[T]`, `dict[K, V]`, `set[T]` (not `List`, `Dict`, `Set` from typing)
@@ -47,14 +81,14 @@
       ...
   ```
 
-### Programming Paradigm
+#### Programming Paradigm
 - Prefer functional programming patterns over OOP when appropriate
 - Use the best tool for the job (don't force FP or OOP dogmatically)
 - Favor immutability and pure functions where practical
 - Prefer composition over inheritance
 - Use dataclasses or Pydantic models for data structures
 
-### Asynchronous Code
+#### Asynchronous Code
 - Prefer `async`/`await` for I/O-bound operations
 - Use `asyncio` patterns consistently
 - Consider `aiohttp`, `httpx`, or similar for HTTP requests
@@ -69,21 +103,21 @@
           return [r.json() for r in responses]
   ```
 
-### Performance
+#### Performance
 - Write code with performance in mind
 - Profile before optimizing
 - Use appropriate data structures (sets for membership, deques for queues, etc.)
 - Leverage list/dict/set comprehensions over explicit loops when clearer
 - Consider generators for memory efficiency with large datasets
 
-## Testing
+### Testing
 
-### Test Execution
+#### Test Execution
 - Run tests with `uv run pytest`
 - All tests must pass before pushing code
 - Fix broken tests immediately—do not commit failing tests
 
-### Test Style
+#### Test Style
 - Follow the same conventions as production code
 - Use descriptive test names that explain the scenario
 - Prefer `async` tests for async code using `pytest-asyncio`
@@ -97,20 +131,75 @@
       assert "id" in result
   ```
 
-## Code Organization
+### Code Organization
 
-### Module Structure
+#### Module Structure
 - Keep modules focused and cohesive
 - Prefer many small modules over few large ones
 - Use clear, descriptive names
 - Organize imports: stdlib, third-party, local (separated by blank lines)
 
-### Function Design
+#### Function Design
 - Keep functions small and single-purpose
 - Use descriptive names (prefer `calculate_total_price` over `calc`)
 - Limit arguments (consider using dataclasses for many parameters)
 - Return early to reduce nesting
 
+---
+
+## Shell Script Conventions
+
+### Verification
+- Always check syntax before committing:
+  ```bash
+  bash -n script.sh
+  ```
+- Test the actual commands work as expected
+- Use `shellcheck` for static analysis when available
+
+### Style
+- Use `set -euo pipefail` for strict error handling
+- Quote variables: `"$var"` not `$var`
+- Use `[[ ]]` over `[ ]` for conditionals
+- Prefer functions for reusable logic
+
+### Documentation
+- Add a header comment explaining the script's purpose
+- Document non-obvious flags and options
+- Keep ASCII diagrams aligned in documentation
+
+---
+
+## Git Conventions
+
+### Commit Messages
+```
+type: short description
+
+Optional longer explanation if needed.
+```
+
+**Types:**
+- `feat:` - New feature
+- `fix:` - Bug fix
+- `docs:` - Documentation only
+- `chore:` - Maintenance, cleanup
+- `refactor:` - Code restructuring (no behavior change)
+- `test:` - Adding/updating tests
+
+### Workflow
+1. Make change
+2. Verify it works (syntax check, run tests, execute command)
+3. Commit with descriptive message
+4. Push when logical unit is complete
+
+---
+
 ## Summary
 
-**Remember:** Write code that is clear, fast, and well-typed. Let the code speak for itself with minimal comments. Use async for I/O. Run formatters, linters, and tests before committing.
+**The Loop:** Change → Verify → Commit → Repeat
+
+- Small, focused commits
+- Test everything before committing
+- Document alongside code
+- If it's not tested, it's not done
