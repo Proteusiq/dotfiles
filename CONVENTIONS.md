@@ -27,6 +27,19 @@
 - Always verify changes work before committing
 - If it's not tested, it's not done
 
+### Testing Philosophy
+- **Snapshot tests**: great for output-heavy code (formatters, CLI output, serialization)
+- **Property tests**: find edge cases humans miss (hypothesis, proptest, fast-check)
+- **Integration over mocks**: test real behavior, mock only external services
+- **Test names describe behavior**: `test_empty_input_returns_none` not `test1`
+
+### Project Documentation
+For non-trivial projects, add an `ARCHITECTURE.md`:
+- Keep it short and high-level (not API docs)
+- Answer "where's the thing that does X?" (codemap)
+- Name important files/types but don't link (links go stale)
+- Call out architectural invariants explicitly
+
 ---
 
 ## Python
@@ -270,6 +283,13 @@ type: short description
 | `chore:` | Maintenance |
 | `refactor:` | Restructure (no behavior change) |
 | `test:` | Tests |
+
+### Pull Requests
+- **Title**: same format as commits (`type: description`)
+- **Description**: explain the *why*, not just the *what*
+- **Before/after**: show output changes when relevant
+- **Link issues**: reference related issues/discussions
+- Keep PRs focused—one logical change per PR
 
 ---
 
