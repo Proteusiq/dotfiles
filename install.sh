@@ -84,49 +84,45 @@ git_install() {
 # =============================================================================
 
 show_help() {
-    cat << 'EOF'
-macOS Setup Script
+    echo -e "Modern macOS dotfiles installer
 
-Usage: ./install.sh [OPTIONS]
+${BOLD}Usage:${NC} ./install.sh [OPTIONS]
 
-OPTIONS:
-    --dry-run             Show what would be done without executing
-    -v, --verbose         Show detailed output (timestamps, status messages)
-    -vv                   Show debug output (executed commands)
-    --interactive         Enable interactive prompts (disabled by default)
-    --only <function>     Run only the specified function (see below)
-    --list                List all available functions with descriptions
-    --versions [group]    Show installed versions (brew|cask|uv|cargo|llm|git|other|all)
-    -h, --help            Show this help message
+${BOLD}Options:${NC}
+    ${GREEN}-h${NC}, ${GREEN}--help${NC}            Show this help message
+    ${GREEN}-v${NC}, ${GREEN}--verbose${NC}         Show detailed output with timestamps
+    ${GREEN}-vv${NC}                   Debug mode (show executed commands)
+    ${GREEN}--dry-run${NC}             Preview changes without executing
+    ${GREEN}--only${NC} <fn>           Run only a specific function
+    ${GREEN}--list${NC}                List functions with full descriptions
+    ${GREEN}--versions${NC} [group]    Show installed versions
+    ${GREEN}--interactive${NC}         Enable interactive prompts
 
-FUNCTIONS:
-    dirs      Create directories (~/Codes, ~/Documents/Screenshots)
-    xcode     Install Xcode Command Line Tools
-    brew      Install Homebrew and Brewfile packages
-    node      Install Node.js tools (n, bun)
-    venv      Create Python virtual environments
-    tmux      Install tmux plugin manager
-    yazi      Install Yazi themes
-    utils     Install CLI utilities (git-lfs, gh-dash, goose, llm, etc.)
-    stow      Link dotfiles with GNU Stow
-    cleanup   Run Homebrew cleanup
+${BOLD}Functions:${NC}
+    ${BLUE}dirs${NC}        Create ~/Codes and ~/Documents/Screenshots
+    ${BLUE}xcode${NC}       Install Xcode Command Line Tools
+    ${BLUE}brew${NC}        Install Homebrew and Brewfile packages
+    ${BLUE}node${NC}        Install Node.js tools (n, bun)
+    ${BLUE}venv${NC}        Create Python virtual environments (neovim, debugpy)
+    ${BLUE}tmux${NC}        Install tmux plugin manager (tpm)
+    ${BLUE}yazi${NC}        Install Yazi file manager themes
+    ${BLUE}utils${NC}       Install CLI utilities (gh-dash, goose, llm, repgrep)
+    ${BLUE}stow${NC}        Symlink dotfiles with GNU Stow
+    ${BLUE}cleanup${NC}     Run Homebrew cleanup and autoremove
 
-VERBOSITY:
-    (default)   Section headers + spinner only
-    -v          Detailed progress + timestamps
-    -vv         Debug: show all executed commands
+${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}uv${NC} | ${YELLOW}cargo${NC} | ${YELLOW}llm${NC} | ${YELLOW}git${NC} | ${YELLOW}other${NC} | ${YELLOW}all${NC}
 
-ENVIRONMENT VARIABLES:
-    DOTFILES_DIR    Path to dotfiles (default: $HOME/dotfiles)
-    LOG_FILE        Path to log file (default: $HOME/macos-setup.log)
+${BOLD}Examples:${NC}
+    ./install.sh                  Full install (quiet mode)
+    ./install.sh -v               Full install with detailed output
+    ./install.sh --only brew      Install only Homebrew packages
+    ./install.sh --only stow      Re-link dotfiles
+    ./install.sh --dry-run -v     Preview all changes
+    ./install.sh --versions uv    Show Python UV tool versions
 
-EXAMPLES:
-    ./install.sh                  # Full install (quiet)
-    ./install.sh -v               # Full install (verbose)
-    ./install.sh --only brew      # Just Homebrew packages
-    ./install.sh --dry-run        # Preview without changes
-    ./install.sh --versions uv    # Show UV tool versions
-EOF
+${BOLD}Environment:${NC}
+    ${GREEN}DOTFILES_DIR${NC}    Dotfiles path (default: \$HOME/dotfiles)
+    ${GREEN}LOG_FILE${NC}        Log path (default: \$HOME/macos-setup.log)"
 }
 
 list_functions() {
