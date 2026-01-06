@@ -83,45 +83,56 @@ cd ~/dotfiles
 
 <details><summary>📜 Install Script Deep Dive</summary>
 
-### How It Works
+### Architecture
+
+The install script is split into modular components for maintainability:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              install.sh                                     │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐             │
-│   │  Parse   │───▶│  Check   │───▶│  Setup   │───▶│  Track   │             │
-│   │   Args   │    │  macOS   │    │  Tools   │    │ Versions │             │
-│   └──────────┘    └──────────┘    └──────────┘    └──────────┘             │
-│        │                                               │                    │
-│        ▼                                               ▼                    │
-│   ┌─────────────────────────────────────────────────────────────┐          │
-│   │                    Setup Pipeline                           │          │
-│   ├─────────────────────────────────────────────────────────────┤          │
-│   │                                                             │          │
-│   │  dirs ──▶ xcode ──▶ brew ──▶ node ──▶ venv ──▶ tmux        │          │
-│   │                                                             │          │
-│   │  yazi ──▶ utils ──▶ stow ──▶ cleanup ──▶ summary           │          │
-│   │                                                             │          │
-│   └─────────────────────────────────────────────────────────────┘          │
-│                                                                             │
-│   Version Tracking: bun, n, goose, llm, tpm, yazi-flavors, ...             │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+dotfiles/
+├── install.sh              # Main script (465 lines) - CLI, setup functions
+└── scripts/
+    ├── logging.sh          # Logging, spinner, execute helpers
+    ├── ui.sh               # Table drawing, formatting
+    └── versions.sh         # Version detection, --versions command
+```
+
+### Pipeline
+
+```
+📋 Checking prerequisites
+📁 Creating directories
+🔨 Installing Xcode CLI
+🍺 Installing Homebrew packages    ← spinner animation
+📦 Installing Node.js tools        ← spinner animation
+🐍 Creating Python virtual environments
+💻 Installing tmux plugins
+🎨 Installing Yazi themes
+🔧 Installing CLI utilities
+🔗 Linking dotfiles
+🧹 Cleaning up
 ```
 
 ### Command Reference
 
 | Command | Description |
 |---------|-------------|
-| `./install.sh` | Full installation |
+| `./install.sh` | Full installation (quiet mode) |
+| `./install.sh -v` | Verbose output with timestamps |
+| `./install.sh -vv` | Debug mode (show all commands) |
 | `./install.sh --dry-run` | Preview changes without executing |
-| `./install.sh --verbose` | Show detailed command output |
 | `./install.sh --versions` | Show installed tool versions |
+| `./install.sh --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|llm\|git\|other\|all) |
 | `./install.sh --list` | List available functions |
 | `./install.sh --only <fn>` | Run only a specific function |
 | `./install.sh --help` | Show help message |
+
+### Verbosity Levels
+
+| Level | Flag | Output |
+|-------|------|--------|
+| Quiet | (default) | Section headers + spinner |
+| Verbose | `-v` | + timestamps, status messages |
+| Debug | `-vv` | + all executed commands |
 
 ### Available Functions
 
@@ -262,6 +273,10 @@ dotfiles/
 ├── ghostty/         # Terminal emulator config
 ├── git/             # Git configuration
 ├── nvim/            # Neovim configuration
+├── scripts/         # Install script modules
+│   ├── logging.sh   # Logging, spinner, helpers
+│   ├── ui.sh        # Table drawing
+│   └── versions.sh  # Version detection
 ├── sesh/            # Session manager config
 ├── starship/        # Shell prompt config
 ├── tmux/            # Terminal multiplexer config
@@ -273,7 +288,7 @@ dotfiles/
 │   ├── .zshenv.sh   # Environment setup
 │   └── .zshrc       # Main zsh config
 ├── Brewfile         # Homebrew packages
-└── install.sh       # Setup script
+└── install.sh       # Main setup script
 ```
 
 ### Key Configuration Files
