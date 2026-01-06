@@ -2,6 +2,109 @@
 # Version detection and display utilities
 
 # =============================================================================
+# Tool Info (--info command)
+# =============================================================================
+
+# Detect which package manager owns a tool and get its info
+get_tool_info() {
+    local tool="$1"
+    local found=false
+    local source="" version="" description=""
+    
+    # Check Homebrew formula
+    if has_cmd brew && brew list --formula "$tool" &>/dev/null; then
+        found=true
+        source="brew"
+        version=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}')
+        description=$(brew info "$tool" 2>/dev/null | sed -n '2p')
+    # Check Homebrew cask
+    elif has_cmd brew && brew list --cask "$tool" &>/dev/null; then
+        found=true
+        source="cask"
+        version=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}')
+        # Casks don't have description line, try to get from JSON
+        description=$(brew info --cask --json=v2 "$tool" 2>/dev/null | jq -r '.casks[0].desc // empty' 2>/dev/null)
+        [[ -z "$description" ]] && description="macOS application"
+    # Check UV tools
+    elif has_cmd uv && uv tool list 2>/dev/null | grep -q "^$tool "; then
+        found=true
+        source="uv"
+        version=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v')
+        # Fetch from PyPI API
+        description=$(curl -s "https://pypi.org/pypi/$tool/json" 2>/dev/null | jq -r '.info.summary // empty' 2>/dev/null)
+        [[ -z "$description" ]] && description="Python tool installed via uv"
+    # Check Cargo
+    elif has_cmd cargo && cargo install --list 2>/dev/null | grep -q "^$tool "; then
+        found=true
+        source="cargo"
+        version=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:')
+        description=$(cargo search "$tool" --limit 1 2>/dev/null | head -1 | sed 's/.*# //' | sed 's/"$//' || echo "Rust package")
+    # Check npm global
+    elif has_cmd npm && npm list -g --depth=0 2>/dev/null | grep -q " $tool@"; then
+        found=true
+        source="npm"
+        version=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p")
+        description=$(npm info "$tool" description 2>/dev/null || echo "Node.js package")
+    # Check LLM plugins
+    elif has_cmd llm && has_cmd jq && llm plugins 2>/dev/null | jq -e ".[] | select(.name==\"$tool\")" &>/dev/null; then
+        found=true
+        source="llm"
+        version=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version")
+        description="LLM plugin for $(echo "$tool" | sed 's/llm-//')"
+    # Check special tools
+    elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
+        found=true
+        source="standalone"
+        version=$("$HOME/.bun/bin/bun" --version 2>/dev/null)
+        description="All-in-one JavaScript runtime & toolkit"
+    elif [[ "$tool" == "goose" ]] && has_cmd goose; then
+        found=true
+        source="standalone"
+        version=$(goose --version 2>/dev/null | tr -d ' ')
+        description="AI developer agent from Block"
+    elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
+        found=true
+        source="git"
+        version=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null)
+        description="Tmux Plugin Manager"
+    elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
+        found=true
+        source="git"
+        version=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null)
+        description="Color schemes for Yazi file manager"
+    fi
+    
+    if [[ "$found" == false ]]; then
+        echo -e "${RED}Tool '$tool' not found${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, llm plugins${NC}"
+        return 1
+    fi
+    
+    # Display info box
+    local w=60
+    local hc="─"
+    
+    echo ""
+    printf "${BLUE}┌%${w}s┐${NC}\n" "" | tr ' ' "$hc"
+    printf "${BLUE}│${NC} ${BOLD}%-$((w-2))s${NC} ${BLUE}│${NC}\n" "$tool"
+    printf "${BLUE}├%${w}s┤${NC}\n" "" | tr ' ' "$hc"
+    printf "${BLUE}│${NC}  ${CYAN}%-12s${NC} %-$((w-16))s ${BLUE}│${NC}\n" "Source:" "$source"
+    printf "${BLUE}│${NC}  ${CYAN}%-12s${NC} ${GREEN}%-$((w-16))s${NC} ${BLUE}│${NC}\n" "Version:" "$version"
+    printf "${BLUE}│${NC}  ${CYAN}%-12s${NC} %-$((w-16))s ${BLUE}│${NC}\n" "Description:" ""
+    
+    # Word wrap description
+    local desc_width=$((w - 6))
+    while [[ ${#description} -gt 0 ]]; do
+        local chunk="${description:0:$desc_width}"
+        description="${description:$desc_width}"
+        printf "${BLUE}│${NC}    %-$((w-4))s ${BLUE}│${NC}\n" "$chunk"
+    done
+    
+    printf "${BLUE}└%${w}s┘${NC}\n" "" | tr ' ' "$hc"
+    echo ""
+}
+
+# =============================================================================
 # Version Detection
 # =============================================================================
 

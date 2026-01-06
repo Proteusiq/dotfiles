@@ -92,6 +92,7 @@ ${BOLD}Options:${NC}
     ${GREEN}--only${NC} <fn>           Run only a specific function
     ${GREEN}--list${NC}                List functions with full descriptions
     ${GREEN}--versions${NC} [group]    Show installed versions
+    ${GREEN}--info${NC} <tool>         Show info about an installed tool
     ${GREEN}--interactive${NC}         Enable interactive prompts
 
 ${BOLD}Functions:${NC}
@@ -115,6 +116,7 @@ ${BOLD}Examples:${NC}
     update --only stow            Re-link dotfiles
     update --dry-run -v           Preview all changes
     update --versions uv          Show Python UV tool versions
+    update --info bat             Show info about bat
 
 ${BOLD}Environment:${NC}
     ${GREEN}DOTFILES_DIR${NC}    Dotfiles path (default: \$HOME/dotfiles)
@@ -183,6 +185,15 @@ parse_args() {
             fi
             show_installed_versions "$group"
             exit 0
+            ;;
+        --info)
+            if [[ -z "${2:-}" || "${2:0:1}" == "-" ]]; then
+                echo -e "${RED}Error: --info requires a tool name${NC}"
+                echo -e "Usage: ${GREEN}update --info <tool>${NC}"
+                exit 1
+            fi
+            get_tool_info "$2"
+            exit $?
             ;;
         -h | --help)
             show_help
