@@ -81,32 +81,112 @@ cd ~/dotfiles
 ./install.sh
 ```
 
-### Installation Options
+<details><summary>📜 Install Script Deep Dive</summary>
 
-The install script supports several flags:
-```bash
-./install.sh --help              # Show all options
-./install.sh --dry-run           # Preview changes without executing
-./install.sh --verbose           # Show detailed output
-./install.sh --skip-interactive  # Non-interactive mode (default)
-./install.sh --list              # List all available functions
-./install.sh --only <function>   # Run only a specific function
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              install.sh                                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐             │
+│   │  Parse   │───▶│  Check   │───▶│  Setup   │───▶│  Track   │             │
+│   │   Args   │    │  macOS   │    │  Tools   │    │ Versions │             │
+│   └──────────┘    └──────────┘    └──────────┘    └──────────┘             │
+│        │                                               │                    │
+│        ▼                                               ▼                    │
+│   ┌─────────────────────────────────────────────────────────────┐          │
+│   │                    Setup Pipeline                           │          │
+│   ├─────────────────────────────────────────────────────────────┤          │
+│   │                                                             │          │
+│   │  dirs ──▶ xcode ──▶ brew ──▶ node ──▶ venv ──▶ tmux        │          │
+│   │                                                             │          │
+│   │  yazi ──▶ utils ──▶ stow ──▶ cleanup ──▶ summary           │          │
+│   │                                                             │          │
+│   └─────────────────────────────────────────────────────────────┘          │
+│                                                                             │
+│   Version Tracking: bun, n, goose, llm, tpm, yazi-flavors, ...             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Run individual functions:**
-```bash
-./install.sh --list              # List available functions
-./install.sh --only stow         # Only stow dotfiles
-./install.sh --only cleanup      # Only run cleanup
-./install.sh --only utils        # Only setup utilities
-./install.sh --only brew         # Only install Homebrew packages
+### Command Reference
+
+| Command | Description |
+|---------|-------------|
+| `./install.sh` | Full installation |
+| `./install.sh --dry-run` | Preview changes without executing |
+| `./install.sh --verbose` | Show detailed command output |
+| `./install.sh --versions` | Show installed tool versions |
+| `./install.sh --list` | List available functions |
+| `./install.sh --only <fn>` | Run only a specific function |
+| `./install.sh --help` | Show help message |
+
+### Available Functions
+
+| Function | Name | Description |
+|----------|------|-------------|
+| `dirs` | create_dirs | Create ~/Codes and ~/Documents/Screenshots |
+| `xcode` | install_xcode_tools | Install Xcode Command Line Tools |
+| `brew` | install_brew | Install Homebrew and Brewfile packages |
+| `node` | configure_node | Install n (Node version manager) and Bun |
+| `venv` | create_virtualenvs | Create Python venvs (neovim, debugpy) |
+| `tmux` | install_tmux_plugins | Install tmux plugin manager (tpm) |
+| `yazi` | install_yazi_themes | Install Yazi file manager themes |
+| `utils` | setup_utils | Install UV tools, LLM, Goose, gh-dash, etc. |
+| `stow` | stow_dotfiles | Symlink dotfiles with GNU Stow |
+| `cleanup` | cleanup | Run Homebrew cleanup and autoremove |
+
+### Version Tracking
+
+The script tracks versions before and after installation, showing a summary of what changed:
+
 ```
+┌──────────────────┬────────────────┬────────────────┬──────────┐
+│ Tool             │ Previous       │ Current        │ Status   │
+├──────────────────┼────────────────┼────────────────┼──────────┤
+│ bun              │ 1.2.18         │ 1.2.19         │ Updated  │
+│ llm              │ -              │ 0.28           │ New      │
+│ tpm              │ 99469c4        │ a1b2c3d        │ Updated  │
+└──────────────────┴────────────────┴────────────────┴──────────┘
+```
+
+**Check installed versions anytime:**
+```bash
+./install.sh --versions
+```
+
+### Examples
+
+```bash
+# Preview what would happen
+./install.sh --dry-run
+
+# Run only Homebrew installation
+./install.sh --only brew
+
+# Update just the utilities
+./install.sh --only utils
+
+# Full install with verbose output
+./install.sh --verbose
+
+# Check current tool versions
+./install.sh --versions
+```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DOTFILES_DIR` | `$HOME/dotfiles` | Path to dotfiles directory |
+| `LOG_FILE` | `$HOME/macos-setup.log` | Path to installation log |
+
+</details>
 
 > [!TIP]
 > After installation, you can use the `update` alias instead of `./install.sh`
-
-> [!NOTE]
-> Available functions: `dirs`, `xcode`, `brew`, `node`, `venv`, `tmux`, `yazi`, `utils`, `stow`, `cleanup`
 
 ## Configuration
 
