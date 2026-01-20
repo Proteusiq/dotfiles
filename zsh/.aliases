@@ -291,6 +291,7 @@ alias f=fuck
 alias tk="take"
 alias clean=clean_pycache
 alias activate=activate_venv
+alias pg=purge
 
 ###############################################################################
 # FUNCTIONS
@@ -503,6 +504,40 @@ clean_pycache() {
 
     echo "Searching for __pycache__ directories under $target_dir..."
     find $target_dir -type d -name '__pycache__' -exec rm -rf {} +
+}
+
+# delete files matching a pattern (with preview)
+# usage: purge "*.csv" [directory]
+purge() {
+    local pattern=$1
+    local target_dir=${2:-.}
+
+    if [[ -z "$pattern" ]]; then
+        echo "Usage: purge <pattern> [directory]"
+        echo "Example: purge '*.csv' ."
+        return 1
+    fi
+
+    local files
+    files=$(find "$target_dir" -name "$pattern" -type f 2>/dev/null)
+
+    if [[ -z "$files" ]]; then
+        echo "No files matching '$pattern' found in $target_dir"
+        return 0
+    fi
+
+    echo "Files to be deleted:"
+    echo "$files" | while read -r f; do echo "  $f"; done
+    echo ""
+    echo -n "Delete these files? [y/N] "
+    read -r confirm
+
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        find "$target_dir" -name "$pattern" -type f -delete
+        echo "Deleted files matching '$pattern'"
+    else
+        echo "Aborted"
+    fi
 }
 
 # run dotfiles install script

@@ -1579,6 +1579,7 @@ update --only install_nvim    # Re-run just nvim setup
 | List files | `eza -la` |
 | Disk usage | `ncdu` |
 | File manager | `yazi` |
+| Delete by pattern | `purge '*.csv'` or `pg '*.log'` |
 
 ### Git Operations
 | Task | Command |
