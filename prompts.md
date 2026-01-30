@@ -1,6 +1,6 @@
 # Prompt Engineering Guide
 
-> [Emilie's Prompting Playbook](https://www.linkedin.com/in/emilielundblad/)
+> [Emilie's Prompting Playbook](https://www.linkedin.com/in/emilielundblad/) — based on her [prompting article](https://www.linkedin.com/pulse/all-you-need-know-prompt-better-emilie-lundblad-mx6ne/)
 
 ## Frameworks
 
