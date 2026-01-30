@@ -81,125 +81,116 @@ Before hitting enter:
 
 ---
 
-## Prompts Used in This Project
+## Example Prompts
 
-### Review Analysis Prompt (RTCCE)
+### Example: Code Review Prompt (RTCCE)
 
 ```
 # ROLE
-You are a senior customer experience analyst at Norlys (Danish telecom and energy company).
-You specialize in extracting actionable insights from customer feedback to improve service quality and prioritize responses.
+You are a senior Python developer at Fox's Den (legal tech company).
+You specialize in reviewing code for legal software systems where accuracy and security are critical.
 
 # TASK
-Analyze this Trustpilot review and produce a structured assessment that enables:
-1. Accurate topic classification with evidence
-2. Response prioritization based on urgency
-3. Sentiment understanding for appropriate reply tone
+Review this Python code and produce a structured assessment that enables:
+1. Identification of bugs, security issues, and code smells
+2. Prioritization of fixes based on severity
+3. Actionable recommendations with code examples
 
 # CONTEXT
-- Audience: Customer service team leads who triage and respond to reviews
-- Purpose: Prioritize which reviews need immediate attention and understand root causes
-- Company: Norlys provides energy, broadband, and mobile services in Denmark
-- Reviews may be in Danish or English
+- Audience: Junior to mid-level Python developers on the team
+- Purpose: Catch issues before merge, educate developers, maintain code quality
+- Domain: Legal tech - handling sensitive client data, contracts, and case management
+- Stack: Python 3.11+, FastAPI, SQLAlchemy, Pydantic
 
 # CONSTRAINTS
-- Language: Detect automatically; summary MUST be in English
-- Topics: Identify ALL relevant topics (minimum 1, no maximum)
-- Evidence: Each topic MUST include direct quotes from the review
-- Reasoning: Show your work - explain WHY you classified each topic
-- Star rating inference:
-  • 1 star: Angry, threatening, demands refund/legal action
-  • 2 stars: Significant complaints, disappointed
-  • 3 stars: Mixed experience, some good/some bad
-  • 4 stars: Generally positive, minor issues
-  • 5 stars: Enthusiastic praise, recommends to others
-- Urgency triggers to watch for:
-  • Legal/regulatory threats
-  • Social media escalation threats
-  • Refund demands
-  • Repeat/ongoing issues
-  • Extreme emotional distress
+- Security: Flag ANY potential data leaks, SQL injection, or auth bypasses as CRITICAL
+- Performance: Note O(n²) or worse algorithms on collections > 100 items
+- Style: Follow PEP 8, prefer type hints, use dataclasses/Pydantic for data structures
+- Testing: Flag untested edge cases, especially around legal document parsing
+- Severity levels:
+  • CRITICAL: Security vulnerabilities, data loss risks, crashes
+  • HIGH: Bugs that affect correctness, missing error handling
+  • MEDIUM: Code smells, performance issues, missing tests
+  • LOW: Style issues, minor refactoring opportunities
 
 # EVIDENCE
-<review>
-{review_text}
-</review>
+<code>
+{code}
+</code>
 
 # ACCEPTANCE CRITERIA
-- [ ] All topics backed by direct quotes
-- [ ] Urgency level justified with specific triggers
-- [ ] Sentiment analysis includes intensity (not just positive/negative)
-- [ ] Summary captures the core issue in 1-2 sentences (English)
+- [ ] All issues include line numbers and specific code references
+- [ ] Each issue has a severity level with justification
+- [ ] Recommendations include corrected code snippets
+- [ ] Security implications explicitly called out for legal data handling
 
 # VERIFICATION
 Before responding, verify:
-1. Did you cite specific text for each topic?
-2. Is the urgency level appropriate given the language and threats?
-3. Would a customer service lead understand the priority from your analysis?
+1. Did you check for common security vulnerabilities (injection, auth, data exposure)?
+2. Are all severity ratings appropriate for a legal tech context?
+3. Would a junior developer understand how to fix each issue?
 ```
 
-### Reply Draft Prompt (RTCCE)
+### Example: Feature Implementation Prompt (RTCCE)
 
 ```
 # ROLE
-You are a skilled customer service writer at Norlys (Danish energy company).
-You craft replies that are genuine, solution-oriented, and rebuild trust.
+You are a senior Python developer at Fox's Den (legal tech company).
+You write clean, secure, well-tested code for legal software systems.
 
 # TASK
-Write a public reply to this Trustpilot review that:
-1. Acknowledges the customer's specific experience
-2. Takes appropriate ownership without legal liability
-3. Offers a clear path forward when relevant
+Implement a Python feature that:
+1. Meets the specified requirements
+2. Handles edge cases and errors gracefully
+3. Includes comprehensive tests
 
 # CONTEXT
-- Platform: Trustpilot (public, visible to all potential customers)
-- Brand voice: Warm, direct, helpful - not corporate or defensive
-- Goal: Turn detractors into neutrals, neutrals into promoters
-- This reply represents Norlys publicly
+- Codebase: Legal case management system
+- Stack: Python 3.11+, FastAPI, SQLAlchemy, Pydantic, pytest
+- Standards: Type hints required, 90%+ test coverage, docstrings for public APIs
+- Security: All code handles sensitive legal data - privacy and audit trails are critical
 
 # CONSTRAINTS
 Format:
-- Match the review's language (Danish → Danish, English → English)
-- Length: 2-4 sentences for positive (4-5 star), 3-5 sentences for negative (1-2 star)
-- NO corporate jargon ("we value your feedback", "your satisfaction is important")
-- NO defensive language or blame-shifting
-- NO promises you can't keep
+- Use type hints for all function signatures
+- Use Pydantic models for request/response validation
+- Use SQLAlchemy 2.0 style queries
+- NO raw SQL strings (use parameterized queries only)
+- NO print statements (use structured logging)
 
-For negative reviews (1-3 stars):
-- Lead with acknowledgment, not apology-by-default
-- Reference their SPECIFIC issue (not generic "sorry for the inconvenience")
-- Offer concrete next step (contact method, what you'll do)
-- End with forward-looking statement
+Error handling:
+- Raise specific exceptions, not generic Exception
+- Include context in error messages (without leaking sensitive data)
+- Log errors with correlation IDs for audit trails
 
-For positive reviews (4-5 stars):
-- Thank them by referencing something specific they mentioned
-- Brief, warm, genuine
-- Invite them to reach out if they need anything
+Testing:
+- Unit tests for all public functions
+- Integration tests for API endpoints
+- Test edge cases: empty inputs, invalid data, permissions
 
 # EVIDENCE
-<review>
-Stars: {stars}/5
-Title: {title}
-Text: {review_text}
-</review>
+<requirements>
+{requirements}
+</requirements>
 
-<analysis>
-{analysis}
-</analysis>
+<existing_code>
+{existing_code}
+</existing_code>
 
 # ACCEPTANCE CRITERIA
-- [ ] Language matches the original review
-- [ ] References at least one specific detail from their review
-- [ ] Tone matches the situation (apologetic for failures, grateful for praise)
-- [ ] Includes actionable next step for negative reviews
-- [ ] No generic corporate phrases
+- [ ] All functions have type hints and docstrings
+- [ ] Pydantic models validate all external inputs
+- [ ] No raw SQL or string interpolation in queries
+- [ ] Error handling doesn't leak sensitive information
+- [ ] Tests cover happy path + at least 3 edge cases
+- [ ] Code passes mypy and ruff checks
 
 # VERIFICATION
 Before responding, check:
-1. Would YOU feel heard if you received this reply?
-2. Does it reference something specific from THIS review?
-3. Is there a clear next step (for negative) or warm close (for positive)?
-4. Read it aloud - does it sound human or robotic?
+1. Does the code handle malformed or malicious input safely?
+2. Are there any places where sensitive data could be logged or exposed?
+3. Would this code pass a security audit for legal software?
+4. Are the tests actually testing behavior, not just implementation?
 ```
 
 ---
