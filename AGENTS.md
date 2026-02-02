@@ -2,20 +2,26 @@
 
 ## Dotfiles: Adding New Tools
 
+**Never run `brew install` directly.** Always add tools via Brewfile.
+
 When adding a new tool/package, update all three locations:
 
-1. **`Brewfile`** — Add installation entry
+1. **`Brewfile`** — Add installation entry, then run `brew bundle`
 2. **`Tools.md`** — Add documentation with examples and use cases
 3. **`bin/tools.py`** — Add to appropriate category in the TUI explorer
 
 ```bash
 # Example: adding 'noti'
-# 1. Brewfile
+
+# 1. Brewfile - add entry
 brew "noti"                              # Process notifications (M4/Sequoia)
 
-# 2. Tools.md - full docs with examples, flags, use cases
+# 2. Install via bundle
+brew bundle --file=~/dotfiles/Brewfile
 
-# 3. bin/tools.py - add to DEV_TOOLS list
+# 3. Tools.md - add full docs with examples, flags, use cases
+
+# 4. bin/tools.py - add to appropriate *_TOOLS list
 ("noti", "Notify when process completes (M4/Sequoia)", "make build; noti → notification when done"),
 ```
 
