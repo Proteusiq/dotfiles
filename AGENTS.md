@@ -146,6 +146,15 @@ async def fetch_users(user_ids: list[int]) -> list[User]:
 - [ ] **Imports**: Absolute imports, no circular dependencies
 - [ ] **Config**: Environment variables via `os.environ` or config files, not hardcoded
 
+### PEP 8 Essentials (enforced by ruff)
+- 4 spaces indentation, no tabs
+- `snake_case` for functions/variables, `PascalCase` for classes, `UPPER_CASE` for constants
+- Use `is` / `is not` for `None` comparisons (not `==`)
+- Prefer `''.join()` for string concatenation in loops
+- Use context managers (`with`) for resource management
+- Avoid mutable default arguments (`def f(x=[])` is bad)
+- Keep functions small and focused (pure functions preferred)
+
 ---
 
 ## Rust
