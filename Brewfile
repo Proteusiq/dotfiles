@@ -86,6 +86,7 @@ brew "vhs"                               # Record terminal sessions as GIFs
 brew "scooter"                           # Interactive find-and-replace
 brew "direnv"                            # Per-directory environment
 brew "universal-ctags"                   # Code indexing
+brew "noti"                              # Process notifications (M4/Sequoia)
 cask "postman"                           # API testing
 
 # INFRASTRUCTURE & CLOUD
