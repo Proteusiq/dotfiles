@@ -1,5 +1,15 @@
 # Development Conventions
 
+## GitHub CLI
+
+Two accounts configured: work and personal. For personal repos (like dotfiles), switch first:
+
+```bash
+gh auth switch --user Proteusiq
+```
+
+---
+
 ## Philosophy
 
 - **Simplicity is king** — the simplest solution that works is the best solution
