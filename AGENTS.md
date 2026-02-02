@@ -1,5 +1,26 @@
 # Development Conventions
 
+## Dotfiles: Adding New Tools
+
+When adding a new tool/package, update all three locations:
+
+1. **`Brewfile`** — Add installation entry
+2. **`Tools.md`** — Add documentation with examples and use cases
+3. **`bin/tools.py`** — Add to appropriate category in the TUI explorer
+
+```bash
+# Example: adding 'noti'
+# 1. Brewfile
+brew "noti"                              # Process notifications (M4/Sequoia)
+
+# 2. Tools.md - full docs with examples, flags, use cases
+
+# 3. bin/tools.py - add to DEV_TOOLS list
+("noti", "Notify when process completes (M4/Sequoia)", "make build; noti → notification when done"),
+```
+
+---
+
 ## Philosophy
 
 - **Simplicity is king** — the simplest solution that works is the best solution
