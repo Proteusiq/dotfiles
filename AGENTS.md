@@ -355,9 +355,9 @@ main "$@"
 ## macOS
 
 ### Tools
-| Tool | Purpose | Install |
-|------|---------|---------|
-| `noti` | Notifications (works on M4/Sequoia) | `brew install noti` |
+| Tool | Purpose |
+|------|---------|
+| `noti` | Notifications (works on M4/Sequoia) |
 
 ### Usage
 ```bash
