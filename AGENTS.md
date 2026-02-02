@@ -57,6 +57,35 @@ These rules apply **to all languages**, regardless of tooling.
 - Keep modules small and focused.
 - Separate business logic from runtime and framework concerns.
 
+### Project Structure (Functional Core, Imperative Shell)
+
+```
+┌─────────────────────────────────┐
+│         Interfaces              │  ← CLI, API, UI (thin)
+├─────────────────────────────────┤
+│         Side Effects            │  ← I/O, database, network
+├─────────────────────────────────┤
+│         Core Logic              │  ← Pure functions (testable)
+└─────────────────────────────────┘
+```
+
+**Recommended layout:**
+```
+src/
+  core/       # Pure business logic (no I/O)
+  services/   # Side effects (DB, HTTP, filesystem)
+  api/        # HTTP handlers
+  cli/        # CLI commands
+tests/
+  unit/       # Tests for core/
+  integration/ # Tests for services/
+```
+
+**Why this works:**
+- Core logic is **pure** → easy to test, no mocks needed
+- Side effects are **isolated** → easy to swap implementations
+- Interfaces are **thin** → easy to add new entry points
+
 ---
 
 ## Python
