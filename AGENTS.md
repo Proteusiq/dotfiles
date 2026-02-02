@@ -135,6 +135,17 @@ async def fetch_users(user_ids: list[int]) -> list[User]:
 - Docstrings: brief, public APIs only
 - Async for I/O
 
+### Best Practices Checklist
+- [ ] **Tools**: Using `uv`, `ruff`, `ty`, `pytest`
+- [ ] **Types**: All functions have type annotations
+- [ ] **Async**: Using `asyncio` for I/O (not blocking `subprocess.run()`, `requests`, etc.)
+- [ ] **Data structures**: Using `dataclass` or `pydantic` for structured data
+- [ ] **HTTP**: Using `httpx` (async) instead of `requests` (sync)
+- [ ] **Validation**: Using `pydantic` or manual validation for external input
+- [ ] **Error handling**: Returning structured errors, not raising exceptions for control flow
+- [ ] **Imports**: Absolute imports, no circular dependencies
+- [ ] **Config**: Environment variables via `os.environ` or config files, not hardcoded
+
 ---
 
 ## Rust
