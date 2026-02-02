@@ -41,6 +41,7 @@ These rules apply **to all languages**, regardless of tooling.
 - Prefer **unit tests** for pure logic and **integration tests** for I/O boundaries.
 - Assert behavior, not implementation details.
 - Aim for reproducibility and determinism.
+- Follow the **AAA pattern**: Arrange, Act, Assert.
 
 ### Comments & Docs
 - Use comments to explain *why* something is needed.
