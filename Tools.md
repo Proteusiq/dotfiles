@@ -689,27 +689,6 @@ watchexec --ignore dist -- npm build  # Ignore directory
 
 **Use cases:** Auto-testing, live reload, build automation, development workflow
 
-#### noti
-Monitor a process and trigger a notification when it completes. Works on M4 Macs with macOS Sequoia (unlike terminal-notifier).
-
-```bash
-noti -t "Build" -m "Complete"             # Simple notification
-make build; noti -t "Build" -m "Done"     # Notify after command
-noti --pwatch 1234                        # Watch process by PID
-noti tar -cjf archive.tar.bz2 Music/      # Notify when tar finishes
-long-command; noti                        # Notify with defaults
-```
-
-| Flag | Description |
-|------|-------------|
-| `-t title` | Notification title |
-| `-m message` | Notification message |
-| `--pwatch pid` | Watch process by PID |
-| `-b` | Use banner notification |
-| `-s` | Use speech notification |
-
-**Use cases:** Long-running builds, deployment notifications, background task completion
-
 ### Text Processing
 
 #### GNU coreutils

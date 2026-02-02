@@ -356,27 +356,6 @@ main "$@"
 
 ---
 
-## macOS
-
-### Tools
-| Tool | Purpose |
-|------|---------|
-| `noti` | Notifications (works on M4/Sequoia) |
-
-### Usage
-```bash
-# Notify when command finishes
-noti -t "Build" -m "Complete"
-
-# Notify after long-running command
-make build; noti -t "Build" -m "Done"
-
-# Watch a process
-noti --pwatch 1234
-```
-
----
-
 ## Git
 
 ### Commit Format

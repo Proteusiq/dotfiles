@@ -139,7 +139,6 @@ DEV_TOOLS = [
     ("vhs", "Record terminal as GIF with a script", "vhs demo.tape → reproducible terminal recordings"),
     ("scooter", "Interactive find & replace across files", "scooter → TUI for project-wide refactoring"),
     ("direnv", "Auto-load .envrc when entering directory", "cd project → env vars loaded automatically"),
-    ("noti", "Notify when process completes (M4/Sequoia)", "make build; noti → notification when done"),
 ]
 
 INFRA_TOOLS = [
