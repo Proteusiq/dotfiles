@@ -92,6 +92,7 @@ cask "postman"                           # API testing
 # ───────────────────────────────────────────────────────────────────────────
 brew "lima"                              # Linux VMs on macOS
 brew "lazydocker"                        # Docker TUI
+brew "docker-slim"                       # Container image optimizer
 brew "terraform"
 brew "azure-cli"
 

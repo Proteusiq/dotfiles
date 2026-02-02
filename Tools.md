@@ -247,6 +247,47 @@ limactl delete default        # Delete VM
 
 **Use cases:** Container development, Linux testing, Docker alternative, running Linux tools
 
+#### slim (docker-slim)
+Container image optimizer. Minify container images by up to 30x while making them more secure by removing unnecessary files and auto-generating security profiles (Seccomp, AppArmor).
+
+```bash
+slim build my-image           # Analyze & minify image
+slim build --target my-image --tag my-image.slim  # Custom output tag
+slim xray my-image            # Inspect image layers & reverse-engineer Dockerfile
+slim lint Dockerfile          # Lint Dockerfile for best practices
+slim debug my-container       # Debug running container with sidecar
+slim profile my-image         # Profile without building slim image
+slim images                   # List container images
+```
+
+| Command | Description |
+|---------|-------------|
+| `slim build` | Analyze and create optimized image |
+| `slim xray` | Inspect image, show layers, reverse-engineer Dockerfile |
+| `slim lint` | Lint Dockerfiles |
+| `slim debug` | Attach debug sidecar to running container |
+| `slim profile` | Profile image without building |
+
+**Build flags:**
+- `--http-probe=false` - Disable HTTP probing (for CLI tools)
+- `--include-path /path` - Include additional paths
+- `--include-shell` - Keep basic shell in minified image
+- `--copy-meta-artifacts /path` - Copy Seccomp/AppArmor profiles
+
+**Example workflow:**
+```bash
+# 1. Build and minify
+slim build --target python:3.12 --tag python:3.12.slim
+
+# 2. Compare sizes
+docker images | grep python
+
+# 3. Use generated security profile
+docker run --security-opt seccomp:my-image-seccomp.json my-image.slim
+```
+
+**Use cases:** Reduce image size, improve security, optimize CI/CD pipelines, remove attack surface
+
 ### Database Tools
 
 #### mongosh

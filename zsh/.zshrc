@@ -66,3 +66,7 @@ function git_add_comment_push() {
 
 
 
+
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+zstyle ':completion:*' menu select
