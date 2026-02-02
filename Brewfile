@@ -95,6 +95,7 @@ brew "lazydocker"                        # Docker TUI
 brew "docker-slim"                       # Container image optimizer
 brew "terraform"
 brew "azure-cli"
+brew "temporal"                          # Durable execution platform CLI
 
 # PROGRAMMING LANGUAGES
 # ───────────────────────────────────────────────────────────────────────────

@@ -288,6 +288,45 @@ docker run --security-opt seccomp:my-image-seccomp.json my-image.slim
 
 **Use cases:** Reduce image size, improve security, optimize CI/CD pipelines, remove attack surface
 
+#### temporal
+Durable execution platform for building reliable workflows. The CLI includes a local development server, workflow management, and debugging tools.
+
+```bash
+temporal server start-dev     # Start local dev server (Web UI at :8233)
+temporal server start-dev --db-filename temporal.db  # Persist data
+temporal server start-dev --ui-port 8080  # Custom Web UI port
+temporal workflow list        # List workflows
+temporal workflow show -w <id> # Show workflow details
+temporal workflow start --task-queue myqueue --type MyWorkflow  # Start workflow
+temporal workflow signal -w <id> --name mySignal --input '{"key":"value"}'
+temporal workflow cancel -w <id>  # Cancel running workflow
+temporal workflow terminate -w <id>  # Force terminate workflow
+```
+
+| Command | Description |
+|---------|-------------|
+| `temporal server start-dev` | Start local Temporal Service + Web UI |
+| `temporal workflow list` | List all workflows |
+| `temporal workflow show` | Show workflow execution history |
+| `temporal workflow start` | Start a new workflow |
+| `temporal workflow signal` | Send signal to running workflow |
+| `temporal workflow cancel` | Request graceful cancellation |
+| `temporal workflow terminate` | Force terminate workflow |
+
+**Server flags:**
+- `--db-filename <file>` - Persist workflows between restarts
+- `--ui-port <port>` - Change Web UI port (default: 8233)
+- `--port <port>` - Change gRPC port (default: 7233)
+- `--log-level <level>` - Set log verbosity
+
+**SDK setup (TypeScript):**
+```bash
+npx @temporalio/create@latest ./my-app  # Create new project
+npm install @temporalio/client @temporalio/worker @temporalio/workflow @temporalio/activity
+```
+
+**Use cases:** Durable workflows, long-running processes, saga patterns, distributed transactions, reliable task queues
+
 ### Database Tools
 
 #### mongosh

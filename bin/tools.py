@@ -145,6 +145,7 @@ INFRA_TOOLS = [
     ("lima", "Linux VMs on Mac, lightweight Docker alt", "lima → full Linux shell for testing"),
     ("lazydocker", "Docker TUI: containers, images, logs", "lazydocker → manage Docker without remembering flags"),
     ("slim", "Minify containers by 30x, auto-gen security profiles", "slim build my-image → optimized image + seccomp profile"),
+    ("temporal", "Durable execution: reliable workflows & queues", "temporal server start-dev → local server + Web UI"),
     ("terraform", "Infrastructure as code", "terraform apply → provision cloud resources from HCL"),
     ("azure-cli", "Manage Azure from terminal", "az vm list → see all your Azure VMs"),
 ]
