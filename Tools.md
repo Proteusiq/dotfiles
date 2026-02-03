@@ -211,6 +211,36 @@ act pull_request              # Simulate PR event
 
 **Use cases:** Testing workflows locally, debugging Actions, faster iteration
 
+#### resterm
+Terminal-based API client for HTTP, GraphQL, gRPC, WebSocket, and SSE. Keyboard-driven with no cloud sync - everything stays local in `.http`/`.rest` files.
+
+```bash
+resterm                       # Open TUI in current directory
+resterm init                  # Bootstrap new project with templates
+resterm --workspace ./api     # Open specific workspace
+resterm --from-curl cmd.txt   # Import curl commands
+resterm --from-openapi spec.yaml  # Import OpenAPI spec
+```
+
+| Key | Action |
+|-----|--------|
+| `Ctrl+Enter` | Send request |
+| `Tab` | Cycle panes (sidebar/editor/response) |
+| `g+p` | Jump to response pane |
+| `g+i` | Jump to editor pane |
+| `Ctrl+E` | Switch environments |
+| `Ctrl+G` | View captured globals |
+| `g+c` | Compare responses (with `@compare`) |
+
+**Features:**
+- OAuth 2.0 with auto token refresh (client credentials, password, auth code + PKCE)
+- SSH tunnels for HTTP/gRPC/WebSocket/SSE
+- Workflows with `@workflow`/`@step` directives
+- Request tracing and timeline visualization
+- RestermScript (RTS) for templates and logic
+
+**Use cases:** API testing, debugging webhooks, gRPC development, WebSocket testing
+
 #### lima
 Linux virtual machines on macOS. Uses Apple's Virtualization.framework for native performance.
 

@@ -79,6 +79,7 @@ cask "pgadmin4"                          # PostgreSQL admin
 
 # DEVELOPMENT & BUILD
 # ───────────────────────────────────────────────────────────────────────────
+brew "resterm"                           # Terminal API client (REST/GraphQL/gRPC)
 brew "watchexec"                         # File watcher for auto-execution
 brew "hyperfine"                         # Benchmarking tool
 brew "act"                               # Run GitHub Actions locally

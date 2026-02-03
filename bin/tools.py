@@ -139,6 +139,7 @@ DEV_TOOLS = [
     ("vhs", "Record terminal as GIF with a script", "vhs demo.tape → reproducible terminal recordings"),
     ("scooter", "Interactive find & replace across files", "scooter → TUI for project-wide refactoring"),
     ("direnv", "Auto-load .envrc when entering directory", "cd project → env vars loaded automatically"),
+    ("resterm", "Terminal API client for REST/GraphQL/gRPC", "resterm → TUI for API testing, OAuth, workflows"),
 ]
 
 INFRA_TOOLS = [
