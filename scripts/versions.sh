@@ -614,7 +614,8 @@ show_installed_versions() {
         esac
     fi
     
-    print_version_table "$group"
+    # Pipe through less with colors preserved, quit if output fits on screen
+    print_version_table "$group" | less -RFX
 }
 
 print_version_summary() {

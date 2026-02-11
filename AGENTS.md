@@ -275,6 +275,24 @@ export async function fetchUser(userId: number): Promise<User> {
 
 ---
 
+## macOS
+
+### Tools
+| Tool | Purpose | Install |
+|------|---------|---------|
+| `mas` | Mac App Store CLI | `brew install mas` |
+
+### Workflow
+```bash
+mas list                    # List installed apps
+mas search Xcode            # Search for apps
+mas outdated                # List outdated apps
+mas upgrade 497799835       # Upgrade Xcode (by ID)
+mas upgrade                 # Upgrade all outdated apps
+```
+
+---
+
 ## Bash
 
 ### Tools
