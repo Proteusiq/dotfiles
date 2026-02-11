@@ -1234,6 +1234,24 @@ cat /dev/urandom | hexdump -C | grep "ca fe"
 | Permission errors | Grant Full Disk Access to your terminal |
 | Python/Node issues | Check that uv and n are properly installed |
 | Terminal theme issues | Restart terminal after font installation |
+| Neovim broken after plugin update | Run the nuclear reset below |
+
+### Neovim Nuclear Reset
+
+If Neovim exits immediately or keymaps stop working after `:Lazy sync` or `:Lazy update`:
+
+```bash
+# 1. Delete all neovim data, state, and cache
+rm -rf ~/.local/share/nvim ~/.local/state/nvim ~/.cache/nvim
+
+# 2. Re-stow the config (from dotfiles directory)
+cd ~/dotfiles && stow -R nvim
+
+# 3. Reinstall all plugins (headless)
+nvim --headless -c "lua require('lazy').sync()" -c "sleep 30" -c "qa!"
+```
+
+This performs a clean reinstall of all plugins from scratch.
 
 > [!TIP]
 > Run `./install.sh --verbose` for detailed debugging output, or check `~/macos-setup.log` for error details.
