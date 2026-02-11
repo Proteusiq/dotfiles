@@ -1253,6 +1253,18 @@ nvim --headless -c "lua require('lazy').sync()" -c "sleep 30" -c "qa!"
 
 This performs a clean reinstall of all plugins from scratch.
 
+### Applying New Neovim Config Changes
+
+After pulling new dotfiles changes or modifying your nvim config:
+
+```bash
+# Quick reload - sync plugins and update lock file
+nvim --headless -c "Lazy sync" -c "sleep 15" -c "qa"
+
+# Or open nvim and run manually
+:Lazy sync
+```
+
 > [!TIP]
 > Run `./install.sh --verbose` for detailed debugging output, or check `~/macos-setup.log` for error details.
 
