@@ -164,7 +164,6 @@ brew "toilet"                            # ASCII art fonts
 cask "1password"
 cask "1password-cli"
 cask "raycast"                           # Spotlight replacement
-cask "notion"
 cask "cleanshot"                         # Screenshot tool
 cask "espanso"                           # Text expander
 cask "hiddenbar"                         # Menu bar organizer
