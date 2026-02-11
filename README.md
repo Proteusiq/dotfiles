@@ -489,7 +489,6 @@ return {
 | Treesitter | `<leader>uT` | Toggle syntax highlighting |
 | Background | `<leader>ub` | Toggle dark/light mode |
 | Inlay hints | `<leader>uh` | Toggle LSP inlay hints |
-| Camouflage | `<leader>ct` | Hide secrets in buffer |
 
 ### Navigation & References
 
