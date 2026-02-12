@@ -1,6 +1,6 @@
 return {
   'zeybek/camouflage.nvim',
-  event = 'VeryLazy',
+  lazy = false,
   opts = {},
   keys = {
     { '<leader>ct', '<cmd>CamouflageToggle<cr>', desc = 'Toggle Camouflage' },
