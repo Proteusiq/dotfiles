@@ -235,11 +235,117 @@ git config --global user.email "your.email@example.com"
 # Generate SSH key (follow GitHub's guide)
 ssh-keygen -t ed25519 -C "your.email@example.com"
 gh auth login
-gh ssh-key add ~/.ssh/id_ed25519.pub --type signing
+gh ssh-key add ~/.ssh/id_ed25519.pub
 
 # Switch to SSH remote
 git remote set-url origin git@github.com:Proteusiq/dotfiles.git
 ```
+
+### Verified Commit Signing (SSH Keys)
+
+> [!IMPORTANT]
+> GitHub requires a **separate signing key** from your authentication key. The same SSH key cannot be used for both authentication and signing if registered on multiple GitHub accounts.
+
+#### Step 1: Generate a Dedicated Signing Key
+
+```bash
+# Create a signing-only key (separate from auth key)
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_signing -N "" -C "signing@github"
+```
+
+#### Step 2: Add Signing Key to GitHub
+
+```bash
+# Add as SIGNING key (not authentication)
+gh ssh-key add ~/.ssh/id_ed25519_signing.pub --type signing --title "Git Commit Signing Key"
+```
+
+#### Step 3: Configure Git to Use SSH Signing
+
+```bash
+# Set signing format to SSH
+git config --global gpg.format ssh
+
+# Point to your signing key
+git config --global user.signingkey ~/.ssh/id_ed25519_signing.pub
+
+# Enable signing for all commits
+git config --global commit.gpgsign true
+
+# (Optional) Set allowed signers file for local verification
+git config --global gpg.ssh.allowedSignersFile ~/.ssh/allowed_signers
+```
+
+#### Step 4: Create Allowed Signers File (Optional)
+
+For local signature verification:
+```bash
+# Format: email key-type public-key
+echo "your.email@example.com $(cat ~/.ssh/id_ed25519_signing.pub)" >> ~/.ssh/allowed_signers
+```
+
+#### Step 5: Verify Setup
+
+```bash
+# Create a test commit
+git commit --allow-empty -m "test: verify commit signing"
+
+# Check signature locally
+git log --show-signature -1
+# Should show: Good "git" signature with ED25519 key SHA256:...
+
+# Push and verify on GitHub
+git push
+gh api repos/OWNER/REPO/commits/HEAD --jq '.commit.verification | "Status: \(.verified) | Reason: \(.reason)"'
+# Should show: Status: true | Reason: valid
+```
+
+#### Multi-Account Setup (Personal + Work)
+
+If you have multiple GitHub accounts (e.g., personal and work), each needs its own signing key:
+
+```bash
+# Generate work signing key
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_signing_work -N "" -C "signing@work"
+
+# Switch to work account and add key
+gh auth switch --user YOUR_WORK_USERNAME
+gh ssh-key add ~/.ssh/id_ed25519_signing_work.pub --type signing --title "Git Commit Signing Key (Work)"
+
+# Configure per-repo signing key for work repos
+cd ~/work/your-repo
+git config user.signingkey ~/.ssh/id_ed25519_signing_work.pub
+git config user.email "your.work@email.com"
+```
+
+**SSH Config for Multiple Accounts** (`~/.ssh/config`):
+```
+# Personal GitHub
+Host github-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_personal
+
+# Work GitHub  
+Host github-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_work
+```
+
+Then clone work repos using the host alias:
+```bash
+git clone git@github-work:ORG/repo.git
+```
+
+#### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| "key is already in use" | Key registered on another account; generate a new key |
+| GitHub shows "Unverified" | Key added as auth, not signing; re-add with `--type signing` |
+| "No principal matched" locally | Add key to `~/.ssh/allowed_signers` file |
+| Wrong key used for work repo | Set `git config user.signingkey` per-repo |
 
 ### Color Scheme
 
