@@ -70,7 +70,7 @@ _fzf_compgen_dir() {
     fd --type=d --hidden --exclude .git . "$1"
 }
 
-source ~/dotfiles/fzf/.fzf/fzf-git.sh
+[[ -f ~/dotfiles/fzf/.fzf/fzf-git.sh ]] && source ~/dotfiles/fzf/.fzf/fzf-git.sh
 
 show_file_or_dir_preview="if [ -d {} ]; then eza --tree --color=always {} | head -200; else bat -n --color=always --line-range :500 {}; fi"
 
@@ -121,25 +121,25 @@ export PNPM_HOME=$HOME/Library/pnpm
 export PATH=$PNPM_HOME:$PATH
 
 # zoxide
-eval "$(zoxide init zsh)"
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 
 # the fuck
-eval "$(thefuck --alias)"
+command -v thefuck &>/dev/null && eval "$(thefuck --alias)"
 
 # pixi
 export PIXI_BETA_WARNING_OFF=true
 # pixi auto completion
-eval "$(pixi completion --shell zsh)"
+command -v pixi &>/dev/null && eval "$(pixi completion --shell zsh)"
 
 # uv auto completion
-eval "$(uv generate-shell-completion zsh)"
+command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
 
 # set starship prompt
-eval "$(starship init zsh)"
+command -v starship &>/dev/null && eval "$(starship init zsh)"
 
 # start tmux on open
 [[ $- != *i* ]] && return
-[[ -z "$TMUX" ]] && exec tmux
+command -v tmux &>/dev/null && [[ -z "$TMUX" ]] && exec tmux
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
@@ -167,15 +167,15 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # fzf key binding and completion
-eval "$(fzf --zsh)"
+command -v fzf &>/dev/null && eval "$(fzf --zsh)"
 
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 fi
 
 # Broot
-source $HOME/.config/broot/launcher/bash/br
+[[ -f "$HOME/.config/broot/launcher/bash/br" ]] && source "$HOME/.config/broot/launcher/bash/br"
 
 # Atuin
-. "$HOME/.atuin/bin/env"
-eval "$(atuin init zsh)"
+[[ -f "$HOME/.atuin/bin/env" ]] && . "$HOME/.atuin/bin/env"
+command -v atuin &>/dev/null && eval "$(atuin init zsh)"

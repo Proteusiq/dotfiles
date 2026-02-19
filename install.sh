@@ -504,7 +504,7 @@ stow_dotfiles() {
     done
 
     if [[ ${#existing[@]} -gt 0 ]]; then
-        run_quiet stow --adopt -d "$DOTFILES_DIR" -t "$HOME" "${existing[@]}"
+        run_quiet stow --restow -d "$DOTFILES_DIR" -t "$HOME" "${existing[@]}"
         log_info "✅ Dotfiles stowed"
     else
         log_warn "No valid stow packages"

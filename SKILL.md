@@ -211,6 +211,26 @@ The `setenv` function in `zsh/.aliases` uses 1Password CLI (`op read`) to resolv
 
 ---
 
+## Known Issues (non-critical)
+
+These are documented quirks that don't break anything but could be cleaned up:
+
+| Issue | File | Notes |
+|-------|------|-------|
+| Starship config in `~/.config/starship/starship.toml` | `starship/.config/starship/` | Starship defaults to `~/.config/starship.toml`. Works if `STARSHIP_CONFIG` is set. |
+| `python@3.14` not explicit in Brewfile | `Brewfile` | Installed as a dependency. Add `brew "python@3.14"` to be explicit. |
+| `GOROOT=/usr/local/go` wrong for Apple Silicon | `zsh/.exports:114` | Should be `/opt/homebrew/opt/go/libexec` |
+| `FZF_DEFAULT_OPTS` set twice (overwritten) | `zsh/.exports:53,158` | Catppuccin theme on line 158 wins |
+| `FZF_DEFAULT_COMMAND` set twice (overwritten) | `zsh/.exports:42,57` | `fd` version on line 57 wins |
+| `%HOME` typo in `.zshrc` bun completions | `zsh/.zshrc:38` | Should be `$HOME`. Dead code (also in `.exports:145`). |
+| `.zprofile` brew line appended on every run | `install.sh:301` | Should check if already present |
+| `.zshenv.sh` / `.zlogin.sh` never sourced | `zsh/` | Zsh reads `~/.zshenv` not `~/.zshenv.sh`. These files are dead. |
+| Duplicate `compinit` calls | `zsh/.zshrc:18,70` | Second call is redundant (~100ms overhead) |
+| `n` alias shadows node version manager | `zsh/.aliases:26` | `alias n="nvim"` prevents using `n` for Node |
+| Unused Homebrew tap | `Brewfile` | `tap "wix/brew"` has no formula using it |
+
+---
+
 ## Key Files by Purpose
 
 | Purpose | File(s) |

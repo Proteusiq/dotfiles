@@ -7,7 +7,7 @@ fi
 
 
 # neovim python virtual environment
-[ ! -d ~/.virtualenvs/neovim ] && python -m ~/.virtualenvs/neovim
+[ ! -d ~/.virtualenvs/neovim ] && command -v python3 &>/dev/null && python3 -m venv ~/.virtualenvs/neovim
 
 # set editors
 export VISUAL=nvim
@@ -46,5 +46,4 @@ if [[ -d "$TMPDIR" ]]; then
     fi
 fi
 
-# misc program exports
-source $HOME/dotfiles/shell/exports
+# misc program exports (loaded via .zshrc -> .exports)
