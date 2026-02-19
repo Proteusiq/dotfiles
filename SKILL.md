@@ -172,6 +172,45 @@ To add configuration for a new tool:
 
 ---
 
+## Sensitive Data
+
+**This repo is public.** Never commit secrets, credentials, or personal identifiers.
+
+### Git Identity
+
+User name, email, and signing key live in `~/.gitconfig.local` (untracked).
+The tracked `git/.gitconfig` includes it via:
+
+```ini
+[include]
+  path = ~/.gitconfig.local
+```
+
+On a fresh machine, create `~/.gitconfig.local`:
+
+```ini
+[user]
+	name = Your Name
+	email = your@email.com
+	signingkey = ~/.ssh/id_ed25519_signing.pub
+```
+
+Without this file, git will prompt for identity on first commit. Everything else (aliases, diff tools, signing config) lives in the tracked `.gitconfig`.
+
+### Secrets in Shell
+
+The `setenv` function in `zsh/.aliases` uses 1Password CLI (`op read`) to resolve secrets at runtime. Never hardcode API keys or tokens in tracked files.
+
+### What NOT to commit
+
+- `.env` files (already in `.gitignore`)
+- API keys, tokens, passwords
+- Snowflake/cloud account identifiers
+- Private SSH/GPG keys
+- Connection strings with credentials
+
+---
+
 ## Key Files by Purpose
 
 | Purpose | File(s) |
