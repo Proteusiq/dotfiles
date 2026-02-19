@@ -15,6 +15,7 @@ tap "joshmedeski/sesh"
 tap "koekeishiya/formulae"
 tap "wix/brew"
 tap "sst/tap"
+tap "dbt-labs/dbt-cli"
 
 cask_args appdir: "/Applications"
 
@@ -73,6 +74,7 @@ brew "gitlogue"                          # Cinematic commit replay
 # ───────────────────────────────────────────────────────────────────────────
 brew "jq"                                # JSON processor
 brew "tabiew"                            # CSV/Parquet/JSON viewer with SQL
+brew "dbt-labs/dbt-cli/dbt"              # Data build tool
 brew "mongosh"                           # MongoDB shell
 brew "lnav"                              # Log file viewer
 cask "pgadmin4"                          # PostgreSQL admin

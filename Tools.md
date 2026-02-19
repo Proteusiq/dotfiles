@@ -359,6 +359,44 @@ npm install @temporalio/client @temporalio/worker @temporalio/workflow @temporal
 
 ### Database Tools
 
+#### dbt
+Data build tool for analytics engineering. Transform raw data into analytics-ready tables using SQL and Jinja templating.
+
+```bash
+dbt init myproject            # Initialize new project
+dbt run                       # Run all models
+dbt run --select model_name   # Run specific model
+dbt test                      # Run tests
+dbt build                     # Run models + tests
+dbt docs generate             # Generate documentation
+dbt docs serve                # Serve docs locally
+dbt debug                     # Test connection
+```
+
+| Command | Description |
+|---------|-------------|
+| `dbt run` | Execute models |
+| `dbt test` | Run data tests |
+| `dbt build` | Run + test |
+| `dbt compile` | Compile SQL without running |
+| `dbt seed` | Load CSV files |
+| `dbt snapshot` | Run snapshots |
+| `dbt source freshness` | Check source data freshness |
+
+**Project structure:**
+```
+myproject/
+├── dbt_project.yml           # Project config
+├── models/                   # SQL models
+│   ├── staging/              # Raw data transforms
+│   └── marts/                # Business logic
+├── tests/                    # Custom tests
+├── macros/                   # Reusable Jinja macros
+└── seeds/                    # CSV files to load
+```
+
+**Use cases:** Data transformation, ELT pipelines, analytics engineering, data modeling
+
 #### mongosh
 MongoDB Shell. Interactive JavaScript interface for MongoDB.
 

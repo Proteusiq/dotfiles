@@ -408,7 +408,9 @@ dotfiles/
 │   ├── .zshenv.sh   # Environment setup
 │   └── .zshrc       # Main zsh config
 ├── Brewfile         # Homebrew packages
-└── install.sh       # Main setup script
+├── install.sh       # Main setup script
+├── AGENTS.md        # Development conventions for AI agents
+└── SKILL.md         # Repository-specific knowledge (adding tools, architecture)
 ```
 
 ### Key Configuration Files

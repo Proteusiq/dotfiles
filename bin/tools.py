@@ -126,6 +126,7 @@ VC_TOOLS = [
 DATA_TOOLS = [
     ("jq", "Query & transform JSON like a boss", "curl api | jq '.items[].name' → extract nested fields"),
     ("tabiew", "View CSV/Parquet/JSON with SQL queries", "tabiew data.csv → spreadsheet view, SQL filtering"),
+    ("dbt", "Data build tool for analytics engineering", "dbt run → transform raw data into analytics-ready tables"),
     ("harlequin", "Full SQL IDE in your terminal", "harlequin db.sqlite → autocomplete, results, export"),
     ("sqlit", "Lazygit for databases, connect & query fast", "sqlit → pick connection, run queries, vim keys"),
     ("mongosh", "MongoDB shell with autocomplete", "mongosh → db.users.find({age: {$gt: 21}})"),

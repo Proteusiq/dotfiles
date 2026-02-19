@@ -1,5 +1,7 @@
 # Development Conventions
 
+> **Note:** For repository-specific knowledge (how to add tools, architecture, CLI commands), see [SKILL.md](./SKILL.md).
+
 ## Philosophy
 
 - **Simplicity is king** — the simplest solution that works is the best solution
