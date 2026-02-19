@@ -383,18 +383,12 @@ setup_utils() {
             }
     fi
 
-    # SnowSQL (user-level install, no sudo)
-    local snowsql_bin="$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql"
-    if [[ ! -f "$snowsql_bin" ]]; then
-        log "Installing SnowSQL..."
-        local snowsql_pkg="/tmp/snowsql.pkg"
-        run_quiet curl -fsSL -o "$snowsql_pkg" \
-            "https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/darwin_x86_64/snowsql-1.3.2-darwin_x86_64.pkg"
-        run_quiet installer -pkg "$snowsql_pkg" -target CurrentUserHomeDirectory
-        rm -f "$snowsql_pkg"
-        log_info "✅ SnowSQL installed"
-    else
+    # SnowSQL (installed manually or via Homebrew cask)
+    local snowsql_bin="/Applications/SnowSQL.app/Contents/MacOS/snowsql"
+    if [[ -f "$snowsql_bin" ]]; then
         log_info "✅ SnowSQL already installed"
+    else
+        log_info "⚠️  SnowSQL not found — install via: brew install --cask snowflake-snowsql"
     fi
 
     # Goose
@@ -502,7 +496,7 @@ stow_dotfiles() {
         return 1
     }
 
-    local packages=(fzf git ghostty nvim sesh starship tmux zsh yazi aerospace snowsql)
+    local packages=(fzf git ghostty nvim sesh starship tmux zsh yazi aerospace)
     local existing=()
 
     for pkg in "${packages[@]}"; do

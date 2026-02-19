@@ -159,7 +159,7 @@ update_tool() {
         source="bun"
     elif [[ "$tool" == "goose" ]] && has_cmd goose; then
         source="goose"
-    elif [[ "$tool" == "snowsql" && -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
+    elif [[ "$tool" == "snowsql" && -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
         source="snowsql"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         source="git-tpm"
@@ -186,7 +186,7 @@ update_tool() {
         llm)       old_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
         bun)       old_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
         goose)     old_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
-        snowsql)   old_ver=$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}') ;;
+        snowsql)   old_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
         git-tpm)   old_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  old_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
     esac
@@ -252,7 +252,7 @@ update_tool() {
         llm)       new_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
         bun)       new_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
         goose)     new_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
-        snowsql)   new_ver=$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}') ;;
+        snowsql)   new_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
         git-tpm)   new_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  new_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
     esac
@@ -340,10 +340,10 @@ get_tool_info() {
         source="standalone"
         version=$(goose --version 2>/dev/null | tr -d ' ')
         [[ -z "$description" ]] && description="AI developer agent from Block"
-    elif [[ "$tool" == "snowsql" && -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
+    elif [[ "$tool" == "snowsql" && -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
         found=true
         source="standalone"
-        version=$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}')
+        version=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}')
         [[ -z "$description" ]] && description="Snowflake command-line client"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         found=true
@@ -447,7 +447,7 @@ get_version() {
     case "$tool" in
         bun)         [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null ;;
         goose)       has_cmd goose && goose --version 2>/dev/null | tr -d ' ' ;;
-        snowsql)     [[ -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}' ;;
+        snowsql)     [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && /Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}' ;;
         llm)         has_cmd llm && llm --version 2>/dev/null | awk '{print $3}' ;;
         repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
         n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
@@ -561,7 +561,7 @@ collect_all_versions() {
             [[ -n "$n_ver" ]] && echo "other|n|$n_ver"
         }
         has_cmd goose && echo "other|goose|$(goose --version 2>/dev/null | tr -d ' ')"
-        [[ -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && echo "other|snowsql|$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}')"
+        [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && echo "other|snowsql|$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}')"
     fi
 }
 

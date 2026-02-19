@@ -289,7 +289,7 @@ alias mergepdf="/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Re
 # MISC ALIASES
 ###############################################################################
 
-alias snowsql="$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql"
+alias snowsql=/Applications/SnowSQL.app/Contents/MacOS/snowsql
 alias f=fuck
 alias tk="take"
 alias clean=clean_pycache
