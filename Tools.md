@@ -443,6 +443,48 @@ See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full ke
 
 **Use cases:** SQL development, database exploration, query testing, data analysis
 
+#### snowsql (SnowSQL)
+Snowflake's official command-line client for executing SQL queries, DDL/DML operations, and data loading against Snowflake data warehouses.
+
+```bash
+snowsql -a <account> -u <user>   # Connect to Snowflake
+snowsql -c <connection_name>     # Use named connection from config
+snowsql -q "SELECT 1"            # Execute query directly
+snowsql -f script.sql            # Run SQL file
+snowsql -f script.sql -o output_format=csv  # Output as CSV
+snowsql -v                       # Check version
+```
+
+| Key/Command | Action |
+|-------------|--------|
+| `!help` | Show help in interactive mode |
+| `!set` | Show/set session variables |
+| `!source file.sql` | Execute SQL file |
+| `!spool on/off` | Enable/disable output logging |
+| `!exit` | Exit SnowSQL |
+
+**Configuration:** `~/.snowsql/config`
+
+**Named connections:**
+```ini
+[connections.prod]
+accountname = xy12345.us-east-1
+username = my_user
+dbname = analytics
+warehousename = compute_wh
+```
+
+**Data loading:**
+```bash
+# PUT local file to stage
+snowsql -q "PUT file://data.csv @mystage"
+
+# COPY into table
+snowsql -q "COPY INTO mytable FROM @mystage FILE_FORMAT=(TYPE=CSV)"
+```
+
+**Use cases:** SQL development, data loading/unloading, Snowflake administration, scripting ETL pipelines
+
 #### sqlit
 The lazygit of SQL databases - connect and query any database from your terminal in seconds. Supports SQL Server, PostgreSQL, MySQL, SQLite, DuckDB, and more.
 

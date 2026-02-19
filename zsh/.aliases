@@ -35,6 +35,8 @@ alias la="eza -la"
 alias tree="eza --tree"
 alias top="btop"
 alias du="ncdu"
+alias python3="/opt/homebrew/opt/python@3.14/bin/python3.14"
+alias python="/opt/homebrew/opt/python@3.14/bin/python3.14"
 
 ###############################################################################
 # GIT - BASICS
@@ -287,6 +289,7 @@ alias mergepdf="/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Re
 # MISC ALIASES
 ###############################################################################
 
+alias snowsql="$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql"
 alias f=fuck
 alias tk="take"
 alias clean=clean_pycache

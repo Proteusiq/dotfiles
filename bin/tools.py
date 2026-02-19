@@ -128,6 +128,7 @@ DATA_TOOLS = [
     ("tabiew", "View CSV/Parquet/JSON with SQL queries", "tabiew data.csv → spreadsheet view, SQL filtering"),
     ("dbt", "Data build tool for analytics engineering", "dbt run → transform raw data into analytics-ready tables"),
     ("harlequin", "Full SQL IDE in your terminal", "harlequin db.sqlite → autocomplete, results, export"),
+    ("snowsql", "Snowflake CLI for queries & data loading", "snowsql -c prod -q 'SELECT * FROM users' → query Snowflake"),
     ("sqlit", "Lazygit for databases, connect & query fast", "sqlit → pick connection, run queries, vim keys"),
     ("mongosh", "MongoDB shell with autocomplete", "mongosh → db.users.find({age: {$gt: 21}})"),
     ("lnav", "Navigate log files with search & filter", "lnav /var/log/*.log → time-synced, filterable"),

@@ -27,6 +27,7 @@ readonly TRACKED_TOOLS=(
     "bun|bun|cmd"
     "n|n|cmd"
     "goose|goose|cmd"
+    "snowsql|snowsql|cmd"
     "repgrep|repgrep|cmd"
     "llm|llm|cmd"
     "tpm|tpm|git"
@@ -359,9 +360,10 @@ setup_utils() {
     log_step "🔧 Installing CLI utilities"
 
     # Capture versions before
-    local old_goose old_repgrep old_harlequin old_sqlit old_llm_anthropic old_llm_ollama
+    local old_goose old_repgrep old_harlequin old_sqlit old_llm_anthropic old_llm_ollama old_snowsql
     old_goose=$(get_version "goose")
     old_repgrep=$(get_version "repgrep")
+    old_snowsql=$(get_version "snowsql")
     old_harlequin=$(get_version "harlequin")
     old_sqlit=$(get_version "sqlit-tui")
     old_llm_anthropic=$(get_version "llm-anthropic")
@@ -379,6 +381,20 @@ setup_utils() {
                 run_quiet gh extension install dlvhdr/gh-dash
                 log_info "✅ gh-dash installed"
             }
+    fi
+
+    # SnowSQL (user-level install, no sudo)
+    local snowsql_bin="$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql"
+    if [[ ! -f "$snowsql_bin" ]]; then
+        log "Installing SnowSQL..."
+        local snowsql_pkg="/tmp/snowsql.pkg"
+        run_quiet curl -fsSL -o "$snowsql_pkg" \
+            "https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/darwin_x86_64/snowsql-1.3.2-darwin_x86_64.pkg"
+        run_quiet installer -pkg "$snowsql_pkg" -target CurrentUserHomeDirectory
+        rm -f "$snowsql_pkg"
+        log_info "✅ SnowSQL installed"
+    else
+        log_info "✅ SnowSQL already installed"
     fi
 
     # Goose
@@ -438,6 +454,7 @@ setup_utils() {
 
     # Track changes
     if [[ "$DRY_RUN" == false ]]; then
+        track_version "snowsql" "$old_snowsql"
         track_version "goose" "$old_goose"
         track_version "repgrep" "$old_repgrep"
         track_version "harlequin" "$old_harlequin"
@@ -485,7 +502,7 @@ stow_dotfiles() {
         return 1
     }
 
-    local packages=(fzf git ghostty nvim sesh starship tmux zsh yazi aerospace)
+    local packages=(fzf git ghostty nvim sesh starship tmux zsh yazi aerospace snowsql)
     local existing=()
 
     for pkg in "${packages[@]}"; do

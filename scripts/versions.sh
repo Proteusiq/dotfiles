@@ -159,6 +159,8 @@ update_tool() {
         source="bun"
     elif [[ "$tool" == "goose" ]] && has_cmd goose; then
         source="goose"
+    elif [[ "$tool" == "snowsql" && -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
+        source="snowsql"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         source="git-tpm"
     elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
@@ -167,7 +169,7 @@ update_tool() {
     
     if [[ -z "$source" ]]; then
         echo -e "${RED}Tool '$tool' not found${NC}"
-        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, llm, bun, goose${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, llm, bun, goose, snowsql${NC}"
         return 1
     fi
     
@@ -184,6 +186,7 @@ update_tool() {
         llm)       old_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
         bun)       old_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
         goose)     old_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
+        snowsql)   old_ver=$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}') ;;
         git-tpm)   old_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  old_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
     esac
@@ -216,6 +219,15 @@ update_tool() {
             echo -e "${YELLOW}Goose update: re-run install script${NC}"
             curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash 2>&1 || rc=$?
             ;;
+        snowsql)
+            local snowsql_pkg="/tmp/snowsql.pkg"
+            curl -fsSL -o "$snowsql_pkg" \
+                "https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/darwin_x86_64/snowsql-1.3.2-darwin_x86_64.pkg" 2>&1 || rc=$?
+            if [[ $rc -eq 0 ]]; then
+                installer -pkg "$snowsql_pkg" -target CurrentUserHomeDirectory 2>&1 || rc=$?
+                rm -f "$snowsql_pkg"
+            fi
+            ;;
         git-tpm)
             git -C "$HOME/.tmux/plugins/tpm" pull --quiet 2>&1 || rc=$?
             ;;
@@ -240,6 +252,7 @@ update_tool() {
         llm)       new_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
         bun)       new_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
         goose)     new_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
+        snowsql)   new_ver=$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}') ;;
         git-tpm)   new_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  new_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
     esac
@@ -327,6 +340,11 @@ get_tool_info() {
         source="standalone"
         version=$(goose --version 2>/dev/null | tr -d ' ')
         [[ -z "$description" ]] && description="AI developer agent from Block"
+    elif [[ "$tool" == "snowsql" && -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
+        found=true
+        source="standalone"
+        version=$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}')
+        [[ -z "$description" ]] && description="Snowflake command-line client"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         found=true
         source="git"
@@ -429,6 +447,7 @@ get_version() {
     case "$tool" in
         bun)         [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null ;;
         goose)       has_cmd goose && goose --version 2>/dev/null | tr -d ' ' ;;
+        snowsql)     [[ -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}' ;;
         llm)         has_cmd llm && llm --version 2>/dev/null | awk '{print $3}' ;;
         repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
         n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
@@ -542,6 +561,7 @@ collect_all_versions() {
             [[ -n "$n_ver" ]] && echo "other|n|$n_ver"
         }
         has_cmd goose && echo "other|goose|$(goose --version 2>/dev/null | tr -d ' ')"
+        [[ -f "$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && echo "other|snowsql|$("$HOME/Applications/SnowSQL.app/Contents/MacOS/snowsql" -v 2>/dev/null | awk '{print $2}')"
     fi
 }
 
