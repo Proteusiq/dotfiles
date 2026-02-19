@@ -31,9 +31,6 @@
 [pager]
   branch = false
   difftool = true
-[user]
-	name = Prayson W. Daniel
-	email = prdani@norlys.dk
 [pull]
 	rebase = false
 [init]
@@ -49,8 +46,6 @@
 	format = ssh
 [commit]
 	gpgsign = true
-[user]
-	signingkey = ~/.ssh/id_ed25519.pub
 [difftool]
         prompt = false
 
