@@ -760,6 +760,41 @@ btop                          # Open monitor
 
 Alias configured: `top` -> `btop`
 
+#### jolt
+Terminal-based battery and energy monitor for macOS and Linux. Tracks power consumption, process energy usage, and battery health in a themeable TUI.
+
+```bash
+jolt                          # Start TUI
+jolt pipe                     # Output metrics as JSON for scripting
+jolt debug                    # Print system and battery debug info
+jolt daemon start             # Start background daemon for history
+jolt daemon status            # Check daemon status
+jolt history                  # View historical data
+jolt theme                    # Manage themes
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` | Navigate up/down |
+| `Enter` | Expand/collapse process group |
+| `K` | Kill selected process |
+| `g` | Toggle graph (battery/power) |
+| `t` | Open theme picker |
+| `s` | Open settings |
+| `h` | View history |
+| `?` | Show help |
+| `q` | Quit |
+
+**Features:**
+- Battery status (charge, time remaining, health, cycle count)
+- Power monitoring (system power draw with CPU/GPU breakdown)
+- Process tracking sorted by energy impact
+- Historical graphs for battery and power trends
+- 10+ built-in themes with dark/light auto-detection
+- Background daemon for data collection
+
+**Use cases:** Battery diagnostics, identifying power-hungry processes, monitoring battery health
+
 #### hyperfine
 Command-line benchmarking tool with statistical analysis.
 

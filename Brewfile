@@ -7,13 +7,13 @@
 # ───────────────────────────────────────────────────────────────────────────
 tap "andrewmd5/tap"
 tap "espanso/espanso"
+tap "jordond/tap"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazydocker"
 tap "jesseduffield/lazygit"
 tap "joshmedeski/sesh"
 tap "koekeishiya/formulae"
-tap "wix/brew"
 tap "sst/tap"
 tap "dbt-labs/dbt-cli"
 
@@ -179,6 +179,7 @@ cask "alt-tab"                           # Windows-style alt-tab
 
 # SYSTEM & SECURITY
 # ───────────────────────────────────────────────────────────────────────────
+brew "jordond/tap/jolt"                  # Battery and energy monitor TUI
 brew "wireguard-tools"                   # VPN
 cask "lulu"                              # Firewall
 cask "aldente"                           # Battery management

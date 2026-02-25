@@ -110,6 +110,7 @@ FILES_TOOLS = [
     ("fzf", "Fuzzy find anything: files, history, processes", "ctrl+r → search command history fuzzy"),
     ("ncdu", "Where's my disk space going? Interactive view", "ncdu ~ → drill down into what's eating your SSD"),
     ("btop", "htop but prettier, shows CPU/RAM/disk/network", "btop → visual system monitor, kill processes"),
+    ("jolt", "Battery & energy monitor TUI, tracks power-hungry processes", "jolt → see battery health, power draw, kill draining apps"),
     ("stow", "Symlink manager for dotfiles", "stow nvim → links nvim/.config/nvim to ~/.config/nvim"),
     ("rename", "Batch rename with regex", "rename 's/IMG_/photo_/' *.jpg → renames all photos"),
 ]
