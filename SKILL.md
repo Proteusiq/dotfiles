@@ -1,8 +1,11 @@
+---
+name: dotfiles
+description: Repository knowledge for this dotfiles setup. Use when adding tools, editing shell configs, understanding the architecture, or working with GNU Stow.
+---
+
 # Dotfiles Repository Knowledge
 
 This document contains repository-specific knowledge for working with this dotfiles setup.
-
----
 
 ## Adding Tools
 
@@ -227,7 +230,6 @@ These are documented quirks that don't break anything but could be cleaned up:
 | `.zshenv.sh` / `.zlogin.sh` never sourced | `zsh/` | Zsh reads `~/.zshenv` not `~/.zshenv.sh`. These files are dead. |
 | Duplicate `compinit` calls | `zsh/.zshrc:18,70` | Second call is redundant (~100ms overhead) |
 | `n` alias shadows node version manager | `zsh/.aliases:26` | `alias n="nvim"` prevents using `n` for Node |
-| Unused Homebrew tap | `Brewfile` | `tap "wix/brew"` has no formula using it |
 
 ---
 

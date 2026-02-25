@@ -2,6 +2,43 @@
 
 > **Note:** For repository-specific knowledge (how to add tools, architecture, CLI commands), see [SKILL.md](./SKILL.md).
 
+## Skills
+
+Skills provide repository-specific knowledge to AI agents. Each repo owns its `SKILL.md` at the root.
+
+### Format
+
+Skills follow the [Agent Skills](https://agentskills.io) open standard with YAML frontmatter:
+
+```yaml
+---
+name: my-skill
+description: What this skill does and when to use it
+---
+
+# Skill Content
+
+Instructions and knowledge for the agent...
+```
+
+### Using Skills Across Projects
+
+To make a repo's skill available globally, symlink it to your agent's config:
+
+```bash
+# OpenCode
+mkdir -p ~/.config/opencode/skills/repo-name
+ln -sfn ~/path/to/repo/SKILL.md ~/.config/opencode/skills/repo-name/SKILL.md
+
+# Claude Code
+mkdir -p ~/.claude/skills/repo-name
+ln -sfn ~/path/to/repo/SKILL.md ~/.claude/skills/repo-name/SKILL.md
+```
+
+The symlink points to the repo's `SKILL.md`; the agent loads it from the skill directory.
+
+---
+
 ## Philosophy
 
 - **Simplicity is king** — the simplest solution that works is the best solution
