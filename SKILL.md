@@ -43,11 +43,10 @@ Location: `~/dotfiles/install.sh`
 
 | Tool Type | Where to Add | Pattern |
 |-----------|--------------|---------|
-| **UV tools** (Python) | `setup_utils()` | Add to `for tool in llm harlequin ...` loop |
+| **UV tools** (Python) | `setup_utils()` | Add to `for tool in harlequin sqlit-tui ...` loop |
 | **Git repos** | `setup_utils()` | `git_install "name" "url" "path" "description"` |
 | **Cargo** | `setup_utils()` | `cargo install <tool>` with `has_cmd` guard |
 | **Curl scripts** | Appropriate function | `curl -fsSL <url> \| bash` with existence check |
-| **LLM plugins** | `setup_utils()` | `llm install <plugin>` |
 
 Example patterns from install.sh:
 
@@ -56,7 +55,7 @@ Example patterns from install.sh:
 git_install "tpm" "https://github.com/tmux-plugins/tpm" "$HOME/.tmux/plugins/tpm" "tmux plugin manager"
 
 # UV tool installation
-for tool in llm harlequin sqlit-tui; do
+for tool in harlequin sqlit-tui; do
     uv tool list 2>/dev/null | grep -q "^$tool " &&
         uv tool upgrade "$tool" || uv tool install "$tool"
 done
@@ -76,7 +75,7 @@ Add to `TRACKED_TOOLS` array:
 ```bash
 readonly TRACKED_TOOLS=(
     # ...existing...
-    "toolname|version_cmd|type"  # type: cmd|git|uv|llm-plugin
+    "toolname|version_cmd|type"  # type: cmd|git|uv
 )
 ```
 
@@ -106,7 +105,7 @@ update --list             # List available functions
 update --info <tool>      # Show tool info
 update --outdated         # Check for available updates
 update --versions         # Show all installed versions
-update --versions brew    # Filter by group (brew|cask|uv|cargo|llm|git|other)
+update --versions brew    # Filter by group (brew|cask|uv|cargo|git|other)
 ```
 
 ---
@@ -137,7 +136,7 @@ dotfiles/
 🐍 Creating Python virtual environments
 💻 Installing tmux plugins         ← tpm (git)
 🎨 Installing Yazi themes          ← yazi-flavors (git)
-🔧 Installing CLI utilities        ← uv tools, cargo, llm plugins
+🔧 Installing CLI utilities        ← uv tools, cargo
 🔗 Linking dotfiles                ← GNU Stow
 🧹 Cleaning up
 ```
@@ -153,7 +152,7 @@ dotfiles/
 | `venv` | create_virtualenvs | Create Python venvs (neovim, debugpy) |
 | `tmux` | install_tmux_plugins | Install tmux plugin manager (tpm) |
 | `yazi` | install_yazi_themes | Install Yazi file manager themes |
-| `utils` | setup_utils | Install UV tools, LLM, Goose, gh-dash, etc. |
+| `utils` | setup_utils | Install UV tools, LLM, gh-dash, etc. |
 | `stow` | stow_dotfiles | Symlink dotfiles with GNU Stow |
 | `cleanup` | cleanup | Run Homebrew cleanup and autoremove |
 

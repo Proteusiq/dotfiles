@@ -124,7 +124,7 @@ dotfiles/
 | `update -vv` | Debug mode (show all commands) |
 | `update --dry-run` | Preview changes without executing |
 | `update --versions` | Show installed tool versions |
-| `update --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|llm\|git\|other) |
+| `update --versions brew` | Show specific group (brew\|cask\|uv\|cargo\|git\|other) |
 | `update --info <tool>` | Show info about a specific tool |
 | `update --list` | List available functions |
 | `update --only <fn>` | Run only a specific function |
@@ -151,7 +151,7 @@ dotfiles/
 | `venv` | create_virtualenvs | Create Python venvs (neovim, debugpy) |
 | `tmux` | install_tmux_plugins | Install tmux plugin manager (tpm) |
 | `yazi` | install_yazi_themes | Install Yazi file manager themes |
-| `utils` | setup_utils | Install UV tools, LLM, Goose, gh-dash, etc. |
+| `utils` | setup_utils | Install UV tools, gh-dash, etc. |
 | `stow` | stow_dotfiles | Symlink dotfiles with GNU Stow |
 | `cleanup` | cleanup | Run Homebrew cleanup and autoremove |
 
@@ -166,7 +166,6 @@ The script tracks versions before and after installation. Changes are always sho
 │ Tool             │ Previous       │ Current        │ Status   │
 ├──────────────────┼────────────────┼────────────────┼──────────┤
 │ bun              │ 1.2.18         │ 1.2.19         │ Updated  │
-│ llm              │ -              │ 0.28           │ New      │
 │ tpm              │ 99469c4        │ a1b2c3d        │ Updated  │
 └──────────────────┴────────────────┴────────────────┴──────────┘
 ```

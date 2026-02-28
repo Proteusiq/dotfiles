@@ -119,8 +119,8 @@ Tool version management and queries.
 │            ▼                     ▼                     ▼                  │
 │   ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
 │   │install_yazi_theme│  │   setup_utils    │  │  stow_dotfiles   │        │
-│   │ flavors (git)    │  │ gh-dash, goose,  │  │ Symlink configs  │        │
-│   │                  │  │ llm, repgrep,    │  │                  │        │
+│   │ flavors (git)    │  │ gh-dash,         │  │ Symlink configs  │        │
+│   │                  │  │ repgrep,         │  │                  │        │
 │   │                  │  │ harlequin, sqlit │  │                  │        │
 │   └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
 │            │                     │                     │                  │
@@ -158,8 +158,7 @@ The `update <tool>` command auto-detects the package manager:
 │   3. uv tool list | grep "bat"  ───────────────────▶ Found? → uv          │
 │   4. cargo install --list       ───────────────────▶ Found? → cargo       │
 │   5. npm list -g | grep "bat"   ───────────────────▶ Found? → npm         │
-│   6. llm plugins | jq           ───────────────────▶ Found? → llm         │
-│   7. Special cases (bun, goose, tpm, yazi-flavors) ▶ Found? → standalone  │
+│   6. Special cases (bun, tpm, yazi-flavors)        ▶ Found? → standalone  │
 │                                                                           │
 └───────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -172,9 +171,7 @@ The `update <tool>` command auto-detects the package manager:
 │   uv     → uv tool upgrade "bat"                                          │
 │   cargo  → cargo install "bat"                                            │
 │   npm    → npm update -g "bat"                                            │
-│   llm    → llm install --upgrade "bat"                                    │
 │   bun    → bun upgrade                                                    │
-│   goose  → curl ... | bash                                                │
 │   git    → git pull                                                       │
 │                                                                           │
 └───────────────────────────────────────────────────────────────────────────┘
@@ -221,9 +218,8 @@ update --help             # Show help
 | `cask` | Homebrew casks (GUI apps) |
 | `uv` | Python tools (uv tool install) |
 | `cargo` | Rust packages |
-| `llm` | LLM plugins |
 | `git` | Git-cloned tools (tpm, yazi-flavors) |
-| `other` | Standalone installs (bun, n, goose) |
+| `other` | Standalone installs (bun, n) |
 
 ## Tool Info Integration
 
@@ -284,7 +280,6 @@ $ update
 │ Tool       │ Previous │ Current  │ Status  │
 ├────────────┼──────────┼──────────┼─────────┤
 │ harlequin  │ 1.20.0   │ 1.21.0   │ Updated │
-│ goose      │ -        │ 0.9.1    │ New     │
 └────────────┴──────────┴──────────┴─────────┘
 ```
 

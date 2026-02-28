@@ -22,20 +22,17 @@ source "$DOTFILES_DIR/scripts/logging.sh"
 source "$DOTFILES_DIR/scripts/ui.sh"
 source "$DOTFILES_DIR/scripts/versions.sh"
 
-# Tools to track: name|version_cmd|type (type: cmd, git, uv, llm-plugin)
+# Tools to track: name|version_cmd|type (type: cmd, git, uv)
 readonly TRACKED_TOOLS=(
     "bun|bun|cmd"
     "n|n|cmd"
-    "goose|goose|cmd"
+    ""
     "snowsql|snowsql|cmd"
     "repgrep|repgrep|cmd"
-    "llm|llm|cmd"
     "tpm|tpm|git"
     "yazi-flavors|yazi-flavors|git"
     "harlequin|harlequin|uv"
     "sqlit-tui|sqlit-tui|uv"
-    "llm-anthropic|llm-anthropic|llm-plugin"
-    "llm-ollama|llm-ollama|llm-plugin"
 )
 
 readonly AVAILABLE_FUNCTIONS=(
@@ -106,11 +103,11 @@ ${BOLD}Functions:${NC}
     ${BLUE}venv${NC}        Create Python virtual environments (neovim, debugpy)
     ${BLUE}tmux${NC}        Install tmux plugin manager (tpm)
     ${BLUE}yazi${NC}        Install Yazi file manager themes
-    ${BLUE}utils${NC}       Install CLI utilities (gh-dash, goose, llm, repgrep)
+    ${BLUE}utils${NC}       Install CLI utilities (gh-dash, repgrep)
     ${BLUE}stow${NC}        Symlink dotfiles with GNU Stow
     ${BLUE}cleanup${NC}     Run Homebrew cleanup and autoremove
 
-${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}uv${NC} | ${YELLOW}cargo${NC} | ${YELLOW}llm${NC} | ${YELLOW}git${NC} | ${YELLOW}other${NC} | ${YELLOW}all${NC}
+${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}uv${NC} | ${YELLOW}cargo${NC} | ${YELLOW}git${NC} | ${YELLOW}other${NC} | ${YELLOW}all${NC}
 
 ${BOLD}Examples:${NC}
     update                        Full install (quiet mode)
@@ -360,14 +357,11 @@ setup_utils() {
     log_step "🔧 Installing CLI utilities"
 
     # Capture versions before
-    local old_goose old_repgrep old_harlequin old_sqlit old_llm_anthropic old_llm_ollama old_snowsql
-    old_goose=$(get_version "goose")
+    local old_repgrep old_harlequin old_sqlit old_snowsql
     old_repgrep=$(get_version "repgrep")
     old_snowsql=$(get_version "snowsql")
     old_harlequin=$(get_version "harlequin")
     old_sqlit=$(get_version "sqlit-tui")
-    old_llm_anthropic=$(get_version "llm-anthropic")
-    old_llm_ollama=$(get_version "llm-ollama")
 
     # Git LFS
     has_cmd git && run_quiet git lfs install
@@ -391,17 +385,11 @@ setup_utils() {
         log_info "⚠️  SnowSQL not found — install via: brew install --cask snowflake-snowsql"
     fi
 
-    # Goose
-    has_cmd goose || {
-        log "Installing Goose..."
-        run_quiet bash -c "$(curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash)"
-    }
-
     # UV tools
     if [[ "$DRY_RUN" == false ]] && has_cmd uv; then
         log "🔧 Installing/updating UV tools..."
         start_spinner
-        for tool in llm harlequin sqlit-tui; do
+        for tool in harlequin sqlit-tui; do
             uv tool list 2>/dev/null | grep -q "^$tool " &&
                 uv tool upgrade "$tool" >>"$LOG_FILE" 2>&1 ||
                 uv tool install "$tool" >>"$LOG_FILE" 2>&1
@@ -411,20 +399,6 @@ setup_utils() {
     else
         dry_run_msg "Would install/upgrade UV tools"
         [[ "$DRY_RUN" == false ]] && log_warn "UV not found, skipping tool installations"
-    fi
-
-    # LLM configuration
-    if [[ "$DRY_RUN" == false ]] && has_cmd llm; then
-        export PATH="$HOME/.local/bin:$PATH"
-        start_spinner
-        llm install llm-anthropic llm-ollama >>"$LOG_FILE" 2>&1
-        llm --system 'Reply with linux terminal commands only, no extra information' --save cmd >>"$LOG_FILE" 2>&1
-        llm --system 'Reply with neovim commands only, no extra information' --save nvim >>"$LOG_FILE" 2>&1
-        llm models default claude-haiku-4.5 >>"$LOG_FILE" 2>&1
-        stop_spinner
-        log_info "✅ LLM configured"
-    else
-        dry_run_msg "Would configure LLM"
     fi
 
     # Repgrep
@@ -449,12 +423,10 @@ setup_utils() {
     # Track changes
     if [[ "$DRY_RUN" == false ]]; then
         track_version "snowsql" "$old_snowsql"
-        track_version "goose" "$old_goose"
+
         track_version "repgrep" "$old_repgrep"
         track_version "harlequin" "$old_harlequin"
         track_version "sqlit-tui" "$old_sqlit"
-        track_version "llm-anthropic" "$old_llm_anthropic"
-        track_version "llm-ollama" "$old_llm_ollama"
     fi
     return 0
 }

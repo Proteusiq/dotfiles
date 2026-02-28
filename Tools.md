@@ -1555,23 +1555,6 @@ ollama serve                  # Start server
 
 **Use cases:** Local AI, privacy-focused LLM usage, offline development
 
-### llm
-CLI tool for interacting with LLMs. Supports multiple providers.
-
-```bash
-llm "What is Python?"         # Query default model
-llm -m gpt-4 "prompt"         # Specify model
-llm -t cmd "list files"       # Use template
-llm chat                      # Interactive chat
-llm models                    # List models
-```
-
-Installed via: `uv tool install llm`
-
-Configured templates:
-- `cmd` - Linux terminal commands
-- `nvim` - Neovim commands
-
 ### llama.cpp
 LLM inference in C/C++. Run models efficiently on CPU.
 
@@ -1756,11 +1739,6 @@ Installed fonts:
 
 ### Bun
 Installed via: `curl -fsSL https://bun.sh/install | bash`
-
-### goose
-AI agent for automated coding tasks.
-
-Installed via: install.sh
 
 ### repgrep (rgr)
 Interactive ripgrep. Browse search results in a TUI.

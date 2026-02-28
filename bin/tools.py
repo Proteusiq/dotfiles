@@ -163,8 +163,7 @@ LANG_TOOLS = [
 
 AI_TOOLS = [
     ("opencode", "AI coding agent in your terminal", "opencode → Claude helps you code, runs commands"),
-    ("llm", "Chat with any LLM from terminal", "llm 'explain this error' -s cmd → get shell commands"),
-    ("goose", "AI agent that can browse, code, execute", "goose → autonomous agent for complex tasks"),
+
     ("ollama", "Run LLMs locally: Llama, Mistral, etc", "ollama run llama2 → chat locally, no API key"),
     ("llamabarn", "Local LLM menu bar app (MIT)", "localhost:2276/v1 → OpenAI-compatible API"),
 ]

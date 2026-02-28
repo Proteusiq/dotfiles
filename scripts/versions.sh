@@ -153,12 +153,8 @@ update_tool() {
         source="cargo"
     elif has_cmd npm && npm list -g --depth=0 2>/dev/null | grep -q " $tool@"; then
         source="npm"
-    elif has_cmd llm && has_cmd jq && llm plugins 2>/dev/null | jq -e ".[] | select(.name==\"$tool\")" &>/dev/null; then
-        source="llm"
     elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
         source="bun"
-    elif [[ "$tool" == "goose" ]] && has_cmd goose; then
-        source="goose"
     elif [[ "$tool" == "snowsql" && -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
         source="snowsql"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
@@ -169,7 +165,7 @@ update_tool() {
     
     if [[ -z "$source" ]]; then
         echo -e "${RED}Tool '$tool' not found${NC}"
-        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, llm, bun, goose, snowsql${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, bun, snowsql${NC}"
         return 1
     fi
     
@@ -183,9 +179,7 @@ update_tool() {
         uv)        old_ver=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v') ;;
         cargo)     old_ver=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:') ;;
         npm)       old_ver=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p") ;;
-        llm)       old_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
         bun)       old_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
-        goose)     old_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
         snowsql)   old_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
         git-tpm)   old_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  old_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
@@ -209,15 +203,8 @@ update_tool() {
         npm)
             npm update -g "$tool" 2>&1 || rc=$?
             ;;
-        llm)
-            llm install --upgrade "$tool" 2>&1 || rc=$?
-            ;;
         bun)
             "$HOME/.bun/bin/bun" upgrade 2>&1 || rc=$?
-            ;;
-        goose)
-            echo -e "${YELLOW}Goose update: re-run install script${NC}"
-            curl -fsSL https://github.com/block/goose/releases/download/stable/download_cli.sh | CONFIGURE=false bash 2>&1 || rc=$?
             ;;
         snowsql)
             local snowsql_pkg="/tmp/snowsql.pkg"
@@ -249,9 +236,7 @@ update_tool() {
         uv)        new_ver=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v') ;;
         cargo)     new_ver=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:') ;;
         npm)       new_ver=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p") ;;
-        llm)       new_ver=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version") ;;
         bun)       new_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
-        goose)     new_ver=$(goose --version 2>/dev/null | tr -d ' ') ;;
         snowsql)   new_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
         git-tpm)   new_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  new_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
@@ -323,23 +308,12 @@ get_tool_info() {
         source="npm"
         version=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p")
         [[ -z "$description" ]] && description=$(npm info "$tool" description 2>/dev/null || echo "Node.js package")
-    # Check LLM plugins
-    elif has_cmd llm && has_cmd jq && llm plugins 2>/dev/null | jq -e ".[] | select(.name==\"$tool\")" &>/dev/null; then
-        found=true
-        source="llm"
-        version=$(llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version")
-        [[ -z "$description" ]] && description="LLM plugin for $(echo "$tool" | sed 's/llm-//')"
     # Check special tools
     elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
         found=true
         source="standalone"
         version=$("$HOME/.bun/bin/bun" --version 2>/dev/null)
         [[ -z "$description" ]] && description="All-in-one JavaScript runtime & toolkit"
-    elif [[ "$tool" == "goose" ]] && has_cmd goose; then
-        found=true
-        source="standalone"
-        version=$(goose --version 2>/dev/null | tr -d ' ')
-        [[ -z "$description" ]] && description="AI developer agent from Block"
     elif [[ "$tool" == "snowsql" && -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
         found=true
         source="standalone"
@@ -359,7 +333,7 @@ get_tool_info() {
     
     if [[ "$found" == false ]]; then
         echo -e "${RED}Tool '$tool' not found${NC}"
-        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, llm plugins${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm${NC}"
         return 1
     fi
     
@@ -446,9 +420,7 @@ get_version() {
     local tool="$1"
     case "$tool" in
         bun)         [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null ;;
-        goose)       has_cmd goose && goose --version 2>/dev/null | tr -d ' ' ;;
         snowsql)     [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && /Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}' ;;
-        llm)         has_cmd llm && llm --version 2>/dev/null | awk '{print $3}' ;;
         repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
         n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
         tpm)         [[ -d "$HOME/.tmux/plugins/tpm/.git" ]] && git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
@@ -464,7 +436,6 @@ get_version_by_type() {
         [[ "$name" != "$tool" ]] && continue
         case "$type" in
             uv)         uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v' ;;
-            llm-plugin) has_cmd llm && llm plugins 2>/dev/null | jq -r ".[] | select(.name==\"$tool\") | .version" 2>/dev/null ;;
         esac
         return
     done
@@ -487,7 +458,7 @@ track_version() {
 # Version Display (--versions command)
 # =============================================================================
 
-readonly VERSION_GROUPS="brew|cask|uv|cargo|llm|git|other"
+readonly VERSION_GROUPS="brew|cask|uv|cargo|git|other"
 
 # Collect all versions into a unified list: "group|name|version"
 collect_all_versions() {
@@ -537,13 +508,6 @@ collect_all_versions() {
         done < <(cargo install --list 2>/dev/null)
     fi
     
-    # LLM plugins
-    if [[ -z "$filter" || "$filter" == "llm" ]] && has_cmd llm && has_cmd jq; then
-        while IFS= read -r line; do
-            [[ -n "$line" ]] && echo "llm|$line"
-        done < <(llm plugins 2>/dev/null | jq -r '.[] | "\(.name)|\(.version)"' 2>/dev/null)
-    fi
-    
     # Git repos
     if [[ -z "$filter" || "$filter" == "git" ]]; then
         local tpm_dir="$HOME/.tmux/plugins/tpm"
@@ -560,7 +524,6 @@ collect_all_versions() {
             n_ver=$(npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p')
             [[ -n "$n_ver" ]] && echo "other|n|$n_ver"
         }
-        has_cmd goose && echo "other|goose|$(goose --version 2>/dev/null | tr -d ' ')"
         [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && echo "other|snowsql|$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}')"
     fi
 }
@@ -625,7 +588,7 @@ show_installed_versions() {
     # Validate group if specified
     if [[ -n "$group" ]]; then
         case "$group" in
-            brew|cask|uv|cargo|llm|git|other) ;;
+            brew|cask|uv|cargo|git|other) ;;
             *)
                 echo -e "${RED}Unknown group: $group${NC}"
                 echo -e "Valid groups: ${GREEN}${VERSION_GROUPS}${NC}"
