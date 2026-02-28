@@ -1579,10 +1579,24 @@ LLM inference in C/C++. Run models efficiently on CPU.
 llama-cli -m model.gguf -p "prompt"  # Run inference
 ```
 
-### LM Studio
-Desktop app for running local LLMs with a UI. Better than Ollama + Open WebUI combined.
+### LlamaBarn
+macOS menu bar app for running local LLMs. Built by ggml-org (llama.cpp maintainers).
 
-**Use cases:** Local LLM experimentation, model comparison, GUI-based AI
+```bash
+# Server runs at http://localhost:2276/v1
+curl http://localhost:2276/v1/models              # List installed models
+curl http://localhost:2276/v1/chat/completions \  # Chat completion
+  -H "Content-Type: application/json" \
+  -d '{"model": "gemma-3-4b", "messages": [{"role": "user", "content": "Hello"}]}'
+```
+
+**Features:**
+- 100% local, 12MB native app, zero config
+- Smart model catalog with auto-configuration
+- OpenAI-compatible API
+- Works with any client: editors, CLIs, chat UIs
+
+**Use cases:** Local LLM server, AI coding assistants, model experimentation
 
 ---
 

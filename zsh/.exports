@@ -148,9 +148,6 @@ command -v tmux &>/dev/null && [[ -z "$TMUX" ]] && exec tmux
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:$HOME/.lmstudio/bin"
-
 # ruby
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 
