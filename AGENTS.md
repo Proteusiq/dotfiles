@@ -2,6 +2,15 @@
 
 > **Note:** For repository-specific knowledge (how to add tools, architecture, CLI commands), see [SKILL.md](./SKILL.md).
 
+## Philosophy
+
+- **Simplicity is king** — the simplest solution that works is the best solution
+- **Self-documenting code** — if it needs comments, refactor it
+- **Functional over OOP** — pure functions, composition, immutability
+- **Commit early, commit often** — small, focused, verified commits
+
+---
+
 ## Skills
 
 Skills provide repository-specific knowledge to AI agents. Each repo owns its `SKILL.md` at the root.
@@ -39,18 +48,17 @@ The symlink points to the repo's `SKILL.md`; the agent loads it from the skill d
 
 ---
 
-## Philosophy
-
-- **Simplicity is king** — the simplest solution that works is the best solution
-- **Self-documenting code** — if it needs comments, refactor it
-- **Functional over OOP** — pure functions, composition, immutability
-- **Commit early, commit often** — small, focused, verified commits
-
----
-
 ## Cross-Language Design Principles
 
 These rules apply **to all languages**, regardless of tooling.
+
+### Task Approach
+- **Enter plan mode for non-trivial tasks** — don't jump straight into code.
+- Create `tasks/lessons.md` and `tasks/todo.md` to track findings and next steps across sessions.
+- **No shortcuts. No laziness. No surface solutions.**
+- Always ask: *how might this change affect the whole?*
+- **Don't reinvent the wheel** — reinventing is the mother of disasters in areas where we're not innovating.
+- Search for existing solutions first: reread documentation, check GitHub issues (open *and* closed), and study the original code.
 
 ### Code Design
 - Prefer **pure functions** where feasible; isolate side effects.
@@ -86,6 +94,11 @@ These rules apply **to all languages**, regardless of tooling.
 - Divide code into *layers* (core logic, side effects, interfaces).
 - Keep modules small and focused.
 - Separate business logic from runtime and framework concerns.
+
+### Visualizing Changes
+- Before making major changes, show ASCII diagrams of **before** and **after** states.
+- Use this for behavior changes, flow changes, state changes, or architectural changes.
+- This clarifies intent and helps catch misunderstandings early.
 
 ### Project Structure (Functional Core, Imperative Shell)
 
