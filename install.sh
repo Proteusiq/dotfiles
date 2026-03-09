@@ -15,6 +15,7 @@ DRY_RUN=false
 VERBOSITY=0 # 0=quiet, 1=normal, 2=debug
 SKIP_INTERACTIVE=true
 ONLY_FUNCTION=""
+SKIP_FUNCTIONS=()
 VERSION_CHANGES=()
 
 # Source modules
@@ -88,6 +89,7 @@ ${BOLD}Options:${NC}
     ${GREEN}-vv${NC}                   Debug mode (show executed commands)
     ${GREEN}--dry-run${NC}             Preview changes without executing
     ${GREEN}--only${NC} <fn>           Run only a specific function
+    ${GREEN}--skip${NC} <fn...>        Skip specific functions (e.g., --skip venv brew)
     ${GREEN}--list${NC}                List functions with full descriptions
     ${GREEN}--versions${NC} [group]    Show installed versions
     ${GREEN}--info${NC} <tool>         Show info about an installed tool
@@ -117,6 +119,8 @@ ${BOLD}Examples:${NC}
     update --all                  Update all packages
     update -v                     Full install with detailed output
     update --only brew            Install only Homebrew packages
+    update --skip venv            Skip venv setup
+    update --skip \"venv brew\"     Skip multiple functions
     update --versions uv          Show Python UV tool versions
     update --info bat             Show info about bat
 
@@ -147,6 +151,14 @@ get_function_by_name() {
     return 1
 }
 
+should_skip() {
+    local fn_name="$1"
+    for skip in "${SKIP_FUNCTIONS[@]}"; do
+        [[ "$skip" == "$fn_name" ]] && return 0
+    done
+    return 1
+}
+
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -172,6 +184,25 @@ parse_args() {
             ;;
         --only)
             ONLY_FUNCTION="$2"
+            shift 2
+            ;;
+        --skip)
+            if [[ -z "${2:-}" || "${2:0:1}" == "-" ]]; then
+                echo -e "${RED}Error: --skip requires at least one function name${NC}"
+                echo -e "Usage: ${GREEN}update --skip <fn> [fn2 ...]${NC}"
+                echo -e "       ${GREEN}update --skip \"fn1 fn2 fn3\"${NC}"
+                list_functions
+                exit 1
+            fi
+            read -ra skip_args <<< "$2"
+            for skip_fn in "${skip_args[@]}"; do
+                if ! get_function_by_name "$skip_fn" &>/dev/null; then
+                    echo -e "${RED}Error: Unknown function to skip: $skip_fn${NC}"
+                    list_functions
+                    exit 1
+                fi
+                SKIP_FUNCTIONS+=("$skip_fn")
+            done
             shift 2
             ;;
         --list)
@@ -531,6 +562,19 @@ main() {
     )
 
     for func in "${functions[@]}"; do
+        local short_name=""
+        for entry in "${AVAILABLE_FUNCTIONS[@]}"; do
+            if [[ "${entry##*:}" == "$func" ]]; then
+                short_name="${entry%%:*}"
+                break
+            fi
+        done
+
+        if [[ -n "$short_name" ]] && should_skip "$short_name"; then
+            log_info "⏭️  Skipping $func (--skip $short_name)"
+            continue
+        fi
+
         $func || {
             log_error "Failed: $func"
             exit 1
