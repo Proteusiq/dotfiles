@@ -113,9 +113,9 @@
     padding-top: 32px !important;
   }
   
-  .VPHero .image-container {
-    width: 140px !important;
-    height: 140px !important;
+  /* Hide the fox completely on mobile - eye tracking doesn't work */
+  .VPHero .image {
+    display: none !important;
   }
   
   .VPHero .name {
