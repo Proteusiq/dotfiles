@@ -37,6 +37,17 @@
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
+/* Feature icon styling */
+.VPFeature .VPImage {
+  width: 48px;
+  height: 48px;
+  filter: invert(50%) sepia(98%) saturate(1500%) hue-rotate(360deg) brightness(103%) contrast(96%);
+}
+
+.dark .VPFeature .VPImage {
+  filter: invert(65%) sepia(64%) saturate(2000%) hue-rotate(360deg) brightness(100%) contrast(95%);
+}
+
 /* Code block styling */
 .vp-code-group .tabs label {
   font-weight: 500;
