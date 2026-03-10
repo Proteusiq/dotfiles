@@ -5,9 +5,6 @@ hero:
   name: "Fox's Dotfiles"
   text: "Modern macOS Dev Environment"
   tagline: A thoughtfully crafted terminal-first development setup with 100+ curated tools
-  image:
-    src: /fox.svg
-    alt: Fox Dotfiles
   actions:
     - theme: brand
       text: Get Started
