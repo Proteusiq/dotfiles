@@ -85,9 +85,11 @@ onUnmounted(() => {
 
 <style scoped>
 .fox-interactive {
-  width: 320px;
-  height: 320px;
+  width: 160px;
+  height: 160px;
   max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
 .pupil {
@@ -96,15 +98,22 @@ onUnmounted(() => {
 
 @media (min-width: 640px) {
   .fox-interactive {
-    width: 375px;
-    height: 375px;
+    width: 200px;
+    height: 200px;
   }
 }
 
 @media (min-width: 960px) {
   .fox-interactive {
-    width: 420px;
-    height: 420px;
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .fox-interactive {
+    width: 400px;
+    height: 400px;
   }
 }
 </style>

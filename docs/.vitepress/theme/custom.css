@@ -57,3 +57,43 @@
 .VPBadge {
   font-weight: 600;
 }
+
+/* Mobile hero layout fix */
+@media (max-width: 959px) {
+  .VPHero .VPImage {
+    max-width: 200px;
+    max-height: 200px;
+  }
+  
+  .VPHero .container {
+    flex-direction: column;
+  }
+  
+  .VPHero .main {
+    text-align: center;
+  }
+  
+  .VPHero .image {
+    margin-top: 2rem;
+    order: -1;
+  }
+}
+
+@media (max-width: 639px) {
+  .VPHero .VPImage {
+    max-width: 160px;
+    max-height: 160px;
+  }
+  
+  .VPHero .name {
+    font-size: 32px !important;
+  }
+  
+  .VPHero .text {
+    font-size: 24px !important;
+  }
+  
+  .VPHero .tagline {
+    font-size: 16px !important;
+  }
+}
