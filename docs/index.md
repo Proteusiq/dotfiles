@@ -21,26 +21,38 @@ features:
       src: /icons/terminal.svg
     title: One Command Setup
     details: Run a single command to install everything. Idempotent and safe to re-run anytime.
+    link: /guide/installation
+    linkText: Learn more
   - icon:
       src: /icons/zap.svg
     title: Blazing Fast Terminal
     details: Ghostty + tmux + Starship prompt. GPU-accelerated with sub-millisecond latency.
+    link: /guide/terminal
+    linkText: Terminal setup
   - icon:
       src: /icons/palette.svg
     title: Beautiful by Default
     details: Catppuccin Mocha theme everywhere. Consistent colors across terminal, editor, and tools.
+    link: /guide/shell
+    linkText: Shell config
   - icon:
       src: /icons/wrench.svg
     title: Modern CLI Tools
     details: bat, eza, fd, ripgrep, zoxide, and more. Classic commands reimagined in Rust.
+    link: /reference/tools
+    linkText: Browse tools
   - icon:
       src: /icons/code.svg
     title: Neovim + LazyVim
     details: Full IDE experience with LSP, completions, debugging, and 23+ carefully configured plugins.
+    link: /guide/neovim
+    linkText: Neovim guide
   - icon:
       src: /icons/package.svg
     title: Python & Rust Ready
     details: UV for Python, Cargo for Rust. Fast package managers with virtual environment support.
+    link: /reference/tools#languages--runtimes
+    linkText: View languages
 ---
 
 <style>
