@@ -64,6 +64,7 @@ These rules apply **to all languages**, regardless of tooling.
 - Prefer **pure functions** where feasible; isolate side effects.
 - Organize code so changes are easy and predictable.
 - Avoid hidden state and mutable globals.
+- **No magic numbers** — extract literals into named constants that explain their purpose.
 
 ### Types & Data
 - Declare types explicitly at *module boundaries*.
