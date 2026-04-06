@@ -153,7 +153,7 @@ get_function_by_name() {
 
 should_skip() {
     local fn_name="$1"
-    for skip in "${SKIP_FUNCTIONS[@]}"; do
+    for skip in ${SKIP_FUNCTIONS[@]+"${SKIP_FUNCTIONS[@]}"}; do
         [[ "$skip" == "$fn_name" ]] && return 0
     done
     return 1
@@ -430,6 +430,15 @@ setup_utils() {
     else
         dry_run_msg "Would install/upgrade UV tools"
         [[ "$DRY_RUN" == false ]] && log_warn "UV not found, skipping tool installations"
+    fi
+
+    # Unsloth Studio
+    if [[ ! -d "$HOME/unsloth_studio" ]]; then
+        log "🦥 Installing Unsloth Studio..."
+        (cd "$HOME" && curl -fsSL https://unsloth.ai/install.sh | sh) >>"$LOG_FILE" 2>&1
+        log_info "✅ Unsloth Studio installed"
+    else
+        log_info "✅ Unsloth Studio already installed"
     fi
 
     # Repgrep

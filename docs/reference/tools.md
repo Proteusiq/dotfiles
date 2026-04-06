@@ -116,7 +116,7 @@ These tools replace classic Unix commands with faster, more intuitive alternativ
 |------|-------------|---------|
 | [opencode](https://opencode.ai/) | AI coding agent in terminal | `opencode` → Claude helps you code |
 | [ollama](https://ollama.ai/) | Run LLMs locally | `ollama run llama2` → chat locally |
-| [llamabarn](https://llamabarn.ai/) | Local LLM menu bar app | `localhost:2276/v1` → OpenAI-compatible |
+| [unsloth](https://unsloth.ai/) | Fine-tune LLMs 2x faster | `unsloth studio` → local UI on :8888 |
 | [llama.cpp](https://github.com/ggerganov/llama.cpp) | Efficient LLM inference | Run models on CPU |
 
 ## GNU Coreutils

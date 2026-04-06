@@ -165,7 +165,7 @@ AI_TOOLS = [
     ("opencode", "AI coding agent in your terminal", "opencode → Claude helps you code, runs commands"),
 
     ("ollama", "Run LLMs locally: Llama, Mistral, etc", "ollama run llama2 → chat locally, no API key"),
-    ("llamabarn", "Local LLM menu bar app (MIT)", "localhost:2276/v1 → OpenAI-compatible API"),
+    ("unsloth", "Fine-tune LLMs 2x faster with 80% less memory", "unsloth studio → local fine-tuning UI on :8888"),
 ]
 
 GNU_TOOLS = [

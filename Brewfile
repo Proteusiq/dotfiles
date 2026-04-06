@@ -125,7 +125,6 @@ brew "gum"                               # Glamorous shell scripts
 brew "sst/tap/opencode"                  # AI coding agent CLI
 brew "llama.cpp"                         # Local LLM inference
 cask "ollama-app"                        # Local LLM runner
-cask "llamabarn"                         # Local LLM menu bar app (MIT)
 
 # GNU COREUTILS
 # ───────────────────────────────────────────────────────────────────────────
