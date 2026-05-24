@@ -3,4 +3,4 @@ success_symbol = "[λ](bold green)"
 error_symbol = "[λ](bold red)"
 
 [python]
-python_binary = "/opt/homebrew/bin/python3"
+python_binary = ["python3", "python"]
