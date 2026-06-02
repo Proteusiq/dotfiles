@@ -336,7 +336,7 @@ install_brew() {
     if [[ "$DRY_RUN" == false ]]; then
         run_quiet brew update --force --quiet
         if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
-            run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile"
+            run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile" --force
         else
             log_warn "Brewfile not found"
         fi
