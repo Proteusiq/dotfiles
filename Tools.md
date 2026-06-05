@@ -1543,6 +1543,23 @@ Configuration: `~/.config/opencode/opencode.json`
 
 **Use cases:** AI pair programming, code generation, refactoring, learning codebases
 
+### pi
+Earendil's terminal coding agent (npm package `@earendil-works/pi-coding-agent`). Installed via the official installer, which checks for Node.js 22.19+ and installs through npm.
+
+```bash
+pi                            # Start the coding agent
+pi --version                  # Check version
+```
+
+Installed by `update` (in `setup_utils`). To reinstall or update:
+
+```bash
+update pi                     # Re-run installer (canonical update path)
+curl -fsSL https://pi.dev/install.sh | sh  # Manual install/update
+```
+
+**Use cases:** AI pair programming, code generation, terminal-driven coding
+
 ### ollama
 Run large language models locally.
 

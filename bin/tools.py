@@ -163,7 +163,7 @@ LANG_TOOLS = [
 
 AI_TOOLS = [
     ("opencode", "AI coding agent in your terminal", "opencode → Claude helps you code, runs commands"),
-
+    ("pi", "Earendil's coding agent, npm-installed", "pi → chat-driven coding agent in the terminal"),
     ("ollama", "Run LLMs locally: Llama, Mistral, etc", "ollama run llama2 → chat locally, no API key"),
     ("unsloth", "Fine-tune LLMs 2x faster with 80% less memory", "unsloth studio → local fine-tuning UI on :8888"),
 ]

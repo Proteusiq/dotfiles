@@ -29,6 +29,7 @@ readonly TRACKED_TOOLS=(
     "n|n|cmd"
     ""
     "snowsql|snowsql|cmd"
+    "pi|pi|cmd"
     "repgrep|repgrep|cmd"
     "tpm|tpm|git"
     "yazi-flavors|yazi-flavors|git"
@@ -439,6 +440,22 @@ setup_utils() {
         log_info "✅ Unsloth Studio installed"
     else
         log_info "✅ Unsloth Studio already installed"
+    fi
+
+    # Pi coding agent (npm: @earendil-works/pi-coding-agent)
+    local old_pi
+    old_pi=$(get_version "pi")
+    if [[ "$DRY_RUN" == false ]]; then
+        if has_cmd pi; then
+            log_info "✅ Pi already installed"
+        else
+            log "🥧 Installing Pi coding agent..."
+            curl -fsSL https://pi.dev/install.sh | sh >>"$LOG_FILE" 2>&1
+            has_cmd pi && log_info "✅ Pi installed" || log_warn "Pi install incomplete — check PATH"
+        fi
+        track_version "pi" "$old_pi"
+    else
+        dry_run_msg "Would install Pi coding agent"
     fi
 
     # Repgrep
