@@ -344,7 +344,8 @@ install_brew() {
             } | sort -u | while read -r t; do
                 run_quiet brew trust "$t"
             done
-            run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile" --force
+            # ponytail: don't let one flaky formula abort the whole installer
+            run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile" --force || log_warn "Some Brewfile deps failed; continuing"
         else
             log_warn "Brewfile not found"
         fi
