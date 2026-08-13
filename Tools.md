@@ -47,6 +47,7 @@ A comprehensive guide to all tools, utilities, and applications included in this
 - [Window Management](#window-management)
 - [System Utilities](#system-utilities)
 - [Dotfiles Management](#dotfiles-management)
+- [Good Commands to Know](#good-commands-to-know)
 
 ---
 
@@ -987,6 +988,39 @@ glow -s light README.md       # Use light style
 
 **Use cases:** Reading READMEs in terminal, browsing documentation, quick markdown preview
 
+### leaf
+GUI-like terminal markdown previewer with a TOC sidebar, live watch mode, fuzzy file picker, and syntax highlighting.
+
+```bash
+leaf README.md                # Render a markdown file
+leaf -w notes.md              # Watch mode: auto-reload on save
+leaf                          # Fuzzy markdown picker
+leaf --picker                 # Directory browser picker
+leaf --theme forest README.md # Pick a color theme
+leaf --inline ansi README.md  # Render to stdout (pipes, fzf previews)
+cat README.md | leaf          # Preview from stdin
+claude "explain X" | leaf     # Stream markdown from another CLI
+```
+
+| Key | Action |
+|-----|--------|
+| `j/k` or `↓/↑` | Scroll down/up |
+| `g/G` | Top/bottom |
+| `t` | Toggle TOC sidebar |
+| `w` | Toggle watch mode |
+| `Ctrl+P` | Fuzzy picker |
+| `Ctrl+E` | Open in editor |
+| `/` | Find |
+| `q` | Quit |
+
+Config: `leaf --config` (theme, editor, watch, width). CLI flags always win.
+
+**leaf vs glow:**
+- **leaf** = Richer TUI (TOC, watch, themes, LaTeX/mermaid, editor integration)
+- **glow** = Lightweight quick render
+
+**Use cases:** Reading long docs with navigation, live-previewing AI-generated markdown, fzf preview pane
+
 ### ghostty
 GPU-accelerated terminal emulator. Fast, feature-rich, and highly configurable.
 
@@ -1025,6 +1059,8 @@ iexit   # Kill current session
 ikill   # Kill all sessions
 iswitch # Interactive session switcher
 ```
+
+**tmux.expose** (plugin): Mission Control-style session switcher with live text previews of every session in a grid. Press `Alt+e` to open the popup, arrows/`hjkl` to move, `Enter` to switch, `q`/`Esc` to close. Backed by the `tmux-expose` binary (installed via cargo).
 
 ### sesh
 Smart session manager for tmux. Quick switching between projects.
@@ -1801,6 +1837,20 @@ update --only install_nvim    # Re-run just nvim setup
 **Use cases:** Dotfiles installation, tool updates, version management, system maintenance
 
 ---
+
+## Good Commands to Know
+
+Handy one-liners worth remembering.
+
+### List directories by most recently modified
+
+After a break, find which projects you touched last:
+
+```bash
+for d in */; do echo "$(find "$d" -type f -exec stat -f '%m' {} + 2>/dev/null | sort -nr | head -1) $d"; done | sort -nr | while read ts dir; do echo "$(date -r "$ts" '+%Y-%m-%d %H:%M:%S') $dir"; done
+```
+
+Sorts subdirectories by the timestamp of their newest file (macOS `stat -f`).
 
 ## Quick Reference
 
