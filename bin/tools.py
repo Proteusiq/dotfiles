@@ -83,6 +83,7 @@ SHELL_TOOLS = [
     ("starship", "Beautiful prompt showing git, python, node status", "See branch, venv, node version at a glance"),
     ("tmux", "Split terminal into panes, persist sessions", "tmux new -s work → detach → reattach from anywhere"),
     ("sesh", "Fuzzy-find and switch tmux sessions instantly", "sesh connect → pick project → instant context switch"),
+    ("tmux-expose", "Mission Control-style tmux session switcher", "Alt+e → grid of live session previews → Enter to jump"),
     ("ghostty", "GPU-rendered terminal, native feel, fast AF", "Smooth scrolling, ligatures, 60fps rendering"),
 ]
 
@@ -90,6 +91,7 @@ EDIT_TOOLS = [
     ("neovim", "Vim but modern: LSP, Treesitter, Lua config", "Space-f-f to fuzzy find files, gd to go to definition"),
     ("dawn", "Distraction-free writing, live markdown render", "dawn notes.md → headers scale, math renders inline"),
     ("glow", "Render markdown beautifully in terminal", "glow README.md → styled output, no browser needed"),
+    ("leaf", "GUI-like markdown previewer: TOC, watch, themes", "leaf -w notes.md → live reload with sidebar navigation"),
 ]
 
 CLI_TOOLS = [

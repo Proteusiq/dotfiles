@@ -34,6 +34,7 @@ cask "ghostty"                           # GPU-accelerated terminal
 brew "neovim"
 brew "andrewmd5/tap/dawn"                # Distraction-free markdown editor
 brew "glow"                              # Terminal markdown viewer
+brew "leaf-markdown-viewer"              # GUI-like terminal markdown previewer
 
 # MODERN CLI REPLACEMENTS
 # ───────────────────────────────────────────────────────────────────────────
