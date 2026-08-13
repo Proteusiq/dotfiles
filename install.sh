@@ -337,6 +337,13 @@ install_brew() {
     if [[ "$DRY_RUN" == false ]]; then
         run_quiet brew update --force --quiet
         if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
+            # ponytail: brew now gates third-party taps; trust every tap referenced in the Brewfile before bundling
+            {
+                grep '^tap ' "$DOTFILES_DIR/Brewfile" | sed -E 's/^tap "([^"]+)".*/\1/'
+                grep -E '^(cask|brew) "[^"]+/[^"]+/[^"]+"' "$DOTFILES_DIR/Brewfile" | sed -E 's/^(cask|brew) "([^/]+\/[^/]+)\/[^"]+".*/\2/'
+            } | sort -u | while read -r t; do
+                run_quiet brew trust "$t"
+            done
             run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile" --force
         else
             log_warn "Brewfile not found"
@@ -555,11 +562,29 @@ cleanup() {
 # Main
 # =============================================================================
 
+# ponytail: prompt for sudo once up front, then refresh the timestamp in the
+# background so later sudo calls (e.g. cask helper removals) never re-prompt.
+keep_sudo_alive() {
+    log_step "🔑 Requesting sudo access (needed by some casks)"
+    sudo -v || {
+        log_error "Could not obtain sudo access"
+        exit 1
+    }
+    while true; do
+        sudo -n true
+        sleep 60
+        kill -0 "$$" 2>/dev/null || exit
+    done &
+    SUDO_KEEPALIVE_PID=$!
+    trap '[[ -n "${SUDO_KEEPALIVE_PID:-}" ]] && kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
+}
+
 main() {
     parse_args "$@"
     echo "macOS Setup Script - $(date)" >"$LOG_FILE"
 
     [[ "$DRY_RUN" == true ]] && log_step "DRY RUN MODE - No changes will be made"
+    [[ "$DRY_RUN" == false ]] && keep_sudo_alive
 
     if [[ -n "$ONLY_FUNCTION" ]]; then
         local target_func
