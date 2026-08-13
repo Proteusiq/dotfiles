@@ -472,6 +472,11 @@ setup_utils() {
     fi
     execute touch "$HOME/.rgrc"
 
+    # tmux.expose (binary backing the cesarferreira/tmux.expose plugin)
+    if ! has_cmd tmux-expose && has_cmd cargo; then
+        run_quiet cargo install tmux-expose
+    fi
+
     # Custom scripts
     if [[ -d "$DOTFILES_DIR/bin" ]]; then
         execute mkdir -p "$HOME/.local/bin"

@@ -103,7 +103,7 @@ update_all() {
     if has_cmd cargo; then
         echo -e "${CYAN}Upgrading Cargo packages...${NC}"
         # Only update packages we explicitly track
-        for pkg in repgrep; do
+        for pkg in repgrep tmux-expose; do
             if cargo install --list 2>/dev/null | grep -q "^$pkg "; then
                 cargo install "$pkg" 2>&1 | tail -1
             fi
@@ -435,6 +435,7 @@ get_version() {
         snowsql)     [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && /Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}' ;;
         pi)          has_cmd pi && pi --version 2>&1 ;;
         repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
+        tmux-expose) has_cmd tmux-expose && cargo install --list 2>/dev/null | awk '/^tmux-expose/{print $2}' | tr -d 'v:' ;;
         n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
         tpm)         [[ -d "$HOME/.tmux/plugins/tpm/.git" ]] && git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
         yazi-flavors) [[ -d "$HOME/.config/yazi/flavors/.git" ]] && git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null ;;
