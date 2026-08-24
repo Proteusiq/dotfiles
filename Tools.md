@@ -672,6 +672,19 @@ br                            # Shortcut (if configured)
 | `alt+Enter` | Open in $EDITOR |
 | `ctrl+q` | Quit |
 
+#### croc
+Securely send files and folders between any two computers, end-to-end encrypted with a relay fallback (works across NAT/firewalls).
+
+```bash
+croc send file.zip            # Send a file, prints a one-time code
+croc send folder/             # Send a directory
+croc send --text "secret"     # Send text/clipboard content
+croc <code-phrase>            # Receive using the code from the sender
+croc --yes <code-phrase>      # Receive without confirmation prompt
+```
+
+**Use cases:** Quick device-to-device transfers, sharing files without cloud, moving data across networks
+
 ### File Viewing & Processing
 
 #### bat

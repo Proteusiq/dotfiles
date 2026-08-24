@@ -60,6 +60,7 @@ brew "stow"                              # Symlink farm manager
 brew "unar"                              # Archive extractor (yazi requirement)
 brew "rename"                            # Batch file renaming
 brew "rsync"                             # File synchronization
+brew "croc"                              # Secure P2P file transfer
 
 # GIT & VERSION CONTROL
 # ───────────────────────────────────────────────────────────────────────────

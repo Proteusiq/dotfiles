@@ -115,6 +115,7 @@ FILES_TOOLS = [
     ("jolt", "Battery & energy monitor TUI, tracks power-hungry processes", "jolt → see battery health, power draw, kill draining apps"),
     ("stow", "Symlink manager for dotfiles", "stow nvim → links nvim/.config/nvim to ~/.config/nvim"),
     ("rename", "Batch rename with regex", "rename 's/IMG_/photo_/' *.jpg → renames all photos"),
+    ("croc", "Send files device-to-device, encrypted, any network", "croc send file.zip → share code → croc <code> to receive"),
 ]
 
 VC_TOOLS = [
