@@ -415,6 +415,17 @@ setup_utils() {
                 run_quiet gh extension install dlvhdr/gh-dash
                 log_info "✅ gh-dash installed"
             }
+        gh extension list 2>/dev/null | grep -q "abdfnx/gh-tran" &&
+            log_info "✅ gh-tran already installed" ||
+            {
+                run_quiet gh extension install abdfnx/gh-tran
+                log_info "✅ gh-tran installed"
+            }
+        # gh-tran ships no arm64 binary; use the Intel one via Rosetta
+        local gh_tran_launcher="$HOME/.local/share/gh/extensions/gh-tran/gh-tran"
+        if [[ -f "$gh_tran_launcher" ]] && ! grep -q 'arch = "arm64"' "$gh_tran_launcher"; then
+            perl -0pi -e 's/(Darwin > \/dev\/null; then\s*\n\s*if \[ \$arch = "x86_64" \])(; then\s*\n\s*exe="darwin-x86_64")/$1 || [ \$arch = "arm64" ]$2/' "$gh_tran_launcher"
+        fi
     fi
 
     # SnowSQL (installed manually or via Homebrew cask)
