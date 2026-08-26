@@ -1,6 +1,3 @@
 [character]
 success_symbol = "[λ](bold green)"
 error_symbol = "[λ](bold red)"
-
-[python]
-python_binary = ["python3", "python"]

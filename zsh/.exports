@@ -134,6 +134,7 @@ command -v pixi &>/dev/null && eval "$(pixi completion --shell zsh)"
 command -v uv &>/dev/null && eval "$(uv generate-shell-completion zsh)"
 
 # set starship prompt
+export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
 command -v starship &>/dev/null && eval "$(starship init zsh)"
 
 # start tmux on open
