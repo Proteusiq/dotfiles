@@ -477,6 +477,22 @@ setup_utils() {
         dry_run_msg "Would install Pi coding agent"
     fi
 
+    # Herdr (herdr.dev)
+    local old_herdr
+    old_herdr=$(get_version "herdr")
+    if [[ "$DRY_RUN" == false ]]; then
+        if has_cmd herdr; then
+            log_info "✅ Herdr already installed"
+        else
+            log "🐑 Installing Herdr..."
+            curl -fsSL https://herdr.dev/install.sh | sh >>"$LOG_FILE" 2>&1
+            has_cmd herdr && log_info "✅ Herdr installed" || log_warn "Herdr install incomplete — check PATH"
+        fi
+        track_version "herdr" "$old_herdr"
+    else
+        dry_run_msg "Would install Herdr"
+    fi
+
     # Repgrep
     if ! has_cmd rgr && has_cmd cargo; then
         run_quiet cargo install repgrep

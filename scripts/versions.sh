@@ -159,6 +159,8 @@ update_tool() {
         source="snowsql"
     elif [[ "$tool" == "pi" ]] && has_cmd pi; then
         source="pi"
+    elif [[ "$tool" == "herdr" ]] && has_cmd herdr; then
+        source="herdr"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         source="git-tpm"
     elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
@@ -167,7 +169,7 @@ update_tool() {
     
     if [[ -z "$source" ]]; then
         echo -e "${RED}Tool '$tool' not found${NC}"
-        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, bun, snowsql, pi${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, bun, snowsql, pi, herdr${NC}"
         return 1
     fi
     
@@ -184,6 +186,7 @@ update_tool() {
         bun)       old_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
         snowsql)   old_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
         pi)        old_ver=$(pi --version 2>&1) ;;
+        herdr)     old_ver=$(herdr --version 2>&1) ;;
         git-tpm)   old_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  old_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
     esac
@@ -221,6 +224,9 @@ update_tool() {
         pi)
             curl -fsSL https://pi.dev/install.sh | sh 2>&1 || rc=$?
             ;;
+        herdr)
+            herdr update 2>&1 || rc=$?
+            ;;
         git-tpm)
             git -C "$HOME/.tmux/plugins/tpm" pull --quiet 2>&1 || rc=$?
             ;;
@@ -245,6 +251,7 @@ update_tool() {
         bun)       new_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
         snowsql)   new_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
         pi)        new_ver=$(pi --version 2>&1) ;;
+        herdr)     new_ver=$(herdr --version 2>&1) ;;
         git-tpm)   new_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
         git-yazi)  new_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
     esac
@@ -331,6 +338,11 @@ get_tool_info() {
         source="npm"
         version=$(pi --version 2>&1)
         [[ -z "$description" ]] && description="Pi coding agent (@earendil-works/pi-coding-agent)"
+    elif [[ "$tool" == "herdr" ]] && has_cmd herdr; then
+        found=true
+        source="standalone"
+        version=$(herdr --version 2>&1)
+        [[ -z "$description" ]] && description="Herdr (herdr.dev)"
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
         found=true
         source="git"
@@ -434,6 +446,7 @@ get_version() {
         bun)         [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null ;;
         snowsql)     [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && /Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}' ;;
         pi)          has_cmd pi && pi --version 2>&1 ;;
+        herdr)       has_cmd herdr && herdr --version 2>&1 ;;
         repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
         tmux-expose) has_cmd tmux-expose && cargo install --list 2>/dev/null | awk '/^tmux-expose/{print $2}' | tr -d 'v:' ;;
         n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
@@ -540,6 +553,7 @@ collect_all_versions() {
         }
         [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && echo "other|snowsql|$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}')"
         has_cmd pi && echo "other|pi|$(pi --version 2>&1)"
+        has_cmd herdr && echo "other|herdr|$(herdr --version 2>&1)"
     fi
 }
 
