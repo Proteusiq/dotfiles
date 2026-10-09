@@ -3159,15 +3159,6 @@
           }
         }
       },
-      "cleanshot": {
-        "version": "4.7.4",
-        "options": {
-          "full_name": "cleanshot",
-          "args": {
-            "appdir": "/Applications"
-          }
-        }
-      },
       "espanso": {
         "version": "2.2.1",
         "options": {

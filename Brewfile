@@ -167,7 +167,7 @@ brew "toilet"                            # ASCII art fonts
 cask "1password"
 cask "1password-cli"
 cask "raycast"                           # Spotlight replacement
-cask "cleanshot"                         # Screenshot tool
+# cleanshot: intentionally unmanaged — frozen at v4 (license doesn't cover v5); install v4 manually
 cask "espanso"                           # Text expander
 cask "hiddenbar"                         # Menu bar organizer
 cask "shortcat"                          # Keyboard-driven UI navigation
