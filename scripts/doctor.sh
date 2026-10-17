@@ -35,6 +35,12 @@ expect() {
     fi
 }
 
+# Symlinks that stow may own: top level of $HOME and anything under ~/.config
+list_home_links() {
+    find "$HOME" -maxdepth 1 -type l 2>/dev/null
+    find "$HOME/.config" -maxdepth 5 -type l 2>/dev/null
+}
+
 check_links() {
     section "Links"
     local output
@@ -51,7 +57,7 @@ check_links() {
         [[ "$(readlink "$link")" == *dotfiles/* && ! -e "$link" ]] || continue
         fail "stale link: $link"
         stale=1
-    done < <(find "$HOME" "$HOME/.config" -maxdepth 1 -type l 2>/dev/null)
+    done < <(list_home_links)
     [[ $stale -eq 0 ]] && pass "no stale links into the repository"
 }
 
