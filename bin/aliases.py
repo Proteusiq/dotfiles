@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --quiet --script
 # /// script
-# requires-python = ">=3.8"
+# requires-python = ">=3.12"
 # dependencies = [
 #     "rich",
 #     "typer",
@@ -8,8 +8,10 @@
 # ]
 # ///
 
+import re
 from enum import Enum
-from typing import Optional
+from pathlib import Path
+from typing import Annotated, ClassVar
 
 import typer
 from rich.box import HEAVY, ROUNDED
@@ -24,6 +26,7 @@ app = typer.Typer(help="CLI tool to display and manage aliases")
 # ═══════════════════════════════════════════════════════════════════════════
 # CATEGORIES with Nerd Font Icons
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 class Category(str, Enum):
     GIT = "git"
@@ -44,7 +47,7 @@ CATEGORY_META = {
     Category.TERM: ("󰆍", "Terminal", "Terminal & shell"),
     Category.PKG: ("󰏗", "Packages", "Package managers"),
     Category.SYS: ("󰒓", "System", "macOS & system"),
-    Category.GNU: ("󰌽", "GNU", "GNU coreutils"),
+    Category.GNU: ("󰌽", "File ops", "Verbose GNU file operations"),
     Category.FN: ("󰊕", "Functions", "Shell functions"),
 }
 
@@ -53,209 +56,89 @@ CATEGORY_META = {
 # ALIAS DATA
 # ═══════════════════════════════════════════════════════════════════════════
 
-GIT_ALIASES = [
-    ("g", "git", "Git command"),
-    ("ga", "git add", "Add file contents to index"),
-    ("gaa", "git add .", "Add all changes"),
-    ("gap", "git add --patch", "Interactively stage changes"),
-    ("gau", "git add --update", "Update tracked files"),
-    ("gb", "git branch", "List/create branches"),
-    ("gbd", "git branch -d", "Delete branch"),
-    ("gbdd", "git branch -D", "Force delete branch"),
-    ("gbm", "git branch --merged", "List merged branches"),
-    ("gbnm", "git branch --no-merged", "List unmerged branches"),
-    ("gc", "git commit -am", "Commit with message"),
-    ("gcm", "git commit --amend --message", "Amend last commit"),
-    ("gcb", "git checkout -b", "Create and switch branch"),
-    ("gch", "git checkout", "Switch branches"),
-    ("gchp", "git cherry-pick", "Apply commits"),
-    ("gcl", "git clone", "Clone repository"),
-    ("gd", "git diff --color", "Show changes"),
-    ("gdt", "git difftool", "Diff with tool"),
-    ("gf", "git fetch", "Download objects/refs"),
-    ("gg", "git grep", "Search patterns"),
-    ("ggl", "git grep --line-number", "Search with line numbers"),
-    ("gl", "git log", "Show commit logs"),
-    ("glg", "git log --graph", "Log with graph"),
-    ("glo", "git log --oneline", "Compact log"),
-    ("gm", "git merge", "Merge branches"),
-    ("gma", "git merge --abort", "Abort merge"),
-    ("gmc", "git merge --continue", "Continue merge"),
-    ("gp", "git push", "Push to remote"),
-    ("gpu", "git push -u origin", "Push and set upstream"),
-    ("gpl", "git pull", "Pull from remote"),
-    ("gr", "git remote", "Manage remotes"),
-    ("gra", "git remote add origin", "Add remote"),
-    ("gre", "git rebase", "Rebase commits"),
-    ("gs", "git status", "Show status"),
-    ("gst", "git stash", "Stash changes"),
-    ("gsa", "git stash apply", "Apply stash"),
-    ("gsp", "git stash pop", "Pop stash"),
-    ("gsd", "git stash drop", "Drop stash"),
-    ("gw", "git whatchanged", "Show change logs"),
-    ("changelog", "git log --pretty=format:...", "Generate changelog"),
-    ("undopush", "git push -f origin HEAD^:master", "Undo last push"),
-    ("gitfix", "git diff --name-only | xargs code", "Open changed files"),
-]
+# Read from the zsh config itself, so this list can never drift from the shell.
+ZSH_CONFIG_DIR = Path(__file__).resolve().parent.parent / "zsh" / ".config" / "zsh"
 
-FILES_ALIASES = [
-    ("cat", "bat", "View files with syntax highlighting"),
-    ("ls", "eza --icons=always", "List with icons"),
-    ("ll", "eza -l", "Long listing"),
-    ("la", "eza -la", "Long listing with hidden"),
-    ("tree", "eza --tree", "Tree view"),
-    ("top", "btop", "System monitor"),
-    ("du", "ncdu", "Disk usage analyzer"),
-    ("fd", "fd", "Find files (fast)"),
-    ("rg", "ripgrep", "Search file contents"),
-    ("cp", "gcp -v", "Copy files (verbose)"),
-    ("mv", "gmv -v", "Move files (verbose)"),
-    ("rm", "grm -v", "Remove files (verbose)"),
-    ("mkdir", "gmkdir -v", "Create directories"),
-    ("rmdir", "grmdir -v", "Remove directories"),
-    ("chmod", "gchmod -v", "Change permissions"),
-    ("chown", "gchown -v", "Change ownership"),
-    ("ln", "gln", "Create links"),
-    ("ln-sym", "gln -nsf", "Create symlinks"),
-    ("touch", "gtouch", "Update timestamps"),
-    ("rename", "rename", "Batch rename files"),
-]
-
-NAV_ALIASES = [
-    ("dev", "cd ~/dev", "Development directory"),
-    ("work", "cd ~/dev/work", "Work directory"),
-    ("desk", "cd ~/desktop", "Desktop"),
-    ("docs", "cd ~/documents", "Documents"),
-    ("dl", "cd ~/downloads", "Downloads"),
-    ("home", "cd ~", "Home directory"),
-    ("dots", "cd ~/dotfiles", "Dotfiles directory"),
-    ("..", "cd ..", "Parent directory"),
-    ("...", "cd ../..", "Two levels up"),
-    ("z", "zoxide", "Smart directory jump"),
-]
-
-TERM_ALIASES = [
-    ("c", "clear", "Clear screen"),
-    ("x", "exit", "Exit shell"),
-    ("reload", "source ~/.zshrc", "Reload shell config"),
-    ("iexit", "tmux kill-session", "Kill tmux session"),
-    ("ix", "iexit", "Kill tmux session (short)"),
-    ("ikill", "tmux kill-server", "Kill tmux server"),
-    ("ik", "ikill", "Kill tmux server (short)"),
-    ("iswitch", "tmux choose-session", "Switch tmux session"),
-    ("ipop", "tmux display-popup", "Tmux popup"),
-    ("f", "fuck", "Correct last command"),
-    ("clip", "pbcopy", "Copy to clipboard"),
-    ("paste", "pbpaste", "Paste from clipboard"),
-]
-
-PKG_ALIASES = [
-    # Yarn
-    ("y", "yarn", "Yarn command"),
-    ("ya", "yarn add", "Add package"),
-    ("yad", "yarn add --dev", "Add dev package"),
-    ("yga", "yarn global add", "Add global package"),
-    ("yr", "yarn run", "Run script"),
-    ("ys", "yarn start", "Start project"),
-    ("yt", "yarn test", "Run tests"),
-    ("yup", "yarn upgrade", "Upgrade packages"),
-    ("yrm", "yarn remove", "Remove package"),
-    # PNPM
-    ("pn", "pnpm", "PNPM command"),
-    ("pna", "pnpm add", "Add package"),
-    ("pnr", "pnpm run", "Run script"),
-    ("pni", "pnpm install", "Install packages"),
-    # Python
-    ("pip", "uv pip", "Python packages (via uv)"),
-    ("pixi", "pixi", "Conda-compatible env manager"),
-]
-
-SYS_ALIASES = [
-    ("show", "defaults write ... AppleShowAllFiles true", "Show hidden files"),
-    ("hide", "defaults write ... AppleShowAllFiles false", "Hide hidden files"),
-    ("showdesktop", "defaults write ... CreateDesktop true", "Show desktop icons"),
-    ("hidedesktop", "defaults write ... CreateDesktop false", "Hide desktop icons"),
-    ("spotoff", "sudo mdutil -a -i off", "Disable Spotlight"),
-    ("spoton", "sudo mdutil -a -i on", "Enable Spotlight"),
-    ("afk", "CGSession -suspend", "Lock screen"),
-    ("stfu", "osascript -e 'set volume output muted true'", "Mute volume"),
-    ("restart", "sudo reboot", "Reboot system"),
-    ("bye", "sudo shutdown -r now", "Shutdown now"),
-    ("rm_ds", "find . -name '*.DS_Store' -delete", "Remove .DS_Store files"),
-    ("emptytrash", "rm -rf ~/.Trash/*", "Empty trash"),
-    ("clean", "clean_pycache", "Remove __pycache__"),
-]
-
-GNU_ALIASES = [
-    ("tail", "gtail -F", "Follow log files"),
-    ("split", "gsplit", "Split files"),
-    ("sum", "gsum", "Checksum files"),
-    ("md5sum", "gmd5sum", "MD5 checksum"),
-    ("sha1sum", "gsha1sum", "SHA1 checksum"),
-    ("cut", "gcut", "Cut columns"),
-    ("join", "gjoin", "Join files"),
-    ("shred", "gshred", "Secure delete"),
-    ("readlink", "greadlink", "Read symlinks"),
-    ("df", "gdf", "Disk free space"),
-    ("stat", "gstat", "File statistics"),
-    ("sync", "gsync", "Sync filesystem"),
-    ("truncate", "gtruncate", "Truncate files"),
-    ("echo", "gecho", "Echo text"),
-    ("tee", "gtee", "Pipe to file and stdout"),
-    ("awk", "gawk", "Pattern processing"),
-    ("grep", "ggrep --color", "Search with color"),
-    ("sed", "gsed", "Stream editor"),
-    ("find", "gfind", "Find files"),
-    ("xargs", "gxargs", "Build command lines"),
-    ("tar", "gtar", "Archive files"),
-    ("which", "gwhich", "Locate command"),
-]
-
-FN_ALIASES = [
-    # Editors
-    ("v", "nvim", "Open Neovim"),
-    ("vi", "nvim", "Open Neovim"),
-    ("vim", "nvim", "Open Neovim"),
-    ("n", "nvim", "Open Neovim"),
-    # Functions
-    ("take", "mkdir && cd", "Create and enter directory"),
-    ("tk", "take", "Create and enter (short)"),
-    ("up", "cd ..", "Go up N directories"),
-    ("yy", "yazi wrapper", "File manager with cd on exit"),
-    ("gi", "gitignore.io", "Generate .gitignore"),
-    ("create-repo", "gh repo create", "Create GitHub repo"),
-    ("rename-branch", "git branch -m", "Rename git branch"),
-    ("gifify", "ffmpeg + gifsicle", "Create GIFs from video"),
-    ("activate", "source venv/bin/activate", "Activate Python venv"),
-    ("setenv", "export from .env", "Load .env file"),
-    ("unsetenv", "unset from .env", "Unload .env file"),
-    ("update", "install.sh", "Run dotfiles installer"),
-    ("o", "open .", "Open current directory"),
-    ("t", "touch", "Create empty file"),
-    ("md", "mkdir", "Create directory"),
-    ("x+", "chmod +x", "Make executable"),
-    ("get", "curl -O -L", "Download file"),
-]
-
-
-# Mapping categories to their data
-ALIAS_MAP = {
-    Category.GIT: GIT_ALIASES,
-    Category.FILES: FILES_ALIASES,
-    Category.NAV: NAV_ALIASES,
-    Category.TERM: TERM_ALIASES,
-    Category.PKG: PKG_ALIASES,
-    Category.SYS: SYS_ALIASES,
-    Category.GNU: GNU_ALIASES,
-    Category.FN: FN_ALIASES,
+SECTION_CATEGORIES = {
+    "SHELL": Category.TERM,
+    "EDITORS": Category.TERM,
+    "TMUX": Category.TERM,
+    "MODERN CLI REPLACEMENTS": Category.FILES,
+    "SAFER FILE OPERATIONS (verbose)": Category.GNU,
+    "GIT": Category.GIT,
+    "DIRECTORY NAVIGATION": Category.NAV,
+    "PACKAGE MANAGERS": Category.PKG,
+    "macOS": Category.SYS,
+    "FUNCTION SHORTCUTS": Category.FN,
 }
 
-ALL_ALIASES = sum(ALIAS_MAP.values(), [])
+ALIAS_PATTERN = re.compile(r"""^alias\s+([^=\s]+)=(['"])(.*)\2\s*(?:#\s*(.*))?$""")
+FUNCTION_PATTERN = re.compile(r"^([A-Za-z_][\w-]*)\(\)\s*\{")
+COMMENT_PATTERN = re.compile(r"^#\s?(.*)$")
+BANNER_PREFIX = "#####"
+
+Alias = tuple[str, str, str]
+
+
+def parse_aliases(text: str) -> dict[Category, list[Alias]]:
+    """Aliases grouped by section banner; description = trailing comment or sub-heading."""
+    aliases: dict[Category, list[Alias]] = {category: [] for category in Category}
+    category = Category.TERM
+    subheading = ""
+    previous_line = ""
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        comment = COMMENT_PATTERN.match(line)
+        if comment and previous_line.startswith(BANNER_PREFIX):
+            category = SECTION_CATEGORIES.get(comment.group(1), category)
+            subheading = ""
+        elif comment and not line.startswith(BANNER_PREFIX):
+            subheading = comment.group(1)
+        elif match := ALIAS_PATTERN.match(line):
+            name, _, command, description = match.groups()
+            aliases[category].append(
+                (name, command, description or subheading.capitalize())
+            )
+        elif not line:
+            subheading = ""
+        previous_line = line
+    return aliases
+
+
+def parse_functions(text: str) -> list[Alias]:
+    """Shell functions with the comment block right above them as description."""
+    functions: list[Alias] = []
+    comments: list[str] = []
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if comment := COMMENT_PATTERN.match(line):
+            comments.append(comment.group(1))
+        elif match := FUNCTION_PATTERN.match(line):
+            description = " ".join(comments).capitalize()
+            functions.append((match.group(1), "function", description))
+            comments = []
+        else:
+            comments = []
+    return functions
+
+
+def load_aliases() -> dict[Category, list[Alias]]:
+    aliases = parse_aliases((ZSH_CONFIG_DIR / "aliases.zsh").read_text())
+    aliases[Category.FN] += parse_functions(
+        (ZSH_CONFIG_DIR / "functions.zsh").read_text()
+    )
+    return aliases
+
+
+ALIAS_MAP = load_aliases()
+
+ALL_ALIASES = [alias for aliases in ALIAS_MAP.values() for alias in aliases]
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 # RICH CLI OUTPUT
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None:
     """Display a category of aliases in a styled table with pagination if needed."""
@@ -279,7 +162,7 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
         title=f"[blue bold]{icon}  {title}[/]",
         subtitle=f"[dim]{desc}[/]",
         title_align="center",
-        border_style="blue"
+        border_style="blue",
     )
 
     # Use pager if content exceeds terminal height and we're in a TTY
@@ -296,11 +179,7 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
         output = string_io.getvalue()
 
         # Pipe through less with ANSI support
-        pager = subprocess.Popen(
-            ["less", "-R", "-S"],
-            stdin=subprocess.PIPE,
-            text=True
-        )
+        pager = subprocess.Popen(["less", "-R", "-S"], stdin=subprocess.PIPE, text=True)
         pager.communicate(input=output)
     else:
         console.print()
@@ -326,7 +205,9 @@ def show_alias_description(alias_name: str):
                     cat_name = f"{icon}  {title}"
                     break
 
-            main_table = Table(box=HEAVY, border_style="blue", show_header=False, width=80)
+            main_table = Table(
+                box=HEAVY, border_style="blue", show_header=False, width=80
+            )
             main_table.add_column("Key", style="cyan bold", width=15)
             main_table.add_column("Value", style="white")
 
@@ -336,7 +217,11 @@ def show_alias_description(alias_name: str):
             main_table.add_row("Category", cat_name)
 
             console.print()
-            console.print(Panel(main_table, title="[blue bold]Alias Details[/]", border_style="blue"))
+            console.print(
+                Panel(
+                    main_table, title="[blue bold]Alias Details[/]", border_style="blue"
+                )
+            )
             console.print()
             return
 
@@ -351,14 +236,16 @@ def show_help():
     console.print("  [green]aliases -d ga[/]       Describe 'ga' alias")
     console.print("  [green]aliases --tui[/]       Interactive browser")
 
-    table = Table(title="[bold]Categories[/]", show_header=True, box=ROUNDED, border_style="blue")
+    table = Table(
+        title="[bold]Categories[/]", show_header=True, box=ROUNDED, border_style="blue"
+    )
     table.add_column("", style="cyan", width=3)
     table.add_column("Name", style="green bold")
     table.add_column("Description")
     table.add_column("Count", style="dim", justify="right")
 
     for cat in Category:
-        icon, title, desc = CATEGORY_META[cat]
+        icon, _, desc = CATEGORY_META[cat]
         count = len(ALIAS_MAP[cat])
         table.add_row(icon, cat.value, desc, str(count))
 
@@ -372,12 +259,22 @@ def show_help():
 # TEXTUAL TUI MODE
 # ═══════════════════════════════════════════════════════════════════════════
 
+
 def run_tui():
     """Launch the Textual TUI application."""
     from textual.app import App, ComposeResult
     from textual.binding import Binding
     from textual.containers import Container
-    from textual.widgets import DataTable, Footer, Header, Input, Static, ListView, ListItem, Label
+    from textual.widgets import (
+        DataTable,
+        Footer,
+        Header,
+        Input,
+        Label,
+        ListItem,
+        ListView,
+        Static,
+    )
 
     class AliasApp(App):
         """Interactive alias browser TUI."""
@@ -445,7 +342,7 @@ def run_tui():
         }
         """
 
-        BINDINGS = [
+        BINDINGS: ClassVar[list[Binding]] = [
             Binding("q", "quit", "Quit"),
             Binding("/", "focus_search", "Search"),
             Binding("escape", "clear_search", "Clear"),
@@ -464,11 +361,14 @@ def run_tui():
             with Container(id="sidebar"):
                 yield Static("󰘳  Categories", classes="title")
                 yield ListView(
-                    *[ListItem(
-                        Label(f"{CATEGORY_META[cat][0]}  {cat.value}"),
-                        id=f"cat-{cat.value}"
-                    ) for cat in Category],
-                    id="category-list"
+                    *[
+                        ListItem(
+                            Label(f"{CATEGORY_META[cat][0]}  {cat.value}"),
+                            id=f"cat-{cat.value}",
+                        )
+                        for cat in Category
+                    ],
+                    id="category-list",
                 )
             with Container(id="main"):
                 yield Input(placeholder="Search aliases... (press /)", id="search")
@@ -510,7 +410,11 @@ def run_tui():
             results = []
             for cat in Category:
                 for name, command, description in ALIAS_MAP[cat]:
-                    if query in name.lower() or query in command.lower() or query in description.lower():
+                    if (
+                        query in name.lower()
+                        or query in command.lower()
+                        or query in description.lower()
+                    ):
                         results.append((name, command, description, cat))
 
             for name, command, description, cat in results:
@@ -526,7 +430,8 @@ def run_tui():
                 return aliases
             query = self.search_query.lower()
             return [
-                (n, c, d) for n, c, d in aliases
+                (n, c, d)
+                for n, c, d in aliases
                 if query in n.lower() or query in c.lower() or query in d.lower()
             ]
 
@@ -546,7 +451,7 @@ def run_tui():
                 cat_info = ""
                 for cat in Category:
                     if any(a[0] == name for a in ALIAS_MAP[cat]):
-                        icon, title, _ = CATEGORY_META[cat]
+                        _, title, _ = CATEGORY_META[cat]
                         cat_info = f" [{title}]"
                         break
                 details = f"[cyan bold]{name}[/]{cat_info} → [green]{command}[/]\n{description}"
@@ -586,17 +491,19 @@ def run_tui():
 # MAIN CLI
 # ═══════════════════════════════════════════════════════════════════════════
 
+
 @app.command()
 def main(
-    show: Optional[Category] = typer.Option(
-        None, "--show", "-s", help="Show aliases for a specific category"
-    ),
-    describe: str = typer.Option(
-        None, "--describe", "-d", help="Describe a specific alias"
-    ),
-    tui: bool = typer.Option(
-        False, "--tui", "-t", help="Launch interactive TUI browser"
-    ),
+    show: Annotated[
+        Category | None,
+        typer.Option("--show", "-s", help="Show aliases for a specific category"),
+    ] = None,
+    describe: Annotated[
+        str | None, typer.Option("--describe", "-d", help="Describe a specific alias")
+    ] = None,
+    tui: Annotated[
+        bool, typer.Option("--tui", "-t", help="Launch interactive TUI browser")
+    ] = False,
 ):
     """
     CLI tool to display and manage shell aliases and functions.
@@ -608,7 +515,7 @@ def main(
       term   - Terminal & shell
       pkg    - Package managers
       sys    - macOS & system
-      gnu    - GNU coreutils
+      gnu    - Verbose GNU file operations
       fn     - Shell functions
 
     Examples:

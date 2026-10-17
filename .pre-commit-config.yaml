@@ -60,3 +60,22 @@ repos:
         language: system
         files: ^Brewfile$
         pass_filenames: false
+
+      - id: tool-catalog
+        name: every installed tool is in bin/tools.py
+        entry: python3 scripts/check_catalog.py
+        language: system
+        files: ^(Brewfile|mise/.*|bin/tools\.py|scripts/check_catalog\.py)$
+        pass_filenames: false
+
+      - id: ruff
+        name: ruff
+        entry: ruff check
+        language: system
+        types: [python]
+
+      - id: ruff-format
+        name: ruff format
+        entry: ruff format --check
+        language: system
+        types: [python]

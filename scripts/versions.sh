@@ -150,8 +150,9 @@ update_all() {
 # Tool Update (update <tool> command)
 # =============================================================================
 
+# A mise tool by name (node) or by the command it provides (pi)
 is_mise_tool() {
-    has_cmd mise && mise ls --global --json 2>/dev/null | jq -e --arg t "$1" 'has($t)' &>/dev/null
+    has_cmd mise && mise which "$1" &>/dev/null
 }
 
 # Which package manager owns a tool: brew | cask | uv | cargo | mise | herdr | git-tpm | git-yazi
@@ -185,7 +186,7 @@ tool_version() {
     cask) brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}' ;;
     uv) uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v' ;;
     cargo) cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:' ;;
-    mise) mise ls --global --json 2>/dev/null | jq -r --arg t "$tool" '.[$t][0].version // empty' ;;
+    mise) mise which --version "$tool" 2>/dev/null ;;
     herdr) herdr --version 2>&1 ;;
     git-tpm) git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
     git-yazi) git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null ;;
@@ -209,7 +210,7 @@ update_tool() {
     cask) brew upgrade --cask "$tool" 2>&1 || rc=$? ;;
     uv) uv tool upgrade "$tool" 2>&1 || rc=$? ;;
     cargo) cargo install --locked "$tool" 2>&1 || rc=$? ;;
-    mise) mise upgrade "$tool" 2>&1 || rc=$? ;;
+    mise) mise upgrade "$(mise which --plugin "$tool")" 2>&1 || rc=$? ;;
     herdr) herdr update 2>&1 || rc=$? ;;
     git-tpm) git -C "$HOME/.tmux/plugins/tpm" pull --ff-only --quiet 2>&1 || rc=$? ;;
     git-yazi) git -C "$HOME/.config/yazi/flavors" pull --ff-only --quiet 2>&1 || rc=$? ;;

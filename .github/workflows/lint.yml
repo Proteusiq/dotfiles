@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Install tools
-        run: brew install prek gitleaks shellcheck shfmt stylua actionlint
+        run: brew install prek gitleaks shellcheck shfmt stylua actionlint ruff
 
       - name: Run hooks on all files
         run: prek run --all-files --show-diff-on-failure
