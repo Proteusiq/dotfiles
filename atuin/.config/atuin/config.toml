@@ -1,0 +1,4 @@
+# Atuin shell history. Defaults are documented at https://docs.atuin.sh/configuration/config/
+
+# Run the selected command on Enter instead of editing it first.
+enter_accept = true
