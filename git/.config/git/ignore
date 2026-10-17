@@ -1,0 +1,49 @@
+# Global ignore. Linked to ~/.config/git/ignore (git's default excludes file).
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+!.env.sample
+.envrc.local
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+
+# Editors
+*.swp
+*~
+.idea/
+.vscode/
+
+# AI agents: local settings and scratch files
+.aider*
+.claude/settings.local.json

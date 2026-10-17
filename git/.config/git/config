@@ -1,0 +1,106 @@
+# Global git config. Linked to ~/.config/git/config by stow.
+# Identity is not tracked: it comes from personal.gitconfig or work.gitconfig in
+# this directory, picked by the repository's remote URL (see [includeIf] below).
+
+[user]
+	# No fallback identity: a repository without a matching remote must set one
+	# explicitly (git config user.email ...), so work and personal never mix.
+	useConfigOnly = true
+[core]
+	abbrev = 12
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = Catppuccin Mocha
+[alias]
+	l = log --graph --oneline --decorate
+	ld = log --graph --pretty=format:'%C(yellow)%h%C(bold white red)%d%Creset %s %C(bold green)%cr %Creset%C(white)%an' --abbrev-commit --date=relative
+	ll = log --stat --decorate --source -p
+	branches = for-each-ref --sort=-committerdate --format=\"%(color:blue)%(authordate:relative)\t%(color:red)%(authorname)\t%(color:white)%(color:bold)%(refname:short)\" refs/remotes
+	delete-merged = "!f() { git fetch --prune && git branch --merged | grep -vE '^\\*|^[[:space:]]*(main|master|dev|develop|staging)$' | while read -r branch; do git branch -d \"$branch\"; done; }; f"
+	# Syntax-aware diffs with difftastic, on demand
+	dft = difftool
+	dlog = -c diff.external=difft log -p --ext-diff
+	dshow = -c diff.external=difft show --ext-diff
+[color]
+	ui = auto
+[diff]
+	tool = difftastic
+	algorithm = histogram
+	colorMoved = zebra
+[difftool]
+	prompt = false
+[difftool "difftastic"]
+	cmd = difft "$LOCAL" "$REMOTE"
+[pager]
+	branch = false
+	difftool = true
+[merge]
+	conflictStyle = zdiff3
+[rerere]
+	enabled = true
+	autoUpdate = true
+[init]
+	defaultBranch = main
+[fetch]
+	prune = true
+[pull]
+	rebase = true
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+[push]
+	default = current
+	autoSetupRemote = true
+	followTags = true
+[commit]
+	verbose = true
+	gpgSign = true
+[tag]
+	gpgSign = true
+	sort = version:refname
+[branch]
+	sort = -committerdate
+[help]
+	autocorrect = prompt
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
+[blame]
+	coloring = highlightRecent
+[credential]
+	helper = osxkeychain
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+
+# Identity by remote. Paths are relative to this file: ~/.config/git/
+[includeIf "hasconfig:remote.*.url:git@github.com:[Pp]roteusiq/**"]
+	path = personal.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github-personal:[Pp]roteusiq/**"]
+	path = personal.gitconfig
+[includeIf "hasconfig:remote.*.url:https://github.com/[Pp]roteusiq/**"]
+	path = personal.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github.com:[Nn]orlys-[Aa]-[Ss]/**"]
+	path = work.gitconfig
+[includeIf "hasconfig:remote.*.url:git@github-work:[Nn]orlys-[Aa]-[Ss]/**"]
+	path = work.gitconfig
+[includeIf "hasconfig:remote.*.url:https://github.com/[Nn]orlys-[Aa]-[Ss]/**"]
+	path = work.gitconfig
+
+# Machine-local overrides, last so they win. Not tracked.
+[include]
+	path = local.gitconfig
