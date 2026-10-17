@@ -1,11 +1,9 @@
-"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
-
 [mgr]
 
 prepend_keymap = [
     { on = [
         "w",
-    ], run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
+    ], run = 'shell "$SHELL" --block', desc = "Open shell here" },
     { on = [
         "W",
     ], run = "tasks_show" },
@@ -30,7 +28,7 @@ prepend_keymap = [
     ], run = "leave" },
     { on = [
         "i",
-    ], run = "plugin --sync smart-enter" },
+    ], run = "plugin smart-enter", desc = "Enter directory or open file" },
 
     { on = [
         "N",

@@ -112,6 +112,7 @@ check_configs() {
     has_cmd ghostty && expect "ghostty config" "run ghostty +validate-config" ghostty +validate-config
     has_cmd tmux && expect "tmux config" "run tmux source-file -n ~/.tmux.conf" \
         tmux -L doctor -f /dev/null start-server \; source-file -n "$HOME/.tmux.conf" \; kill-server
+    has_cmd yazi && expect "yazi config" "run yazi --version" yazi --version
     expect "aerospace config" "missing at ~/.config/aerospace/aerospace.toml" test -f "$HOME/.config/aerospace/aerospace.toml"
 }
 
