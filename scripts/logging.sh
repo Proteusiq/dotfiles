@@ -12,11 +12,11 @@ readonly BLUE='\033[0;34m' CYAN='\033[0;36m' BOLD='\033[1m' DIM='\033[2m' NC='\0
 # Levels: step (always), log (v>=1), info (v>=1), debug (v>=2)
 # Errors and warnings always shown
 
-log_step()  { echo -e "${GREEN}$*${NC}" | tee -a "$LOG_FILE"; }
-log()       { [[ $VERBOSITY -ge 1 ]] && echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $*${NC}" | tee -a "$LOG_FILE" || echo "$*" >> "$LOG_FILE"; }
+log_step() { echo -e "${GREEN}$*${NC}" | tee -a "$LOG_FILE"; }
+log() { [[ $VERBOSITY -ge 1 ]] && echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $*${NC}" | tee -a "$LOG_FILE" || echo "$*" >>"$LOG_FILE"; }
 log_error() { echo -e "${RED}[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $*${NC}" | tee -a "$LOG_FILE" >&2; }
-log_warn()  { echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $*${NC}" | tee -a "$LOG_FILE"; }
-log_info()  { [[ $VERBOSITY -ge 1 ]] && echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $*${NC}" | tee -a "$LOG_FILE" || echo "INFO: $*" >> "$LOG_FILE"; }
+log_warn() { echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: $*${NC}" | tee -a "$LOG_FILE"; }
+log_info() { [[ $VERBOSITY -ge 1 ]] && echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $*${NC}" | tee -a "$LOG_FILE" || echo "INFO: $*" >>"$LOG_FILE"; }
 log_debug() { [[ $VERBOSITY -ge 2 ]] && echo -e "${BLUE}[DEBUG] $*${NC}" | tee -a "$LOG_FILE" || true; }
 
 # =============================================================================
@@ -29,10 +29,10 @@ FAILED_COMMANDS=()
 spin() {
     local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
     local i=0
-    tput civis 2>/dev/null  # hide cursor
+    tput civis 2>/dev/null # hide cursor
     while true; do
         printf "\r  ${BLUE}%s${NC}  " "${chars:$i:1}"
-        i=$(( (i + 1) % ${#chars} ))
+        i=$(((i + 1) % ${#chars}))
         sleep 0.1
     done
 }
@@ -50,9 +50,9 @@ stop_spinner() {
         kill "$SPINNER_PID" 2>/dev/null
         wait "$SPINNER_PID" 2>/dev/null
         printf "\r      \r"
-        tput cnorm 2>/dev/null  # show cursor
+        tput cnorm 2>/dev/null # show cursor
         SPINNER_PID=""
-FAILED_COMMANDS=()
+        FAILED_COMMANDS=()
     fi
 }
 
@@ -64,13 +64,16 @@ FAILED_COMMANDS=()
 # A failure is logged and recorded in FAILED_COMMANDS, and its exit code returned,
 # so the caller decides whether to stop. main() reports every failure at the end.
 run_quiet() {
-    [[ "$DRY_RUN" == true ]] && { dry_run_msg "Would run: $*"; return 0; }
+    [[ "$DRY_RUN" == true ]] && {
+        dry_run_msg "Would run: $*"
+        return 0
+    }
     local rc=0
     if [[ $VERBOSITY -ge 1 ]]; then
         "$@" || rc=$?
     else
         start_spinner
-        "$@" >> "$LOG_FILE" 2>&1 || rc=$?
+        "$@" >>"$LOG_FILE" 2>&1 || rc=$?
         stop_spinner
     fi
     if [[ $rc -ne 0 ]]; then
@@ -83,7 +86,10 @@ run_quiet() {
 # Execute with debug logging
 execute() {
     log_debug "Executing: $*"
-    [[ "$DRY_RUN" == true ]] && { [[ $VERBOSITY -ge 1 ]] && echo "[DRY RUN] Would execute: $*"; return 0; }
+    [[ "$DRY_RUN" == true ]] && {
+        [[ $VERBOSITY -ge 1 ]] && echo "[DRY RUN] Would execute: $*"
+        return 0
+    }
     "$@"
 }
 

@@ -73,7 +73,10 @@ run_remote_installer() {
     log "Running the $name installer from $url"
     local script rc=0
     script="$(mktemp)"
-    run_quiet curl -fsSL -o "$script" "$url" || { rm -f "$script"; return 1; }
+    run_quiet curl -fsSL -o "$script" "$url" || {
+        rm -f "$script"
+        return 1
+    }
     # shellcheck disable=SC2016 # expanded by the inner bash
     run_quiet bash -c 'cd "$1" && sh "$2"' _ "$workdir" "$script" || rc=$?
     rm -f "$script"
