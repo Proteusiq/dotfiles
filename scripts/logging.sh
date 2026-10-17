@@ -1,7 +1,8 @@
 #!/bin/bash
 # Logging and progress utilities
 
-# Colors (must be defined before use)
+# Colors (must be defined before use). Also used by the scripts that source this file.
+# shellcheck disable=SC2034
 readonly RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m' CYAN='\033[0;36m' BOLD='\033[1m' DIM='\033[2m' NC='\033[0m'
 
@@ -23,6 +24,7 @@ log_debug() { [[ $VERBOSITY -ge 2 ]] && echo -e "${BLUE}[DEBUG] $*${NC}" | tee -
 # =============================================================================
 
 SPINNER_PID=""
+FAILED_COMMANDS=()
 
 spin() {
     local chars="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
@@ -40,7 +42,6 @@ start_spinner() {
     if [[ -t 1 ]]; then
         spin &
         SPINNER_PID=$!
-        disown
     fi
 }
 
@@ -51,6 +52,7 @@ stop_spinner() {
         printf "\r      \r"
         tput cnorm 2>/dev/null  # show cursor
         SPINNER_PID=""
+FAILED_COMMANDS=()
     fi
 }
 
@@ -58,18 +60,24 @@ stop_spinner() {
 # Command Execution Helpers
 # =============================================================================
 
-# Run command with spinner in quiet mode, full output in verbose
+# Run a command with a spinner (quiet) or full output (verbose).
+# A failure is logged and recorded in FAILED_COMMANDS, and its exit code returned,
+# so the caller decides whether to stop. main() reports every failure at the end.
 run_quiet() {
     [[ "$DRY_RUN" == true ]] && { dry_run_msg "Would run: $*"; return 0; }
+    local rc=0
     if [[ $VERBOSITY -ge 1 ]]; then
-        "$@"
+        "$@" || rc=$?
     else
         start_spinner
-        "$@" >> "$LOG_FILE" 2>&1
-        local rc=$?
+        "$@" >> "$LOG_FILE" 2>&1 || rc=$?
         stop_spinner
-        return $rc
     fi
+    if [[ $rc -ne 0 ]]; then
+        FAILED_COMMANDS+=("$* (exit $rc)")
+        log_error "Command failed (exit $rc): $*"
+    fi
+    return $rc
 }
 
 # Execute with debug logging

@@ -9,44 +9,37 @@ set -euo pipefail
 # =============================================================================
 
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-readonly LOG_FILE="${LOG_FILE:-$HOME/macos-setup.log}"
+readonly LOG_FILE="${LOG_FILE:-${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/install.log}"
+readonly BACKUP_ROOT="$HOME/.dotfiles-backup"
+readonly STOW_PACKAGES=(aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh)
+readonly UNSLOTH_DIR="$HOME/unsloth_studio"
+readonly GH_EXTENSIONS=(dlvhdr/gh-dash)
 
 DRY_RUN=false
 VERBOSITY=0 # 0=quiet, 1=normal, 2=debug
 SKIP_INTERACTIVE=true
 ONLY_FUNCTION=""
 SKIP_FUNCTIONS=()
+FAILED_STEPS=()
 VERSION_CHANGES=()
+SUDO_KEEPALIVE_PID=""
 
 # Source modules
 source "$DOTFILES_DIR/scripts/logging.sh"
 source "$DOTFILES_DIR/scripts/ui.sh"
 source "$DOTFILES_DIR/scripts/versions.sh"
 
-# Tools to track: name|version_cmd|type (type: cmd, git, uv)
-readonly TRACKED_TOOLS=(
-    "bun|bun|cmd"
-    "n|n|cmd"
-    ""
-    "snowsql|snowsql|cmd"
-    "pi|pi|cmd"
-    "repgrep|repgrep|cmd"
-    "tpm|tpm|git"
-    "yazi-flavors|yazi-flavors|git"
-    "harlequin|harlequin|uv"
-    "sqlit-tui|sqlit-tui|uv"
-)
-
 readonly AVAILABLE_FUNCTIONS=(
     "dirs:create_dirs"
     "xcode:install_xcode_tools"
     "brew:install_brew"
-    "node:configure_node"
+    "stow:stow_dotfiles"
+    "runtimes:install_runtimes"
     "venv:create_virtualenvs"
     "tmux:install_tmux_plugins"
     "yazi:install_yazi_themes"
     "utils:setup_utils"
-    "stow:stow_dotfiles"
+    "macos:configure_macos"
     "cleanup:cleanup"
 )
 
@@ -54,25 +47,37 @@ readonly AVAILABLE_FUNCTIONS=(
 # Usage: git_install "tool_name" "url" "folder" "friendly_name"
 git_install() {
     local tool="$1" url="$2" folder="$3" name="$4"
-    local old_ver was_missing=false
-
+    local old_ver
     old_ver=$(get_version "$tool")
-    [[ ! -d "$folder" ]] && was_missing=true
 
     if [[ ! -d "$folder" ]]; then
-        run_quiet git clone "$url" "$folder"
-    else
-        [[ "$DRY_RUN" == false ]] && run_quiet git -C "$folder" pull --quiet 2>/dev/null || true
-    fi
-
-    if [[ "$was_missing" == true ]]; then
+        run_quiet git clone --depth 1 "$url" "$folder" || return 1
         log_info "✅ $name installed"
     else
-        log_info "✅ $name already installed"
+        run_quiet git -C "$folder" pull --ff-only --quiet || log_warn "Could not update $name"
+        log_info "✅ $name up to date"
     fi
 
     [[ "$DRY_RUN" == false ]] && track_version "$tool" "$old_ver"
     return 0
+}
+
+# Run a third-party install script from its official URL, never with sudo.
+# Usage: run_remote_installer "name" "https://url/install.sh" [workdir]
+run_remote_installer() {
+    local name="$1" url="$2" workdir="${3:-$HOME}"
+    if [[ "$DRY_RUN" == true ]]; then
+        dry_run_msg "Would run the $name installer from $url"
+        return 0
+    fi
+    log "Running the $name installer from $url"
+    local script rc=0
+    script="$(mktemp)"
+    run_quiet curl -fsSL -o "$script" "$url" || { rm -f "$script"; return 1; }
+    # shellcheck disable=SC2016 # expanded by the inner bash
+    run_quiet bash -c 'cd "$1" && sh "$2"' _ "$workdir" "$script" || rc=$?
+    rm -f "$script"
+    return $rc
 }
 
 # =============================================================================
@@ -95,22 +100,24 @@ ${BOLD}Options:${NC}
     ${GREEN}--versions${NC} [group]    Show installed versions
     ${GREEN}--info${NC} <tool>         Show info about an installed tool
     ${GREEN}--outdated${NC}            Show packages with available updates
-    ${GREEN}--all${NC}                 Update all packages (brew, uv, cargo, git)
+    ${GREEN}--all${NC}                 Update all packages (brew, uv, cargo, mise, git)
+    ${GREEN}--doctor${NC}              Check links, PATH order, configs and Brewfile
     ${GREEN}--interactive${NC}         Enable interactive prompts
 
 ${BOLD}Functions:${NC}
     ${BLUE}dirs${NC}        Create ~/Codes and ~/Documents/Screenshots
     ${BLUE}xcode${NC}       Install Xcode Command Line Tools
-    ${BLUE}brew${NC}        Install Homebrew and Brewfile packages
-    ${BLUE}node${NC}        Install Node.js tools (n, bun)
-    ${BLUE}venv${NC}        Create Python virtual environments (neovim, debugpy)
-    ${BLUE}tmux${NC}        Install tmux plugin manager (tpm)
+    ${BLUE}brew${NC}        Install Homebrew and everything in the Brewfile (brew, cask, uv, cargo)
+    ${BLUE}stow${NC}        Symlink dotfiles with GNU Stow (backs up conflicting files)
+    ${BLUE}runtimes${NC}    Install runtimes with mise (node, go, bun) and Rust with rustup
+    ${BLUE}venv${NC}        Create Python virtual environments for Neovim (neovim, debugpy)
+    ${BLUE}tmux${NC}        Install tmux plugin manager (tpm) and plugins
     ${BLUE}yazi${NC}        Install Yazi file manager themes
-    ${BLUE}utils${NC}       Install CLI utilities (gh-dash, repgrep)
-    ${BLUE}stow${NC}        Symlink dotfiles with GNU Stow
+    ${BLUE}utils${NC}       Install extras: gh extensions, Bicep, Herdr, Unsloth Studio, bin scripts
+    ${BLUE}macos${NC}       Configure macOS: Touch ID for sudo, screenshot folder
     ${BLUE}cleanup${NC}     Run Homebrew cleanup and autoremove
 
-${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}uv${NC} | ${YELLOW}cargo${NC} | ${YELLOW}git${NC} | ${YELLOW}other${NC} | ${YELLOW}all${NC}
+${BOLD}Version Groups:${NC}  ${YELLOW}brew${NC} | ${YELLOW}cask${NC} | ${YELLOW}uv${NC} | ${YELLOW}cargo${NC} | ${YELLOW}mise${NC} | ${YELLOW}git${NC} | ${YELLOW}other${NC} | ${YELLOW}all${NC}
 
 ${BOLD}Examples:${NC}
     update                        Full install (quiet mode)
@@ -118,6 +125,7 @@ ${BOLD}Examples:${NC}
     update harlequin              Update only harlequin (auto-detects uv)
     update --outdated             Check for available updates
     update --all                  Update all packages
+    update --doctor               Check that the setup is healthy
     update -v                     Full install with detailed output
     update --only brew            Install only Homebrew packages
     update --skip venv            Skip venv setup
@@ -127,7 +135,7 @@ ${BOLD}Examples:${NC}
 
 ${BOLD}Environment:${NC}
     ${GREEN}DOTFILES_DIR${NC}    Dotfiles path (default: \$HOME/dotfiles)
-    ${GREEN}LOG_FILE${NC}        Log path (default: \$HOME/macos-setup.log)
+    ${GREEN}LOG_FILE${NC}        Log path (default: \$XDG_STATE_HOME/dotfiles/install.log)
 
 ${YELLOW}Note:${NC} If 'update' alias is unavailable, run ~/dotfiles/install.sh directly"
 }
@@ -160,6 +168,14 @@ should_skip() {
     return 1
 }
 
+require_value() {
+    local flag="$1" value="${2:-}"
+    if [[ -z "$value" || "${value:0:1}" == "-" ]]; then
+        echo -e "${RED}Error: $flag requires a value${NC}" >&2
+        exit 1
+    fi
+}
+
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -184,18 +200,13 @@ parse_args() {
             shift
             ;;
         --only)
+            require_value "--only" "${2:-}"
             ONLY_FUNCTION="$2"
             shift 2
             ;;
         --skip)
-            if [[ -z "${2:-}" || "${2:0:1}" == "-" ]]; then
-                echo -e "${RED}Error: --skip requires at least one function name${NC}"
-                echo -e "Usage: ${GREEN}update --skip <fn> [fn2 ...]${NC}"
-                echo -e "       ${GREEN}update --skip \"fn1 fn2 fn3\"${NC}"
-                list_functions
-                exit 1
-            fi
-            read -ra skip_args <<< "$2"
+            require_value "--skip" "${2:-}"
+            read -ra skip_args <<<"$2"
             for skip_fn in "${skip_args[@]}"; do
                 if ! get_function_by_name "$skip_fn" &>/dev/null; then
                     echo -e "${RED}Error: Unknown function to skip: $skip_fn${NC}"
@@ -212,7 +223,6 @@ parse_args() {
             ;;
         --versions)
             local group=""
-            # Check if next arg exists and is not another flag
             if [[ -n "${2:-}" && "${2:0:1}" != "-" ]]; then
                 group="$2"
                 shift
@@ -221,11 +231,7 @@ parse_args() {
             exit 0
             ;;
         --info)
-            if [[ -z "${2:-}" || "${2:0:1}" == "-" ]]; then
-                echo -e "${RED}Error: --info requires a tool name${NC}"
-                echo -e "Usage: ${GREEN}update --info <tool>${NC}"
-                exit 1
-            fi
+            require_value "--info" "${2:-}"
             get_tool_info "$2"
             exit $?
             ;;
@@ -237,6 +243,10 @@ parse_args() {
             update_all
             exit 0
             ;;
+        --doctor)
+            "$DOTFILES_DIR/scripts/doctor.sh"
+            exit $?
+            ;;
         -h | --help)
             show_help
             exit 0
@@ -247,7 +257,6 @@ parse_args() {
             exit 1
             ;;
         *)
-            # Positional argument - treat as tool name to update
             update_tool "$1"
             exit $?
             ;;
@@ -268,23 +277,22 @@ check_macos() {
 
 check_prerequisites() {
     log_step "📋 Checking prerequisites"
-    if [[ ! -d "$DOTFILES_DIR" ]]; then
-        log_error "Dotfiles directory not found at $DOTFILES_DIR"
-        log_info "Please clone your dotfiles repository first"
-        exit 1
-    fi
-    [[ ! -f "$DOTFILES_DIR/Brewfile" ]] && log_warn "Brewfile not found at $DOTFILES_DIR/Brewfile"
-    return 0
+    [[ -f "$DOTFILES_DIR/Brewfile" ]] || {
+        log_error "Brewfile not found at $DOTFILES_DIR/Brewfile"
+        return 1
+    }
 }
 
 create_dirs() {
     log_step "📁 Creating directories"
-    local dirs=("$HOME/Codes" "$HOME/Documents/Screenshots")
-    for dir in "${dirs[@]}"; do
-        [[ ! -d "$dir" ]] && {
+    local dir
+    for dir in "$HOME/Codes" "$HOME/Documents/Screenshots" "$(dirname "$LOG_FILE")"; do
+        if [[ -d "$dir" ]]; then
+            log_info "$dir already exists"
+        else
             execute mkdir -p "$dir"
             log "Created $dir"
-        } || log_info "$dir already exists"
+        fi
     done
 }
 
@@ -321,241 +329,99 @@ install_xcode_tools() {
     log_info "✅ Xcode Command Line Tools installed successfully"
 }
 
+# Some casks need sudo. Keep the sudo timestamp fresh only while Homebrew runs,
+# then drop it, so later third-party installers cannot use it.
+start_sudo_keepalive() {
+    sudo -v || {
+        log_error "Could not obtain sudo access"
+        return 1
+    }
+    while true; do
+        sudo -n true
+        sleep 60
+        kill -0 "$$" 2>/dev/null || exit
+    done &
+    SUDO_KEEPALIVE_PID=$!
+}
+
+stop_sudo_keepalive() {
+    [[ -n "$SUDO_KEEPALIVE_PID" ]] || return 0
+    kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+    SUDO_KEEPALIVE_PID=""
+    sudo -k
+}
+
+# Homebrew blocks third-party taps until you trust them. Only taps declared with
+# an explicit `tap` line in the Brewfile are trusted, so adding one is a reviewed change.
+trust_brewfile_taps() {
+    local tap
+    while read -r tap; do
+        run_quiet brew trust "$tap" || return 1
+    done < <(sed -nE 's/^tap "([^"]+)".*/\1/p' "$DOTFILES_DIR/Brewfile")
+}
+
 install_brew() {
     log_step "🍺 Installing Homebrew packages"
 
-    if [[ "$DRY_RUN" == false ]] && ! has_cmd brew; then
+    if [[ "$DRY_RUN" == true ]]; then
+        dry_run_msg "Would install Homebrew if missing, then run: brew update && brew bundle"
+        return 0
+    fi
+
+    if ! has_cmd brew; then
         log "Installing Homebrew..."
-        HOMEBREW_NO_INSTALL_FROM_API=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        [[ -f "$HOME/.zprofile" ]] && echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>~/.zprofile
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         eval "$(/opt/homebrew/bin/brew shellenv)"
-    else
-        [[ "$DRY_RUN" == false ]] && log_info "✅ Homebrew already installed"
-        dry_run_msg "Would install/check Homebrew"
     fi
 
-    if [[ "$DRY_RUN" == false ]]; then
-        run_quiet brew update --force --quiet
-        if [[ -f "$DOTFILES_DIR/Brewfile" ]]; then
-            # ponytail: brew now gates third-party taps; trust every tap referenced in the Brewfile before bundling
-            {
-                grep '^tap ' "$DOTFILES_DIR/Brewfile" | sed -E 's/^tap "([^"]+)".*/\1/'
-                grep -E '^(cask|brew) "[^"]+/[^"]+/[^"]+"' "$DOTFILES_DIR/Brewfile" | sed -E 's/^(cask|brew) "([^/]+\/[^/]+)\/[^"]+".*/\2/'
-            } | sort -u | while read -r t; do
-                run_quiet brew trust "$t"
-            done
-            # ponytail: don't let one flaky formula abort the whole installer
-            run_quiet brew bundle --file="$DOTFILES_DIR/Brewfile" --force || log_warn "Some Brewfile deps failed; continuing"
-        else
-            log_warn "Brewfile not found"
-        fi
+    run_quiet brew update --quiet || log_warn "brew update failed; using the current formulae"
+    trust_brewfile_taps || return 1
+
+    start_sudo_keepalive || return 1
+    run_quiet brew bundle install --file="$DOTFILES_DIR/Brewfile"
+    ensure_rust_toolchain
+    # cargo and uv entries need the toolchains above. A second pass picks them up.
+    if ! brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+        run_quiet brew bundle install --file="$DOTFILES_DIR/Brewfile"
+    fi
+    stop_sudo_keepalive
+
+    if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+        log_info "✅ Everything in the Brewfile is installed"
     else
-        dry_run_msg "Would run: brew update && brew bundle"
+        log_error "Some Brewfile entries are missing. Run: brew bundle check --verbose --file=$DOTFILES_DIR/Brewfile"
+        return 1
     fi
 }
 
-configure_node() {
-    log_step "📦 Installing Node.js tools"
-    local old_n old_bun
-    old_n=$(get_version "n")
-    old_bun=$(get_version "bun")
-
-    if [[ "$DRY_RUN" == false ]]; then
-        if has_cmd npm; then
-            run_quiet npm install -g n
-        else
-            log_warn "npm not found, skipping n"
-        fi
-
-        if [[ ! -f "$HOME/.bun/bin/bun" ]]; then
-            log "Installing Bun..."
-            run_quiet bash -c "$(curl -fsSL https://bun.sh/install)"
-            [[ -f "$HOME/.bun/bin/bun" ]] && log_info "🍞 Baked bun v$("$HOME/.bun/bin/bun" --version)"
-        else
-            log_info "✅ Bun already installed: $("$HOME/.bun/bin/bun" --version)"
-        fi
-
-        track_version "n" "$old_n"
-        track_version "bun" "$old_bun"
-    else
-        dry_run_msg "Would install n and Bun"
-    fi
+ensure_rust_toolchain() {
+    has_cmd rustup || return 0
+    rustup default &>/dev/null && return 0
+    log "Installing the stable Rust toolchain..."
+    run_quiet rustup default stable
 }
 
-install_tmux_plugins() {
-    log_step "💻 Installing tmux plugins"
-    git_install "tpm" "https://github.com/tmux-plugins/tpm" "$HOME/.tmux/plugins/tpm" "tmux plugin manager"
-}
+# Stow refuses to replace real files. Move them to a timestamped backup first,
+# and remove links that point to files no longer in the repository.
+prepare_stow_targets() {
+    local -a packages=("$@")
+    local backup_dir link target conflict
+    backup_dir="$BACKUP_ROOT/$(date +%Y%m%d-%H%M%S)"
 
-install_yazi_themes() {
-    log_step "🎨 Installing Yazi themes"
-    execute mkdir -p "$HOME/.config/yazi"
-    git_install "yazi-flavors" "https://github.com/yazi-rs/flavors.git" "$HOME/.config/yazi/flavors" "Yazi themes"
-}
+    while IFS= read -r link; do
+        target="$(readlink "$link")"
+        [[ "$target" == *dotfiles/* && ! -e "$link" ]] || continue
+        execute rm "$link"
+        log_info "Removing stale link $link"
+    done < <(find "$HOME" "$HOME/.config" -maxdepth 1 -type l 2>/dev/null)
 
-setup_utils() {
-    log_step "🔧 Installing CLI utilities"
-
-    # Capture versions before
-    local old_repgrep old_harlequin old_sqlit old_snowsql
-    old_repgrep=$(get_version "repgrep")
-    old_snowsql=$(get_version "snowsql")
-    old_harlequin=$(get_version "harlequin")
-    old_sqlit=$(get_version "sqlit-tui")
-
-    # Git LFS
-    has_cmd git && run_quiet git lfs install
-
-    # GitHub CLI extensions
-    if has_cmd gh; then
-        log "📊 Installing GitHub CLI extensions..."
-        gh extension list 2>/dev/null | grep -q "dlvhdr/gh-dash" &&
-            log_info "✅ gh-dash already installed" ||
-            {
-                run_quiet gh extension install dlvhdr/gh-dash
-                log_info "✅ gh-dash installed"
-            }
-        gh extension list 2>/dev/null | grep -q "abdfnx/gh-tran" &&
-            log_info "✅ gh-tran already installed" ||
-            {
-                run_quiet gh extension install abdfnx/gh-tran
-                log_info "✅ gh-tran installed"
-            }
-        # gh-tran ships no arm64 binary; use the Intel one via Rosetta
-        local gh_tran_launcher="$HOME/.local/share/gh/extensions/gh-tran/gh-tran"
-        if [[ -f "$gh_tran_launcher" ]] && ! grep -q 'arch = "arm64"' "$gh_tran_launcher"; then
-            perl -0pi -e 's/(Darwin > \/dev\/null; then\s*\n\s*if \[ \$arch = "x86_64" \])(; then\s*\n\s*exe="darwin-x86_64")/$1 || [ \$arch = "arm64" ]$2/' "$gh_tran_launcher"
-        fi
-    fi
-
-    # SnowSQL (installed manually or via Homebrew cask)
-    local snowsql_bin="/Applications/SnowSQL.app/Contents/MacOS/snowsql"
-    if [[ -f "$snowsql_bin" ]]; then
-        log_info "✅ SnowSQL already installed"
-    else
-        log_info "⚠️  SnowSQL not found — install via: brew install --cask snowflake-snowsql"
-    fi
-
-    # UV tools
-    if [[ "$DRY_RUN" == false ]] && has_cmd uv; then
-        log "🔧 Installing/updating UV tools..."
-        start_spinner
-        for tool in harlequin sqlit-tui; do
-            uv tool list 2>/dev/null | grep -q "^$tool " &&
-                uv tool upgrade "$tool" >>"$LOG_FILE" 2>&1 ||
-                uv tool install "$tool" >>"$LOG_FILE" 2>&1
-        done
-        stop_spinner
-        log_info "✅ UV tools configured"
-    else
-        dry_run_msg "Would install/upgrade UV tools"
-        [[ "$DRY_RUN" == false ]] && log_warn "UV not found, skipping tool installations"
-    fi
-
-    # Unsloth Studio
-    if [[ ! -d "$HOME/unsloth_studio" ]]; then
-        log "🦥 Installing Unsloth Studio..."
-        (cd "$HOME" && curl -fsSL https://unsloth.ai/install.sh | sh) >>"$LOG_FILE" 2>&1
-        log_info "✅ Unsloth Studio installed"
-    else
-        log_info "✅ Unsloth Studio already installed"
-    fi
-
-    # Pi coding agent (npm: @earendil-works/pi-coding-agent)
-    local old_pi
-    old_pi=$(get_version "pi")
-    if [[ "$DRY_RUN" == false ]]; then
-        if has_cmd pi; then
-            log_info "✅ Pi already installed"
-        else
-            log "🥧 Installing Pi coding agent..."
-            curl -fsSL https://pi.dev/install.sh | sh >>"$LOG_FILE" 2>&1
-            has_cmd pi && log_info "✅ Pi installed" || log_warn "Pi install incomplete — check PATH"
-        fi
-        track_version "pi" "$old_pi"
-    else
-        dry_run_msg "Would install Pi coding agent"
-    fi
-
-    # Herdr (herdr.dev)
-    local old_herdr
-    old_herdr=$(get_version "herdr")
-    if [[ "$DRY_RUN" == false ]]; then
-        if has_cmd herdr; then
-            log_info "✅ Herdr already installed"
-        else
-            log "🐑 Installing Herdr..."
-            curl -fsSL https://herdr.dev/install.sh | sh >>"$LOG_FILE" 2>&1
-            has_cmd herdr && log_info "✅ Herdr installed" || log_warn "Herdr install incomplete — check PATH"
-        fi
-        track_version "herdr" "$old_herdr"
-    else
-        dry_run_msg "Would install Herdr"
-    fi
-
-    # Repgrep
-    if ! has_cmd rgr && has_cmd cargo; then
-        run_quiet cargo install repgrep
-    fi
-    execute touch "$HOME/.rgrc"
-
-    # tmux.expose (binary backing the cesarferreira/tmux.expose plugin)
-    if ! has_cmd tmux-expose && has_cmd cargo; then
-        run_quiet cargo install tmux-expose
-    fi
-
-    # Custom scripts
-    if [[ -d "$DOTFILES_DIR/bin" ]]; then
-        execute mkdir -p "$HOME/.local/bin"
-        for file in "$DOTFILES_DIR/bin"/*.py; do
-            [[ -f "$file" ]] && {
-                local name
-                name=$(basename "${file%.py}")
-                execute cp "$file" "$HOME/.local/bin/$name"
-                execute chmod +x "$HOME/.local/bin/$name"
-            }
-        done
-    fi
-
-    # Track changes
-    if [[ "$DRY_RUN" == false ]]; then
-        track_version "snowsql" "$old_snowsql"
-
-        track_version "repgrep" "$old_repgrep"
-        track_version "harlequin" "$old_harlequin"
-        track_version "sqlit-tui" "$old_sqlit"
-    fi
-    return 0
-}
-
-create_virtualenvs() {
-    log_step "🐍 Creating Python virtual environments"
-
-    if ! has_cmd uv; then
-        [[ "$DRY_RUN" == true ]] && dry_run_msg "Would skip (UV not found)" || log_warn "UV not found"
-        return 0
-    fi
-    [[ "$DRY_RUN" == true ]] && {
-        dry_run_msg "Would create venvs: neovim, debugpy"
-        return 0
-    }
-
-    local envs=(
-        "$HOME/.virtualenvs/neovim|pynvim"
-        "$HOME/.virtualenvs/debugpy|pynvim debugpy ruff"
-    )
-
-    execute mkdir -p "$HOME/.virtualenvs"
-    for env in "${envs[@]}"; do
-        IFS='|' read -r dir packages <<<"$env"
-        [[ ! -d "$dir" ]] && {
-            log "Creating venv: $(basename "$dir")"
-            run_quiet uv venv "$dir"
-        }
-        log "Installing in $(basename "$dir"): $packages"
-        run_quiet bash -c "source $dir/bin/activate && uv pip install --upgrade $packages && deactivate"
-    done
-    log_info "✅ Virtual environments configured"
+    while IFS= read -r conflict; do
+        [[ -n "$conflict" ]] || continue
+        execute mkdir -p "$backup_dir/$(dirname "$conflict")"
+        execute mv "$HOME/$conflict" "$backup_dir/$conflict"
+        log_warn "Moved ~/$conflict to $backup_dir/$conflict"
+    done < <(stow --no --no-folding --restow -d "$DOTFILES_DIR" -t "$HOME" "${packages[@]}" 2>&1 |
+        sed -nE 's/.*over existing target (.*) since.*/\1/p; s/.*existing target is not owned by stow: (.*)/\1/p')
 }
 
 stow_dotfiles() {
@@ -565,19 +431,158 @@ stow_dotfiles() {
         return 1
     }
 
-    local packages=(fzf git ghostty nvim sesh starship tmux zsh yazi aerospace)
-    local existing=()
-
-    for pkg in "${packages[@]}"; do
-        [[ -d "$DOTFILES_DIR/$pkg" ]] && existing+=("$pkg") || log_warn "Not found: $pkg"
+    local -a existing=()
+    local pkg
+    for pkg in "${STOW_PACKAGES[@]}"; do
+        if [[ -d "$DOTFILES_DIR/$pkg" ]]; then
+            existing+=("$pkg")
+        else
+            log_warn "Not found: $pkg"
+        fi
     done
-
-    if [[ ${#existing[@]} -gt 0 ]]; then
-        run_quiet stow --restow -d "$DOTFILES_DIR" -t "$HOME" "${existing[@]}"
-        log_info "✅ Dotfiles stowed"
-    else
+    [[ ${#existing[@]} -gt 0 ]] || {
         log_warn "No valid stow packages"
+        return 0
+    }
+
+    prepare_stow_targets "${existing[@]}"
+    run_quiet stow --no-folding --restow -d "$DOTFILES_DIR" -t "$HOME" "${existing[@]}" || return 1
+    log_info "✅ Dotfiles stowed"
+}
+
+install_runtimes() {
+    log_step "📦 Installing runtimes"
+    if [[ "$DRY_RUN" == true ]]; then
+        dry_run_msg "Would run: mise install && rustup default stable"
+        return 0
     fi
+
+    if has_cmd mise; then
+        run_quiet env MISE_YES=1 mise install || return 1
+        log_info "✅ mise runtimes installed"
+    else
+        log_warn "mise not found; run 'update --only brew' first"
+    fi
+    ensure_rust_toolchain
+}
+
+install_tmux_plugins() {
+    log_step "💻 Installing tmux plugins"
+    git_install "tpm" "https://github.com/tmux-plugins/tpm" "$HOME/.tmux/plugins/tpm" "tmux plugin manager" || return 1
+    [[ "$DRY_RUN" == false ]] && run_quiet "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+    return 0
+}
+
+install_yazi_themes() {
+    log_step "🎨 Installing Yazi themes"
+    execute mkdir -p "$HOME/.config/yazi"
+    git_install "yazi-flavors" "https://github.com/yazi-rs/flavors.git" "$HOME/.config/yazi/flavors" "Yazi themes"
+}
+
+install_gh_extensions() {
+    has_cmd gh || return 0
+    local extension
+    for extension in "${GH_EXTENSIONS[@]}"; do
+        if gh extension list 2>/dev/null | grep -q "$extension"; then
+            log_info "✅ $extension already installed"
+        else
+            run_quiet gh extension install "$extension" && log_info "✅ $extension installed"
+        fi
+    done
+}
+
+link_bin_scripts() {
+    execute mkdir -p "$HOME/.local/bin"
+    local file name
+    for file in "$DOTFILES_DIR/bin"/*.py; do
+        [[ -f "$file" ]] || continue
+        name="$(basename "${file%.py}")"
+        execute ln -sfn "$file" "$HOME/.local/bin/$name"
+    done
+}
+
+setup_utils() {
+    log_step "🔧 Installing CLI utilities"
+
+    has_cmd git && run_quiet git lfs install
+    install_gh_extensions
+
+    if has_cmd az && ! az bicep version &>/dev/null; then
+        run_quiet az bicep install && log_info "✅ Bicep installed"
+    fi
+
+    local old_herdr
+    old_herdr=$(get_version "herdr")
+    if has_cmd herdr; then
+        log_info "✅ Herdr already installed"
+    else
+        run_remote_installer "Herdr" "https://herdr.dev/install.sh" && log_info "✅ Herdr installed"
+    fi
+    [[ "$DRY_RUN" == false ]] && track_version "herdr" "$old_herdr"
+
+    if [[ -d "$UNSLOTH_DIR" ]]; then
+        log_info "✅ Unsloth Studio already installed"
+    else
+        run_remote_installer "Unsloth Studio" "https://unsloth.ai/install.sh" "$HOME" &&
+            log_info "✅ Unsloth Studio installed"
+    fi
+
+    execute touch "$HOME/.rgrc"
+    link_bin_scripts
+    return 0
+}
+
+create_virtualenvs() {
+    log_step "🐍 Creating Python virtual environments"
+
+    if ! has_cmd uv; then
+        log_warn "uv not found; run 'update --only brew' first"
+        return 0
+    fi
+    [[ "$DRY_RUN" == true ]] && {
+        dry_run_msg "Would create venvs: neovim, debugpy"
+        return 0
+    }
+
+    local -a envs=(
+        "$HOME/.virtualenvs/neovim|pynvim"
+        "$HOME/.virtualenvs/debugpy|debugpy"
+    )
+    local env dir packages
+    execute mkdir -p "$HOME/.virtualenvs"
+    for env in "${envs[@]}"; do
+        IFS='|' read -r dir packages <<<"$env"
+        [[ -d "$dir" ]] || run_quiet uv venv "$dir" || return 1
+        # shellcheck disable=SC2086 # packages is a space-separated list
+        run_quiet uv pip install --python "$dir/bin/python" --upgrade $packages || return 1
+    done
+    log_info "✅ Virtual environments configured"
+}
+
+# Touch ID for sudo, also inside tmux (pam_reattach). sudo_local survives macOS updates.
+enable_touch_id_sudo() {
+    local sudo_local="/etc/pam.d/sudo_local"
+    local reattach="${HOMEBREW_PREFIX:-/opt/homebrew}/lib/pam/pam_reattach.so"
+    grep -qs "pam_tid.so" "$sudo_local" && {
+        log_info "✅ Touch ID for sudo already enabled"
+        return 0
+    }
+    local config="auth       sufficient     pam_tid.so"
+    [[ -f "$reattach" ]] && config="auth       optional       $reattach ignore_ssh
+$config"
+    if [[ "$DRY_RUN" == true ]]; then
+        dry_run_msg "Would write $sudo_local"
+        return 0
+    fi
+    printf '%s\n' "$config" | sudo tee "$sudo_local" >/dev/null && log_info "✅ Touch ID for sudo enabled"
+}
+
+configure_macos() {
+    log_step "🍎 Configuring macOS"
+    enable_touch_id_sudo
+    execute defaults write com.apple.screencapture location -string "$HOME/Documents/Screenshots"
+    execute killall SystemUIServer 2>/dev/null || true
+    log_info "✅ Screenshots saved to ~/Documents/Screenshots"
 }
 
 cleanup() {
@@ -585,6 +590,10 @@ cleanup() {
     if [[ "$DRY_RUN" == false ]] && has_cmd brew; then
         run_quiet brew cleanup --prune=all --quiet
         run_quiet brew autoremove --quiet
+        local undeclared
+        undeclared="$(brew bundle cleanup --file="$DOTFILES_DIR/Brewfile" 2>/dev/null | grep -vE '^(Would|Run )' || true)"
+        [[ -n "$undeclared" ]] && log_warn "Installed but not in the Brewfile (review with: brew bundle cleanup --file=$DOTFILES_DIR/Brewfile):
+$undeclared"
     else
         dry_run_msg "Would run Homebrew cleanup"
     fi
@@ -595,29 +604,37 @@ cleanup() {
 # Main
 # =============================================================================
 
-# ponytail: prompt for sudo once up front, then refresh the timestamp in the
-# background so later sudo calls (e.g. cask helper removals) never re-prompt.
-keep_sudo_alive() {
-    log_step "🔑 Requesting sudo access (needed by some casks)"
-    sudo -v || {
-        log_error "Could not obtain sudo access"
-        exit 1
-    }
-    while true; do
-        sudo -n true
-        sleep 60
-        kill -0 "$$" 2>/dev/null || exit
-    done &
-    SUDO_KEEPALIVE_PID=$!
-    trap '[[ -n "${SUDO_KEEPALIVE_PID:-}" ]] && kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
+on_exit() {
+    stop_spinner
+    stop_sudo_keepalive
+}
+
+run_step() {
+    local func="$1"
+    "$func" && return 0
+    FAILED_STEPS+=("$func")
+    log_error "Step failed: $func (continuing)"
+}
+
+report_failures() {
+    [[ ${#FAILED_STEPS[@]} -eq 0 && ${#FAILED_COMMANDS[@]} -eq 0 ]] && return 0
+    log_error "Setup finished with failures. Details in $LOG_FILE"
+    local item
+    for item in ${FAILED_STEPS[@]+"${FAILED_STEPS[@]}"}; do log_error "  step: $item"; done
+    for item in ${FAILED_COMMANDS[@]+"${FAILED_COMMANDS[@]}"}; do log_error "  command: $item"; done
+    return 1
 }
 
 main() {
+    trap on_exit EXIT
+    trap 'exit 130' INT TERM
     parse_args "$@"
+    mkdir -p "$(dirname "$LOG_FILE")"
     echo "macOS Setup Script - $(date)" >"$LOG_FILE"
 
+    check_macos
+    check_prerequisites
     [[ "$DRY_RUN" == true ]] && log_step "DRY RUN MODE - No changes will be made"
-    [[ "$DRY_RUN" == false ]] && keep_sudo_alive
 
     if [[ -n "$ONLY_FUNCTION" ]]; then
         local target_func
@@ -627,11 +644,9 @@ main() {
             exit 1
         }
         log_step "Running only: $target_func"
-        $target_func || {
-            log_error "Failed: $target_func"
-            exit 1
-        }
+        run_step "$target_func"
         [[ "$DRY_RUN" == false ]] && print_version_summary
+        report_failures || exit 1
         log_step "✅ $target_func completed!"
         return 0
     fi
@@ -639,33 +654,19 @@ main() {
     log_step "🐌 The World Changed! Beginning MacOS setup..."
     log "Log file: $LOG_FILE"
 
-    local functions=(
-        check_macos check_prerequisites create_dirs install_xcode_tools
-        install_brew configure_node create_virtualenvs install_tmux_plugins
-        install_yazi_themes setup_utils stow_dotfiles cleanup
-    )
-
-    for func in "${functions[@]}"; do
-        local short_name=""
-        for entry in "${AVAILABLE_FUNCTIONS[@]}"; do
-            if [[ "${entry##*:}" == "$func" ]]; then
-                short_name="${entry%%:*}"
-                break
-            fi
-        done
-
-        if [[ -n "$short_name" ]] && should_skip "$short_name"; then
+    local entry short_name func
+    for entry in "${AVAILABLE_FUNCTIONS[@]}"; do
+        short_name="${entry%%:*}"
+        func="${entry##*:}"
+        if should_skip "$short_name"; then
             log_info "⏭️  Skipping $func (--skip $short_name)"
             continue
         fi
-
-        $func || {
-            log_error "Failed: $func"
-            exit 1
-        }
+        run_step "$func"
     done
 
     [[ "$DRY_RUN" == false ]] && print_version_summary
+    report_failures || exit 1
     log_step "🦊 The World is restored. Setup completed successfully!"
     log "📋 Log file: $LOG_FILE"
 }

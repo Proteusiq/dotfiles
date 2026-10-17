@@ -61,6 +61,22 @@ show_outdated() {
         echo ""
     fi
     
+    # mise runtimes
+    if has_cmd mise; then
+        echo -e "${CYAN}mise runtimes:${NC}"
+        local mise_outdated
+        mise_outdated=$(mise outdated --no-header 2>/dev/null)
+        if [[ -n "$mise_outdated" ]]; then
+            has_outdated=true
+            echo "$mise_outdated" | while read -r line; do
+                echo -e "  ${YELLOW}$line${NC}"
+            done
+        else
+            echo -e "  ${GREEN}All up to date${NC}"
+        fi
+        echo ""
+    fi
+
     # Summary
     if [[ "$has_outdated" == true ]]; then
         echo -e "${DIM}Run 'update --all' to update everything, or 'update <tool>' for specific tools${NC}"
@@ -73,63 +89,60 @@ show_outdated() {
 # Update All (--all command)
 # =============================================================================
 
+# Cargo crates declared in the Brewfile, e.g. `cargo "repgrep"`
+brewfile_cargo_crates() {
+    sed -nE 's/^cargo "([^"]+)".*/\1/p' "$DOTFILES_DIR/Brewfile"
+}
+
 update_all() {
     echo -e "${BOLD}Updating all packages...${NC}\n"
-    
-    # Homebrew
+
     if has_cmd brew; then
         echo -e "${CYAN}Updating Homebrew...${NC}"
         brew update --quiet
-        
-        echo -e "${CYAN}Upgrading formulae...${NC}"
-        brew upgrade --formula 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All formulae up to date${NC}"
-        
-        echo -e "${CYAN}Upgrading casks...${NC}"
-        brew upgrade --cask 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All casks up to date${NC}"
+        echo -e "${CYAN}Upgrading formulae and casks...${NC}"
+        brew upgrade 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All up to date${NC}"
         echo ""
     fi
-    
-    # UV tools
+
     if has_cmd uv; then
-        echo -e "${CYAN}Upgrading UV tools...${NC}"
-        uv tool list 2>/dev/null | grep -v "^-" | awk '{print $1}' | while read -r tool; do
-            [[ -z "$tool" ]] && continue
-            uv tool upgrade "$tool" 2>&1 | grep -v "^$" || true
-        done
+        echo -e "${CYAN}Upgrading uv tools...${NC}"
+        uv tool upgrade --all 2>&1 | grep -v "^$" || true
         echo ""
     fi
-    
-    # Cargo
+
     if has_cmd cargo; then
-        echo -e "${CYAN}Upgrading Cargo packages...${NC}"
-        # Only update packages we explicitly track
-        for pkg in repgrep tmux-expose; do
-            if cargo install --list 2>/dev/null | grep -q "^$pkg "; then
-                cargo install "$pkg" 2>&1 | tail -1
-            fi
-        done
+        echo -e "${CYAN}Upgrading cargo crates...${NC}"
+        local crate
+        while read -r crate; do
+            cargo install --locked "$crate" 2>&1 | tail -1
+        done < <(brewfile_cargo_crates)
         echo ""
     fi
-    
-    # Git repos
+
+    if has_cmd mise; then
+        echo -e "${CYAN}Upgrading mise runtimes...${NC}"
+        mise upgrade 2>&1 | grep -v "^$" || true
+        echo ""
+    fi
+
     echo -e "${CYAN}Updating git repos...${NC}"
-    [[ -d "$HOME/.tmux/plugins/tpm" ]] && {
-        echo -n "  tpm: "
-        git -C "$HOME/.tmux/plugins/tpm" pull --quiet 2>&1 && echo -e "${GREEN}updated${NC}" || echo -e "${YELLOW}unchanged${NC}"
+    [[ -x "$HOME/.tmux/plugins/tpm/bin/update_plugins" ]] && {
+        echo -n "  tmux plugins: "
+        "$HOME/.tmux/plugins/tpm/bin/update_plugins" all >/dev/null 2>&1 && echo -e "${GREEN}updated${NC}" || echo -e "${YELLOW}failed${NC}"
     }
     [[ -d "$HOME/.config/yazi/flavors" ]] && {
         echo -n "  yazi-flavors: "
-        git -C "$HOME/.config/yazi/flavors" pull --quiet 2>&1 && echo -e "${GREEN}updated${NC}" || echo -e "${YELLOW}unchanged${NC}"
+        git -C "$HOME/.config/yazi/flavors" pull --ff-only --quiet 2>&1 && echo -e "${GREEN}updated${NC}" || echo -e "${YELLOW}unchanged${NC}"
     }
     echo ""
-    
-    # Cleanup
+
     if has_cmd brew; then
         echo -e "${CYAN}Cleaning up...${NC}"
         brew cleanup --prune=all --quiet 2>/dev/null
         brew autoremove --quiet 2>/dev/null
     fi
-    
+
     echo -e "\n${GREEN}✓ All updates complete${NC}"
 }
 
@@ -137,126 +150,77 @@ update_all() {
 # Tool Update (update <tool> command)
 # =============================================================================
 
-# Update a single tool using the appropriate package manager
-update_tool() {
+is_mise_tool() {
+    has_cmd mise && mise ls --global --json 2>/dev/null | jq -e --arg t "$1" 'has($t)' &>/dev/null
+}
+
+# Which package manager owns a tool: brew | cask | uv | cargo | mise | herdr | git-tpm | git-yazi
+detect_tool_source() {
     local tool="$1"
-    local source=""
-    
-    # Detect package manager
     if has_cmd brew && brew list --formula "$tool" &>/dev/null; then
-        source="brew"
+        echo brew
     elif has_cmd brew && brew list --cask "$tool" &>/dev/null; then
-        source="cask"
+        echo cask
     elif has_cmd uv && uv tool list 2>/dev/null | grep -q "^$tool "; then
-        source="uv"
+        echo uv
     elif has_cmd cargo && cargo install --list 2>/dev/null | grep -q "^$tool "; then
-        source="cargo"
-    elif has_cmd npm && npm list -g --depth=0 2>/dev/null | grep -q " $tool@"; then
-        source="npm"
-    elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
-        source="bun"
-    elif [[ "$tool" == "snowsql" && -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
-        source="snowsql"
-    elif [[ "$tool" == "pi" ]] && has_cmd pi; then
-        source="pi"
+        echo cargo
+    elif is_mise_tool "$tool"; then
+        echo mise
     elif [[ "$tool" == "herdr" ]] && has_cmd herdr; then
-        source="herdr"
+        echo herdr
     elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
-        source="git-tpm"
+        echo git-tpm
     elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
-        source="git-yazi"
-    fi
-    
-    if [[ -z "$source" ]]; then
-        echo -e "${RED}Tool '$tool' not found${NC}"
-        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm, bun, snowsql, pi, herdr${NC}"
+        echo git-yazi
+    else
         return 1
     fi
-    
+}
+
+tool_version() {
+    local tool="$1" source="$2"
+    case "$source" in
+        brew)      brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}' ;;
+        cask)      brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}' ;;
+        uv)        uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v' ;;
+        cargo)     cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:' ;;
+        mise)      mise ls --global --json 2>/dev/null | jq -r --arg t "$tool" '.[$t][0].version // empty' ;;
+        herdr)     herdr --version 2>&1 ;;
+        git-tpm)   git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
+        git-yazi)  git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null ;;
+    esac
+}
+
+update_tool() {
+    local tool="$1" source
+    source="$(detect_tool_source "$tool")" || {
+        echo -e "${RED}Tool '$tool' not found${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, mise, herdr, tpm, yazi-flavors${NC}"
+        return 1
+    }
+
     echo -e "${BLUE}Updating${NC} ${BOLD}$tool${NC} ${DIM}($source)${NC}"
-    
-    # Get version before update
-    local old_ver=""
+    local old_ver new_ver rc=0
+    old_ver="$(tool_version "$tool" "$source")"
+
     case "$source" in
-        brew)      old_ver=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
-        cask)      old_ver=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
-        uv)        old_ver=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v') ;;
-        cargo)     old_ver=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:') ;;
-        npm)       old_ver=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p") ;;
-        bun)       old_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
-        snowsql)   old_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
-        pi)        old_ver=$(pi --version 2>&1) ;;
-        herdr)     old_ver=$(herdr --version 2>&1) ;;
-        git-tpm)   old_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
-        git-yazi)  old_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
+        brew)      brew upgrade "$tool" 2>&1 || rc=$? ;;
+        cask)      brew upgrade --cask "$tool" 2>&1 || rc=$? ;;
+        uv)        uv tool upgrade "$tool" 2>&1 || rc=$? ;;
+        cargo)     cargo install --locked "$tool" 2>&1 || rc=$? ;;
+        mise)      mise upgrade "$tool" 2>&1 || rc=$? ;;
+        herdr)     herdr update 2>&1 || rc=$? ;;
+        git-tpm)   git -C "$HOME/.tmux/plugins/tpm" pull --ff-only --quiet 2>&1 || rc=$? ;;
+        git-yazi)  git -C "$HOME/.config/yazi/flavors" pull --ff-only --quiet 2>&1 || rc=$? ;;
     esac
-    
-    # Run update command
-    local rc=0
-    case "$source" in
-        brew)
-            brew upgrade "$tool" 2>&1 || rc=$?
-            ;;
-        cask)
-            brew upgrade --cask "$tool" 2>&1 || rc=$?
-            ;;
-        uv)
-            uv tool upgrade "$tool" 2>&1 || rc=$?
-            ;;
-        cargo)
-            cargo install "$tool" 2>&1 || rc=$?
-            ;;
-        npm)
-            npm update -g "$tool" 2>&1 || rc=$?
-            ;;
-        bun)
-            "$HOME/.bun/bin/bun" upgrade 2>&1 || rc=$?
-            ;;
-        snowsql)
-            local snowsql_pkg="/tmp/snowsql.pkg"
-            curl -fsSL -o "$snowsql_pkg" \
-                "https://sfc-repo.snowflakecomputing.com/snowsql/bootstrap/1.3/darwin_x86_64/snowsql-1.3.2-darwin_x86_64.pkg" 2>&1 || rc=$?
-            if [[ $rc -eq 0 ]]; then
-                installer -pkg "$snowsql_pkg" -target CurrentUserHomeDirectory 2>&1 || rc=$?
-                rm -f "$snowsql_pkg"
-            fi
-            ;;
-        pi)
-            curl -fsSL https://pi.dev/install.sh | sh 2>&1 || rc=$?
-            ;;
-        herdr)
-            herdr update 2>&1 || rc=$?
-            ;;
-        git-tpm)
-            git -C "$HOME/.tmux/plugins/tpm" pull --quiet 2>&1 || rc=$?
-            ;;
-        git-yazi)
-            git -C "$HOME/.config/yazi/flavors" pull --quiet 2>&1 || rc=$?
-            ;;
-    esac
-    
+
     if [[ $rc -ne 0 ]]; then
         echo -e "${RED}Update failed${NC}"
         return $rc
     fi
-    
-    # Get version after update
-    local new_ver=""
-    case "$source" in
-        brew)      new_ver=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
-        cask)      new_ver=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}') ;;
-        uv)        new_ver=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v') ;;
-        cargo)     new_ver=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:') ;;
-        npm)       new_ver=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p") ;;
-        bun)       new_ver=$("$HOME/.bun/bin/bun" --version 2>/dev/null) ;;
-        snowsql)   new_ver=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}') ;;
-        pi)        new_ver=$(pi --version 2>&1) ;;
-        herdr)     new_ver=$(herdr --version 2>&1) ;;
-        git-tpm)   new_ver=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null) ;;
-        git-yazi)  new_ver=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null) ;;
-    esac
-    
-    # Report result
+
+    new_ver="$(tool_version "$tool" "$source")"
     if [[ "$old_ver" == "$new_ver" ]]; then
         echo -e "${GREEN}✓${NC} $tool ${DIM}already at $new_ver${NC}"
     else
@@ -286,90 +250,25 @@ get_tool_info() {
         fi
     fi
     
-    # Check Homebrew formula
-    if has_cmd brew && brew list --formula "$tool" &>/dev/null; then
+    if source="$(detect_tool_source "$tool")"; then
         found=true
-        source="brew"
-        version=$(brew list --formula --versions "$tool" 2>/dev/null | awk '{print $2}')
-        [[ -z "$description" ]] && description=$(brew info "$tool" 2>/dev/null | sed -n '2p')
-    # Check Homebrew cask
-    elif has_cmd brew && brew list --cask "$tool" &>/dev/null; then
-        found=true
-        source="cask"
-        version=$(brew list --cask --versions "$tool" 2>/dev/null | awk '{print $2}')
-        if [[ -z "$description" ]]; then
-            description=$(brew info --cask --json=v2 "$tool" 2>/dev/null | jq -r '.casks[0].desc // empty' 2>/dev/null)
-            [[ -z "$description" ]] && description="macOS application"
-        fi
-    # Check UV tools
-    elif has_cmd uv && uv tool list 2>/dev/null | grep -q "^$tool "; then
-        found=true
-        source="uv"
-        version=$(uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v')
-        if [[ -z "$description" ]]; then
-            description=$(curl -s "https://pypi.org/pypi/$tool/json" 2>/dev/null | jq -r '.info.summary // empty' 2>/dev/null)
-            [[ -z "$description" ]] && description="Python tool installed via uv"
-        fi
-    # Check Cargo
-    elif has_cmd cargo && cargo install --list 2>/dev/null | grep -q "^$tool "; then
-        found=true
-        source="cargo"
-        version=$(cargo install --list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v:')
-        [[ -z "$description" ]] && description=$(cargo search "$tool" --limit 1 2>/dev/null | head -1 | sed 's/.*# //' | sed 's/"$//' || echo "Rust package")
-    # Check npm global
-    elif has_cmd npm && npm list -g --depth=0 2>/dev/null | grep -q " $tool@"; then
-        found=true
-        source="npm"
-        version=$(npm list -g --depth=0 2>/dev/null | sed -n "s/.*$tool@//p")
-        [[ -z "$description" ]] && description=$(npm info "$tool" description 2>/dev/null || echo "Node.js package")
-    # Check special tools
-    elif [[ "$tool" == "bun" && -f "$HOME/.bun/bin/bun" ]]; then
-        found=true
-        source="standalone"
-        version=$("$HOME/.bun/bin/bun" --version 2>/dev/null)
-        [[ -z "$description" ]] && description="All-in-one JavaScript runtime & toolkit"
-    elif [[ "$tool" == "snowsql" && -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]]; then
-        found=true
-        source="standalone"
-        version=$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}')
-        [[ -z "$description" ]] && description="Snowflake command-line client"
-    elif [[ "$tool" == "pi" ]] && has_cmd pi; then
-        found=true
-        source="npm"
-        version=$(pi --version 2>&1)
-        [[ -z "$description" ]] && description="Pi coding agent (@earendil-works/pi-coding-agent)"
-    elif [[ "$tool" == "herdr" ]] && has_cmd herdr; then
-        found=true
-        source="standalone"
-        version=$(herdr --version 2>&1)
-        [[ -z "$description" ]] && description="Herdr (herdr.dev)"
-    elif [[ "$tool" == "tpm" && -d "$HOME/.tmux/plugins/tpm" ]]; then
-        found=true
-        source="git"
-        version=$(git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null)
-        [[ -z "$description" ]] && description="Tmux Plugin Manager"
-    elif [[ "$tool" == "yazi-flavors" && -d "$HOME/.config/yazi/flavors" ]]; then
-        found=true
-        source="git"
-        version=$(git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null)
-        [[ -z "$description" ]] && description="Color schemes for Yazi file manager"
+        version="$(tool_version "$tool" "$source")"
     fi
-    
+    if [[ "$found" == true && -z "$description" ]]; then
+        case "$source" in
+            brew) description=$(brew info --json=v2 "$tool" 2>/dev/null | jq -r '.formulae[0].desc // empty') ;;
+            cask) description=$(brew info --cask --json=v2 "$tool" 2>/dev/null | jq -r '.casks[0].desc // empty') ;;
+            uv)   description=$(curl -s "https://pypi.org/pypi/$tool/json" 2>/dev/null | jq -r '.info.summary // empty') ;;
+        esac
+    fi
+
     if [[ "$found" == false ]]; then
         echo -e "${RED}Tool '$tool' not found${NC}"
-        echo -e "${DIM}Searched: brew, cask, uv, cargo, npm${NC}"
+        echo -e "${DIM}Searched: brew, cask, uv, cargo, mise, herdr, tpm, yazi-flavors${NC}"
         return 1
     fi
     
-    # Display info box - simpler approach with fixed strings
-    local w=58  # Inner content width
-    
-    # Pad string to width
-    pad() {
-        local str="$1" len="$2"
-        printf "%-${len}s" "$str"
-    }
-    
+    # Display info box
     # Truncate/pad value to fit
     fit() {
         local str="$1" len="$2"
@@ -440,32 +339,15 @@ get_tool_info() {
 # Version Detection
 # =============================================================================
 
+# Version of a tool installed outside Homebrew, used for the change summary
 get_version() {
     local tool="$1"
     case "$tool" in
-        bun)         [[ -f "$HOME/.bun/bin/bun" ]] && "$HOME/.bun/bin/bun" --version 2>/dev/null ;;
-        snowsql)     [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && /Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}' ;;
-        pi)          has_cmd pi && pi --version 2>&1 ;;
-        herdr)       has_cmd herdr && herdr --version 2>&1 ;;
-        repgrep)     has_cmd rgr && cargo install --list 2>/dev/null | awk '/^repgrep/{print $2}' | tr -d 'v:' ;;
-        tmux-expose) has_cmd tmux-expose && cargo install --list 2>/dev/null | awk '/^tmux-expose/{print $2}' | tr -d 'v:' ;;
-        n)           has_cmd npm && npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p' ;;
-        tpm)         [[ -d "$HOME/.tmux/plugins/tpm/.git" ]] && git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
+        herdr)        has_cmd herdr && herdr --version 2>&1 ;;
+        tpm)          [[ -d "$HOME/.tmux/plugins/tpm/.git" ]] && git -C "$HOME/.tmux/plugins/tpm" rev-parse --short HEAD 2>/dev/null ;;
         yazi-flavors) [[ -d "$HOME/.config/yazi/flavors/.git" ]] && git -C "$HOME/.config/yazi/flavors" rev-parse --short HEAD 2>/dev/null ;;
-        *)           get_version_by_type "$tool" ;;
     esac
-}
-
-get_version_by_type() {
-    local tool="$1"
-    for entry in "${TRACKED_TOOLS[@]}"; do
-        IFS='|' read -r name _ type <<< "$entry"
-        [[ "$name" != "$tool" ]] && continue
-        case "$type" in
-            uv)         uv tool list 2>/dev/null | awk -v t="$tool" '$1==t{print $2}' | tr -d 'v' ;;
-        esac
-        return
-    done
+    return 0
 }
 
 record_change() {
@@ -485,7 +367,7 @@ track_version() {
 # Version Display (--versions command)
 # =============================================================================
 
-readonly VERSION_GROUPS="brew|cask|uv|cargo|git|other"
+readonly VERSION_GROUPS="brew|cask|uv|cargo|mise|git|other"
 
 # Collect all versions into a unified list: "group|name|version"
 collect_all_versions() {
@@ -543,16 +425,13 @@ collect_all_versions() {
         [[ -d "$yazi_dir/.git" ]] && echo "git|yazi-flavors|$(git -C "$yazi_dir" rev-parse --short HEAD 2>/dev/null)"
     fi
     
+    # mise runtimes
+    if [[ -z "$filter" || "$filter" == "mise" ]] && has_cmd mise; then
+        mise ls --global --json 2>/dev/null | jq -r 'to_entries[] | "mise|\(.key)|\(.value[0].version)"'
+    fi
+
     # Other tools
     if [[ -z "$filter" || "$filter" == "other" ]]; then
-        [[ -f "$HOME/.bun/bin/bun" ]] && echo "other|bun|$("$HOME/.bun/bin/bun" --version 2>/dev/null)"
-        has_cmd npm && {
-            local n_ver
-            n_ver=$(npm list -g --depth=0 2>/dev/null | sed -n 's/.*n@//p')
-            [[ -n "$n_ver" ]] && echo "other|n|$n_ver"
-        }
-        [[ -f "/Applications/SnowSQL.app/Contents/MacOS/snowsql" ]] && echo "other|snowsql|$(/Applications/SnowSQL.app/Contents/MacOS/snowsql -v 2>/dev/null | awk '{print $2}')"
-        has_cmd pi && echo "other|pi|$(pi --version 2>&1)"
         has_cmd herdr && echo "other|herdr|$(herdr --version 2>&1)"
     fi
 }
@@ -579,7 +458,6 @@ print_version_table() {
     done
     
     local hc="─" vc="│"
-    local total_w=$((w_group + w_tool + w_ver + 4))
     
     # Title
     local title="Installed Tools"
@@ -617,7 +495,7 @@ show_installed_versions() {
     # Validate group if specified
     if [[ -n "$group" ]]; then
         case "$group" in
-            brew|cask|uv|cargo|git|other) ;;
+            brew|cask|uv|cargo|mise|git|other) ;;
             *)
                 echo -e "${RED}Unknown group: $group${NC}"
                 echo -e "Valid groups: ${GREEN}${VERSION_GROUPS}${NC}"
@@ -650,8 +528,8 @@ print_version_summary() {
         (( ${#status} + 2 > w_status )) && w_status=$((${#status} + 2))
     done
 
-    local rows=""
-    for entry in "${changes[@]}"; do rows+="$entry;"; done
+    local row_list=""
+    for entry in "${changes[@]}"; do row_list+="$entry;"; done
     
     # Always show version changes table (not just in verbose mode)
     echo ""
@@ -661,5 +539,5 @@ print_version_summary() {
     draw_table \
         --headers "Tool,Previous,Current,Status" \
         --widths "$w_tool,$w_prev,$w_new,$w_status" \
-        --rows "${rows%;}"
+        --rows "${row_list%;}"
 }
