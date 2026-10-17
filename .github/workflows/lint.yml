@@ -1,0 +1,69 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hooks:
+    name: prek hooks
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install tools
+        run: brew install prek gitleaks shellcheck shfmt stylua actionlint
+
+      - name: Run hooks on all files
+        run: prek run --all-files --show-diff-on-failure
+
+      - name: Scan history for secrets
+        run: gitleaks git --redact --no-banner .
+
+  install:
+    name: install.sh dry run
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install stow
+        run: brew install stow
+
+      - name: Dry run the full installer
+        env:
+          DOTFILES_DIR: ${{ github.workspace }}
+        run: ./install.sh --dry-run -v
+
+      - name: Every package links into an empty home
+        run: |
+          home="$(mktemp -d)"
+          mkdir -p "$home/.config"
+          stow --no --no-folding -v -d "$GITHUB_WORKSPACE" -t "$home" \
+            aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh
+
+      - name: zsh starts cleanly with only this config
+        env:
+          DOTFILES_DIR: ${{ github.workspace }}
+          DOTFILES_NO_TMUX: "1"
+        run: |
+          home="$(mktemp -d)"
+          mkdir -p "$home/.config"
+          stow --no-folding -d "$GITHUB_WORKSPACE" -t "$home" zsh
+          HOME="$home" zsh -i -c 'echo "PATH ok: $PATH"' 2>&1 | tee zsh.log
+          ! grep -E "command not found|parse error|no such file" zsh.log
