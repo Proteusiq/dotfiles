@@ -384,12 +384,12 @@ install_brew() {
     run_quiet brew bundle install --file="$DOTFILES_DIR/Brewfile"
     ensure_rust_toolchain
     # cargo and uv entries need the toolchains above. A second pass picks them up.
-    if ! brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+    if ! brew bundle check --no-upgrade --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
         run_quiet brew bundle install --file="$DOTFILES_DIR/Brewfile"
     fi
     stop_sudo_keepalive
 
-    if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+    if brew bundle check --no-upgrade --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
         log_info "✅ Everything in the Brewfile is installed"
     else
         log_error "Some Brewfile entries are missing. Run: brew bundle check --verbose --file=$DOTFILES_DIR/Brewfile"

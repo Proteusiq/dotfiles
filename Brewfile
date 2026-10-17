@@ -210,7 +210,7 @@ brew "zlib"                              # Compression library
 
 # PYTHON TOOLS (uv tool install)
 # ───────────────────────────────────────────────────────────────────────────
-uv "harlequin"                           # SQL IDE in the terminal
+uv "harlequin[duckdb,mysql,postgres,sqlite]" # SQL IDE in the terminal, with adapters
 uv "sqlit-tui"                           # SQLite TUI
 
 # RUST TOOLS (cargo install --locked)

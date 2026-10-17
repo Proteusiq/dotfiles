@@ -78,7 +78,7 @@ check_path_order() {
     section "PATH"
     local prefix="${HOMEBREW_PREFIX:-/opt/homebrew}"
     local tool resolved
-    for tool in git curl rsync python3 node; do
+    for tool in git rsync python3 node; do
         resolved="$(DOTFILES_NO_TMUX=1 zsh -i -c "whence -p $tool" 2>/dev/null)"
         case "$resolved" in
         "") warn "$tool not found" ;;
@@ -122,7 +122,7 @@ check_brewfile() {
         fail "Homebrew is not installed"
         return
     fi
-    if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+    if brew bundle check --no-upgrade --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
         pass "everything in the Brewfile is installed"
     else
         fail "missing Brewfile entries (see: brew bundle check --verbose --file=$DOTFILES_DIR/Brewfile)"
