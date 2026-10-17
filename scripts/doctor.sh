@@ -5,9 +5,9 @@
 set -uo pipefail
 
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-readonly STOW_PACKAGES=(aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh)
 readonly MAX_STARTUP_MS=300
 
+source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/logging.sh"
 
 FAILURES=0

@@ -52,7 +52,6 @@ stop_spinner() {
         printf "\r      \r"
         tput cnorm 2>/dev/null # show cursor
         SPINNER_PID=""
-        FAILED_COMMANDS=()
     fi
 }
 

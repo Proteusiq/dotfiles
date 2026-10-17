@@ -51,11 +51,12 @@ jobs:
         run: ./install.sh --dry-run -v
 
       - name: Every package links into an empty home
+        shell: bash
         run: |
           home="$(mktemp -d)"
           mkdir -p "$home/.config"
-          stow --no --no-folding -v -d "$GITHUB_WORKSPACE" -t "$home" \
-            aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh
+          source scripts/packages.sh
+          stow --no --no-folding -v -d "$GITHUB_WORKSPACE" -t "$home" "${STOW_PACKAGES[@]}"
 
       - name: zsh starts cleanly with only this config
         env:

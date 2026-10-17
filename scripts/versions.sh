@@ -498,6 +498,7 @@ print_version_table() {
 
 show_installed_versions() {
     local group="${1:-}"
+    [[ "$group" == "all" ]] && group=""
 
     # Validate group if specified
     if [[ -n "$group" ]]; then

@@ -11,7 +11,6 @@ set -euo pipefail
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly LOG_FILE="${LOG_FILE:-${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/install.log}"
 readonly BACKUP_ROOT="$HOME/.dotfiles-backup"
-readonly STOW_PACKAGES=(aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh)
 readonly UNSLOTH_DIR="$HOME/unsloth_studio"
 readonly GH_EXTENSIONS=(dlvhdr/gh-dash)
 
@@ -25,6 +24,7 @@ VERSION_CHANGES=()
 SUDO_KEEPALIVE_PID=""
 
 # Source modules
+source "$DOTFILES_DIR/scripts/packages.sh"
 source "$DOTFILES_DIR/scripts/logging.sh"
 source "$DOTFILES_DIR/scripts/ui.sh"
 source "$DOTFILES_DIR/scripts/versions.sh"
@@ -98,7 +98,7 @@ ${BOLD}Options:${NC}
     ${GREEN}-vv${NC}                   Debug mode (show executed commands)
     ${GREEN}--dry-run${NC}             Preview changes without executing
     ${GREEN}--only${NC} <fn>           Run only a specific function
-    ${GREEN}--skip${NC} <fn...>        Skip specific functions (e.g., --skip venv brew)
+    ${GREEN}--skip${NC} \"<fn...>\"      Skip functions; quote several (e.g., --skip \"venv brew\")
     ${GREEN}--list${NC}                List functions with full descriptions
     ${GREEN}--versions${NC} [group]    Show installed versions
     ${GREEN}--info${NC} <tool>         Show info about an installed tool
@@ -374,7 +374,10 @@ install_brew() {
     if ! has_cmd brew; then
         log "Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        local brew_bin
+        for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+            [[ -x "$brew_bin" ]] && eval "$("$brew_bin" shellenv)" && break
+        done
     fi
 
     run_quiet brew update --quiet || log_warn "brew update failed; using the current formulae"

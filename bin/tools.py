@@ -200,7 +200,7 @@ FILES_TOOLS = [
     (
         "yazi",
         "Fastest file manager, vim keys, preview all",
-        "yazi → j/k navigate, l to enter, preview images/PDFs",
+        "yy → u/e move, i enters or opens, n goes up; quit to cd there",
     ),
     (
         "broot",
@@ -352,7 +352,7 @@ DATA_TOOLS = [
     (
         "tabiew",
         "View CSV/Parquet/JSON with SQL queries",
-        "tabiew data.csv → spreadsheet view, SQL filtering",
+        "tw data.csv → spreadsheet view, SQL filtering",
     ),
     (
         "dbt",
@@ -654,7 +654,7 @@ WM_TOOLS = [
     (
         "aerospace",
         "Tiling WM: auto-arrange windows",
-        "Alt+Enter → new terminal, windows auto-tile",
+        "Alt+h/j/k/l focus, Alt+1..9 workspaces, windows auto-tile",
     ),
     (
         "alt-tab",
