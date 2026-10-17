@@ -2,10 +2,10 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
--- Python debugging
-vim.g.python3_host_prog = "~/.virtualenvs/debugpy/bin/python"
-vim.g.lazyvim_python_lsp = "pyright"
--- Set to "ruff_lsp" to use the old LSP implementation version.
+-- Python provider for plugins (pynvim), created by `update --only venv`
+vim.g.python3_host_prog = vim.fn.expand("~/.virtualenvs/neovim/bin/python")
+-- Python language servers: ty for types, ruff for lint and format (see plugins/lsp.lua)
+vim.g.lazyvim_python_lsp = "ty"
 vim.g.lazyvim_python_ruff = "ruff"
 -- Auto Normal Mode
 -- Automatically leave insert mode after 'updatetime' milliseconds of inactivity

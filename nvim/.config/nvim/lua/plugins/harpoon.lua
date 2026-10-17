@@ -1,78 +1,55 @@
+-- Harpoon: pin up to four files and jump to them with <leader>1..4.
 return {
   "ThePrimeagen/harpoon",
   branch = "harpoon2",
-  dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
-  config = function() -- Harpoon
-    local harpoon = require("harpoon")
-
-    -- REQUIRED
-    harpoon:setup()
-
-    vim.keymap.set("n", "<leader>a", function()
-      harpoon:list():add()
-    end)
-
-    vim.keymap.set("n", "<C-e>", function()
-      harpoon.ui:toggle_quick_menu(harpoon:list())
-    end)
-
-    vim.keymap.set("n", "<C-h>", function()
-      harpoon:list():select(1)
-    end)
-
-    vim.keymap.set("n", "<C-t>", function()
-      harpoon:list():select(2)
-    end)
-
-    vim.keymap.set("n", "<C-n>", function()
-      harpoon:list():select(3)
-    end)
-
-    vim.keymap.set("n", "<C-s>", function()
-      harpoon:list():select(4)
-    end)
-
-    -- Toggle previous & next buffers stored within Harpoon list
-
-    vim.keymap.set("n", "<C-S-P>", function()
-      harpoon:list():prev()
-    end)
-
-    vim.keymap.set("n", "<C-S-N>", function()
-      harpoon:list():next()
-    end)
-
-    -- Telescope + Harpoon
-    -- -- basic telescope configuration
-
-    local conf = require("telescope.config").values
-
-    local function toggle_telescope(harpoon_files)
-      local file_paths = {}
-
-      for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-      end
-
-      require("telescope.pickers")
-        .new({}, {
-          prompt_title = "Harpoon",
-          finder = require("telescope.finders").new_table({
-            results = file_paths,
-          }),
-          previewer = conf.file_previewer({}),
-          sorter = conf.generic_sorter({}),
-        })
-        :find()
+  dependencies = { "nvim-lua/plenary.nvim" },
+  keys = function()
+    local function harpoon()
+      return require("harpoon")
     end
-
-    vim.keymap.set("n", "<C-e>", function()
-      toggle_telescope(harpoon:list())
-    end, { desc = "Open harpoon window" })
-
-    -- renaming
-    vim.keymap.set("n", "<leader>rn", function()
-      return ":IncRename " .. vim.fn.expand("<cword>")
-    end, { expr = true })
+    local keys = {
+      {
+        "<leader>a",
+        function()
+          harpoon():list():add()
+        end,
+        desc = "Harpoon add file",
+      },
+      {
+        "<C-e>",
+        function()
+          harpoon().ui:toggle_quick_menu(harpoon():list())
+        end,
+        desc = "Harpoon menu",
+      },
+      {
+        "<C-S-P>",
+        function()
+          harpoon():list():prev()
+        end,
+        desc = "Harpoon previous",
+      },
+      {
+        "<C-S-N>",
+        function()
+          harpoon():list():next()
+        end,
+        desc = "Harpoon next",
+      },
+    }
+    for index = 1, 4 do
+      table.insert(keys, {
+        "<leader>" .. index,
+        function()
+          harpoon():list():select(index)
+        end,
+        desc = "Harpoon file " .. index,
+      })
+    end
+    return keys
+  end,
+  opts = {},
+  config = function(_, opts)
+    require("harpoon"):setup(opts)
   end,
 }

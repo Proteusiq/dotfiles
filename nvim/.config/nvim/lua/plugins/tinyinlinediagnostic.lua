@@ -1,9 +1,14 @@
+-- Inline diagnostics replace Neovim's virtual text. Disabled through LazyVim's
+-- diagnostics options so LazyVim does not turn virtual text back on.
 return {
+  {
     "rachartier/tiny-inline-diagnostic.nvim",
     event = "VeryLazy",
     priority = 1000,
-    config = function()
-        require("tiny-inline-diagnostic").setup()
-        vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
-    end,
+    opts = {},
+  },
+  {
+    "neovim/nvim-lspconfig",
+    opts = { diagnostics = { virtual_text = false } },
+  },
 }

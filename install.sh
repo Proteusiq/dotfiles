@@ -110,7 +110,7 @@ ${BOLD}Functions:${NC}
     ${BLUE}brew${NC}        Install Homebrew and everything in the Brewfile (brew, cask, uv, cargo)
     ${BLUE}stow${NC}        Symlink dotfiles with GNU Stow (backs up conflicting files)
     ${BLUE}runtimes${NC}    Install runtimes with mise (node, go, bun) and Rust with rustup
-    ${BLUE}venv${NC}        Create Python virtual environments for Neovim (neovim, debugpy)
+    ${BLUE}venv${NC}        Create the Python venv Neovim uses for plugins (pynvim)
     ${BLUE}tmux${NC}        Install tmux plugin manager (tpm) and plugins
     ${BLUE}yazi${NC}        Install Yazi file manager themes
     ${BLUE}utils${NC}       Install extras: gh extensions, Bicep, Herdr, Unsloth Studio, bin scripts
@@ -401,6 +401,12 @@ ensure_rust_toolchain() {
     run_quiet rustup default stable
 }
 
+# Symlinks that stow may own: top level of $HOME and anything under ~/.config
+list_home_links() {
+    find "$HOME" -maxdepth 1 -type l 2>/dev/null
+    find "$HOME/.config" -maxdepth 5 -type l 2>/dev/null
+}
+
 # Stow refuses to replace real files. Move them to a timestamped backup first,
 # and remove links that point to files no longer in the repository.
 prepare_stow_targets() {
@@ -413,7 +419,7 @@ prepare_stow_targets() {
         [[ "$target" == *dotfiles/* && ! -e "$link" ]] || continue
         execute rm "$link"
         log_info "Removing stale link $link"
-    done < <(find "$HOME" "$HOME/.config" -maxdepth 1 -type l 2>/dev/null)
+    done < <(list_home_links)
 
     while IFS= read -r conflict; do
         [[ -n "$conflict" ]] || continue
@@ -540,13 +546,12 @@ create_virtualenvs() {
         return 0
     fi
     [[ "$DRY_RUN" == true ]] && {
-        dry_run_msg "Would create venvs: neovim, debugpy"
+        dry_run_msg "Would create venv: neovim"
         return 0
     }
 
     local -a envs=(
         "$HOME/.virtualenvs/neovim|pynvim"
-        "$HOME/.virtualenvs/debugpy|debugpy"
     )
     local env dir packages
     execute mkdir -p "$HOME/.virtualenvs"

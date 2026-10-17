@@ -1,5 +1,5 @@
 return {
-    "XXiaoA/atone.nvim",
-    cmd = "Atone",
-    opts = {}, 
+  "XXiaoA/atone.nvim",
+  cmd = "Atone",
+  opts = {},
 }

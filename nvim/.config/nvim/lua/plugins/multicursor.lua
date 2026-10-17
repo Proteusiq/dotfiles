@@ -21,19 +21,19 @@ return {
       mc.lineSkipCursor(1)
     end)
 
-    -- Add or skip adding a new cursor by matching word/selection
-    set({ "n", "x" }, "<leader>n", function()
+    -- Add or skip a cursor at the next/previous match (<leader>m group, free in LazyVim)
+    set({ "n", "x" }, "<leader>mn", function()
       mc.matchAddCursor(1)
-    end)
-    set({ "n", "x" }, "<leader>s", function()
+    end, { desc = "Cursor at next match" })
+    set({ "n", "x" }, "<leader>ms", function()
       mc.matchSkipCursor(1)
-    end)
-    set({ "n", "x" }, "<leader>N", function()
+    end, { desc = "Skip next match" })
+    set({ "n", "x" }, "<leader>mN", function()
       mc.matchAddCursor(-1)
-    end)
-    set({ "n", "x" }, "<leader>S", function()
+    end, { desc = "Cursor at previous match" })
+    set({ "n", "x" }, "<leader>mS", function()
       mc.matchSkipCursor(-1)
-    end)
+    end, { desc = "Skip previous match" })
 
     -- Add and remove cursors with control + left click.
     set("n", "<c-leftmouse>", mc.handleMouse)
