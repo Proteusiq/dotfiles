@@ -1,0 +1,8 @@
+# zsh plugins, loaded by antidote (see ~/.zshrc). One plugin per line.
+# Edit this file, then open a new shell: antidote rebuilds the static bundle.
+
+romkatv/zsh-defer
+zsh-users/zsh-completions path:src kind:fpath
+djui/alias-tips
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-syntax-highlighting kind:defer
