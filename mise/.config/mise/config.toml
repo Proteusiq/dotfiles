@@ -1,0 +1,17 @@
+# Global runtimes and runtime-bound CLI tools, managed by mise.
+# Rule: language runtimes and npm-based tools live here; system tools live in the Brewfile.
+# Python is managed by uv, Rust by rustup.
+# Pin a version per project with `mise use node@24` in that project.
+
+[tools]
+node = "lts"
+go = "latest"
+bun = "latest"
+pnpm = "latest"
+usage = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
+
+[settings]
+experimental = false
+# Read .nvmrc, .node-version, .go-version and similar files in projects.
+idiomatic_version_file_enable_tools = ["node", "go"]
