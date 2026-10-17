@@ -4,7 +4,7 @@ export default defineConfig({
   title: "Fox's Dotfiles",
   description: 'A modern macOS development environment',
   base: '/dotfiles/',
-  
+
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/dotfiles/fox.svg' }],
     ['meta', { name: 'theme-color', content: '#f97316' }],
@@ -15,7 +15,7 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/fox.svg',
-    
+
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Reference', link: '/reference/tools' },

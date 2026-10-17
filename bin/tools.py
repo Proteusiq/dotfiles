@@ -238,7 +238,7 @@ ALL_TOOLS = sum(TOOL_MAP.values(), [])
 def show_tools(category: Category, tools: list[tuple[str, str, str]]) -> None:
     """Display a category of tools in a styled table with pagination if needed."""
     icon, title, desc = CATEGORY_META[category]
-    
+
     table = Table(box=ROUNDED, border_style="blue", expand=True)
     table.add_column("Tool", style="cyan bold", no_wrap=True)
     table.add_column("Description", style="white")
@@ -258,11 +258,11 @@ def show_tools(category: Category, tools: list[tuple[str, str, str]]) -> None:
         title_align="center",
         border_style="blue"
     )
-    
+
     # Use pager if content exceeds terminal height and we're in a TTY
     terminal_height = shutil.get_terminal_size().lines
     estimated_lines = len(tools) * 2 + 6
-    
+
     if estimated_lines > terminal_height and os.isatty(1):
         string_io = StringIO()
         temp_console = Console(file=string_io, force_terminal=True)
@@ -270,7 +270,7 @@ def show_tools(category: Category, tools: list[tuple[str, str, str]]) -> None:
         temp_console.print(panel)
         temp_console.print()
         output = string_io.getvalue()
-        
+
         pager = subprocess.Popen(
             ["less", "-R", "-S"],
             stdin=subprocess.PIPE,
@@ -356,7 +356,7 @@ def run_tui():
 
     class ToolsApp(App):
         """Interactive tool browser TUI."""
-        
+
         TITLE = "Fox's Den"
 
         CSS = """
@@ -485,8 +485,8 @@ def run_tui():
             results = []
             for cat in Category:
                 for name, description, example in TOOL_MAP[cat]:
-                    if (query in name.lower() or 
-                        query in description.lower() or 
+                    if (query in name.lower() or
+                        query in description.lower() or
                         query in example.lower()):
                         results.append((name, description, example, cat))
 

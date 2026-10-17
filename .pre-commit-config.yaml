@@ -1,0 +1,62 @@
+# Git hooks, run by prek (https://prek.j178.dev), a faster drop-in for pre-commit.
+# Install once per clone:  prek install
+# Run everything:          prek run --all-files
+# Tools come from the Brewfile, so hooks use `language: system`.
+
+repos:
+  - repo: builtin
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+        exclude: ^nvim/.config/nvim/lazy-lock\.json$
+      - id: detect-private-key
+
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks (secrets)
+        entry: gitleaks git --pre-commit --staged --redact --no-banner
+        language: system
+        pass_filenames: false
+
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck -x
+        language: system
+        files: ^(install\.sh|run\.sh|scripts/.*\.sh)$
+
+      - id: shfmt
+        name: shfmt
+        entry: shfmt -i 4 -d
+        language: system
+        files: ^(install\.sh|run\.sh|scripts/.*\.sh)$
+
+      - id: zsh-syntax
+        name: zsh syntax
+        entry: zsh -n
+        language: system
+        files: ^zsh/(\.zshenv|\.zprofile|\.zshrc|\.config/zsh/.*\.zsh)$
+
+      - id: stylua
+        name: stylua
+        entry: stylua --check
+        language: system
+        types: [lua]
+
+      - id: actionlint
+        name: actionlint
+        entry: actionlint
+        language: system
+        files: ^\.github/workflows/
+
+      - id: brewfile
+        name: Brewfile parses
+        entry: brew bundle list --all --file=Brewfile
+        language: system
+        files: ^Brewfile$
+        pass_filenames: false

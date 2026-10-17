@@ -49,4 +49,3 @@ window-decoration = false
 window-inherit-working-directory = true
 macos-titlebar-proxy-icon = hidden
 macos-option-as-alt = left
-

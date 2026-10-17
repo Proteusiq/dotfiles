@@ -23,10 +23,10 @@ function handleMouseMove(event) {
   const deltaX = event.clientX - foxCenterX
   const deltaY = event.clientY - foxCenterY
   const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-  
+
   const normalizedX = distance > 0 ? deltaX / distance : 0
   const normalizedY = distance > 0 ? deltaY / distance : 0
-  
+
   const scale = Math.min(distance / 200, 1)
   const offsetX = normalizedX * maxPupilOffset * scale
   const offsetY = normalizedY * maxPupilOffset * scale

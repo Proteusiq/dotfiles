@@ -263,9 +263,9 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
     import shutil
     import subprocess
     from io import StringIO
-    
+
     icon, title, desc = CATEGORY_META[category]
-    
+
     table = Table(box=ROUNDED, border_style="blue", expand=True)
     table.add_column("Alias", style="cyan bold", width=15)
     table.add_column("Command", style="green", width=35)
@@ -281,11 +281,11 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
         title_align="center",
         border_style="blue"
     )
-    
+
     # Use pager if content exceeds terminal height and we're in a TTY
     terminal_height = shutil.get_terminal_size().lines
     estimated_lines = len(aliases) * 2 + 6
-    
+
     if estimated_lines > terminal_height and os.isatty(1):
         # Render to string with ANSI codes
         string_io = StringIO()
@@ -294,7 +294,7 @@ def add_aliases(category: Category, aliases: list[tuple[str, str, str]]) -> None
         temp_console.print(panel)
         temp_console.print()
         output = string_io.getvalue()
-        
+
         # Pipe through less with ANSI support
         pager = subprocess.Popen(
             ["less", "-R", "-S"],
@@ -381,7 +381,7 @@ def run_tui():
 
     class AliasApp(App):
         """Interactive alias browser TUI."""
-        
+
         TITLE = "Fox's Aliases"
 
         CSS = """
@@ -603,7 +603,7 @@ def main(
 
     Categories:
       git    - Version control shortcuts
-      files  - Modern file operations  
+      files  - Modern file operations
       nav    - Directory jumping
       term   - Terminal & shell
       pkg    - Package managers
