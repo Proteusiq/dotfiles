@@ -1,12 +1,13 @@
 # Development Conventions
 
-> **Note:** For repository-specific knowledge (how to add tools, architecture, CLI commands), see [SKILL.md](./SKILL.md).
+> **Note:** The principles behind these conventions are in [MANIFESTO.md](./MANIFESTO.md); when this file and the manifesto disagree, the manifesto wins. For repository-specific knowledge (how to add tools, architecture, CLI commands), see [SKILL.md](./SKILL.md).
 
 ## Philosophy
 
 - **Simplicity is king** — the simplest solution that works is the best solution
-- **Self-documenting code** — if it needs comments, refactor it
-- **Functional over OOP** — pure functions, composition, immutability
+- **Self-documenting code** — names, types and structure carry the intent; comments explain *why*
+- **Functional by default** — pure functions, composition, immutability; use OOP where it is a genuine advantage
+- **Secure by default** — deny by default, least privilege, never commit secrets
 - **Commit early, commit often** — small, focused, verified commits
 
 ---
@@ -64,7 +65,7 @@ These rules apply **to all languages**, regardless of tooling.
 - Prefer **pure functions** where feasible; isolate side effects.
 - Organize code so changes are easy and predictable.
 - Avoid hidden state and mutable globals.
-- **No magic numbers** — extract literals into named constants that explain their purpose.
+- **No magic numbers** — extract meaningful literals into named constants that explain their purpose (not trivial values like `0` or `1`).
 
 ### Types & Data
 - Declare types explicitly at *module boundaries*.
@@ -176,12 +177,12 @@ async def fetch_users(user_ids: list[int]) -> list[User]:
 
 - Type annotations: always, Python 3.12+ (`list[T]`, `X | None`)
 - Docstrings: brief, public APIs only
-- Async for I/O
+- Async for concurrent I/O; plain synchronous code is fine for simple scripts
 
 ### Best Practices Checklist
 - [ ] **Tools**: Using `uv`, `ruff`, `ty`, `pytest`
 - [ ] **Types**: All functions have type annotations
-- [ ] **Async**: Using `asyncio` for I/O (not blocking `subprocess.run()`, `requests`, etc.)
+- [ ] **Async**: Using `asyncio` when I/O is concurrent (not blocking `subprocess.run()`, `requests`, etc. inside async code)
 - [ ] **Data structures**: Using `dataclass` or `pydantic` for structured data
 - [ ] **HTTP**: Using `httpx` (async) instead of `requests` (sync)
 - [ ] **Validation**: Using `pydantic` or manual validation for external input
@@ -253,7 +254,7 @@ mod tests {
 ```
 
 - Error handling: `Result<T, E>` and `?`, avoid `.unwrap()` in production
-- No inline comments
+- Comments explain *why*, never *what*
 
 ---
 
@@ -324,7 +325,7 @@ export async function fetchUser(userId: number): Promise<User> {
 
 - Always TypeScript, never `any`
 - `async`/`await` over raw promises
-- No inline comments
+- Comments explain *why*, never *what*
 
 ---
 
@@ -383,7 +384,7 @@ main "$@"
 - Always `set -euo pipefail`
 - Quote variables: `"$var"`
 - `[[ ]]` over `[ ]`
-- No inline comments
+- Comments explain *why*, never *what*
 
 ---
 

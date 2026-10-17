@@ -100,7 +100,7 @@ Review this Python code and produce a structured assessment that enables:
 - Audience: Junior to mid-level Python developers on the team
 - Purpose: Catch issues before merge, educate developers, maintain code quality
 - Domain: Legal tech - handling sensitive client data, contracts, and case management
-- Stack: Python 3.11+, FastAPI, SQLAlchemy, Pydantic
+- Stack: Python 3.12+, FastAPI, SQLAlchemy, Pydantic
 
 # CONSTRAINTS
 - Security: Flag ANY potential data leaks, SQL injection, or auth bypasses as CRITICAL
@@ -146,7 +146,7 @@ Implement a Python feature that:
 
 # CONTEXT
 - Codebase: Legal case management system
-- Stack: Python 3.11+, FastAPI, SQLAlchemy, Pydantic, pytest
+- Stack: Python 3.12+, FastAPI, SQLAlchemy, Pydantic, pytest
 - Standards: Type hints required, 90%+ test coverage, docstrings for public APIs
 - Security: All code handles sensitive legal data - privacy and audit trails are critical
 
@@ -183,7 +183,7 @@ Testing:
 - [ ] No raw SQL or string interpolation in queries
 - [ ] Error handling doesn't leak sensitive information
 - [ ] Tests cover happy path + at least 3 edge cases
-- [ ] Code passes mypy and ruff checks
+- [ ] Code passes ty and ruff checks
 
 # VERIFICATION
 Before responding, check:

@@ -1,220 +1,225 @@
 # CLI Reference
 
-The `update` command is the main interface for managing your dotfiles.
+Commands provided by this repository:
 
-## Synopsis
+| Command | What it is |
+|---------|------------|
+| `update` | Alias for `"$DOTFILES_DIR/install.sh"`: install, update and check the setup |
+| `aliases` | `bin/aliases.py`: browse shell aliases and functions |
+| `tools` | `bin/tools.py`: browse the tool catalog |
+| `prek` | Git hooks runner for this repository (`.pre-commit-config.yaml`) |
+
+`aliases` and `tools` are uv scripts (`#!/usr/bin/env -S uv run --script`). The `utils` step links every `bin/*.py` to `~/.local/bin/<name>` as a symlink.
+
+If the `update` alias is not available (first install, or a non-zsh shell), run `~/dotfiles/install.sh` directly.
+
+## `update`
 
 ```bash
 update [OPTIONS] [TOOL]
 ```
 
-## Options
+### Options
 
 | Option | Description |
 |--------|-------------|
-| `-h, --help` | Show help message |
-| `-v, --verbose` | Show detailed output with timestamps |
-| `-vv` | Debug mode (show executed commands) |
+| `-h`, `--help` | Show help |
+| `-v`, `--verbose` | Detailed output with timestamps |
+| `-vv` | Debug mode: show executed commands |
 | `--dry-run` | Preview changes without executing |
-| `--only <fn>` | Run only a specific function |
-| `--skip <fn...>` | Skip specific functions |
-| `--list` | List available functions |
-| `--versions [group]` | Show installed versions |
-| `--info <tool>` | Show info about a tool |
-| `--outdated` | Show packages with updates |
+| `--only <fn>` | Run only one step |
+| `--skip "<fn> [fn...]"` | Skip steps. Several names go in **one quoted argument**: `--skip "venv brew"` |
+| `--list` | List step names and the functions they run |
+| `--versions [group]` | Show installed versions; optional group (see below) |
+| `--info <tool>` | Show source, version, description, example and category of a tool |
+| `--outdated` | Show packages with available updates |
 | `--all` | Update all packages |
-| `--interactive` | Enable interactive prompts |
+| `--doctor` | Health check (see [below](#update-doctor)) |
+| `--interactive` | Enable interactive prompts (only the Xcode step prompts) |
+| `--skip-interactive` | Disable interactive prompts (the default) |
 
-## Commands
+`--list`, `--versions`, `--info`, `--outdated`, `--all`, `--doctor`, `--help` and `update <tool>` do their job and exit; they do not run the install steps.
 
-### Full Installation
+### Steps
 
-```bash
-# Run all installation steps
-update
+A full `update` runs these steps in order. Use the name with `--only` or `--skip`.
 
-# With verbose output
-update -v
-
-# Debug mode
-update -vv
-
-# Preview only
-update --dry-run
-```
-
-### Selective Installation
-
-```bash
-# Run single function
-update --only brew
-update --only stow
-update --only venv
-
-# Skip functions
-update --skip venv
-update --skip "venv brew"
-
-# List available functions
-update --list
-```
-
-### Version Management
-
-```bash
-# Show all versions
-update --versions
-
-# Filter by manager
-update --versions brew
-update --versions cask
-update --versions uv
-update --versions cargo
-update --versions git
-update --versions other
-update --versions all
-```
-
-### Tool Information
-
-```bash
-# Get tool info
-update --info bat
-update --info ripgrep
-update --info harlequin
-```
-
-Output:
-```
-📦 bat
-├─ Version: 0.25.0
-├─ Manager: brew
-├─ Type: formula
-└─ Description: Clone of cat(1) with syntax highlighting and Git integration
-```
-
-### Updates
-
-```bash
-# Check for outdated packages
-update --outdated
-
-# Update everything
-update --all
-
-# Update specific tool
-update bat
-update harlequin
-update yazi
-```
-
-## Available Functions
-
-| Name | Function | Description |
-|------|----------|-------------|
-| `dirs` | `create_dirs` | Create ~/Codes and ~/Documents/Screenshots |
+| Name | Function | What it does |
+|------|----------|--------------|
+| `dirs` | `create_dirs` | Create `~/Codes`, `~/Documents/Screenshots` and the log directory |
 | `xcode` | `install_xcode_tools` | Install Xcode Command Line Tools |
-| `brew` | `install_brew` | Install Homebrew and Brewfile packages |
-| `node` | `configure_node` | Install Node.js tools (n, Bun) |
-| `venv` | `create_virtualenvs` | Create Python venvs for Neovim |
-| `tmux` | `install_tmux_plugins` | Install tmux plugin manager |
-| `yazi` | `install_yazi_themes` | Install Yazi themes |
-| `utils` | `setup_utils` | Install CLI utilities |
-| `stow` | `stow_dotfiles` | Symlink dotfiles with GNU Stow |
-| `cleanup` | `cleanup` | Run Homebrew cleanup |
+| `brew` | `install_brew` | Install Homebrew if missing, trust the taps declared in the Brewfile, run `brew bundle` (formulae, casks, uv tools, cargo crates), ensure the stable Rust toolchain, run a second bundle pass for uv/cargo entries, then `brew bundle check --no-upgrade`. sudo is kept alive only during `brew bundle`, then dropped (`sudo -k`) |
+| `stow` | `stow_dotfiles` | Link packages `aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh` with `stow --no-folding --restow`. First removes stale links into the repository and moves conflicting real files to `~/.dotfiles-backup/<timestamp>/` |
+| `runtimes` | `install_runtimes` | `mise install` (node, go, bun, pnpm, usage, pi) and `rustup default stable` |
+| `venv` | `create_virtualenvs` | Create `~/.virtualenvs/neovim` with pynvim (Neovim's Python provider) |
+| `tmux` | `install_tmux_plugins` | Clone or update tpm, install tmux plugins |
+| `yazi` | `install_yazi_themes` | Clone or update `yazi-rs/flavors` into `~/.config/yazi/flavors` |
+| `utils` | `setup_utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr and Unsloth Studio installers, create `~/.rgrc`, link `bin/*.py` into `~/.local/bin` |
+| `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach, so it works in tmux); screenshots to `~/Documents/Screenshots` |
+| `cleanup` | `cleanup` | `brew cleanup` and `brew autoremove`; warn about installed packages missing from the Brewfile (lists only, never removes) |
 
-## Examples
+Remote installers (Herdr, Unsloth Studio) are downloaded to a temporary file and run without sudo; `--dry-run` skips them.
 
-### Initial Setup
+A failed step does not stop the run. The installer records every failed step and command, continues, prints a summary at the end and exits non-zero.
 
-```bash
-# Clone and install
-git clone https://github.com/Proteusiq/dotfiles.git ~/dotfiles
-cd ~/dotfiles && ./install.sh
-```
-
-### Daily Usage
+### Updating one tool
 
 ```bash
-# Check what needs updating
-update --outdated
-
-# Update everything
-update --all
-
-# Or update specific tools
-update bat ripgrep
+update <tool>
 ```
 
-### Debugging
+The source is detected in this order: Homebrew formula, Homebrew cask, uv tool, cargo crate, mise tool (by tool name or by the command it provides, e.g. `pi`), then `herdr`, `tpm` and `yazi-flavors`. One tool per call. The old and new versions are printed.
+
+| Source | Update command used |
+|--------|---------------------|
+| brew | `brew upgrade <tool>` |
+| cask | `brew upgrade --cask <tool>` |
+| uv | `uv tool upgrade <tool>` |
+| cargo | `cargo install --locked <tool>` |
+| mise | `mise upgrade <plugin>` |
+| herdr | `herdr update` |
+| tpm, yazi-flavors | `git pull --ff-only` |
+
+### Version groups
 
 ```bash
-# See what would happen
-update --dry-run -v
-
-# Full debug output
-update -vv
-
-# Check specific function
-update --only brew --dry-run -v
+update --versions [brew|cask|uv|cargo|mise|git|other]
 ```
 
-### After Editing Configs
+| Group | Contents |
+|-------|----------|
+| `brew` | Homebrew formulae |
+| `cask` | Homebrew casks |
+| `uv` | uv tools |
+| `cargo` | cargo crates |
+| `mise` | global mise runtimes |
+| `git` | git-cloned repositories: `tpm`, `yazi-flavors` |
+| `other` | `herdr` |
+
+Without a group, all groups are shown. The output goes through `less -RFX`.
+
+### `--outdated` and `--all`
+
+`--outdated` checks Homebrew formulae, Homebrew casks, uv tools (against PyPI) and mise runtimes.
+
+`--all` runs, in order: `brew update` and `brew upgrade`; `uv tool upgrade --all`; `cargo install --locked` for each `cargo` entry in the Brewfile; `mise upgrade`; tpm plugin update; `git pull` of the yazi flavors; `brew cleanup` and `brew autoremove`.
+
+### `update --doctor`
+
+Runs `scripts/doctor.sh`. Exits non-zero if any check fails; warnings do not fail.
+
+| Section | Checks |
+|---------|--------|
+| Links | All stow packages link without conflicts (fix: `update --only stow`); no stale symlinks into the repository in `~` or `~/.config` |
+| Repository | Working tree is clean (warning: an installer may have edited a linked file) |
+| PATH | In a fresh interactive zsh, `git`, `rsync`, `python3` and `node` do not resolve to `/usr/bin` or `/bin`; Homebrew's `bin` is on `PATH` |
+| Shell startup | Interactive zsh starts in under 300 ms (warning otherwise) |
+| Configs | `zsh -n` on `~/.zshenv`, `~/.zprofile`, `~/.zshrc`, `~/.config/zsh/*.zsh`; `ghostty +validate-config`; tmux config parses; `yazi --version`; `~/.config/aerospace/aerospace.toml` exists |
+| Brewfile | `brew bundle check --no-upgrade` passes; warns about packages installed but not declared |
+| Git identity | `~/.config/git/personal.gitconfig` and `work.gitconfig` exist (warnings); the dotfiles repository resolves a `user.email` |
+| Runtimes | `mise doctor` passes; `rustup default` is set |
+
+### Examples
 
 ```bash
-# Re-stow dotfiles
-update --only stow
+update                     # full install (quiet)
+update -v                  # full install with detailed output
+update --dry-run -v        # preview everything
+update --only brew         # only Homebrew packages
+update --only stow         # re-link dotfiles after adding a file
+update --skip venv         # everything except the Neovim venv
+update --skip "venv brew"  # skip several steps
+update --list              # step names
 
-# Or manually
-stow --restow -d ~/dotfiles -t ~ zsh nvim tmux
+update bat                 # update bat (brew)
+update harlequin           # update harlequin (uv)
+update pay-respects        # update a cargo crate
+update pi                  # update a mise tool by its command name
+update tpm                 # update tpm
+
+update --outdated          # what can be updated
+update --all               # update everything
+update --versions uv       # uv tool versions
+update --info bat          # info about bat
+update --doctor            # health check
 ```
 
-## Environment Variables
+### Environment
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DOTFILES_DIR` | `$HOME/dotfiles` | Dotfiles location |
-| `LOG_FILE` | `$HOME/macos-setup.log` | Log file path |
+| `DOTFILES_DIR` | `$HOME/dotfiles` | Repository location |
+| `LOG_FILE` | `$XDG_STATE_HOME/dotfiles/install.log` (`~/.local/state/dotfiles/install.log` when `XDG_STATE_HOME` is unset) | Log of the last install run |
 
-## Exit Codes
+The log is overwritten at the start of every install run.
+
+### Exit codes
 
 | Code | Meaning |
 |------|---------|
-| 0 | Success |
-| 1 | Error (check log file) |
+| `0` | Success |
+| non-zero | A step or command failed (summary printed, details in `$LOG_FILE`), an unknown option or step, a failed `update <tool>`, or a failed doctor check |
 
-## Log File
+## `aliases`
 
-All operations are logged to `$LOG_FILE` (default: `~/macos-setup.log`).
+Browse the aliases and functions defined in `zsh/.config/zsh/aliases.zsh` and `functions.zsh`. The script parses those files on every run. See the [Aliases reference](./aliases.md).
 
-```bash
-# View log
-cat ~/macos-setup.log
+| Option | Description |
+|--------|-------------|
+| *(none)* | Usage and categories with counts |
+| `-s`, `--show <category>` | Show one category |
+| `-d`, `--describe <name>` | Show one alias or function |
+| `-t`, `--tui` | Interactive browser (`/` search, `Esc` clear, `j`/`k` move, `q` quit) |
 
-# Follow log
-tail -f ~/macos-setup.log
-
-# Search log
-grep "error" ~/macos-setup.log
-```
-
-## Custom Tools Commands
-
-### `aliases` - Alias Explorer
+Categories: `git`, `files`, `nav`, `term`, `pkg`, `sys`, `gnu`, `fn`.
 
 ```bash
-aliases              # Interactive TUI
-aliases --list       # List all aliases
-aliases --search git # Search aliases
-aliases --json       # JSON output
+aliases
+aliases -s git
+aliases -d gcl
+aliases --tui
 ```
 
-### `tools` - Tool Explorer
+## `tools`
+
+Browse the tool catalog in `bin/tools.py`. See the [Tools reference](./tools.md).
+
+| Option | Description |
+|--------|-------------|
+| *(none)* | Usage and categories with counts |
+| `-s`, `--show <category>` | Show one category |
+| `-d`, `--describe <name>` | Show one tool |
+| `-j`, `--json <name>` | One tool as JSON; exits 1 if unknown (used by `update --info`) |
+| `-t`, `--tui` | Interactive browser (`/` search, `Esc` clear, `j`/`k` move, `q` quit) |
+
+Categories: `shell`, `edit`, `cli`, `files`, `vc`, `quality`, `data`, `dev`, `infra`, `lang`, `ai`, `gnu`, `media`, `apps`, `wm`, `sys`.
 
 ```bash
-tools                     # Interactive TUI
-tools --list              # List all tools
-tools --category "Git"    # Filter by category
-tools --search ripgrep    # Search tools
-tools --json              # JSON output
+tools
+tools -s vc
+tools -d lazygit
+tools -j lazygit
+tools --tui
 ```
+
+## `prek` (git hooks)
+
+The repository's hooks are defined in `.pre-commit-config.yaml` and run by [prek](https://prek.j178.dev), a pre-commit compatible runner. Hook tools come from the Brewfile (`language: system`).
+
+```bash
+prek install               # once per clone: install the git hook shims
+prek run --all-files       # run every hook on all tracked files
+prek run shellcheck        # run one hook (by id)
+```
+
+| Hook | Checks |
+|------|--------|
+| builtin | trailing whitespace (not `*.md`), end of file, merge conflict markers, YAML, TOML, JSON (not `lazy-lock.json`), private keys |
+| `gitleaks` | Secrets in staged changes |
+| `shellcheck`, `shfmt` | `install.sh`, `run.sh`, `scripts/*.sh` (`shfmt -i 4`) |
+| `zsh-syntax` | `zsh -n` on the zsh files |
+| `stylua` | Lua formatting |
+| `actionlint` | `.github/workflows/` |
+| `brewfile` | The Brewfile parses |
+| `tool-catalog` | Every Brewfile and mise tool has an entry in `bin/tools.py` |
+| `ruff`, `ruff-format` | Python lint and format check |

@@ -1,207 +1,282 @@
 # Tools Reference
 
-A comprehensive guide to all 100+ tools included in this dotfiles setup. Each tool is documented with its purpose and practical examples.
+Every tool installed by this setup, grouped by the categories of the `tools` command (`bin/tools.py`).
 
-::: tip Interactive Browser
-Run `tools --tui` in your terminal for an interactive tool browser with search!
+Sources of truth:
+
+- `Brewfile`: Homebrew formulae and casks, `uv` tools and `cargo` crates.
+- `mise/.config/mise/config.toml`: language runtimes and npm-based tools.
+- `bin/tools.py`: the catalog behind `tools` and `update --info`. A prek hook (`scripts/check_catalog.py`) fails if a Brewfile or mise tool has no catalog entry.
+
+::: tip Interactive browser
+Run `tools --tui` for a searchable browser, or `tools -s <category>` for one category.
 :::
 
-## Shell & Terminal
+The **Source** column shows how a tool is installed: `brew`, `cask`, `uv`, `cargo`, `mise`, or `installer` (a third-party install script run by `update --only utils`).
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [zsh](https://www.zsh.org/) | Modern shell with plugins & completions | Tab-complete git branches, kubectl resources |
-| [starship](https://starship.rs/) | Beautiful prompt showing git, python, node status | See branch, venv, node version at a glance |
-| [tmux](https://github.com/tmux/tmux) | Split terminal into panes, persist sessions | `tmux new -s work` → detach → reattach anywhere |
-| [sesh](https://github.com/joshmedeski/sesh) | Fuzzy-find and switch tmux sessions | `sesh connect` → pick project → instant switch |
-| [ghostty](https://ghostty.org/) | GPU-rendered terminal, native feel | Smooth scrolling, ligatures, 60fps rendering |
+## Shell (`shell`)
 
-## Editors & Writing
+Terminal, prompt, multiplexer.
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [neovim](https://neovim.io/) | Vim but modern: LSP, Treesitter, Lua | `<Space>ff` fuzzy find, `gd` go to definition |
-| [dawn](https://github.com/andrewmd5/dawn) | Distraction-free writing, live markdown | `dawn notes.md` → headers scale, math renders |
-| [glow](https://github.com/charmbracelet/glow) | Render markdown beautifully in terminal | `glow README.md` → styled output, no browser |
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [zsh](https://www.zsh.org/) | brew | Shell with plugins and completions | Tab-complete git branches, ssh hosts |
+| [antidote](https://github.com/mattmc3/antidote) | brew | zsh plugin manager, static bundle | Edit `~/.config/zsh/plugins.txt`, open a new shell |
+| [starship](https://starship.rs/) | brew | Prompt with git, Python and Node status | Branch, venv and Node version at a glance |
+| [tmux](https://github.com/tmux/tmux) | brew | Split the terminal into panes, persist sessions | `tmux new -s work`, detach, reattach later |
+| [sesh](https://github.com/joshmedeski/sesh) | brew | Fuzzy-find and switch tmux sessions | `sesh connect` → pick a project |
+| [tmux-expose](https://github.com/cesarferreira/tmux.expose) | cargo | Mission Control-style tmux session switcher | `Alt+e` → grid of live session previews |
+| [atuin](https://github.com/atuinsh/atuin) | brew | Searchable shell history with context | `Ctrl+R` → search every command |
+| [ghostty](https://ghostty.org/) | cask | GPU-rendered terminal | Default terminal; starts tmux automatically |
+| [herdr](https://herdr.dev) | installer | Herdr | `herdr --help` |
 
-## Modern CLI Replacements
+## Editors (`edit`)
 
-These tools replace classic Unix commands with faster, more intuitive alternatives:
+Text editors and writing.
 
-| Classic | Modern | Why It's Better |
-|---------|--------|-----------------|
-| `cat` | [bat](https://github.com/sharkdp/bat) | Syntax highlighting, line numbers, git integration |
-| `ls` | [eza](https://github.com/eza-community/eza) | Icons, git status, tree view built-in |
-| `find` | [fd](https://github.com/sharkdp/fd) | Intuitive syntax, respects `.gitignore` |
-| `grep` | [ripgrep](https://github.com/BurntSushi/ripgrep) | 10x faster, smart defaults, skips binaries |
-| `cd` | [zoxide](https://github.com/ajeetdsouza/zoxide) | Learns your habits, `z proj` jumps anywhere |
-| `diff` | [difftastic](https://difftastic.wilfred.me.uk/) | Understands code structure, semantic diffs |
-| `curl` | [httpie](https://httpie.io/) | Human-friendly, colored JSON output |
-| `man` | [tldr](https://tldr.sh/) | Practical examples, not 50-page manuals |
-| `top` | [btop](https://github.com/aristocratos/btop) | Beautiful, shows CPU/RAM/disk/network |
-| `du` | [ncdu](https://dev.yorhel.nl/ncdu) | Interactive disk usage explorer |
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [neovim](https://neovim.io/) | brew | Editor with LSP, Treesitter, Lua config (LazyVim) | `<Space>ff` find files, `gd` go to definition |
+| [dawn](https://github.com/andrewmd5/dawn) | brew (tap `andrewmd5/tap`) | Distraction-free writing, live markdown render | `dawn notes.md` |
+| [glow](https://github.com/charmbracelet/glow) | brew | Render markdown in the terminal | `glow README.md` |
+| leaf-markdown-viewer | brew | Markdown previewer with TOC, watch mode, themes | `leaf -w notes.md` → live reload |
 
-## File Management
+## Modern CLI (`cli`)
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [yazi](https://yazi-rs.github.io/) | Fastest file manager, vim keys, previews | `yazi` → j/k navigate, preview images/PDFs |
-| [broot](https://dystroy.org/broot/) | Navigate directories as tree, fuzzy search | `br` → type to filter, alt+enter to cd |
-| [fzf](https://github.com/junegunn/fzf) | Fuzzy find anything: files, history, processes | `Ctrl+r` → search command history |
-| [stow](https://www.gnu.org/software/stow/) | Symlink manager for dotfiles | `stow nvim` → links config automatically |
-| [rename](https://metacpan.org/pod/rename) | Batch rename with regex | `rename 's/IMG_/photo_/' *.jpg` |
+Modern Unix replacements. Several are aliased over the classic command (see [Aliases](./aliases.md)).
 
-## Version Control
+| Classic | Tool | Source | Description | Example |
+|---------|------|--------|-------------|---------|
+| `cat` | [bat](https://github.com/sharkdp/bat) | brew | Syntax highlighting and line numbers | `bat script.py` |
+| `ls` | [eza](https://github.com/eza-community/eza) | brew | Icons, git status, tree view | `eza -la --git` |
+| `find` | [fd](https://github.com/sharkdp/fd) | brew | Simple syntax, respects `.gitignore` | `fd 'test.*py'` |
+| `grep` | [ripgrep](https://github.com/BurntSushi/ripgrep) | brew | Fast recursive search, skips binaries and `.git` | `rg 'TODO'` |
+| | [repgrep](https://github.com/acheronfail/repgrep) | cargo | Interactive find and replace on ripgrep results | `rgr 'old_name'` |
+| `cd` | [zoxide](https://github.com/ajeetdsouza/zoxide) | brew | `cd` that learns your habits | `z proj` |
+| `curl` | [httpie](https://httpie.io/) | brew | HTTP client with coloured JSON output | `http GET api.github.com/users/octocat` |
+| `man` | [tlrc](https://github.com/tldr-pages/tlrc) | brew | tldr pages client (command: `tldr`) | `tldr tar` |
+| | [pay-respects](https://github.com/iffse/pay-respects) | cargo | Fix the last mistyped command (replaces thefuck) | `git brach` → `f` |
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [git](https://git-scm.com/) | Distributed version control | `git log --oneline --graph` |
-| [gh](https://cli.github.com/) | GitHub from terminal: PRs, issues, Actions | `gh pr create` → PR without leaving terminal |
-| [lazygit](https://github.com/jesseduffield/lazygit) | Git TUI: stage hunks, rebase visually | `lazygit` → space to stage, c to commit |
-| [serie](https://github.com/lusingander/serie) | Beautiful git commit graph | `serie` → see branch topology with colors |
-| [gitlogue](https://github.com/bensadeh/gitlogue) | Replay commits like a movie | `gitlogue` → watch project evolve |
-| [git-lfs](https://git-lfs.github.com/) | Handle large files efficiently | `git lfs track '*.psd'` |
-| [difftastic](https://difftastic.wilfred.me.uk/) | Structural diff tool | `difft old.py new.py` → semantic changes |
+## Files (`files`)
 
-## Data & Databases
+File management and navigation.
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [jq](https://jqlang.github.io/jq/) | Query & transform JSON | `curl api \| jq '.items[].name'` |
-| [harlequin](https://harlequin.sh/) | Full SQL IDE in terminal | `harlequin db.sqlite` → autocomplete, export |
-| [tabiew](https://github.com/shshemi/tabiew) | View CSV/Parquet with SQL queries | `tw data.csv` → spreadsheet + SQL filtering |
-| [dbt](https://www.getdbt.com/) | Analytics engineering tool | `dbt run` → transform raw data |
-| [mongosh](https://www.mongodb.com/docs/mongodb-shell/) | MongoDB shell with autocomplete | `db.users.find({age: {$gt: 21}})` |
-| [snowsql](https://docs.snowflake.com/en/user-guide/snowsql) | Snowflake CLI | `snowsql -q 'SELECT * FROM users'` |
-| [sqlit](https://github.com/nicholassm/sqlit) | Lazygit for databases | `sqlit` → connect, query, vim keys |
-| [lnav](https://lnav.org/) | Log file navigator | `lnav *.log` → time-synced, filterable |
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [yazi](https://yazi-rs.github.io/) | brew | Terminal file manager with previews | `yy` → yazi, then cd to where you left it |
+| [broot](https://dystroy.org/broot/) | brew | Navigate directories as a tree | `br` → type to filter |
+| [fzf](https://github.com/junegunn/fzf) | brew | Fuzzy finder | `Ctrl+T` → pick a file into the command line |
+| [ncdu](https://dev.yorhel.nl/ncdu) | brew | Interactive disk usage (alias `du`) | `ncdu ~` |
+| [btop](https://github.com/aristocratos/btop) | brew | System monitor (alias `top`) | `btop` |
+| [stow](https://www.gnu.org/software/stow/) | brew | Symlink manager for dotfiles | `update --only stow` |
+| [rename](https://metacpan.org/pod/rename) | brew | Batch rename with regex | `rename 's/IMG_/photo_/' *.jpg` |
+| rsync | brew | Fast incremental file copy and sync | `rsync -avh src/ dst/` |
+| [croc](https://github.com/schollz/croc) | brew | Encrypted device-to-device file transfer | `croc send file.zip` |
 
-## Development Tools
+## Version control (`vc`)
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [watchexec](https://github.com/watchexec/watchexec) | Run command on file changes | `watchexec -e py pytest` → auto-test |
-| [hyperfine](https://github.com/sharkdp/hyperfine) | Benchmark commands scientifically | `hyperfine 'fd' 'find'` → compare |
-| [act](https://github.com/nektos/act) | Test GitHub Actions locally | `act -j test` → run without pushing |
-| [vhs](https://github.com/charmbracelet/vhs) | Record terminal as GIF | `vhs demo.tape` → reproducible recordings |
-| [scooter](https://github.com/thomasschafer/scooter) | Interactive find & replace | TUI for project-wide refactoring |
-| [resterm](https://github.com/resterm/resterm) | Terminal API client | REST/GraphQL/gRPC/WebSocket testing |
-| [direnv](https://direnv.net/) | Auto-load env vars per directory | `cd project` → `.envrc` loads automatically |
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [git](https://git-scm.com/) | brew | Version control | `git l` → graph log (git alias) |
+| [git-lfs](https://git-lfs.github.com/) | brew | Large file storage | `git lfs track '*.psd'` |
+| [git-filter-repo](https://github.com/newren/git-filter-repo) | brew | Rewrite git history | `git filter-repo --path secrets.env --invert-paths` |
+| [git-delta](https://github.com/dandavison/delta) | brew | Pager for `git diff`, `git log`, `git show` | `git diff` → `n`/`N` jump between files |
+| [difftastic](https://difftastic.wilfred.me.uk/) | brew | Syntax-aware diff, on demand | `git dft`, `git dlog`, `git dshow` |
+| [gh](https://cli.github.com/) | brew | GitHub CLI; also the git credential helper for github.com | `gh pr create` |
+| [lazygit](https://github.com/jesseduffield/lazygit) | brew | Git TUI | `lazygit`, or `prefix g` in tmux |
+| [serie](https://github.com/lusingander/serie) | brew | Git commit graph | `serie` |
+| [gitlogue](https://github.com/unhappychoice/gitlogue) | brew | Cinematic commit replay | `gitlogue` |
 
-## Infrastructure & Cloud
+`update --only utils` also installs the `gh` extension `dlvhdr/gh-dash` (`gh dash`).
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [lima](https://lima-vm.io/) | Linux VMs on Mac, Docker alternative | `lima` → full Linux shell |
-| [lazydocker](https://github.com/jesseduffield/lazydocker) | Docker TUI | Manage containers without flags |
-| [slim](https://github.com/slimtoolkit/slim) | Minify containers by 30x | `slim build my-image` → optimized |
-| [temporal](https://temporal.io/) | Durable execution platform | `temporal server start-dev` |
-| [terraform](https://www.terraform.io/) | Infrastructure as code | `terraform apply` → provision cloud |
-| [azure-cli](https://docs.microsoft.com/cli/azure/) | Manage Azure resources | `az vm list` |
+## Quality (`quality`)
 
-## Languages & Runtimes
+Linters, formatters and secret scanning. The repository's git hooks (`.pre-commit-config.yaml`) use these through prek.
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [uv](https://github.com/astral-sh/uv) | pip but 100x faster | `uv pip install pandas` → milliseconds |
-| [pixi](https://prefix.dev/pixi) | Conda-compatible, fast | `pixi add numpy` → Python + system deps |
-| [bun](https://bun.sh/) | Node.js but faster | `bun run dev` → 10x faster startup |
-| [go](https://go.dev/) | Go programming language | `go run main.go` |
-| [rust](https://www.rust-lang.org/) | Systems programming | `cargo run` |
-| [gum](https://github.com/charmbracelet/gum) | Beautiful shell script prompts | `gum choose 'opt1' 'opt2'` |
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [prek](https://prek.j178.dev) | brew | Git hooks runner, pre-commit compatible | `prek install` |
+| [gitleaks](https://github.com/gitleaks/gitleaks) | brew | Find secrets in code and git history | `gitleaks git .` |
+| [shellcheck](https://github.com/koalaman/shellcheck) | brew | Shell linter | `shellcheck install.sh` |
+| [shfmt](https://github.com/mvdan/sh) | brew | Shell formatter | `shfmt -i 4 -w script.sh` |
+| [stylua](https://github.com/JohnnyMorganz/StyLua) | brew | Lua formatter | `stylua nvim/` |
+| [actionlint](https://github.com/rhysd/actionlint) | brew | GitHub Actions workflow linter | `actionlint` |
+| [ruff](https://github.com/astral-sh/ruff) | brew | Python linter and formatter | `ruff check --fix . && ruff format .` |
+| [ty](https://github.com/astral-sh/ty) | brew | Python type checker | `ty check .` |
+| [biome](https://biomejs.dev/) | brew | JS/TS linter and formatter | `biome check --write .` |
+| [bacon](https://github.com/Canop/bacon) | brew | Background Rust checker | `bacon clippy` |
 
-## AI & LLM Tools
+## Data (`data`)
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [opencode](https://opencode.ai/) | AI coding agent in terminal | `opencode` → Claude helps you code |
-| [ollama](https://ollama.ai/) | Run LLMs locally | `ollama run llama2` → chat locally |
-| [unsloth](https://unsloth.ai/) | Fine-tune LLMs 2x faster | `unsloth studio` → local UI on :8888 |
-| [llama.cpp](https://github.com/ggerganov/llama.cpp) | Efficient LLM inference | Run models on CPU |
+Databases and data processing.
 
-## GNU Coreutils
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [jq](https://jqlang.github.io/jq/) | brew | Query and transform JSON | `curl api \| jq '.items[].name'` |
+| [yq](https://github.com/mikefarah/yq) | brew | jq for YAML | `yq '.parameters' main.params.yaml` |
+| [duckdb](https://duckdb.org/) | brew | In-process analytical SQL on files | `duckdb -c "select * from 'data/*.parquet' limit 5"` |
+| [tabiew](https://github.com/shshemi/tabiew) | brew | View CSV/Parquet/JSON with SQL (command: `tw`) | `tw data.csv` |
+| [dbt](https://www.getdbt.com/) | brew (tap `dbt-labs/dbt-cli`) | dbt Cloud CLI | `dbt run` |
+| [snowflake-cli](https://github.com/snowflakedb/snowflake-cli) | brew | Snowflake CLI (command: `snow`; replaces SnowSQL) | `snow sql -q 'select current_role()'` |
+| [sqlfluff](https://github.com/sqlfluff/sqlfluff) | brew | SQL linter and formatter (dbt, Snowflake) | `sqlfluff lint models/ --dialect snowflake` |
+| [harlequin](https://harlequin.sh/) | uv | SQL IDE in the terminal (duckdb, mysql, postgres, sqlite adapters) | `harlequin db.duckdb` |
+| sqlit-tui | uv | Database TUI (command: `sqlit`) | `sqlit` → pick a connection |
+| [mongosh](https://www.mongodb.com/docs/mongodb-shell/) | brew | MongoDB shell | `mongosh` |
+| [lnav](https://lnav.org/) | brew | Log file viewer | `lnav /var/log/*.log` |
+| [pgadmin4](https://www.pgadmin.org/) | cask | PostgreSQL admin GUI | Browse schemas, run queries |
 
-GNU versions with more features than macOS defaults:
+## Dev (`dev`)
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| coreutils | GNU cp, mv, rm with progress | `gcp --progress file.iso /mnt` |
-| gnu-sed | sed that works as expected | `gsed -i 's/old/new/g' file` |
-| gawk | Full-featured awk | `gawk '{sum+=$1} END {print sum}'` |
-| wget | Download & mirror websites | `wget -r site.com` |
-| gnupg | Encrypt files & sign commits | `gpg -c secrets.txt` |
+Development and build tools.
 
-## Media & Documents
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [watchexec](https://github.com/watchexec/watchexec) | brew | Run a command when files change | `watchexec -e py pytest` |
+| [hyperfine](https://github.com/sharkdp/hyperfine) | brew | Benchmark commands | `hyperfine 'fd' 'find'` |
+| [act](https://github.com/nektos/act) | brew | Run GitHub Actions locally | `act -j test` |
+| [vhs](https://github.com/charmbracelet/vhs) | brew | Record terminal sessions as GIFs | `vhs demo.tape` |
+| [scooter](https://github.com/thomasschafer/scooter) | brew | Interactive find and replace across files | `scooter` |
+| [resterm](https://github.com/resterm/resterm) | brew | Terminal API client (REST/GraphQL/gRPC) | `resterm` |
+| [universal-ctags](https://github.com/universal-ctags/ctags) | brew | Index symbols for editors | `ctags -R .` |
+| [postman](https://www.postman.com/) | cask | API client GUI | Collections, environments, tests |
+| [gum](https://github.com/charmbracelet/gum) | brew | Prompts and spinners for shell scripts | `gum choose 'opt1' 'opt2'` |
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [ffmpeg](https://ffmpeg.org/) | Convert any media format | `ffmpeg -i vid.mov out.mp4` |
-| [imagemagick](https://imagemagick.org/) | Batch process images | `convert -resize 50% img.png thumb.png` |
-| [mermaid-cli](https://github.com/mermaid-js/mermaid-cli) | Diagrams from text | `mmdc -i diagram.md -o out.png` |
-| [slides](https://github.com/maaslalani/slides) | Terminal presentations | `slides deck.md` |
-| [figlet](http://www.figlet.org/) | ASCII art text | `figlet 'Hello'` |
+## Infra (`infra`)
 
-## Productivity Apps
+Containers, infrastructure and cloud.
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [1password](https://1password.com/) | Password manager + CLI | `op item get 'AWS' --fields password` |
-| [raycast](https://raycast.com/) | Spotlight replacement | Clipboard history, snippets, emoji |
-| [cleanshot](https://cleanshot.com/) | Screenshot & annotate | Cmd+Shift+4 → draw → share |
-| [espanso](https://espanso.org/) | Text expansion | `:sig` → full email signature |
-| [shortcat](https://shortcat.app/) | Click UI with keyboard | Cmd+Shift+Space → type to click |
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [orbstack](https://orbstack.dev/) | cask | Docker and Linux VMs for macOS (default engine) | `docker run --rm hello-world` |
+| [colima](https://github.com/abiosoft/colima) | brew | Open-source container runtime on Lima (alternative) | `colima start` |
+| [lima](https://lima-vm.io/) | brew | Linux VMs on macOS | `limactl start` |
+| [docker](https://www.docker.com/) | brew | Docker CLI (engine from OrbStack or colima) | `docker compose up` |
+| [docker-compose](https://github.com/docker/compose) | brew | Multi-container apps | `docker compose logs -f api` |
+| [docker-buildx](https://github.com/docker/buildx) | brew | Multi-platform image builds | `docker buildx build --platform linux/amd64 .` |
+| [lazydocker](https://github.com/jesseduffield/lazydocker) | brew | Docker TUI | `lazydocker`, or `prefix D` in tmux |
+| [mintoolkit](https://github.com/mintoolkit/mint) | brew | Container image minifier (formerly docker-slim; command: `mint`) | `mint slim my-image` |
+| [opentofu](https://opentofu.org/) | brew | Open-source Terraform (command: `tofu`; replaces terraform) | `tofu plan` |
+| [azure-cli](https://docs.microsoft.com/cli/azure/) | brew | Azure CLI (`az`); Bicep via `az bicep install` | `az bicep build -f main.bicep` |
+| [azd](https://github.com/Azure/azure-dev) | brew (tap `azure/azd`) | Azure Developer CLI | `azd up` |
+| [temporal](https://temporal.io/) | brew | Durable execution platform CLI | `temporal server start-dev` |
 
-## Window Management
+## Languages (`lang`)
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [aerospace](https://github.com/nikitabobko/AeroSpace) | Tiling window manager | Alt+Enter → windows auto-tile |
-| [skhd](https://github.com/koekeishiya/skhd) | Global hotkeys | Ctrl+Alt+T → terminal anywhere |
-| [alt-tab](https://alt-tab-macos.netlify.app/) | Windows-style alt-tab | See window previews |
+Runtimes and toolchains. Rule from `mise/.config/mise/config.toml`: language runtimes and npm-based tools live in mise; Python is managed by uv, Rust by rustup.
 
-## System & Security
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [mise](https://mise.jdx.dev/) | brew | Runtime manager for node, go, bun, pnpm; per-project versions | `mise use node@24` |
+| [uv](https://github.com/astral-sh/uv) | brew | Python packages, tools and versions | `uv add pandas` |
+| [pixi](https://prefix.dev/pixi) | brew | Conda-compatible environment manager | `pixi add numpy` |
+| [rustup](https://rustup.rs/) | brew | Rust toolchain manager (`rustup default stable`) | `rustup update` |
+| [node](https://nodejs.org/) | mise (`lts`) | JavaScript runtime | `node --version` |
+| [go](https://go.dev/) | mise (`latest`) | Go toolchain | `go run .` |
+| [bun](https://bun.sh/) | mise (`latest`) | JavaScript runtime and bundler | `bun run dev` |
+| [pnpm](https://pnpm.io/) | mise (`latest`) | Disk-efficient npm | `pnpm install` |
 
-| Tool | Description | Example |
-|------|-------------|---------|
-| [wireguard](https://www.wireguard.com/) | Modern VPN | `wg-quick up vpn` |
-| [lulu](https://objective-see.org/products/lulu.html) | Block outgoing connections | Firewall for outbound traffic |
-| [aldente](https://apphousekitchen.com/) | Battery charge limiter | Stop at 80% for battery health |
-| [jolt](https://github.com/jordond/jolt) | Battery & energy monitor | Track power-hungry processes |
+## AI (`ai`)
 
-## Exploring Tools
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [opencode](https://opencode.ai/) | brew | AI coding agent in the terminal | `opencode` |
+| pi | mise (`npm:@earendil-works/pi-coding-agent`) | Earendil's coding agent | `pi` |
+| [llama.cpp](https://github.com/ggerganov/llama.cpp) | brew | Run GGUF models locally | `llama-server -m model.gguf` |
+| [ollama-app](https://ollama.ai/) | cask | Run LLMs locally | `ollama run llama3` |
+| hf | brew | Hugging Face Hub CLI | `hf download org/model` |
+| [unsloth](https://unsloth.ai/) | installer | Fine-tune LLMs locally (Unsloth Studio, in `~/unsloth_studio`) | `unsloth studio` |
 
-### CLI Commands
+## GNU (`gnu`)
+
+Interactive zsh puts the GNU versions of coreutils, findutils, sed, tar, grep and awk first on `PATH` under their usual names (see `zsh/.zshrc`). Scripts keep the BSD tools.
+
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| coreutils | brew | GNU `cp`, `ls`, `date`, ... | `cp --backup=numbered a b` |
+| gnu-sed | brew | GNU sed as `sed` | `sed -i 's/old/new/g' file` |
+| gawk | brew | GNU awk as `awk` | `awk '{sum+=$1} END {print sum}'` |
+| wget | brew | Download files, mirror websites | `wget -r site.com` |
+| gnupg | brew | Encrypt and sign files | `gpg -c secrets.txt` |
+
+Also installed, not catalogued: findutils, diffutils, binutils (keg-only), moreutils, gnu-tar, gnu-time, gnu-which, grep, gzip.
+
+## Media (`media`)
+
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [ffmpeg](https://ffmpeg.org/) | brew | Convert media formats | `ffmpeg -i vid.mov out.mp4` |
+| [gifsicle](https://www.lcdf.org/gifsicle/) | brew | Optimize GIFs (used by `gifify`) | `gifify demo.mov` |
+| [imagemagick](https://imagemagick.org/) | brew | Image processing | `magick img.png -resize 50% thumb.png` |
+| [mermaid-cli](https://github.com/mermaid-js/mermaid-cli) | brew | Diagrams from text | `mmdc -i diagram.md -o out.png` |
+| [slides](https://github.com/maaslalani/slides) | brew | Terminal presentations | `slides deck.md` |
+| [figlet](http://www.figlet.org/) | brew | ASCII art banners | `figlet 'Hello'` |
+| toilet | brew | Coloured ASCII art text | `toilet -f mono12 -F metal Hi` |
+
+## Apps (`apps`)
+
+Productivity applications and browsers.
+
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [1password](https://1password.com/) | cask | Password manager | |
+| 1password-cli | cask | 1Password CLI (`op`) | `envrun python app.py` → secrets for one command |
+| [raycast](https://raycast.com/) | cask | Spotlight replacement | Clipboard history, snippets |
+| [cleanshot](https://cleanshot.com/) | manual | Screenshots. **Not in the Brewfile**: frozen at v4 (the license does not cover v5); install v4 manually | |
+| [espanso](https://espanso.org/) | cask | Text expander | `:sig` → email signature |
+| [hiddenbar](https://github.com/dwarvesf/hidden) | cask | Hide menu bar icons | |
+| [shortcat](https://shortcat.app/) | cask | Keyboard-driven UI navigation | |
+| [mas](https://github.com/mas-cli/mas) | brew | Mac App Store CLI | `mas outdated` |
+| [arc](https://arc.net/) | cask | Browser | |
+| [zen](https://zen-browser.app/) | cask | Firefox-based privacy browser | |
+
+## Windows (`wm`)
+
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [aerospace](https://github.com/nikitabobko/AeroSpace) | cask (tap `nikitabobko/tap`) | Tiling window manager; config `~/.config/aerospace/aerospace.toml` | `Alt+h/j/k/l` focus |
+| [alt-tab](https://alt-tab-macos.netlify.app/) | cask | Windows-style alt-tab with previews | |
+
+## System (`sys`)
+
+| Tool | Source | Description | Example |
+|------|--------|-------------|---------|
+| [jolt](https://github.com/jordond/jolt) | brew (tap `jordond/tap`) | Battery and energy monitor TUI | `jolt` |
+| [wireguard-tools](https://www.wireguard.com/) | brew | VPN | `wg-quick up vpn` |
+| [lulu](https://objective-see.org/products/lulu.html) | cask | Outbound firewall | |
+| [aldente](https://apphousekitchen.com/) | cask | Battery charge limiter | |
+
+## Supporting packages
+
+Installed by the Brewfile but not catalogued in `bin/tools.py` (`NOT_CATALOGUED` in `scripts/check_catalog.py`):
+
+| Package | Why it is installed |
+|---------|---------------------|
+| pam-reattach | Touch ID for `sudo` inside tmux |
+| unar, poppler, ffmpegthumbnailer, font-symbols-only-nerd-font | Yazi requirements |
+| ghostscript, tectonic | snacks.nvim rendering (PDF, LaTeX) |
+| graphviz | Graph visualization (PyMC) |
+| font-hack-nerd-font | Hack Nerd Font |
+| portaudio | Audio I/O (pyaudio) |
+| zlib | Compression library |
+| usage | Listed in the mise config |
+
+## Removed
+
+No longer installed: antigen, zplug (→ antidote), n, yarn (→ mise, pnpm), thefuck (→ pay-respects, alias `f`), terraform (→ opentofu `tofu`), SnowSQL (→ snowflake-cli `snow`), direnv (→ mise), skhd, screen, ack, flux-app, font-hack, gh-tran. docker-slim is now `mintoolkit`.
+
+## Exploring tools
 
 ```bash
-# Show all categories
-tools
+tools                 # categories and counts
+tools -s vc           # one category
+tools -d lazygit      # one tool
+tools -j lazygit      # one tool as JSON (used by update --info)
+tools --tui           # interactive browser
 
-# Show tools in a category
-tools -s vc          # Version control
-tools -s cli         # Modern CLI tools
-tools -s data        # Database tools
-
-# Get details about a tool
-tools -d lazygit
-
-# Interactive TUI browser
-tools --tui
+update --info bat     # catalog entry + installed source and version
+update --versions     # installed versions (see CLI reference for groups)
+update --outdated     # available updates
+update bat            # update one tool
 ```
 
-### Version Management
-
-```bash
-# Show installed versions
-update --versions
-
-# Filter by package manager
-update --versions brew
-update --versions uv
-update --versions cargo
-
-# Check for updates
-update --outdated
-
-# Update a specific tool
-update bat
-```
+See the [CLI reference](./cli.md) for every flag.

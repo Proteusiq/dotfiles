@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Fox's Dotfiles"
   text: "Modern macOS Dev Environment"
-  tagline: A thoughtfully crafted terminal-first development setup with 100+ curated tools
+  tagline: A terminal-first macOS setup, installed and maintained with one command
   actions:
     - theme: brand
       text: Get Started
@@ -17,39 +17,39 @@ features:
   - icon:
       src: /icons/terminal.svg
     title: One Command Setup
-    details: Run a single command to install everything. Idempotent and safe to re-run anytime.
+    details: One installer for packages, runtimes and links. Run it again at any time to update the setup. Check the result with update --doctor.
     link: /guide/installation
     linkText: Learn more
   - icon:
       src: /icons/zap.svg
-    title: Blazing Fast Terminal
-    details: Ghostty + tmux + Starship prompt. GPU-accelerated with sub-millisecond latency.
+    title: Terminal Stack
+    details: Ghostty, tmux, sesh and Starship. Ghostty starts tmux automatically. sesh switches between projects.
     link: /guide/terminal
     linkText: Terminal setup
   - icon:
       src: /icons/palette.svg
-    title: Beautiful by Default
-    details: Catppuccin Mocha theme everywhere. Consistent colors across terminal, editor, and tools.
+    title: One Theme
+    details: Catppuccin Mocha in Ghostty, tmux, fzf, delta, Yazi and Neovim.
     link: /guide/shell
     linkText: Shell config
   - icon:
       src: /icons/wrench.svg
     title: Modern CLI Tools
-    details: bat, eza, fd, ripgrep, zoxide, and more. Classic commands reimagined in Rust.
+    details: bat, eza, fd, ripgrep, zoxide, fzf, atuin and more. All declared in one Brewfile.
     link: /reference/tools
     linkText: Browse tools
   - icon:
       src: /icons/code.svg
     title: Neovim + LazyVim
-    details: Full IDE experience with LSP, completions, debugging, and 23+ carefully configured plugins.
+    details: LazyVim with language extras for Python, Go, Rust, TypeScript, SQL, Terraform and more, plus a small set of custom plugins.
     link: /guide/neovim
     linkText: Neovim guide
   - icon:
       src: /icons/package.svg
-    title: Python & Rust Ready
-    details: UV for Python, Cargo for Rust. Fast package managers with virtual environment support.
-    link: /reference/tools#languages--runtimes
-    linkText: View languages
+    title: Languages
+    details: uv for Python, mise for Node, Go and Bun, rustup for Rust.
+    link: /reference/tools
+    linkText: View tools
 ---
 
 <style>
@@ -61,13 +61,21 @@ features:
 
 ## Quick Start
 
-```bash
-# Clone the repository
-git clone https://github.com/Proteusiq/dotfiles.git ~/dotfiles
+Bootstrap a new Mac with one command:
 
-# Run the installer
-cd ~/dotfiles && ./install.sh
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Proteusiq/dotfiles/main/run.sh)"
 ```
+
+Or clone the repository and run the installer yourself:
+
+```bash
+git clone https://github.com/Proteusiq/dotfiles ~/dotfiles && ~/dotfiles/install.sh
+```
+
+::: tip
+`run.sh` is short. Read it before you run it.
+:::
 
 ## What's Included
 
@@ -75,24 +83,32 @@ cd ~/dotfiles && ./install.sh
 
 | Category | Tools |
 |----------|-------|
-| **Terminal** | Ghostty, tmux, Starship, sesh |
+| **Terminal** | Ghostty, tmux, sesh, Starship |
 | **Editor** | Neovim + LazyVim |
-| **Shell** | Zsh + Antigen |
+| **Shell** | Zsh + antidote, fzf, zoxide, atuin |
 | **Files** | Yazi, fzf, fd, ripgrep |
-| **Git** | lazygit, gh CLI, git-delta |
-| **Languages** | Python (uv), Rust, Go, Bun |
+| **Git** | lazygit, gh, delta, difftastic |
+| **Languages** | Python (uv), Node/Go/Bun (mise), Rust (rustup) |
+| **Containers** | OrbStack or colima, Docker CLI |
 
 </div>
 
+See the [Tools Reference](/reference/tools) for the full list.
+
 ## The `update` Command
 
-After installation, use the `update` command to manage your setup:
+After installation, the `update` alias runs the installer:
 
 ```bash
-update                    # Full install (idempotent)
+update                    # Full install; safe to run again
+update --dry-run -v       # Show what would run, change nothing
+update --doctor           # Check links, PATH, configs and the Brewfile
+update --outdated         # Show packages with updates available
+update --all              # Update brew, uv, cargo, mise and git-cloned tools
+update bat                # Update one tool
+update --only brew        # Run one step
+update --skip "venv brew" # Skip steps
 update --versions         # Show installed versions
-update --outdated         # Check for updates
-update --only brew        # Run specific function
-update --skip "venv brew" # Skip functions
-update -v                 # Verbose output
 ```
+
+See [Installation](/guide/installation) and the [CLI Reference](/reference/cli).

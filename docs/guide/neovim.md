@@ -1,230 +1,145 @@
-# Neovim Configuration
+# Neovim
 
-This setup uses [LazyVim](https://lazyvim.org) as a base with custom plugins and keybindings optimized for Python, Rust, and web development.
+Neovim uses [LazyVim](https://lazyvim.org) as its base. The configuration adds language extras, a few plugins and some options. Everything else is LazyVim's default.
 
-## Quick Start
-
-```bash
-# Open Neovim
-nvim
-
-# Or use the alias
-n
-```
-
-On first launch, LazyVim will automatically install all plugins.
-
-## Structure
+## Files
 
 ```
 nvim/.config/nvim/
-├── init.lua              # Entry point
-├── lazyvim.json          # LazyVim configuration
+├── init.lua              # loads config/lazy.lua
+├── lazyvim.json          # LazyVim extras (the only list)
+├── lazy-lock.json        # plugin versions (tracked)
 └── lua/
     ├── config/
-    │   ├── autocmds.lua  # Auto commands
-    │   ├── keymaps.lua   # Custom keybindings
-    │   ├── lazy.lua      # Plugin manager setup
-    │   └── options.lua   # Editor options
-    └── plugins/
-        ├── coding.lua    # Completion, snippets
-        ├── colorscheme.lua
-        ├── editor.lua    # File explorer, search
-        ├── lsp.lua       # Language servers
-        └── ui.lua        # UI enhancements
+    │   ├── lazy.lua      # lazy.nvim setup
+    │   ├── options.lua   # options, Python provider, auto-normal mode
+    │   ├── autocmds.lua  # autosave
+    │   └── keymaps.lua   # empty: LazyVim defaults
+    └── plugins/          # one file per plugin or override
 ```
 
-## Key Mappings
+`lazy.lua` loads LazyVim, then every file in `lua/plugins/`. Custom plugins are not lazy-loaded unless their spec says so. lazy.nvim checks for plugin updates in the background and does not notify.
 
-Leader key is `<Space>`.
+## Extras
 
-### General
+`lazyvim.json` enables these LazyVim extras:
 
-| Key | Action |
-|-----|--------|
-| `<Space>` | Show which-key menu |
-| `<Space>e` | Toggle file explorer |
-| `<Space>ff` | Find files |
-| `<Space>fg` | Live grep |
-| `<Space>fb` | Browse buffers |
-| `<Space>fr` | Recent files |
+| Group | Extras |
+|-------|--------|
+| Coding | `coding.yanky` |
+| Debugging and tests | `dap.core`, `test.core` |
+| Editor | `editor.leap`, `editor.neo-tree` |
+| Languages | `lang.docker`, `lang.git`, `lang.go`, `lang.json`, `lang.markdown`, `lang.python`, `lang.rust`, `lang.sql`, `lang.terraform`, `lang.toml`, `lang.typescript`, `lang.yaml` |
+| UI | `ui.mini-animate` |
+| Utilities | `util.dot`, `util.octo` |
 
-### File Explorer (Neo-tree)
+Change extras with `:LazyExtras`. It writes `lazyvim.json`.
 
-| Key | Action |
-|-----|--------|
-| `<Space>e` | Toggle explorer |
-| `a` | Add file/directory |
-| `d` | Delete |
-| `r` | Rename |
-| `c` | Copy |
-| `m` | Move |
-| `y` | Copy path |
+LazyVim's defaults apply: blink.cmp for completion, the snacks picker, and lazygit through snacks (`<leader>gg`).
 
-### LSP
+## Custom Plugins
 
-| Key | Action |
-|-----|--------|
-| `gd` | Go to definition |
-| `gr` | Go to references |
-| `K` | Hover documentation |
-| `<Space>ca` | Code actions |
-| `<Space>cr` | Rename symbol |
-| `<Space>cf` | Format document |
-| `]d` | Next diagnostic |
-| `[d` | Previous diagnostic |
+| Plugin | Purpose | Keys |
+|--------|---------|------|
+| [harpoon](https://github.com/ThePrimeagen/harpoon) (harpoon2) | Pin files and jump to them | `<leader>a` add, `<C-e>` menu, `<leader>1`…`<leader>4` jump, `<C-S-P>`/`<C-S-N>` previous/next |
+| [multicursor.nvim](https://github.com/jake-stewart/multicursor.nvim) | Multiple cursors | see [below](#multiple-cursors) |
+| [camouflage.nvim](https://github.com/zeybek/camouflage.nvim) | Masks secret values in `.env` and similar files | `<leader>ct` toggle, `<leader>cv` reveal line, `<leader>cy` yank value |
+| [yazi.nvim](https://github.com/mikavilpas/yazi.nvim) | Yazi in a floating window | `<leader>fy` at current file, `<leader>fY` in working directory |
+| [nvim-navbuddy](https://github.com/SmiteshP/nvim-navbuddy) | Symbol tree navigation | `<leader>cn` |
+| [opencode.nvim](https://github.com/NickvanDyke/opencode.nvim) | opencode AI agent | `<leader>oa` ask, `<leader>os` select prompt, `<leader>o+` add context, `<leader>ot` toggle, `<leader>oc` command, `<leader>on` new session, `<leader>oi` interrupt, `<leader>oA` cycle agent, `<S-C-u>`/`<S-C-d>` scroll messages |
+| [atone.nvim](https://github.com/XXiaoA/atone.nvim) | Undo tree | `:Atone` |
+| [better-escape.nvim](https://github.com/max397574/better-escape.nvim) | Leave insert mode with a key sequence | plugin defaults |
+| [git-conflict.nvim](https://github.com/akinsho/git-conflict.nvim) | Resolve merge conflicts in the buffer | plugin defaults |
+| [live-command.nvim](https://github.com/smjonas/live-command.nvim) | Preview commands while you type them | |
+| [nvim-surround](https://github.com/kylechui/nvim-surround) | Add, change and delete surrounding pairs | plugin defaults |
+| [typr](https://github.com/nvzone/typr) | Typing practice | `:Typr`, `:TyprStats` |
+| [tiny-inline-diagnostic.nvim](https://github.com/rachartier/tiny-inline-diagnostic.nvim) | Inline diagnostics | Replaces virtual text, which is turned off |
 
-### Git
+Snacks adds two keys to LazyVim's defaults: `<leader>gH` (Git history of the current file) and `<leader>N` (Neovim news). It also sets a custom dashboard header, enables image previews, and shows notifications for 3 s.
 
-| Key | Action |
-|-----|--------|
-| `<Space>gg` | Open lazygit |
-| `<Space>gf` | Git file history |
-| `<Space>gb` | Git blame |
-| `]h` | Next hunk |
-| `[h` | Previous hunk |
-| `<Space>hp` | Preview hunk |
-| `<Space>hs` | Stage hunk |
-| `<Space>hr` | Reset hunk |
+In the navbuddy window, `k` and `i` move to the next and previous sibling, `j` to the parent, `l` to the children. `q` or `<Esc>` closes it.
 
-### Windows & Buffers
+### Multiple Cursors
 
-| Key | Action |
-|-----|--------|
-| `<C-h/j/k/l>` | Navigate windows |
-| `<Space>-` | Split horizontal |
-| `<Space>\|` | Split vertical |
-| `<S-h>` | Previous buffer |
-| `<S-l>` | Next buffer |
-| `<Space>bd` | Delete buffer |
+| Keys | Action |
+|------|--------|
+| `<Up>` / `<Down>` | Add a cursor above / below |
+| `<leader><Up>` / `<leader><Down>` | Skip a line above / below |
+| `<leader>mn` / `<leader>mN` | Add a cursor at the next / previous match |
+| `<leader>ms` / `<leader>mS` | Skip the next / previous match |
+| `<C-q>` | Turn cursors on or off |
+| `<C-LeftMouse>` | Add or remove a cursor |
 
-### Terminal
+With more than one cursor:
 
-| Key | Action |
-|-----|--------|
-| `<C-/>` | Toggle terminal |
-| `<Space>ft` | Float terminal |
-| `<Esc><Esc>` | Exit terminal mode |
+| Keys | Action |
+|------|--------|
+| `<Left>` / `<Right>` | Select the previous / next cursor as the main one |
+| `<leader>x` | Delete the main cursor |
+| `<Esc>` | Turn cursors back on, or clear them |
 
-## Plugins
-
-### UI & Navigation
-
-| Plugin | Purpose |
-|--------|---------|
-| [neo-tree](https://github.com/nvim-neo-tree/neo-tree.nvim) | File explorer |
-| [telescope](https://github.com/nvim-telescope/telescope.nvim) | Fuzzy finder |
-| [which-key](https://github.com/folke/which-key.nvim) | Keybinding hints |
-| [bufferline](https://github.com/akinsho/bufferline.nvim) | Buffer tabs |
-| [lualine](https://github.com/nvim-lualine/lualine.nvim) | Status line |
-
-### Coding
-
-| Plugin | Purpose |
-|--------|---------|
-| [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) | Completion engine |
-| [LuaSnip](https://github.com/L3MON4D3/LuaSnip) | Snippets |
-| [nvim-autopairs](https://github.com/windwp/nvim-autopairs) | Auto brackets |
-| [Comment.nvim](https://github.com/numToStr/Comment.nvim) | Smart comments |
-| [nvim-surround](https://github.com/kylechui/nvim-surround) | Surround text |
-
-### LSP & Diagnostics
-
-| Plugin | Purpose |
-|--------|---------|
-| [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) | LSP configuration |
-| [mason](https://github.com/williamboman/mason.nvim) | LSP installer |
-| [conform.nvim](https://github.com/stevearc/conform.nvim) | Formatting |
-| [nvim-lint](https://github.com/mfussenegger/nvim-lint) | Linting |
-| [trouble.nvim](https://github.com/folke/trouble.nvim) | Diagnostics panel |
-
-### Git
-
-| Plugin | Purpose |
-|--------|---------|
-| [gitsigns](https://github.com/lewis6991/gitsigns.nvim) | Git decorations |
-| [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim) | Lazygit integration |
-| [diffview](https://github.com/sindrets/diffview.nvim) | Diff viewer |
-
-## Language Support
+## Languages
 
 ### Python
 
-- LSP: `pyright`
-- Formatter: `ruff`
-- Linter: `ruff`
-- Debugger: `debugpy`
+| Part | Source |
+|------|--------|
+| Type checking | [ty](https://github.com/astral-sh/ty) (`vim.g.lazyvim_python_lsp = "ty"`) |
+| Lint and format | [ruff](https://github.com/astral-sh/ruff) (`vim.g.lazyvim_python_ruff = "ruff"`) |
+| Python provider | `~/.virtualenvs/neovim/bin/python` with `pynvim` |
 
-```lua
--- Auto-activate virtual environments
-vim.g.python3_host_prog = "~/.virtualenvs/neovim/bin/python"
-```
+ty and ruff come from Homebrew, so Mason does not install them (`mason = false` in `lua/plugins/lsp.lua`). The installer creates the provider environment; rebuild it with `update --only venv`.
+
+Debugging uses `dap.core` and the Python extra. To debug the test under the cursor:
+
+| Keys | Action |
+|------|--------|
+| `<leader>dPt` | Debug the test method |
+| `<leader>dPc` | Debug the test class |
 
 ### Rust
 
-- LSP: `rust-analyzer`
-- Formatter: `rustfmt`
+Diagnostics come from rust-analyzer (`vim.g.lazyvim_rust_diagnostics = "rust-analyzer"`).
 
-### TypeScript/JavaScript
+### Terraform
 
-- LSP: `typescript-language-server`
-- Formatter: `biome` or `prettier`
-- Linter: `biome` or `eslint`
+Terraform files are formatted with OpenTofu (`tofu fmt`, through conform.nvim). The `terraform` binary is not installed.
 
-### Go
+### Tree-sitter
 
-- LSP: `gopls`
-- Formatter: `gofmt`
+`lua/plugins/treesitter.lua` adds parsers that the extras do not install: bicep, c, css, html, latex, scss, svelte, typst and vue.
 
-## Colorscheme
+### Mason
 
-Uses [Catppuccin Mocha](https://github.com/catppuccin/nvim) for a consistent look across all tools.
+Language servers and formatters come from the language extras. `lua/plugins/mason.lua` adds `actionlint` and `shellcheck`. Open `:Mason` to see what is installed.
 
-```lua
--- lua/plugins/colorscheme.lua
-return {
-  "catppuccin/nvim",
-  name = "catppuccin",
-  priority = 1000,
-  opts = {
-    flavour = "mocha",
-    transparent_background = false,
-    integrations = {
-      cmp = true,
-      gitsigns = true,
-      neo_tree = true,
-      telescope = true,
-      treesitter = true,
-      which_key = true,
-    },
-  },
-}
-```
+## Theme
 
-## Tips
+The colorscheme is [Catppuccin](https://github.com/catppuccin/nvim), flavour Mocha, set in `lua/plugins/catppucin.lua`.
 
-### Update Plugins
+## Editing Behaviour
+
+These come from `lua/config/`:
+
+- **Autosave.** A modified buffer is written when you leave it, when Neovim loses focus, or when you leave insert mode. Only normal buffers whose file exists on disk are written.
+- **Auto normal mode.** After 5 seconds without input in insert mode, Neovim returns to normal mode, and autosave writes the file. Outside insert mode, `updatetime` keeps its usual value.
+- **Global statusline** (`laststatus = 3`).
+- **`startofline`** is on: `gg` and `G` move to the first non-blank character.
+
+## Updating
 
 ```vim
-:Lazy update
+:Lazy sync
 ```
 
-### Check Health
+This updates the plugins and writes `lazy-lock.json`. The lock file is tracked, so commit it to keep machines on the same versions.
+
+Other checks:
 
 ```vim
-:checkhealth
+:Lazy         " plugin status
+:Mason        " installed tools
+:checkhealth  " Neovim health checks
 ```
 
-### Mason (LSP Manager)
-
-```vim
-:Mason
-```
-
-### Telescope Commands
-
-```vim
-:Telescope keymaps       " Search keybindings
-:Telescope help_tags     " Search help
-:Telescope commands      " Search commands
-```
+For more keys, see the [Keybindings Reference](/reference/keybindings). LazyVim's own keys are listed at [lazyvim.org/keymaps](https://www.lazyvim.org/keymaps).

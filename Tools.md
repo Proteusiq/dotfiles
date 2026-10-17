@@ -28,6 +28,7 @@ A comprehensive guide to all tools, utilities, and applications included in this
 
 - [Development Tools](#development-tools)
   - [Version Control](#version-control)
+  - [Code Quality & Security](#code-quality--security)
   - [Infrastructure & Cloud](#infrastructure--cloud)
   - [Database Tools](#database-tools)
 - [Command Line Utilities](#command-line-utilities)
@@ -36,8 +37,11 @@ A comprehensive guide to all tools, utilities, and applications included in this
   - [System Monitoring](#system-monitoring)
   - [Text Processing](#text-processing)
 - [Terminal & Editors](#terminal--editors)
+  - [zsh & antidote](#zsh--antidote)
+  - [atuin](#atuin)
 - [Neovim](#neovim)
 - [Programming Languages](#programming-languages)
+  - [mise (runtime manager)](#mise-runtime-manager)
   - [Python](#python)
   - [Node.js & JavaScript](#nodejs--javascript)
   - [Go](#go)
@@ -46,8 +50,11 @@ A comprehensive guide to all tools, utilities, and applications included in this
 - [Productivity Applications](#productivity-applications)
 - [Window Management](#window-management)
 - [System Utilities](#system-utilities)
+- [Fonts](#fonts)
+- [Additional Tools](#additional-tools)
 - [Dotfiles Management](#dotfiles-management)
 - [Good Commands to Know](#good-commands-to-know)
+- [Quick Reference](#quick-reference)
 
 ---
 
@@ -63,6 +70,16 @@ git status                    # Check working tree status
 git add -p                    # Interactive staging
 git commit -am "message"      # Stage and commit
 git log --oneline -10         # Recent commits
+```
+
+Configuration: `~/.config/git/config` (stow package `git`; there is no `~/.gitconfig`). Identity is not tracked: it comes from `~/.config/git/personal.gitconfig` or `work.gitconfig`, chosen by the repository's remote URL (`includeIf "hasconfig:remote.*.url:..."`). Commits and tags are signed with SSH keys. Git aliases defined there:
+
+```bash
+git l                         # Graph log, one line per commit
+git ld                        # Graph log with relative dates and authors
+git ll                        # Log with stats and patches
+git branches                  # Remote branches by last commit date
+git delete-merged             # Prune, then delete merged branches (keeps main/master/dev/develop/staging and the current branch)
 ```
 
 #### gh (GitHub CLI)
@@ -168,26 +185,83 @@ git filter-repo --invert-paths --path secret.txt  # Remove file from history
 
 **Use cases:** Removing sensitive data, splitting repositories, cleaning history
 
-#### difftastic
-Structural diff tool that understands syntax. Shows meaningful diffs, not just line changes.
+#### git-delta
+Pager for git with syntax highlighting. Set as git's pager (`core.pager = delta`) and for `git add -p` (`interactive.diffFilter = delta --color-only`), with `navigate`, `line-numbers` and the Catppuccin Mocha syntax theme.
 
 ```bash
-difft file1.py file2.py       # Compare files
-git diff --external-diff=difft # Use with git
+git diff                      # Rendered by delta
+git log -p                    # Patches rendered by delta
+git show HEAD                 # Last commit rendered by delta
+```
+
+| Key | Action |
+|-----|--------|
+| `n` / `N` | Next / previous file or hunk (`navigate = true`) |
+| `q` | Quit the pager |
+
+`git diff` output stays a valid patch: no external diff tool is set globally.
+
+#### difftastic
+Structural diff tool that understands syntax. Shows meaningful diffs, not just line changes. Used on demand through git aliases in `~/.config/git/config`.
+
+```bash
+difft file1.py file2.py       # Compare two files
+git dft                       # git difftool with difftastic (working tree changes)
+git dft main                  # Structural diff against main
+git dlog                      # git log -p with difftastic
+git dshow                     # git show with difftastic
 ```
 
 **Use cases:** Code review, understanding changes in context, syntax-aware diffs
 
-### Infrastructure & Cloud
+### Code Quality & Security
 
-#### terraform
-Infrastructure as Code tool for provisioning cloud resources declaratively.
+#### prek
+Fast git hooks runner, compatible with pre-commit's `.pre-commit-config.yaml`. This repository's hooks run gitleaks, shellcheck, shfmt, `zsh -n`, stylua, actionlint, ruff and a few built-in checks.
 
 ```bash
-terraform init                # Initialize working directory
-terraform plan                # Preview changes
-terraform apply               # Apply changes
-terraform destroy             # Tear down infrastructure
+prek install                  # Once per clone: install the git hook shims
+prek run --all-files          # Run every hook on all tracked files
+prek run gitleaks             # Run one hook by id
+prek list                     # List configured hooks
+```
+
+**Use cases:** Consistent checks before every commit, running the same checks as CI locally
+
+#### gitleaks
+Finds secrets (API keys, tokens, private keys) in files and git history. Runs as a prek hook on staged changes, and in CI over the full history.
+
+```bash
+gitleaks git .                # Scan every commit of the repository
+gitleaks dir .                # Scan files on disk
+```
+
+**Use cases:** Catching leaked credentials before they are pushed, auditing old history
+
+#### Other linters and formatters
+
+| Tool | Purpose | Example |
+|------|---------|---------|
+| shellcheck | Shell linter | `shellcheck install.sh` |
+| shfmt | Shell formatter | `shfmt -i 4 -w script.sh` |
+| stylua | Lua formatter | `stylua nvim/` |
+| actionlint | GitHub Actions linter | `actionlint` |
+| biome | JS/TS linter and formatter | `biome check --write .` |
+| bacon | Background Rust checker | `bacon clippy` |
+
+ruff and ty are covered under [Python](#python).
+
+### Infrastructure & Cloud
+
+#### opentofu
+Open-source, Terraform-compatible Infrastructure as Code tool. The command is `tofu`. Replaces terraform, which is no longer installed. Neovim formats Terraform files with `tofu fmt`.
+
+```bash
+tofu init                     # Initialize working directory
+tofu plan                     # Preview changes
+tofu apply                    # Apply changes
+tofu destroy                  # Tear down infrastructure
+tofu fmt                      # Format configuration files
 ```
 
 #### azure-cli
@@ -198,6 +272,19 @@ az login                      # Authenticate
 az account list               # List subscriptions
 az vm list                    # List virtual machines
 az group create -n mygroup -l eastus  # Create resource group
+az bicep build -f main.bicep  # Compile Bicep (installed by: update --only utils)
+```
+
+#### azd (Azure Developer CLI)
+Provision and deploy applications to Azure from templates. Installed from the `azure/azd` tap.
+
+```bash
+azd auth login                # Authenticate
+azd init                      # Initialize a new application
+azd up                        # Provision and deploy in one command
+azd provision                 # Provision Azure resources only
+azd deploy                    # Deploy code only
+azd down                      # Delete the project's Azure resources
 ```
 
 #### act
@@ -242,6 +329,26 @@ resterm --from-openapi spec.yaml  # Import OpenAPI spec
 
 **Use cases:** API testing, debugging webhooks, gRPC development, WebSocket testing
 
+#### Containers: OrbStack, colima and the docker CLI
+The Docker CLI (`docker`, `docker-compose`, `docker-buildx`) comes from Homebrew. The engine comes from one of:
+
+- **OrbStack** (cask, default engine): Docker and Linux VMs for macOS. Start the app, then use `docker` as usual.
+- **colima** (open-source alternative, built on Lima): start it with `colima start`.
+
+```bash
+docker run --rm hello-world   # Works with either engine
+docker context ls             # Show which engine docker talks to
+colima start                  # Start colima (sets the docker context "colima")
+colima status                 # Is colima running?
+colima stop                   # Stop colima
+docker compose up             # Start a Compose stack
+docker buildx build --platform linux/amd64 .  # Multi-platform build
+```
+
+`prefix D` in tmux opens lazydocker in a popup.
+
+**Use cases:** Local containers and Compose stacks without Docker Desktop
+
 #### lima
 Linux virtual machines on macOS. Uses Apple's Virtualization.framework for native performance.
 
@@ -278,26 +385,26 @@ limactl delete default        # Delete VM
 
 **Use cases:** Container development, Linux testing, Docker alternative, running Linux tools
 
-#### slim (docker-slim)
-Container image optimizer. Minify container images by up to 30x while making them more secure by removing unnecessary files and auto-generating security profiles (Seccomp, AppArmor).
+#### mintoolkit (mint, formerly docker-slim)
+Container image optimizer. Minify container images by up to 30x while making them more secure by removing unnecessary files and auto-generating security profiles (Seccomp, AppArmor). The Homebrew formula is `mintoolkit`; the command is `mint`.
 
 ```bash
-slim build my-image           # Analyze & minify image
-slim build --target my-image --tag my-image.slim  # Custom output tag
-slim xray my-image            # Inspect image layers & reverse-engineer Dockerfile
-slim lint Dockerfile          # Lint Dockerfile for best practices
-slim debug my-container       # Debug running container with sidecar
-slim profile my-image         # Profile without building slim image
-slim images                   # List container images
+mint slim my-image            # Analyze & minify image (alias: mint build)
+mint slim --target my-image --tag my-image.slim  # Custom output tag
+mint xray my-image            # Inspect image layers & reverse-engineer Dockerfile
+mint lint Dockerfile          # Lint Dockerfile for best practices
+mint debug my-container       # Debug running container with sidecar
+mint profile my-image         # Profile without building slim image
+mint images                   # List container images
 ```
 
 | Command | Description |
 |---------|-------------|
-| `slim build` | Analyze and create optimized image |
-| `slim xray` | Inspect image, show layers, reverse-engineer Dockerfile |
-| `slim lint` | Lint Dockerfiles |
-| `slim debug` | Attach debug sidecar to running container |
-| `slim profile` | Profile image without building |
+| `mint slim` / `mint build` | Analyze and create optimized image |
+| `mint xray` | Inspect image, show layers, reverse-engineer Dockerfile |
+| `mint lint` | Lint Dockerfiles |
+| `mint debug` | Attach debug sidecar to running container |
+| `mint profile` | Profile image without building |
 
 **Build flags:**
 - `--http-probe=false` - Disable HTTP probing (for CLI tools)
@@ -308,7 +415,7 @@ slim images                   # List container images
 **Example workflow:**
 ```bash
 # 1. Build and minify
-slim build --target python:3.12 --tag python:3.12.slim
+mint slim --target python:3.12 --tag python:3.12.slim
 
 # 2. Compare sizes
 docker images | grep python
@@ -361,7 +468,7 @@ npm install @temporalio/client @temporalio/worker @temporalio/workflow @temporal
 ### Database Tools
 
 #### dbt
-Data build tool for analytics engineering. Transform raw data into analytics-ready tables using SQL and Jinja templating.
+Data build tool for analytics engineering. Transform raw data into analytics-ready tables using SQL and Jinja templating. The installed `dbt` is the **dbt Cloud CLI** (tap `dbt-labs/dbt-cli`).
 
 ```bash
 dbt init myproject            # Initialize new project
@@ -444,47 +551,52 @@ See [harlequin.sh/docs/bindings](https://harlequin.sh/docs/bindings) for full ke
 
 **Use cases:** SQL development, database exploration, query testing, data analysis
 
-#### snowsql (SnowSQL)
-Snowflake's official command-line client for executing SQL queries, DDL/DML operations, and data loading against Snowflake data warehouses.
+#### snowflake-cli (snow)
+Snowflake's command-line interface. The command is `snow`. Replaces SnowSQL, which is no longer installed.
 
 ```bash
-snowsql -a <account> -u <user>   # Connect to Snowflake
-snowsql -c <connection_name>     # Use named connection from config
-snowsql -q "SELECT 1"            # Execute query directly
-snowsql -f script.sql            # Run SQL file
-snowsql -f script.sql -o output_format=csv  # Output as CSV
-snowsql -v                       # Check version
-```
-
-| Key/Command | Action |
-|-------------|--------|
-| `!help` | Show help in interactive mode |
-| `!set` | Show/set session variables |
-| `!source file.sql` | Execute SQL file |
-| `!spool on/off` | Enable/disable output logging |
-| `!exit` | Exit SnowSQL |
-
-**Configuration:** `~/.snowsql/config`
-
-**Named connections:**
-```ini
-[connections.prod]
-accountname = xy12345.us-east-1
-username = my_user
-dbname = analytics
-warehousename = compute_wh
+snow connection add           # Add a named connection (interactive)
+snow connection list          # List configured connections
+snow connection test -c prod  # Test a connection
+snow connection set-default prod  # Make a connection the default
+snow sql -q "select current_role()"     # Run a query
+snow sql -q "select 1" -c prod          # Run against a named connection
+snow sql -f script.sql                  # Run a SQL file
 ```
 
 **Data loading:**
 ```bash
-# PUT local file to stage
-snowsql -q "PUT file://data.csv @mystage"
-
-# COPY into table
-snowsql -q "COPY INTO mytable FROM @mystage FILE_FORMAT=(TYPE=CSV)"
+snow sql -q "PUT file://data.csv @mystage"
+snow sql -q "COPY INTO mytable FROM @mystage FILE_FORMAT=(TYPE=CSV)"
 ```
 
 **Use cases:** SQL development, data loading/unloading, Snowflake administration, scripting ETL pipelines
+
+#### duckdb
+In-process analytical SQL database. Queries CSV, Parquet and JSON files directly.
+
+```bash
+duckdb                        # Interactive shell, in-memory database
+duckdb analytics.duckdb       # Open or create a database file
+duckdb -c "select * from 'data/*.parquet' limit 5"   # One-off query on files
+duckdb -c "select count(*) from 'events.csv'"
+duckdb -ui                    # Web UI (ui extension)
+```
+
+Harlequin is installed with the DuckDB adapter: `harlequin analytics.duckdb`.
+
+**Use cases:** Fast local analytics, exploring Parquet/CSV, prototyping SQL before running it in a warehouse
+
+#### sqlfluff
+SQL linter and formatter with dbt and Snowflake dialects.
+
+```bash
+sqlfluff lint models/ --dialect snowflake   # Report problems
+sqlfluff fix models/ --dialect snowflake    # Fix what can be fixed
+sqlfluff format models/ --dialect snowflake # Format only
+```
+
+**Use cases:** Consistent SQL style in dbt projects, catching errors in review
 
 #### sqlit
 The lazygit of SQL databases - connect and query any database from your terminal in seconds. Supports SQL Server, PostgreSQL, MySQL, SQLite, DuckDB, and more.
@@ -566,10 +678,13 @@ nvim $(fzf)                   # Open selected file in nvim
 cd $(find . -type d | fzf)    # cd to selected directory
 
 # Shortcuts (with shell integration)
-Ctrl+r                        # Search command history
-Ctrl+t                        # Paste selected file path
-Alt+c                         # cd to selected directory
+Ctrl+t                        # Paste selected file path (fd list, bat/eza preview)
+Alt+c                         # cd to selected directory (eza tree preview)
+cd **<Tab>                    # fzf completion with preview
+Ctrl+g Ctrl+f                 # fzf-git: pick git files (also b branches, h commits, s stashes, ...)
 ```
+
+`Ctrl+r` is handled by [atuin](#atuin), which loads after fzf. Configuration: `~/.config/zsh/fzf.zsh` (fd as the file source, Catppuccin Mocha colours).
 
 **Use cases:** File selection, history search, process killing, git operations
 
@@ -639,21 +754,24 @@ Blazing fast terminal file manager with image preview support.
 ```bash
 yazi                          # Open file manager
 yazi /path/to/dir             # Open specific directory
+yy                            # Open yazi, cd to its directory on exit
 ```
+
+Custom keys from `~/.config/yazi/keymap.toml` (prepended to Yazi's defaults; Colemak-style `u`/`e`/`n`/`i` navigation):
 
 | Key | Action |
 |-----|--------|
-| `j/k` | Navigate up/down |
-| `h/l` | Parent/enter directory |
-| `Enter` | Open file |
-| `y` | Yank (copy) |
-| `p` | Paste |
-| `d` | Delete |
-| `a` | Create file |
-| `r` | Rename |
-| `space` | Select |
-| `/` | Search |
-| `q` | Quit |
+| `u` / `e` | Up / down (`U` / `E`: 5 lines) |
+| `n` | Parent directory |
+| `i` | Enter directory or open file (smart-enter) |
+| `N` / `I` | Back / forward in history |
+| `C-u` / `C-e` | Scroll preview |
+| `l` / `L` | Symlink yanked files (absolute / relative) |
+| `-` / `=` | Next / previous find match |
+| `w` | Open a shell here |
+| `W` | Show tasks |
+
+Theme: Catppuccin flavors (Mocha dark, Latte light), cloned by `update --only yazi`. In Neovim: `<leader>fy` (current file), `<leader>fY` (cwd).
 
 **Use cases:** File browsing, bulk operations, preview files without opening
 
@@ -662,7 +780,7 @@ Interactive tree view with search. Navigate and operate on directory structures.
 
 ```bash
 broot                         # Open in current directory
-br                            # Shortcut (if configured)
+br                            # Launcher function (sourced in ~/.zshrc): cd on exit
 ```
 
 | Key | Action |
@@ -853,14 +971,16 @@ watchexec --ignore dist -- npm build  # Ignore directory
 #### GNU coreutils
 GNU versions of standard Unix utilities. More features than macOS defaults.
 
-Configured aliases include:
+Interactive zsh puts the GNU coreutils, findutils, sed, tar, grep and awk first on `PATH` under their usual names (no `g` prefix). Scripts keep the BSD tools.
+
+Configured aliases (verbose file operations):
 ```bash
-cp      # gcp -v
-mv      # gmv -v
-rm      # grm -v
-mkdir   # gmkdir -v
-chmod   # gchmod -v
-chown   # gchown -v
+cp      # cp -v
+mv      # mv -v
+rm      # rm -v
+mkdir   # mkdir -v
+chmod   # chmod -v
+chown   # chown -v
 ```
 
 #### vhs
@@ -1037,7 +1157,20 @@ Config: `leaf --config` (theme, editor, watch, width). CLI flags always win.
 ### ghostty
 GPU-accelerated terminal emulator. Fast, feature-rich, and highly configurable.
 
-Configuration: `~/.config/ghostty/config`
+Configuration: `~/.config/ghostty/config` (theme Catppuccin Mocha, left Option key as Alt). New windows start tmux automatically: `~/.zshrc` runs `exec tmux` when `TERM_PROGRAM=ghostty`, outside tmux and SSH, unless `DOTFILES_NO_TMUX` is set.
+
+Custom keys are sequences that start with `Cmd+b`:
+
+| Key | Action |
+|-----|--------|
+| `Cmd+b r` | Reload config |
+| `Cmd+b x` | Close window |
+| `Cmd+b n` | New window |
+| `Cmd+b i` | New split right |
+| `Cmd+b -` | New split down |
+| `Cmd+b h/j/k/l` | Go to split left/bottom/top/right |
+| `Cmd+b z` | Toggle split zoom |
+| `Cmd+b e` | Equalize splits |
 
 **Use cases:** Primary terminal emulator, tmux integration
 
@@ -1052,28 +1185,37 @@ tmux attach -t name           # Attach to session
 tmux kill-session -t name     # Kill session
 ```
 
-Leader key: `Ctrl+b`
+Prefix: `Ctrl+b` (tmux default). Configuration: `~/.tmux.conf`.
 
 | Binding | Action |
 |---------|--------|
-| `leader + c` | New window |
-| `leader + n` | Next window |
-| `leader + p` | Previous window |
-| `leader + "` | Horizontal split |
-| `leader + %` | Vertical split |
-| `leader + hjkl` | Navigate panes |
-| `leader + z` | Zoom pane |
-| `leader + d` | Detach |
-| `leader + I` | Install plugins |
+| `prefix + i` | Split right (current directory) |
+| `prefix + -` | Split down (current directory) |
+| `Ctrl + h/j/k/l` | Move between panes, no prefix (passed to Neovim when it runs in the pane) |
+| `prefix + h/j/k/l` | Resize pane |
+| `prefix + c` | New window (current directory) |
+| `prefix + < / >` | Swap window left / right |
+| `prefix + x` | Kill pane (no prompt) |
+| `prefix + Ctrl+s` | Toggle synchronize-panes |
+| `prefix + r` | Reload config |
+| `prefix + g` | lazygit popup |
+| `prefix + D` | lazydocker popup |
+| `prefix + K` | sesh picker (gum) |
+| `prefix + T` | sesh picker (fzf) |
+| `prefix + P` | Paste buffer (overrides the tmux-floax menu key) |
+| `prefix + I` | Install plugins (tpm) |
+
+Copy mode uses vi keys: `v` begin selection, `y` copy, `r` rectangle. tmux's other default bindings (`prefix + d` detach, `prefix + z` zoom, ...) are unchanged.
 
 Aliases:
 ```bash
 iexit   # Kill current session
-ikill   # Kill all sessions
+ikill   # Kill the tmux server
 iswitch # Interactive session switcher
+ipop    # Popup with a "scratch" session in the current directory
 ```
 
-**tmux.expose** (plugin): Mission Control-style session switcher with live text previews of every session in a grid. Press `Alt+e` to open the popup, arrows/`hjkl` to move, `Enter` to switch, `q`/`Esc` to close. Backed by the `tmux-expose` binary (installed via cargo).
+**tmux.expose** (plugin): Mission Control-style session switcher with live text previews of every session in a grid. Press `Alt+e` (no prefix) to open the popup, arrows/`hjkl` to move, `Enter` to switch, `q`/`Esc` to close. Backed by the `tmux-expose` binary (a `cargo` entry in the Brewfile).
 
 ### sesh
 Smart session manager for tmux. Quick switching between projects.
@@ -1083,12 +1225,57 @@ sesh connect project          # Connect to or create session
 sesh list                     # List sessions
 ```
 
-Configuration: `~/.config/sesh/sesh.toml`
+Pickers: `Alt+s` in zsh, `prefix + K` or `prefix + T` in tmux.
+
+Configuration: `~/.config/sesh/sesh.toml` (sessions: `Downloads 📥` with yazi, `dotfiles` with nvim, `tmux config`).
 
 ### starship
 Minimal, fast, customizable prompt for any shell.
 
-Configuration: `~/.config/starship/starship.toml`
+Configuration: `~/.config/starship.toml` (starship's default location)
+
+### zsh & antidote
+zsh configuration is split by when it runs:
+
+| File | Runs for | Contents |
+|------|----------|----------|
+| `~/.zshenv` | Every zsh | XDG variables, `DOTFILES_DIR`, `EDITOR=nvim`, `PATH` |
+| `~/.zprofile` | Login shells | Rebuilds `PATH` after macOS `path_helper`; sources `~/.zprofile.local` |
+| `~/.zshrc` | Interactive shells | tmux auto-start, history, plugins, completions, tool init, aliases, functions; sources `~/.zshrc.local` last |
+
+Machine-local settings, and lines that installers append to `~/.zshrc`, belong in `~/.zshrc.local` (not tracked).
+
+**antidote** is the plugin manager (replaces antigen and zplug). Plugins are listed one per line in `~/.config/zsh/plugins.txt`; antidote compiles them into a static file in `$XDG_CACHE_HOME/zsh`.
+
+```bash
+# ~/.config/zsh/plugins.txt
+romkatv/zsh-defer
+zsh-users/zsh-completions path:src kind:fpath
+djui/alias-tips
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-syntax-highlighting kind:defer
+```
+
+```bash
+antidote list                 # Cloned bundles
+antidote update               # Update antidote and all bundles
+```
+
+After editing `plugins.txt`, open a new shell (or `reload`) and antidote rebuilds the bundle.
+
+### atuin
+Searchable shell history with context (directory, host). Replaces fzf's history search: it is loaded last in `~/.zshrc`, so it owns `Ctrl+R` and the up arrow.
+
+```bash
+Ctrl+R                        # Search all history
+atuin search docker           # Search from the command line
+atuin stats                   # Most used commands
+atuin import zsh              # Import existing zsh history
+```
+
+Configuration: `~/.config/atuin/config.toml` (`enter_accept = true`: Enter runs the selected command).
+
+**Use cases:** Finding that command from last month, history per directory, optional sync between machines (`atuin login`, `atuin sync`)
 
 ---
 
@@ -1102,9 +1289,15 @@ nvim +42 file                 # Open at line 42
 nvim -d file1 file2           # Diff mode
 ```
 
-Configuration: `~/.config/nvim/`
+Configuration: `~/.config/nvim/`. LazyVim extras are listed only in `lazyvim.json`; custom plugins live in `lua/plugins/`.
 
-Alias: `n` -> `nvim`
+Aliases: `n`, `v`, `vi`, `vim` -> `nvim`
+
+- **Picker:** snacks (Telescope is not used). **Completion:** blink.cmp. **Colorscheme:** Catppuccin Mocha.
+- **Python:** ty (`vim.g.lazyvim_python_lsp = "ty"`) for types, ruff for lint and format; both from Homebrew, not Mason. Plugins use `~/.virtualenvs/neovim` (pynvim), created by `update --only venv`.
+- **Terraform:** formatted with `tofu fmt`.
+- **Autosave** on leaving a buffer, losing focus, or leaving insert mode; insert mode ends after 5 seconds without typing.
+- Press `<leader>` (Space) and wait: which-key lists every mapping. `<leader>sk` searches keymaps.
 
 ### Vim Grammar: Speaking the Language
 
@@ -1241,33 +1434,43 @@ ciw     + new text + Esc    -> .  repeats "change word to new text"
 
 | Key | Action |
 |-----|--------|
-| `<leader><leader>` | Find files |
-| `<leader>ff` | Find files (Telescope) |
-| `<leader>fg` | Live grep search |
-| `<leader>fb` | Buffer list |
-| `<leader>fh` | Help tags |
+| `<leader><leader>` | Find files (snacks picker) |
+| `<leader>ff` | Find files |
+| `<leader>fr` | Recent files |
+| `<leader>/` | Grep (root dir) |
+| `<leader>sg` | Live grep |
+| `<leader>fb` / `<leader>,` | Buffer list |
+| `<leader>sh` | Help pages |
 | `<leader>e` | File explorer (neo-tree) |
-| `<leader>-` | Yazi file manager |
+| `<leader>fy` | Yazi at the current file |
+| `<leader>fY` | Yazi in the working directory |
 | `<leader>bd` | Delete buffer |
 | `<leader>.` | Scratch buffer |
+| `Shift+h/l` | Previous/next buffer |
 
 ### Harpoon (Quick File Access)
 
 | Key | Action |
 |-----|--------|
 | `<leader>a` | Add file to harpoon |
-| `<leader>1-5` | Jump to harpoon file 1-5 |
+| `Ctrl+e` | Harpoon menu |
+| `<leader>1-4` | Jump to harpoon file 1-4 |
+| `Ctrl+Shift+p/n` | Previous/next harpoon file |
 
 ### Git Integration
 
 | Key | Action |
 |-----|--------|
-| `<leader>gg` | Open Lazygit |
-| `<leader>gf` | File history (Lazygit) |
-| `<leader>Gh` | File history (Telescope) |
+| `<leader>gg` | Open Lazygit (snacks) |
+| `<leader>gf` | Current file history (snacks picker) |
+| `<leader>gH` | Git file history (custom, snacks picker) |
 | `<leader>gl` | Git log |
 | `<leader>gb` | Blame line |
 | `<leader>gB` | Browse on GitHub |
+| `]h/[h` | Next/Previous hunk |
+| `<leader>ghs` | Stage hunk |
+| `co/ct/cb/c0` | Resolve conflict: ours/theirs/both/none (git-conflict) |
+| `]x/[x` | Next/Previous conflict (git-conflict) |
 
 ### Code Navigation (LSP)
 
@@ -1280,29 +1483,43 @@ ciw     + new text + Esc    -> .  repeats "change word to new text"
 | `<leader>cr` | Rename symbol |
 | `<leader>cf` | Format code |
 | `<leader>cd` | Line diagnostics |
-| `<leader>nv` | Navbuddy symbol tree |
+| `<leader>cn` | Navbuddy symbol tree |
 | `]d/[d` | Next/Previous diagnostic |
+
+### Secrets (Camouflage)
+
+Values of sensitive keys (API keys, tokens, passwords, ...) in `.env`-style files are masked until revealed.
+
+| Key | Action |
+|-----|--------|
+| `<leader>ct` | Toggle masking |
+| `<leader>cv` | Reveal the secret on this line |
+| `<leader>cy` | Yank the secret value |
 
 ### Testing
 
 | Key | Action |
 |-----|--------|
-| `<leader>tt` | Run nearest test |
-| `<leader>tT` | Run file tests |
-| `<leader>tr` | Run last test |
+| `<leader>tr` | Run nearest test |
+| `<leader>tt` | Run file tests |
+| `<leader>tT` | Run all test files |
+| `<leader>tl` | Run last test |
 | `<leader>ts` | Toggle test summary |
 | `<leader>to` | Show test output |
 | `<leader>tS` | Stop tests |
+| `<leader>td` | Debug nearest test |
 
 ### Debugging (DAP)
 
 | Key | Action |
 |-----|--------|
-| `<leader>dm` | Debug test method |
-| `<leader>dc` | Debug test class |
-| `<leader>df` | Debug file |
-| `<leader>du` | Debug function |
-| `<leader>dk` | Debug class |
+| `<leader>db` | Toggle breakpoint |
+| `<leader>dc` | Run/Continue |
+| `<leader>di` / `<leader>dO` / `<leader>do` | Step into/over/out |
+| `<leader>du` | Toggle DAP UI |
+| `<leader>dt` | Terminate |
+| `<leader>dPt` | Debug Python test method |
+| `<leader>dPc` | Debug Python test class |
 
 ### AI Integration (OpenCode)
 
@@ -1344,14 +1561,22 @@ ciw     + new text + Esc    -> .  repeats "change word to new text"
 | `>>/<<` | Indent/Unindent |
 | `J` | Join lines |
 | `.` | Repeat last action |
+| `s` / `S` | Leap forward/backward |
+| `<leader>p` | Yank history |
 
 ### Multi-cursor
 
 | Key | Action |
 |-----|--------|
-| `Ctrl+n` | Select word, add cursor |
-| `Ctrl+Up/Down` | Add cursor above/below |
-| `<leader>x` | Delete cursor |
+| `Up/Down` | Add cursor above/below |
+| `<leader>Up/Down` | Skip line above/below |
+| `<leader>mn` / `<leader>mN` | Add cursor at next/previous match |
+| `<leader>ms` / `<leader>mS` | Skip next/previous match |
+| `Ctrl+q` | Disable/enable cursors |
+| `Ctrl+click` | Add/remove cursor |
+| `Left/Right` | Switch main cursor (with cursors active) |
+| `<leader>x` | Delete main cursor (with cursors active) |
+| `Esc` | Clear cursors |
 
 ### Splits & Windows
 
@@ -1369,21 +1594,55 @@ Key plugins in this configuration:
 | Plugin | Purpose |
 |--------|---------|
 | **LazyVim** | Base distribution |
-| **Telescope** | Fuzzy finder |
+| **Snacks** | Picker, lazygit, dashboard, notifications, scratch, terminal |
+| **blink.cmp** | Autocompletion |
 | **neo-tree** | File explorer |
 | **Harpoon** | Quick file marks |
-| **Yazi** | Terminal file manager |
-| **Lazygit** | Git UI |
+| **yazi.nvim** | Terminal file manager |
+| **multicursor.nvim** | Multiple cursors |
+| **camouflage.nvim** | Mask secrets in `.env` files |
+| **nvim-navbuddy** | Symbol tree |
+| **opencode.nvim** | AI agent integration |
+| **git-conflict.nvim** | Resolve merge conflicts |
+| **nvim-surround** | Surround text objects |
+| **leap.nvim** | Jump anywhere (replaces flash) |
 | **nvim-dap** | Debugger |
-| **nvim-cmp** | Autocompletion |
+| **neotest** | Test runner |
 | **Treesitter** | Syntax highlighting |
-| **Mason** | LSP installer |
-| **Snacks** | UI utilities |
+| **Mason** | Tool installer (actionlint, shellcheck, language extras) |
+| **tiny-inline-diagnostic** | Inline diagnostics (virtual text off) |
+| **atone.nvim** | Undo tree (`:Atone`) |
+| **typr** | Typing practice (`:Typr`) |
 | **Catppuccin** | Color scheme |
 
 ---
 
 ## Programming Languages
+
+### mise (runtime manager)
+One manager for language runtimes and npm-based tools. Replaces n (Node versions) and direnv. Rule from its config: language runtimes and npm-based tools live in mise; system tools live in the Brewfile; Python is managed by uv and Rust by rustup.
+
+Global tools (`~/.config/mise/config.toml`): `node` (lts), `go`, `bun`, `pnpm`, `usage`, and `npm:@earendil-works/pi-coding-agent` (the `pi` command). mise also reads `.nvmrc`, `.node-version` and `.go-version` files in projects.
+
+```bash
+mise install                  # Install everything in the config (update --only runtimes)
+mise use node@24              # Pin Node for this project (writes mise.toml)
+mise use -g go@latest         # Change a global version
+mise ls                       # Installed and active versions
+mise outdated                 # Available updates
+mise upgrade                  # Upgrade (also run by update --all)
+mise exec node@20 -- node -v  # Run one command with another version
+mise doctor                   # Check the setup (also run by update --doctor)
+```
+
+Per-project environment variables, previously in `.envrc` (direnv), go in the project's `mise.toml`:
+
+```toml
+[env]
+DATABASE_URL = "postgres://localhost/dev"
+```
+
+**Use cases:** Per-project runtime versions, one tool instead of n and direnv
 
 ### Python
 
@@ -1420,15 +1679,17 @@ uv run --python 3.11 python   # Run with specific Python version
 
 **Tools (like pipx)**
 ```bash
-uvx ruff check .              # Run tool without installing (alias for uv tool run)
+uvx pycowsay hello            # Run tool without installing (alias for uv tool run)
 uvx --from textual textual-demo  # Run command from specific package
-uv tool install ruff          # Install tool globally
+uv tool install harlequin     # Install tool globally
 uv tool install --with plugins pkg  # Install with extra dependencies
 uv tool list                  # List installed tools
-uv tool upgrade ruff          # Upgrade specific tool
+uv tool upgrade harlequin     # Upgrade specific tool
 uv tool upgrade --all         # Upgrade all tools
-uv tool uninstall ruff        # Uninstall tool
+uv tool uninstall harlequin   # Uninstall tool
 ```
+
+Global uv tools are declared in the Brewfile (`uv "harlequin[duckdb,mysql,postgres,sqlite]"`, `uv "sqlit-tui"`) and installed by `brew bundle`. ruff and ty are Homebrew formulae, not uv tools.
 
 **Scripts with Inline Dependencies**
 ```bash
@@ -1457,6 +1718,26 @@ uv version --bump minor       # Bump version
 
 **Use cases:** Project management, dependency resolution, running scripts, tool management, Python version management
 
+#### ruff
+Python linter and formatter (Homebrew formula). Also used by Neovim for lint and format, and by this repository's prek hooks.
+
+```bash
+ruff check .                  # Lint
+ruff check --fix .            # Lint and apply fixes
+ruff format .                 # Format
+ruff format --check .         # Check formatting only (CI)
+```
+
+#### ty
+Python type checker from Astral (Homebrew formula). Neovim uses it as the Python language server.
+
+```bash
+ty check .                    # Type-check the project
+ty check src/app.py           # Type-check one file
+```
+
+**Before commit** (from `AGENTS.md`): `uv run ruff format . && uv run ruff check --fix . && uv run ty check . && uv run pytest`
+
 #### pixi
 Fast package manager for conda environments. Like Poetry for the conda world.
 
@@ -1472,7 +1753,7 @@ pixi shell                    # Activate environment
 ### Node.js & JavaScript
 
 #### node
-JavaScript runtime built on Chrome's V8 engine.
+JavaScript runtime built on Chrome's V8 engine. Installed by mise (LTS); pin per project with `mise use node@<version>`.
 
 ```bash
 node script.js                # Run JavaScript
@@ -1481,7 +1762,7 @@ node --inspect script.js      # Debug mode
 ```
 
 #### bun
-Fast all-in-one JavaScript runtime, bundler, and package manager.
+Fast all-in-one JavaScript runtime, bundler, and package manager. Installed by mise.
 
 ```bash
 bun run script.ts             # Run TypeScript directly
@@ -1493,29 +1774,34 @@ bun test                      # Run tests
 
 **Use cases:** Fast package installs, TypeScript execution, bundling
 
-#### yarn
-Fast, reliable dependency management.
+#### pnpm
+Fast, disk-efficient package manager (replaces yarn). Installed by mise.
 
 ```bash
-yarn                          # Install dependencies
-yarn add package              # Add dependency
-yarn run script               # Run script
+pnpm install                  # Install dependencies
+pnpm add package              # Add dependency
+pnpm run script               # Run script
 ```
 
 Aliases:
 ```bash
-y     # yarn
-ya    # yarn add
-yad   # yarn add --dev
-yr    # yarn run
-ys    # yarn start
-yt    # yarn test
+pn    # pnpm
+pna   # pnpm add
+pnr   # pnpm run
+pni   # pnpm install
+```
+
+#### biome
+Linter and formatter for JavaScript and TypeScript (Homebrew formula).
+
+```bash
+biome check --write .         # Lint and format in one pass
 ```
 
 ### Go
 
 #### go
-The Go programming language. Compiled, statically typed.
+The Go programming language. Compiled, statically typed. Installed by mise. `GOPATH` is `~/projects/go`; `$GOBIN` is on `PATH`.
 
 ```bash
 go run main.go                # Run program
@@ -1528,16 +1814,20 @@ go get package                # Add dependency
 ### Rust
 
 #### rust (rustc, cargo)
-Systems programming language focused on safety and performance.
+Systems programming language focused on safety and performance. The toolchain is managed by **rustup** (Homebrew formula, keg-only); `update` runs `rustup default stable` and `~/.cargo/bin` is on `PATH`.
 
 ```bash
+rustup update                 # Update to the latest stable toolchain
 cargo new project             # Create project
 cargo build                   # Compile
 cargo run                     # Build and run
 cargo test                    # Run tests
 cargo add package             # Add dependency
 rustc --version               # Check version
+bacon clippy                  # Re-run clippy on every save
 ```
+
+Global crates are `cargo` entries in the Brewfile (repgrep, tmux-expose, pay-respects), installed with `cargo install --locked`.
 
 ---
 
@@ -1593,18 +1883,18 @@ Configuration: `~/.config/opencode/opencode.json`
 **Use cases:** AI pair programming, code generation, refactoring, learning codebases
 
 ### pi
-Earendil's terminal coding agent (npm package `@earendil-works/pi-coding-agent`). Installed via the official installer, which checks for Node.js 22.19+ and installs through npm.
+Earendil's terminal coding agent (npm package `@earendil-works/pi-coding-agent`). Installed by mise as `npm:@earendil-works/pi-coding-agent` (see `~/.config/mise/config.toml`), so it runs on mise's Node.
 
 ```bash
 pi                            # Start the coding agent
 pi --version                  # Check version
 ```
 
-Installed by `update` (in `setup_utils`). To reinstall or update:
+Installed by `update --only runtimes` (`mise install`). To update:
 
 ```bash
-update pi                     # Re-run installer (canonical update path)
-curl -fsSL https://pi.dev/install.sh | sh  # Manual install/update
+update pi                     # Detected as a mise tool by its command name
+mise upgrade                  # Upgrade every mise tool
 ```
 
 **Use cases:** AI pair programming, code generation, terminal-driven coding
@@ -1626,26 +1916,24 @@ LLM inference in C/C++. Run models efficiently on CPU.
 
 ```bash
 llama-cli -m model.gguf -p "prompt"  # Run inference
+llama-server -m model.gguf           # OpenAI-compatible API server
 ```
 
-### LlamaBarn
-macOS menu bar app for running local LLMs. Built by ggml-org (llama.cpp maintainers).
+### hf (Hugging Face Hub CLI)
+Download and upload models and datasets from the Hugging Face Hub.
 
 ```bash
-# Server runs at http://localhost:2276/v1
-curl http://localhost:2276/v1/models              # List installed models
-curl http://localhost:2276/v1/chat/completions \  # Chat completion
-  -H "Content-Type: application/json" \
-  -d '{"model": "gemma-3-4b", "messages": [{"role": "user", "content": "Hello"}]}'
+hf auth login                 # Authenticate
+hf download org/model         # Fetch model weights
+hf upload org/model ./folder  # Upload a folder
 ```
 
-**Features:**
-- 100% local, 12MB native app, zero config
-- Smart model catalog with auto-configuration
-- OpenAI-compatible API
-- Works with any client: editors, CLIs, chat UIs
+### Unsloth Studio
+Local UI for fine-tuning LLMs. Installed by `update --only utils` from the official installer into `~/unsloth_studio`.
 
-**Use cases:** Local LLM server, AI coding assistants, model experimentation
+```bash
+unsloth studio                # Local fine-tuning UI on :8888
+```
 
 ---
 
@@ -1658,7 +1946,10 @@ Password manager with CLI integration.
 op signin                     # Authenticate
 op item get "item name"       # Retrieve item
 op read "op://vault/item/field"  # Read secret
+envrun python app.py          # Run one command with .env loaded; op:// references resolved
 ```
+
+`envrun` (shell function) wraps `op run --env-file=.env -- <command>`, so secrets never enter your shell. `setenv --key` exports `.env` into the current shell instead.
 
 ### Raycast
 Spotlight replacement with extensibility. Launcher, snippets, clipboard history.
@@ -1689,11 +1980,17 @@ Shortcut: `Cmd + Shift + Space` (configurable)
 ### hiddenbar
 Hide menu bar items. Keep your menu bar clean.
 
-### Notion
-Note-taking and knowledge management.
-
 ### CleanShot
-Screenshot and screen recording tool with annotation.
+Screenshot and screen recording tool with annotation. **Not managed by the Brewfile**: kept at v4 (the license does not cover v5). Install v4 manually.
+
+### mas
+Mac App Store from the terminal.
+
+```bash
+mas list                      # Installed App Store apps
+mas outdated                  # Apps with updates
+mas upgrade                   # Upgrade all
+```
 
 ### Alt-Tab
 Windows-style alt-tab window switcher for macOS.
@@ -1710,21 +2007,23 @@ Privacy-focused Firefox-based browser with a clean, minimal UI. Emphasizes distr
 ### AeroSpace
 Tiling window manager for macOS. i3-like experience.
 
-Configuration: `~/.config/aerospace/aerospace.toml`
+Configuration: `~/.config/aerospace/aerospace.toml` (stow package `aerospace`; AeroSpace's default template, `start-at-login = false`).
 
 | Key | Action |
 |-----|--------|
 | `alt + h/j/k/l` | Focus window |
 | `alt + shift + h/j/k/l` | Move window |
-| `alt + 1-9` | Switch workspace |
-| `alt + shift + 1-9` | Move to workspace |
+| `alt + 1-9`, `alt + <letter>` | Switch workspace |
+| `alt + shift + 1-9`, `alt + shift + <letter>` | Move to workspace |
+| `alt + /` | Tiles layout |
+| `alt + ,` | Accordion layout |
+| `alt + shift + -` / `alt + shift + =` | Resize |
+| `alt + tab` | Previous workspace |
+| `alt + shift + ;` | Service mode (`f` float/tile, `r` reset layout, `esc` reload config) |
+
+AeroSpace's `alt + e` and `alt + s` (workspaces E and S) are global and shadow tmux.expose (`Alt+e`) and the zsh sesh picker (`Alt+s`) while AeroSpace runs.
 
 **Use cases:** Tiling window management, keyboard-driven workflow
-
-### skhd
-Simple hotkey daemon for macOS. Define custom keyboard shortcuts.
-
-Configuration: `~/.config/skhd/skhdrc`
 
 ---
 
@@ -1739,27 +2038,20 @@ stow -D zsh                   # Unstow
 stow --adopt zsh              # Adopt existing files
 ```
 
+`update --only stow` links the packages `aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh` with `stow --no-folding --restow` (files are linked one by one, so directories such as `~/.config/git` stay real). Before stowing it removes stale links into the repository and moves conflicting files to `~/.dotfiles-backup/<timestamp>/`.
+
 **Use cases:** Dotfiles management, keeping configs in git
 
-### direnv
-Load/unload environment variables based on directory.
+### Per-project environment (mise)
+direnv is no longer installed; mise handles per-project tool versions and environment variables (see [mise](#mise-runtime-manager)). For secrets, use `envrun <command>` with a `.env` file of `op://` references (see [1Password](#1password)).
+
+### pay-respects
+Corrects your previous console command. Replaces thefuck. Installed as a `cargo` entry in the Brewfile and initialised in `~/.zshrc` with the alias `f`.
 
 ```bash
-# Create .envrc in project directory
-echo 'export API_KEY=xxx' > .envrc
-direnv allow                  # Allow the envrc
+git brach                     # Typo
+f                             # Suggests and runs: git branch
 ```
-
-**Use cases:** Per-project environment, secrets management, auto-activation
-
-### thefuck
-Corrects your previous console command.
-
-```bash
-fuck                          # Correct last command
-```
-
-Alias configured: `f` -> `fuck`
 
 ### tldr (tlrc)
 Official tldr client written in Rust. Simplified man pages with practical examples.
@@ -1787,24 +2079,23 @@ Battery charge limiter for MacBooks. Extends battery lifespan.
 ### Lulu
 macOS firewall. Block unknown outgoing connections.
 
-### Flux
-Adjusts display color based on time of day. Reduces eye strain.
+### Touch ID for sudo
+`update --only macos` writes `/etc/pam.d/sudo_local` so `sudo` accepts Touch ID. With pam-reattach (Brewfile) it also works inside tmux. `sudo_local` survives macOS updates.
 
 ---
 
 ## Fonts
 
 Installed fonts:
-- **Hack** - Monospace font designed for source code
 - **Hack Nerd Font** - Hack with additional glyphs/icons
 - **Symbols Only Nerd Font** - Just the icons (for yazi)
 
 ---
 
-## Additional Tools from install.sh
+## Additional Tools
 
 ### Bun
-Installed via: `curl -fsSL https://bun.sh/install | bash`
+Installed by mise (`bun = "latest"` in `~/.config/mise/config.toml`).
 
 ### repgrep (rgr)
 Interactive ripgrep. Browse search results in a TUI.
@@ -1813,41 +2104,60 @@ Interactive ripgrep. Browse search results in a TUI.
 rgr pattern                   # Interactive search
 ```
 
-Installed via: `cargo install repgrep`
+Installed via: `cargo "repgrep"` in the Brewfile (`cargo install --locked`)
+
+### Herdr
+Installed by `update --only utils` from the official installer (herdr.dev). Update with `update herdr`.
 
 ---
 
 ## Dotfiles Management
 
 ### update (install.sh CLI)
-The primary CLI for managing this dotfiles setup. Installs, updates, and queries tools.
+The primary CLI for managing this dotfiles setup. Installs, updates, checks and queries tools. `update` is an alias for `"$DOTFILES_DIR/install.sh"`.
 
 ```bash
 update                        # Full dotfiles install (idempotent)
-update <tool>                 # Update single tool (auto-detects package manager)
+update <tool>                 # Update one tool (auto-detects its source)
 update --versions             # Show all installed tool versions
-update --versions brew        # Show versions for specific group
+update --versions brew        # Show versions for one group
 update --info <tool>          # Show tool info, examples, and category
 update --outdated             # Show packages with available updates
-update --all                  # Update everything (brew, uv, cargo, git repos)
-update --only <function>      # Run specific install function
-update --list                 # List available install functions
+update --all                  # Update everything (brew, uv, cargo, mise, git repos)
+update --doctor               # Health check: links, PATH, configs, Brewfile, identity
+update --only <step>          # Run one install step
+update --skip "<step> ..."    # Skip steps (one quoted argument)
+update --list                 # List install steps
+update --dry-run -v           # Preview without changing anything
 update --help                 # Show help
 ```
 
-**Version groups:** `brew`, `cask`, `uv`, `cargo`, `node`, `go`
+**Install steps** (in order): `dirs`, `xcode`, `brew`, `stow`, `runtimes`, `venv`, `tmux`, `yazi`, `utils`, `macos`, `cleanup`.
+
+**Version groups:** `brew`, `cask`, `uv`, `cargo`, `mise`, `git`, `other`
+
+**Tool sources** for `update <tool>`: Homebrew formula, cask, uv tool, cargo crate, mise tool (also by command name, e.g. `pi`), `herdr`, `tpm`, `yazi-flavors`.
 
 **Examples:**
 ```bash
 update bat                    # Update bat (detects: brew)
-update ruff                   # Update ruff (detects: uv tool)
+update ruff                   # Update ruff (detects: brew)
+update harlequin              # Update harlequin (detects: uv tool)
+update pi                     # Update pi (detects: mise)
 update --info fzf             # Show fzf description and examples
 update --outdated             # Check what needs updating
 update --all                  # Update all package managers
-update --only install_nvim    # Re-run just nvim setup
+update --only stow            # Re-link dotfiles
+update --only runtimes        # Re-run mise install and rustup
+update --doctor               # Check that the setup is healthy
 ```
 
+Log file: `$XDG_STATE_HOME/dotfiles/install.log` (default `~/.local/state/dotfiles/install.log`). Failed steps do not stop the run; they are summarised at the end and the exit code is non-zero.
+
 **Use cases:** Dotfiles installation, tool updates, version management, system maintenance
+
+### Git hooks (prek)
+Run `prek install` once per clone. Hooks run on every commit; `prek run --all-files` runs them on demand. See [prek](#prek).
 
 ---
 
@@ -1894,7 +2204,7 @@ Sorts subdirectories by the timestamp of their newest file (macOS `stat -f`).
 | New Python project | `uv init` |
 | Add dependency | `uv add package` |
 | Run Python | `uv run python` |
-| Run tool once | `uvx ruff check .` |
+| Lint Python | `ruff check .` |
 | Run TypeScript | `bun run file.ts` |
 
 ### System
@@ -1902,5 +2212,5 @@ Sorts subdirectories by the timestamp of their newest file (macOS `stat -f`).
 |------|---------|
 | Process monitor | `btop` |
 | Benchmark | `hyperfine 'cmd'` |
-| Correct command | `fuck` |
+| Correct command | `f` (pay-respects) |
 | Quick docs | `tldr command` |
