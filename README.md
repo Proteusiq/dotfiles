@@ -82,7 +82,7 @@ Steps, in order: `dirs`, `xcode`, `brew`, `stow`, `runtimes`, `venv`, `tmux`, `y
 | `xcode` | Installs the Xcode Command Line Tools |
 | `brew` | Installs Homebrew if missing, trusts only the taps in the Brewfile, runs `brew bundle` (formulae, casks, uv tools, cargo crates) |
 | `stow` | Links the configs into `$HOME`, backs up conflicts, removes stale links |
-| `runtimes` | `mise install` and `rustup default stable` |
+| `runtimes` | Python 3.14 via uv (default `python`/`python3`), `mise install`, `rustup default stable` |
 | `venv` | Creates `~/.virtualenvs/neovim` with `pynvim` |
 | `tmux` | Installs tpm and the tmux plugins |
 | `yazi` | Clones the Yazi flavors into `~/.config/yazi/flavors` |
@@ -100,7 +100,7 @@ Ghostty, tmux, Neovim, fzf, delta and Yazi use the Catppuccin theme.
 | Terminal | Ghostty, tmux + tpm, sesh, Yazi, broot, AeroSpace |
 | Editor | Neovim with LazyVim, glow, dawn |
 | Git | git, gh + gh-dash, delta, difftastic, lazygit, serie, git-lfs, git-filter-repo |
-| Languages and runtimes | uv (Python), pixi, mise (Node LTS, Go, Bun, pnpm), rustup (Rust) |
+| Languages and runtimes | uv (Python 3.14), pixi, mise (Node LTS, Go, Bun, pnpm), rustup (Rust) |
 | Containers and cloud | OrbStack, colima, docker CLI + compose + buildx, lazydocker, OpenTofu (`tofu`), Azure CLI + Bicep, azd, Temporal CLI |
 | Data | DuckDB, harlequin, tabiew, dbt Cloud CLI, Snowflake CLI (`snow`), sqlfluff, jq, yq, mongosh |
 | AI | OpenCode, pi, Ollama, llama.cpp, hf, Unsloth Studio |
@@ -123,6 +123,7 @@ dotfiles/
 ├── sesh/         → ~/.config/sesh/sesh.toml
 ├── starship/     → ~/.config/starship.toml
 ├── tmux/         → ~/.tmux.conf
+├── uv/           → ~/.config/uv/.python-version (default Python: 3.14)
 ├── yazi/         → ~/.config/yazi/
 ├── zsh/          → ~/.zshenv, ~/.zprofile, ~/.zshrc, ~/.config/zsh/
 ├── bin/          aliases.py, tools.py (linked to ~/.local/bin/aliases and ~/.local/bin/tools)
@@ -147,6 +148,7 @@ Shell startup order:
 | Knowledge | File |
 |-----------|------|
 | System tools (Homebrew formulae, casks, uv tools, cargo crates) | [Brewfile](./Brewfile) |
+| Default Python version | [uv/.config/uv/.python-version](./uv/.config/uv/.python-version) |
 | Language runtimes and npm-based CLIs | [mise/.config/mise/config.toml](./mise/.config/mise/config.toml) |
 | Shell aliases | [zsh/.config/zsh/aliases.zsh](./zsh/.config/zsh/aliases.zsh) |
 | Shell functions | [zsh/.config/zsh/functions.zsh](./zsh/.config/zsh/functions.zsh) |

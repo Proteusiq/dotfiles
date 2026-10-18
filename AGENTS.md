@@ -135,26 +135,29 @@ tests/
 
 ## Python
 
+Default version: **Python 3.14** (pinned in `uv/.config/uv/.python-version`; `python` and `python3` on PATH are uv's 3.14).
+
 ### Tools
 | Tool | Purpose | Install |
 |------|---------|---------|
-| `uv` | Package/project manager, Python versions | `brew install uv` |
-| `ruff` | Linter & formatter | `uv tool install ruff` |
-| `ty` | Type checker (Astral, 10-100x faster than mypy) | `uv tool install ty` |
+| `uv` | Package/project manager, Python versions | Brewfile |
+| `ruff` | Linter & formatter | Brewfile |
+| `ty` | Type checker (Astral, 10-100x faster than mypy) | Brewfile |
 | `pytest` | Testing | `uv add --dev pytest` |
+| `httpx2` | HTTP client (sync + async, HTTP/2, WebSockets) | `uv add 'httpx2[ws]'` |
 
 ### Workflow
 ```bash
-uv init myproject && cd myproject
-uv add requests
+uv init --python 3.14 myproject && cd myproject   # requires-python = ">=3.14"
+uv add 'httpx2[ws]' pydantic
 uv add --dev pytest
 
 uv run python script.py
 uv run pytest
 
-# One-off (no install)
-uvx ruff check .
-uvx ty check .
+# One-off scripts: PEP 723 inline metadata
+uv add --script script.py 'httpx2[ws]'
+uv run script.py
 ```
 
 ### Before Commit
@@ -167,24 +170,47 @@ uv run pytest
 
 ### Style
 ```python
-async def fetch_users(user_ids: list[int]) -> list[User]:
-    """Fetch users by their IDs."""
-    async with httpx.AsyncClient() as client:
-        tasks = [client.get(f"/users/{id}") for id in user_ids]
-        responses = await asyncio.gather(*tasks)
-        return [User(**r.json()) for r in responses]
+import asyncio
+
+import httpx2
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    id: int
+    name: str
+
+
+async def fetch_users(client: httpx2.AsyncClient, user_ids: list[int]) -> list[User]:
+    """Fetch users by their IDs, concurrently."""
+    async with asyncio.TaskGroup() as group:
+        tasks = [
+            group.create_task(client.get(f"/users/{user_id}")) for user_id in user_ids
+        ]
+    return [
+        User.model_validate(task.result().raise_for_status().json()) for task in tasks
+    ]
+
+
+async def stream_events(client: httpx2.AsyncClient) -> None:
+    """Print messages from a WebSocket (needs the `ws` extra)."""
+    async with client.websocket("/ws/events") as ws:
+        await ws.send_text("subscribe")
+        print(await ws.receive_text())
 ```
 
-- Type annotations: always, Python 3.12+ (`list[T]`, `X | None`)
+- Type annotations: always, Python 3.14 (`list[T]`, `X | None`, `type` aliases, deferred annotations)
+- The client is passed in (dependency injection), so tests can give it a mock transport
 - Docstrings: brief, public APIs only
-- Async for concurrent I/O; plain synchronous code is fine for simple scripts
+- Async for concurrent I/O; plain synchronous code (`httpx2.Client`) is fine for simple scripts
 
 ### Best Practices Checklist
+- [ ] **Version**: `requires-python = ">=3.14"`
 - [ ] **Tools**: Using `uv`, `ruff`, `ty`, `pytest`
 - [ ] **Types**: All functions have type annotations
-- [ ] **Async**: Using `asyncio` when I/O is concurrent (not blocking `subprocess.run()`, `requests`, etc. inside async code)
+- [ ] **Async**: Using `asyncio` (`TaskGroup`) when I/O is concurrent (not blocking `subprocess.run()`, `requests`, etc. inside async code)
 - [ ] **Data structures**: Using `dataclass` or `pydantic` for structured data
-- [ ] **HTTP**: Using `httpx` (async) instead of `requests` (sync)
+- [ ] **HTTP**: Using `httpx2` (`httpx2[ws]` for WebSockets) instead of `requests` or `httpx`
 - [ ] **Validation**: Using `pydantic` or manual validation for external input
 - [ ] **Error handling**: Returning structured errors, not raising exceptions for control flow
 - [ ] **Imports**: Absolute imports, no circular dependencies

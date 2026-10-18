@@ -15,6 +15,7 @@ dotfiles/
 ├── sesh/                   # stow package: tmux sessions
 ├── starship/               # stow package: prompt
 ├── tmux/                   # stow package: tmux
+├── uv/                     # stow package: default Python version (3.14)
 ├── yazi/                   # stow package: file manager
 ├── zsh/                    # stow package: shell
 ├── bin/
@@ -24,6 +25,7 @@ dotfiles/
 │   ├── logging.sh          # installer module
 │   ├── ui.sh               # installer module
 │   ├── versions.sh         # installer module
+│   ├── packages.sh         # STOW_PACKAGES list
 │   ├── doctor.sh           # update --doctor
 │   └── check_catalog.py    # Brewfile/mise vs. tools.py check
 ├── docs/                   # this site (VitePress)
@@ -52,6 +54,7 @@ dotfiles/
 | `sesh` | `~/.config/sesh/sesh.toml` |
 | `starship` | `~/.config/starship.toml` |
 | `tmux` | `~/.tmux.conf` |
+| `uv` | `~/.config/uv/.python-version` |
 | `yazi` | `~/.config/yazi/{yazi,keymap,theme}.toml`, `~/.config/yazi/plugins/smart-enter.yazi/init.lua` |
 | `zsh` | `~/.zshenv`, `~/.zprofile`, `~/.zshrc`, files under `~/.config/zsh/` |
 

@@ -87,6 +87,15 @@ check_path_order() {
         esac
     done
     [[ ":$PATH:" == *":$prefix/bin:"* ]] || warn "$prefix/bin is not on PATH in this shell"
+
+    local expected actual
+    expected="$(tr -d '[:space:]' <"$DOTFILES_DIR/uv/.config/uv/.python-version")"
+    actual="$(DOTFILES_NO_TMUX=1 zsh -i -c 'python3 -c "import sys; print(*sys.version_info[:2], sep=\".\")"' 2>/dev/null)"
+    if [[ "$actual" == "$expected" ]]; then
+        pass "python3 is Python $expected"
+    else
+        fail "python3 is Python ${actual:-missing}, expected $expected: run update --only runtimes"
+    fi
 }
 
 check_startup_time() {

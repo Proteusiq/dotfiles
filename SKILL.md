@@ -110,7 +110,7 @@ dotfiles/
 │   └── tools.py             # `tools`: tool catalog, used by update --info
 ├── docs/                    # VitePress site (GitHub Pages)
 ├── .github/workflows/       # lint.yml (hooks, dry run, stow, zsh), docs.yml
-└── <stow packages>/         # aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh
+└── <stow packages>/         # aerospace atuin ghostty git mise nvim sesh starship tmux uv yazi zsh
 ```
 
 ### Installation Pipeline
@@ -121,7 +121,7 @@ dotfiles/
 🔨 Installing Xcode CLI             xcode
 🍺 Installing Homebrew packages     brew      ← Brewfile (bundle, rustup, second pass, check)
 🔗 Linking dotfiles                 stow      ← GNU Stow
-📦 Installing runtimes              runtimes  ← mise install, rustup default stable
+📦 Installing runtimes              runtimes  ← uv python 3.14 (default), mise install, rustup
 🐍 Creating Python virtual envs     venv      ← ~/.virtualenvs/neovim (pynvim)
 💻 Installing tmux plugins          tmux      ← tpm (git)
 🎨 Installing Yazi themes           yazi      ← yazi-rs/flavors (git)
@@ -142,7 +142,7 @@ The `brew` step keeps sudo alive only during `brew bundle`, then runs `sudo -k`.
 | `xcode` | `install_xcode_tools` | Install Xcode Command Line Tools |
 | `brew` | `install_brew` | Install Homebrew, trust Brewfile taps, `brew bundle`, Rust toolchain |
 | `stow` | `stow_dotfiles` | Link configs with GNU Stow, back up conflicts, prune stale links |
-| `runtimes` | `install_runtimes` | `mise install`, `rustup default stable` |
+| `runtimes` | `install_runtimes` | `uv python install --upgrade --default` (version from `uv/.config/uv/.python-version`), `mise install`, `rustup default stable` |
 | `venv` | `create_virtualenvs` | `~/.virtualenvs/neovim` with pynvim (`python3_host_prog`) |
 | `tmux` | `install_tmux_plugins` | tpm clone and `install_plugins` |
 | `yazi` | `install_yazi_themes` | Clone Yazi flavors to `~/.config/yazi/flavors` |
@@ -154,7 +154,7 @@ The `brew` step keeps sudo alive only during `brew bundle`, then runs `sudo -k`.
 
 ## Dotfile Configuration (GNU Stow)
 
-Packages: `aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh`.
+Packages: `aerospace atuin ghostty git mise nvim sesh starship tmux uv yazi zsh`.
 
 ```bash
 stow --no-folding --restow -d "$DOTFILES_DIR" -t "$HOME" <packages>

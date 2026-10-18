@@ -103,6 +103,7 @@ Runs on its own (`set -uo pipefail`) and sources `logging.sh`. Each check prints
 | `check_brewfile` | `brew bundle check --no-upgrade`; packages installed but not declared (warning) |
 | `check_git_identity` | `personal.gitconfig` and `work.gitconfig` exist (warning); this repository has a `user.email` |
 | `check_runtimes` | `mise doctor`, `rustup default` |
+| `check_path_order` | Homebrew/uv binaries win over `/usr/bin`; `python3` is the pinned version |
 
 The checks run zsh with `DOTFILES_NO_TMUX=1`, so tmux does not start.
 
@@ -153,7 +154,7 @@ update [flags]
 | `xcode` | `install_xcode_tools` | Xcode Command Line Tools (prompt only with `--interactive`) |
 | `brew` | `install_brew` | Install Homebrew if missing, `brew update`, `brew trust` each Brewfile `tap`, sudo keepalive, `brew bundle install`, `ensure_rust_toolchain`, second `brew bundle install` if `brew bundle check` fails (cargo and uv entries need the toolchains), `sudo -k`, final `brew bundle check --no-upgrade` |
 | `stow` | `stow_dotfiles` | `prepare_stow_targets` (remove stale links, back up conflicts), then `stow --no-folding --restow` |
-| `runtimes` | `install_runtimes` | `MISE_YES=1 mise install`, `ensure_rust_toolchain` |
+| `runtimes` | `install_runtimes` | `install_default_python` (uv, version from `uv/.config/uv/.python-version`), `MISE_YES=1 mise install`, `ensure_rust_toolchain` |
 | `venv` | `create_virtualenvs` | `uv venv ~/.virtualenvs/neovim`, `uv pip install --upgrade pynvim` |
 | `tmux` | `install_tmux_plugins` | `git_install` tpm, then `install_plugins` |
 | `yazi` | `install_yazi_themes` | `git_install` yazi-rs/flavors into `~/.config/yazi/flavors` |

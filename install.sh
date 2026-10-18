@@ -12,6 +12,8 @@ readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly LOG_FILE="${LOG_FILE:-${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/install.log}"
 readonly BACKUP_ROOT="$HOME/.dotfiles-backup"
 readonly UNSLOTH_DIR="$HOME/unsloth_studio"
+# Default Python for uv and for python/python3 on PATH. Same file uv reads globally.
+readonly PYTHON_VERSION_FILE="$DOTFILES_DIR/uv/.config/uv/.python-version"
 readonly GH_EXTENSIONS=(dlvhdr/gh-dash)
 
 DRY_RUN=false
@@ -112,7 +114,7 @@ ${BOLD}Functions:${NC}
     ${BLUE}xcode${NC}       Install Xcode Command Line Tools
     ${BLUE}brew${NC}        Install Homebrew and everything in the Brewfile (brew, cask, uv, cargo)
     ${BLUE}stow${NC}        Symlink dotfiles with GNU Stow (backs up conflicting files)
-    ${BLUE}runtimes${NC}    Install runtimes with mise (node, go, bun) and Rust with rustup
+    ${BLUE}runtimes${NC}    Install Python (uv, version from uv/.config/uv/.python-version), mise runtimes and Rust
     ${BLUE}venv${NC}        Create the Python venv Neovim uses for plugins (pynvim)
     ${BLUE}tmux${NC}        Install tmux plugin manager (tpm) and plugins
     ${BLUE}yazi${NC}        Install Yazi file manager themes
@@ -462,12 +464,31 @@ stow_dotfiles() {
     log_info "✅ Dotfiles stowed"
 }
 
+python_version() {
+    tr -d '[:space:]' <"$PYTHON_VERSION_FILE"
+}
+
+# Install the pinned Python with uv, upgrade it to the latest patch release, and
+# link python and python3 in ~/.local/bin (first on PATH) to it.
+install_default_python() {
+    has_cmd uv || {
+        log_warn "uv not found; run 'update --only brew' first"
+        return 0
+    }
+    local version
+    version="$(python_version)"
+    run_quiet uv python install --upgrade --default --preview-features python-install-default "$version" || return 1
+    log_info "✅ Python $version is the default python and python3"
+}
+
 install_runtimes() {
     log_step "📦 Installing runtimes"
     if [[ "$DRY_RUN" == true ]]; then
-        dry_run_msg "Would run: mise install && rustup default stable"
+        dry_run_msg "Would run: uv python install $(python_version) --default && mise install && rustup default stable"
         return 0
     fi
+
+    install_default_python || return 1
 
     if has_cmd mise; then
         run_quiet env MISE_YES=1 mise install || return 1
@@ -559,11 +580,15 @@ create_virtualenvs() {
     local -a envs=(
         "$HOME/.virtualenvs/neovim|pynvim"
     )
-    local env dir packages
+    local env dir packages version
+    version="$(python_version)"
     execute mkdir -p "$HOME/.virtualenvs"
     for env in "${envs[@]}"; do
         IFS='|' read -r dir packages <<<"$env"
-        [[ -d "$dir" ]] || run_quiet uv venv "$dir" || return 1
+        # Recreate the venv when it was built with another Python version.
+        if [[ ! -x "$dir/bin/python" ]] || ! "$dir/bin/python" -c "import sys; sys.exit(f'{sys.version_info[0]}.{sys.version_info[1]}' != '$version')"; then
+            run_quiet uv venv --clear --python "$version" "$dir" || return 1
+        fi
         # shellcheck disable=SC2086 # packages is a space-separated list
         run_quiet uv pip install --python "$dir/bin/python" --upgrade $packages || return 1
     done

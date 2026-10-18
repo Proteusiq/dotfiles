@@ -49,8 +49,8 @@ A full `update` runs these steps in order. Use the name with `--only` or `--skip
 | `dirs` | `create_dirs` | Create `~/Codes`, `~/Documents/Screenshots` and the log directory |
 | `xcode` | `install_xcode_tools` | Install Xcode Command Line Tools |
 | `brew` | `install_brew` | Install Homebrew if missing, trust the taps declared in the Brewfile, run `brew bundle` (formulae, casks, uv tools, cargo crates), ensure the stable Rust toolchain, run a second bundle pass for uv/cargo entries, then `brew bundle check --no-upgrade`. sudo is kept alive only during `brew bundle`, then dropped (`sudo -k`) |
-| `stow` | `stow_dotfiles` | Link packages `aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh` with `stow --no-folding --restow`. First removes stale links into the repository and moves conflicting real files to `~/.dotfiles-backup/<timestamp>/` |
-| `runtimes` | `install_runtimes` | `mise install` (node, go, bun, pnpm, usage, pi) and `rustup default stable` |
+| `stow` | `stow_dotfiles` | Link packages `aerospace atuin ghostty git mise nvim sesh starship tmux uv yazi zsh` with `stow --no-folding --restow`. First removes stale links into the repository and moves conflicting real files to `~/.dotfiles-backup/<timestamp>/` |
+| `runtimes` | `install_runtimes` | Python 3.14 via `uv python install --upgrade --default`, `mise install` (node, go, bun, pnpm, usage, pi) and `rustup default stable` |
 | `venv` | `create_virtualenvs` | Create `~/.virtualenvs/neovim` with pynvim (Neovim's Python provider) |
 | `tmux` | `install_tmux_plugins` | Clone or update tpm, install tmux plugins |
 | `yazi` | `install_yazi_themes` | Clone or update `yazi-rs/flavors` into `~/.config/yazi/flavors` |

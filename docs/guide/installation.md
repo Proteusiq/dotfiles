@@ -18,7 +18,7 @@ A full run executes these steps in order. Use the names with `--only` and `--ski
 | `xcode` | Installs the Xcode Command Line Tools if `xcode-select` finds none. |
 | `brew` | Installs Homebrew if it is missing. Trusts only the taps declared with a `tap` line in the `Brewfile`. Runs `brew bundle`, sets the Rust toolchain (`rustup default stable`), runs a second pass for the `cargo` and `uv` entries, then checks with `brew bundle check --no-upgrade`. |
 | `stow` | Links the stow packages into `$HOME` with `stow --no-folding --restow`. Removes stale links and backs up conflicting files first. |
-| `runtimes` | Runs `mise install` (Node LTS, Go, Bun, pnpm, usage, pi) and makes sure a Rust toolchain is set. |
+| `runtimes` | Installs Python 3.14 with uv and links `python`/`python3` in `~/.local/bin` to it (version in `uv/.config/uv/.python-version`), runs `mise install` (Node LTS, Go, Bun, pnpm, usage, pi) and makes sure a Rust toolchain is set. |
 | `venv` | Creates `~/.virtualenvs/neovim` with `pynvim`, the Python provider for Neovim. |
 | `tmux` | Clones tpm into `~/.tmux/plugins/tpm` and installs the plugins. |
 | `yazi` | Clones `yazi-rs/flavors` into `~/.config/yazi/flavors`. |

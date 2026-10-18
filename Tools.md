@@ -1655,15 +1655,15 @@ uv init                       # Initialize project in current directory
 uv init myproj                # Initialize project in myproj/
 uv init --app --package       # Initialize packageable app (CLI, web app)
 uv init --lib --package       # Initialize packageable library
-uv init --python 3.12         # Use specific Python version
+uv init --python 3.14         # Use specific Python version (3.14 is the default here)
 ```
 
 **Managing Dependencies**
 ```bash
-uv add requests               # Add dependency
+uv add 'httpx2[ws]'           # Add dependency (HTTP client with WebSockets)
 uv add pytest --dev           # Add dev dependency
 uv add -r requirements.txt    # Add from requirements file
-uv remove requests            # Remove dependency
+uv remove httpx2              # Remove dependency
 uv tree                       # Show dependency tree
 uv lock --upgrade             # Upgrade all dependencies
 ```
@@ -1674,7 +1674,7 @@ uv run python                 # Run Python in project environment
 uv run pytest                 # Run pytest
 uv run --with rich python     # Run with additional package
 uv run --with bpython bpython # Run bpython REPL
-uv run --python 3.11 python   # Run with specific Python version
+uv run --python 3.13 python   # Run with another Python version
 ```
 
 **Tools (like pipx)**
@@ -1703,10 +1703,14 @@ Add shebang to make scripts executable: `#!/usr/bin/env -S uv run`
 **Python Version Management**
 ```bash
 uv python list                # List installed and available versions
-uv python install 3.12        # Install Python version
-uv python uninstall 3.11      # Uninstall Python version
-uv python pin 3.12            # Pin project to Python version
+uv python install 3.14        # Install Python version
+uv python upgrade 3.14        # Upgrade to the latest patch release
+uv python uninstall 3.13      # Uninstall Python version
+uv python pin 3.14            # Pin project to Python version
+uv python pin --global 3.14   # Change the global default
 ```
+
+The default Python is **3.14**, pinned in `uv/.config/uv/.python-version` (stowed to `~/.config/uv/.python-version`, which uv reads globally). `update --only runtimes` installs it and links `python` and `python3` in `~/.local/bin` to it, so they win over Homebrew's `python3`. To move to a new version, edit that file and run `update --only runtimes venv`.
 
 **Project Lifecycle**
 ```bash
@@ -2038,7 +2042,7 @@ stow -D zsh                   # Unstow
 stow --adopt zsh              # Adopt existing files
 ```
 
-`update --only stow` links the packages `aerospace atuin ghostty git mise nvim sesh starship tmux yazi zsh` with `stow --no-folding --restow` (files are linked one by one, so directories such as `~/.config/git` stay real). Before stowing it removes stale links into the repository and moves conflicting files to `~/.dotfiles-backup/<timestamp>/`.
+`update --only stow` links the packages `aerospace atuin ghostty git mise nvim sesh starship tmux uv yazi zsh` with `stow --no-folding --restow` (files are linked one by one, so directories such as `~/.config/git` stay real). Before stowing it removes stale links into the repository and moves conflicting files to `~/.dotfiles-backup/<timestamp>/`.
 
 **Use cases:** Dotfiles management, keeping configs in git
 
