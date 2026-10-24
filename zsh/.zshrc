@@ -1,10 +1,61 @@
 # Interactive shells only. Environment and PATH live in ~/.zshenv.
 
-# Start tmux before any other work, so the outer shell stays cheap. Skipped inside
-# tmux, over SSH, for `zsh -c`, and outside Ghostty (IDEs, agents, other terminals).
-if [[ -z "$TMUX" && -z "$SSH_CONNECTION" && -z "$ZSH_EXECUTION_STRING" && -z "$DOTFILES_NO_TMUX" ]] &&
-    [[ "$TERM_PROGRAM" == "ghostty" ]] && (( $+commands[tmux] )); then
-    exec tmux
+# Start the terminal multiplexer before any other work, so the outer shell stays
+# cheap. A greeting counts down to herdr: t starts tmux, h starts herdr now, and
+# any other key adds 5 seconds. herdr reopens its last session.
+# MULTIPLEXER=herdr|tmux skips the greeting, for example in a Ghostty profile.
+# Skipped inside a multiplexer, over SSH, for `zsh -c`, outside Ghostty (IDEs,
+# agents, other terminals), and when DOTFILES_NO_TMUX is set.
+if [[ -z "$TMUX" && -z "$HERDR_ENV" && -z "$SSH_CONNECTION" && -z "$ZSH_EXECUTION_STRING" ]] &&
+    [[ -z "$DOTFILES_NO_TMUX" && "$TERM_PROGRAM" == "ghostty" ]]; then
+    () {
+        local -ri countdown_seconds=3 extra_seconds=5
+        local choice="${MULTIPLEXER:-}" key greeting icon name hour
+        local -i remaining=countdown_seconds
+        if [[ -z "$choice" ]]; then
+            # /usr/bin/id because GNU id (no -F) is not on PATH yet, but may be later.
+            name="${${(z)$(/usr/bin/id -F 2>/dev/null)}[1]:-$USER}"
+            print -v hour -P '%D{%K}'
+            if (( hour >= 5 && hour < 12 )); then
+                greeting="Good morning" icon="☀"
+            elif (( hour >= 12 && hour < 18 )); then
+                greeting="Good afternoon" icon="☀"
+            else
+                greeting="Good evening" icon="☾"
+            fi
+            print -u2
+            print -u2 -P "  %F{yellow}${icon}%f  %B${greeting}, ${name//\%/%%}%b"
+            print -u2 -P "     %F{8}%D{%A %f %B · %K:%M}%f"
+            print -u2
+            print -n -u2 $'\e[?25l'
+            {
+                while (( remaining > 0 )); do
+                    print -n -u2 -P "\r%E     %F{blue}❯%f %F{green}herdr%f in %B${remaining}s%b" \
+                        "   %F{magenta}t%f %F{8}tmux%f  %F{magenta}h%f %F{8}herdr%f" \
+                        " %F{8}· any key +${extra_seconds}s%f"
+                    if read -k 1 -t 1 -s key; then
+                        # Arrow keys send several bytes; count them as one press.
+                        while read -k 1 -t 0 -s; do :; done
+                        case "$key" in
+                            [tT]) choice=tmux; break ;;
+                            [hH]) choice=herdr; break ;;
+                            *) (( remaining += extra_seconds )) ;;
+                        esac
+                    else
+                        (( remaining-- ))
+                    fi
+                done
+            } always {
+                print -n -u2 $'\r\e[K\e[?25h'
+            }
+            : ${choice:=herdr}
+        fi
+        case "$choice" in
+            herdr) (( $+commands[herdr] )) && exec herdr ;;
+            tmux) (( $+commands[tmux] )) && exec tmux ;;
+            *) print -u2 "zsh: MULTIPLEXER must be herdr or tmux, got '$choice'" ;;
+        esac
+    }
 fi
 
 ZSH_CONFIG_DIR="$XDG_CONFIG_HOME/zsh"
