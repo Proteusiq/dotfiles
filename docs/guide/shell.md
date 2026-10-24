@@ -52,16 +52,29 @@ Directories that do not exist are dropped, and duplicates are removed (`typeset 
 
 Interactive shells put the GNU versions of coreutils, findutils, sed, tar, grep and awk first on `PATH`, under their usual names (`ls`, `sed`, `find`, ...). Scripts do not get this change, so they keep the BSD tools that macOS scripts expect.
 
-## Automatic tmux
+## Multiplexer on start
 
-`~/.zshrc` replaces the shell with tmux (`exec tmux`) only when all of these are true:
+A new Ghostty window greets you by time of day and counts down to herdr:
+
+````
+  ☀  Good afternoon, Prayson
+     Saturday 24 October · 12:31
+
+     ❯ herdr in 3s    t tmux  h herdr  · any key +5s
+````
+
+- `t` starts tmux, `h` starts herdr straight away
+- any other key adds 5 seconds
+- no key starts herdr, which reopens its last session
+- `MULTIPLEXER=herdr|tmux` skips the greeting and starts that multiplexer
+
+The greeting runs only when all of these are true:
 
 - `TERM_PROGRAM` is `ghostty`
-- the shell is not already inside tmux
+- the shell is not already inside a multiplexer (`TMUX`, `HERDR_ENV`)
 - the session is not over SSH
 - the shell is not running a command (`zsh -c`)
 - `DOTFILES_NO_TMUX` is not set
-- `tmux` is installed
 
 Other terminals, IDEs and agents get a plain shell. `update --doctor` and CI set `DOTFILES_NO_TMUX=1` when they start zsh.
 

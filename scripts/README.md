@@ -97,15 +97,14 @@ Runs on its own (`set -uo pipefail`) and sources `logging.sh`. Each check prints
 |-------|---------------|
 | `check_links` | `stow --no` reports no conflicts; no stale links into the repository |
 | `check_repo_clean` | `git status --porcelain` is empty (warning) |
-| `check_path_order` | `git`, `rsync`, `python3`, `node` do not resolve to `/usr/bin` or `/bin` in a fresh interactive zsh |
+| `check_path_order` | `git`, `rsync`, `python3`, `node` do not resolve to `/usr/bin` or `/bin` in a fresh interactive zsh; Homebrew/uv binaries win over `/usr/bin`; `python3` is the pinned version |
 | `check_startup_time` | Interactive zsh starts in less than `MAX_STARTUP_MS` (300) (warning) |
 | `check_configs` | `zsh -n` on the zsh files, `ghostty +validate-config`, `tmux source-file -n`, `yazi --version`, `~/.config/aerospace/aerospace.toml` exists |
 | `check_brewfile` | `brew bundle check --no-upgrade`; packages installed but not declared (warning) |
 | `check_git_identity` | `personal.gitconfig` and `work.gitconfig` exist (warning); this repository has a `user.email` |
 | `check_runtimes` | `mise doctor`, `rustup default` |
-| `check_path_order` | Homebrew/uv binaries win over `/usr/bin`; `python3` is the pinned version |
 
-The checks run zsh with `DOTFILES_NO_TMUX=1`, so tmux does not start.
+The checks run zsh with `DOTFILES_NO_TMUX=1`, so the greeting and the multiplexer do not start.
 
 ### check_catalog.py
 

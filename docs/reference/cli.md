@@ -113,6 +113,7 @@ Runs `scripts/doctor.sh`. Exits non-zero if any check fails; warnings do not fai
 | Links | All stow packages link without conflicts (fix: `update --only stow`); no stale symlinks into the repository in `~` or `~/.config` |
 | Repository | Working tree is clean (warning: an installer may have edited a linked file) |
 | PATH | In a fresh interactive zsh, `git`, `rsync`, `python3` and `node` do not resolve to `/usr/bin` or `/bin`; Homebrew's `bin` is on `PATH` |
+| Python | In a fresh interactive zsh, `python3` reports the version pinned in `uv/.config/uv/.python-version` (fix: `update --only runtimes`) |
 | Shell startup | Interactive zsh starts in under 300 ms (warning otherwise) |
 | Configs | `zsh -n` on `~/.zshenv`, `~/.zprofile`, `~/.zshrc`, `~/.config/zsh/*.zsh`; `ghostty +validate-config`; tmux config parses; `yazi --version`; `~/.config/aerospace/aerospace.toml` exists |
 | Brewfile | `brew bundle check --no-upgrade` passes; warns about packages installed but not declared |

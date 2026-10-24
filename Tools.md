@@ -1157,7 +1157,7 @@ Config: `leaf --config` (theme, editor, watch, width). CLI flags always win.
 ### ghostty
 GPU-accelerated terminal emulator. Fast, feature-rich, and highly configurable.
 
-Configuration: `~/.config/ghostty/config` (theme Catppuccin Mocha, left Option key as Alt). New windows start tmux automatically: `~/.zshrc` runs `exec tmux` when `TERM_PROGRAM=ghostty`, outside tmux and SSH, unless `DOTFILES_NO_TMUX` is set.
+Configuration: `~/.config/ghostty/config` (theme Catppuccin Mocha, left Option key as Alt). New windows show a greeting and count down to herdr (`t` tmux, `h` herdr, any other key adds 5 seconds) when `TERM_PROGRAM=ghostty`, outside tmux/herdr and SSH, unless `DOTFILES_NO_TMUX` is set or `MULTIPLEXER` picks one.
 
 Custom keys are sequences that start with `Cmd+b`:
 
@@ -1721,6 +1721,28 @@ uv version --bump minor       # Bump version
 ```
 
 **Use cases:** Project management, dependency resolution, running scripts, tool management, Python version management
+
+#### httpx2
+The standard HTTP client for Python code in this setup (sync and async, HTTP/2, WebSockets). Use it instead of `requests` or `httpx`. Add the `ws` extra when you need WebSockets:
+
+```bash
+uv add 'httpx2[ws]'           # Project dependency
+uv add --script script.py 'httpx2[ws]'  # Single-file script
+```
+
+```python
+import asyncio
+
+import httpx2
+
+
+async def fetch_titles(client: httpx2.AsyncClient, urls: list[str]) -> list[str]:
+    async with asyncio.TaskGroup() as group:
+        tasks = [group.create_task(client.get(url)) for url in urls]
+    return [task.result().raise_for_status().json()["title"] for task in tasks]
+```
+
+Pass the client in instead of creating one inside the function, so tests can give it a mock transport. The full conventions and checklist are in [AGENTS.md](./AGENTS.md#python).
 
 #### ruff
 Python linter and formatter (Homebrew formula). Also used by Neovim for lint and format, and by this repository's prek hooks.

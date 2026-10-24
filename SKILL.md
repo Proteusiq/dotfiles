@@ -83,6 +83,7 @@ update --interactive      # Allow prompts (Xcode install)
 - Stow conflicts and stale links into the repository
 - Uncommitted changes in the repository
 - PATH order: `git`, `rsync`, `python3`, `node` must not resolve to `/usr/bin` or `/bin`
+- `python3` is the version pinned in `uv/.config/uv/.python-version` (fix: `update --only runtimes`)
 - Interactive zsh startup time (target below 300 ms)
 - Configs: `zsh -n`, `ghostty +validate-config`, `tmux source-file -n`, `yazi --version`, `~/.config/aerospace/aerospace.toml` exists
 - `brew bundle check` and packages installed but not in the Brewfile
@@ -227,7 +228,7 @@ Signing: `gpg.format = ssh`, `commit.gpgSign = true`, `tag.gpgSign = true`, `gpg
 - **PATH is built in `zsh/.zshenv`** by `dotfiles_path` and rebuilt in `zsh/.zprofile` after macOS `path_helper`. Do not prepend PATH in `.zshrc`. The only exception is the GNU `gnubin` directories.
 - **GNU tools shadow BSD tools in interactive shells only.** Scripts and `zsh -c` keep the BSD versions.
 - **Installers that append to `~/.zshrc` change the tracked file.** Move those lines to `~/.zshrc.local`. `update --doctor` warns about uncommitted changes in the repository.
-- **tmux autostart** happens only in Ghostty, outside tmux, outside SSH, not for `zsh -c`. Set `DOTFILES_NO_TMUX=1` to disable it.
+- **Multiplexer autostart** happens only in Ghostty, outside tmux and herdr, outside SSH, not for `zsh -c`. A greeting counts down to herdr: `t` starts tmux, `h` starts herdr, any other key adds 5 seconds. `MULTIPLEXER=herdr|tmux` skips the greeting; `DOTFILES_NO_TMUX=1` disables it.
 - **zsh plugins** are listed in `zsh/.config/zsh/plugins.txt`. antidote builds a static bundle in `$XDG_CACHE_HOME/zsh`.
 - **Neovim extras** are listed only in `nvim/.config/nvim/lazyvim.json`. Python LSP is `ty` with `ruff`, both from Homebrew (`mason = false`).
 - **Hooks run with prek.** Install once per clone with `prek install`. Run all with `prek run --all-files`. Shell scripts are formatted with `shfmt -i 4`.
