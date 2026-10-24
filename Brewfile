@@ -94,7 +94,6 @@ brew "snowflake-cli"                     # Snowflake CLI (snow)
 brew "sqlfluff"                          # SQL linter (dbt, Snowflake dialects)
 brew "mongosh"                           # MongoDB shell
 brew "lnav"                              # Log file viewer
-cask "pgadmin4"                          # PostgreSQL admin
 
 # DEVELOPMENT & BUILD
 # ───────────────────────────────────────────────────────────────────────────
@@ -176,7 +175,6 @@ cask "1password"
 cask "1password-cli"
 cask "raycast"                           # Spotlight replacement
 # cleanshot: intentionally unmanaged — frozen at v4 (license doesn't cover v5); install v4 manually
-cask "espanso"                           # Text expander
 cask "hiddenbar"                         # Menu bar organizer
 cask "shortcat"                          # Keyboard-driven UI navigation
 brew "mas"                               # Mac App Store CLI

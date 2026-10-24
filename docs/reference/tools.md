@@ -123,7 +123,6 @@ Databases and data processing.
 | sqlit-tui | uv | Database TUI (command: `sqlit`) | `sqlit` → pick a connection |
 | [mongosh](https://www.mongodb.com/docs/mongodb-shell/) | brew | MongoDB shell | `mongosh` |
 | [lnav](https://lnav.org/) | brew | Log file viewer | `lnav /var/log/*.log` |
-| [pgadmin4](https://www.pgadmin.org/) | cask | PostgreSQL admin GUI | Browse schemas, run queries |
 
 ## Dev (`dev`)
 
@@ -222,7 +221,6 @@ Productivity applications and browsers.
 | 1password-cli | cask | 1Password CLI (`op`) | `envrun python app.py` → secrets for one command |
 | [raycast](https://raycast.com/) | cask | Spotlight replacement | Clipboard history, snippets |
 | [cleanshot](https://cleanshot.com/) | manual | Screenshots. **Not in the Brewfile**: frozen at v4 (the license does not cover v5); install v4 manually | |
-| [espanso](https://espanso.org/) | cask | Text expander | `:sig` → email signature |
 | [hiddenbar](https://github.com/dwarvesf/hidden) | cask | Hide menu bar icons | |
 | [shortcat](https://shortcat.app/) | cask | Keyboard-driven UI navigation | |
 | [mas](https://github.com/mas-cli/mas) | brew | Mac App Store CLI | `mas outdated` |

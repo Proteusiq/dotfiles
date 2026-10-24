@@ -389,7 +389,6 @@ DATA_TOOLS = [
         "Navigate log files with search & filter",
         "lnav /var/log/*.log → time-synced, filterable",
     ),
-    ("pgadmin4", "PostgreSQL admin GUI", "Browse schemas, run queries, inspect plans"),
 ]
 
 DEV_TOOLS = [
@@ -629,11 +628,6 @@ APPS_TOOLS = [
         "cleanshot",
         "Screenshots (install v4 manually, not in Brewfile)",
         "Cmd+Shift+4 → draw → copy/upload in seconds",
-    ),
-    (
-        "espanso",
-        "Text expansion everywhere",
-        "Type :sig → expands to full email signature",
     ),
     ("hiddenbar", "Hide menu bar icons", "Cmd-drag icons behind the divider"),
     (

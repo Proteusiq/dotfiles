@@ -1984,18 +1984,6 @@ Default shortcut: `Cmd + Space`
 
 **Use cases:** App launching, snippets, window management, calculations
 
-### espanso
-Cross-platform text expander. Type abbreviations, get expansions.
-
-```yaml
-# Example config
-matches:
-  - trigger: ":email"
-    replace: "user@example.com"
-```
-
-**Use cases:** Email templates, code snippets, common phrases
-
 ### Shortcat
 Keyboard-driven UI navigation. Click any button with your keyboard.
 
