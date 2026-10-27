@@ -5,7 +5,9 @@
 readonly STOW_PACKAGES=(aerospace atuin ghostty git mise nvim sesh starship tmux uv yazi zsh)
 
 # Some casks need sudo. Keep the sudo timestamp fresh only while Homebrew runs,
-# then drop it, so later third-party installers cannot use it.
+# then drop it, so later third-party installers cannot use it. Plain sudo on
+# purpose: the first install has no 1Password and no Touch ID yet, and no
+# password is ever stored.
 start_sudo_keepalive() {
     sudo -v || {
         log_error "Could not obtain sudo access"

@@ -105,7 +105,7 @@ Without a group, all groups are shown. The output goes through `less -RFX`.
 
 `--all` runs, in order: `brew update` and `brew upgrade` for formulae; `brew upgrade --cask` for casks that do not need admin; `uv tool upgrade --all`; `cargo install --locked` for each `cargo` entry in the Brewfile; `mise upgrade`; tpm plugin update; `git pull` of the yazi flavors; `brew cleanup` and `brew autoremove`.
 
-Casks that install a package or touch `/Library` need admin rights. `--all` skips them and names them, so it never blocks on a password prompt. Add `--with-sudo` to include them: sudo asks once (Touch ID if enabled), the timestamp is kept alive only while brew runs, and `sudo -k` drops it afterwards.
+Casks that install a package or touch `/Library` need admin rights. `--all` skips them and names them, so it never blocks on a password prompt. Add `--with-sudo` to include them: sudo asks once, the timestamp is kept alive only while brew runs, and `sudo -k` drops it afterwards. The prompt is plain sudo — a fresh machine has no 1Password and no Touch ID yet, so it asks for your password. Run `update --only macos` to make later prompts a fingerprint.
 
 ### `update --doctor`
 
