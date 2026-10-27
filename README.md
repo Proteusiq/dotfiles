@@ -62,7 +62,7 @@ These files are machine-local. They are not in the repository.
 | `update` | Run all install steps (quiet) |
 | `update --doctor` | Check links, PATH order, configs, Brewfile, git identity, runtimes |
 | `update --outdated` | Show packages with available updates |
-| `update --all` | Upgrade everything: brew, uv, cargo, mise, tmux plugins, Yazi flavors |
+| `update --all` | Upgrade everything: brew (casks need `--with-sudo`), uv, cargo, mise, tmux plugins, Yazi flavors |
 | `update <tool>` | Upgrade one tool. The package manager is detected (brew, cask, uv, cargo, mise, herdr, tpm, yazi-flavors) |
 | `update --info <tool>` | Show source, version, description and example of a tool |
 | `update --versions [group]` | Show installed versions. Groups: `brew`, `cask`, `uv`, `cargo`, `mise`, `git`, `other` |

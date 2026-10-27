@@ -100,8 +100,9 @@ update_all() {
     if has_cmd brew; then
         echo -e "${CYAN}Updating Homebrew...${NC}"
         brew update --quiet
-        echo -e "${CYAN}Upgrading formulae and casks...${NC}"
+        echo -e "${CYAN}Upgrading formulae...${NC}"
         brew upgrade 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All up to date${NC}"
+        upgrade_casks
         echo ""
     fi
 

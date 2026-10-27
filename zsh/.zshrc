@@ -123,3 +123,6 @@ source "$ZSH_CONFIG_DIR/functions.zsh"
 
 # Machine-local settings and lines that installers append. Not tracked.
 [[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# Cortex CLI completion (disable via /settings in cortex)
+[[ -s ~/.zsh/completions/cortex.zsh ]] && source ~/.zsh/completions/cortex.zsh

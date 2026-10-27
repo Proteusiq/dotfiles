@@ -19,6 +19,8 @@ readonly GH_EXTENSIONS=(dlvhdr/gh-dash)
 DRY_RUN=false
 VERBOSITY=0 # 0=quiet, 1=normal, 2=debug
 SKIP_INTERACTIVE=true
+RUN_ALL=false
+WITH_SUDO=false # allow casks that need admin rights (asks once, via Touch ID)
 ONLY_FUNCTION=""
 SKIP_FUNCTIONS=()
 FAILED_STEPS=()
@@ -106,6 +108,7 @@ ${BOLD}Options:${NC}
     ${GREEN}--info${NC} <tool>         Show info about an installed tool
     ${GREEN}--outdated${NC}            Show packages with available updates
     ${GREEN}--all${NC}                 Update all packages (brew, uv, cargo, mise, git)
+    ${GREEN}--with-sudo${NC}           With --all, include casks that need admin (asks once)
     ${GREEN}--doctor${NC}              Check links, PATH order, configs and Brewfile
     ${GREEN}--interactive${NC}         Enable interactive prompts
 
@@ -130,6 +133,7 @@ ${BOLD}Examples:${NC}
     update harlequin              Update only harlequin (auto-detects uv)
     update --outdated             Check for available updates
     update --all                  Update all packages
+    update --all --with-sudo      Also upgrade casks that need admin rights
     update --doctor               Check that the setup is healthy
     update -v                     Full install with detailed output
     update --only brew            Install only Homebrew packages
@@ -245,8 +249,12 @@ parse_args() {
             exit 0
             ;;
         --all)
-            update_all
-            exit 0
+            RUN_ALL=true
+            shift
+            ;;
+        --with-sudo)
+            WITH_SUDO=true
+            shift
             ;;
         --doctor)
             "$DOTFILES_DIR/scripts/doctor.sh"
@@ -267,6 +275,11 @@ parse_args() {
             ;;
         esac
     done
+
+    if [[ "$RUN_ALL" == true ]]; then
+        update_all
+        exit 0
+    fi
 }
 
 # =============================================================================
@@ -332,28 +345,6 @@ install_xcode_tools() {
         }
     fi
     log_info "✅ Xcode Command Line Tools installed successfully"
-}
-
-# Some casks need sudo. Keep the sudo timestamp fresh only while Homebrew runs,
-# then drop it, so later third-party installers cannot use it.
-start_sudo_keepalive() {
-    sudo -v || {
-        log_error "Could not obtain sudo access"
-        return 1
-    }
-    while true; do
-        sudo -n true
-        sleep 60
-        kill -0 "$$" 2>/dev/null || exit
-    done &
-    SUDO_KEEPALIVE_PID=$!
-}
-
-stop_sudo_keepalive() {
-    [[ -n "$SUDO_KEEPALIVE_PID" ]] || return 0
-    kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
-    SUDO_KEEPALIVE_PID=""
-    sudo -k
 }
 
 # Homebrew blocks third-party taps until you trust them. Only taps declared with

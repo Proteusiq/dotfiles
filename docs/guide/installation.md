@@ -99,7 +99,7 @@ Problems make the doctor exit non-zero. Warnings do not.
 
 ```bash
 update --outdated     # Formulae, casks, uv tools and mise runtimes with updates
-update --all          # brew upgrade, uv tool upgrade --all, cargo crates, mise upgrade, tmux plugins, Yazi flavors
+update --all              # brew (casks need --with-sudo), uv, cargo, mise, tmux plugins, Yazi flavors
 update <tool>         # One tool; finds it in brew, cask, uv, cargo or mise
 update pi             # mise tools also match by command name
 update tpm            # tpm, yazi-flavors and herdr are also supported

@@ -34,6 +34,7 @@ update [OPTIONS] [TOOL]
 | `--info <tool>` | Show source, version, description, example and category of a tool |
 | `--outdated` | Show packages with available updates |
 | `--all` | Update all packages |
+| `--with-sudo` | With `--all`, also upgrade casks that need admin (asks once, then drops the timestamp) |
 | `--doctor` | Health check (see [below](#update-doctor)) |
 | `--interactive` | Enable interactive prompts (only the Xcode step prompts) |
 | `--skip-interactive` | Disable interactive prompts (the default) |
@@ -102,7 +103,9 @@ Without a group, all groups are shown. The output goes through `less -RFX`.
 
 `--outdated` checks Homebrew formulae, Homebrew casks, uv tools (against PyPI) and mise runtimes.
 
-`--all` runs, in order: `brew update` and `brew upgrade`; `uv tool upgrade --all`; `cargo install --locked` for each `cargo` entry in the Brewfile; `mise upgrade`; tpm plugin update; `git pull` of the yazi flavors; `brew cleanup` and `brew autoremove`.
+`--all` runs, in order: `brew update` and `brew upgrade` for formulae; `brew upgrade --cask` for casks that do not need admin; `uv tool upgrade --all`; `cargo install --locked` for each `cargo` entry in the Brewfile; `mise upgrade`; tpm plugin update; `git pull` of the yazi flavors; `brew cleanup` and `brew autoremove`.
+
+Casks that install a package or touch `/Library` need admin rights. `--all` skips them and names them, so it never blocks on a password prompt. Add `--with-sudo` to include them: sudo asks once (Touch ID if enabled), the timestamp is kept alive only while brew runs, and `sudo -k` drops it afterwards.
 
 ### `update --doctor`
 

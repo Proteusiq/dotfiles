@@ -203,6 +203,8 @@ Helpers in `install.sh`:
 
 `STOW_PACKAGES` in `scripts/packages.sh`, sourced by `install.sh`, `scripts/doctor.sh` and the CI workflow. Stow runs with `--no-folding`, so it links files, not directories.
 
+`scripts/packages.sh` also owns the Homebrew helpers: `start_sudo_keepalive` / `stop_sudo_keepalive` (one prompt, timestamp kept only while brew runs, then `sudo -k`), `cask_needs_sudo` (a cask with a `pkg` artifact or `/Library` paths in its artifacts) and `upgrade_casks` (used by `update --all`).
+
 ```
 dotfiles/
 ├── aerospace/  →  ~/.config/aerospace/aerospace.toml

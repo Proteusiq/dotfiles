@@ -61,7 +61,7 @@ update --dry-run          # Preview, change nothing
 
 update --doctor           # Health check (scripts/doctor.sh)
 update <tool>             # Upgrade one tool (brew, cask, uv, cargo, mise, herdr, tpm, yazi-flavors)
-update --all              # Upgrade brew, uv, cargo crates from the Brewfile, mise, tpm plugins, Yazi flavors
+update --all              # Upgrade brew (casks need --with-sudo), uv, cargo crates from the Brewfile, mise, tpm plugins, Yazi flavors
 update --outdated         # Show available updates (brew, cask, uv, mise)
 
 update --only <step>      # Run one step
