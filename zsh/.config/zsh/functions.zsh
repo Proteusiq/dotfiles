@@ -137,6 +137,7 @@ setenv() {
             continue
         fi
         if $use_op && [[ "$value" == op://* ]]; then
+            (( $+commands[op] )) || { echo "op:// needs the 1Password CLI: brew install 1password-cli" >&2; return 1; }
             value="$(op read "$value")" || return 1
         fi
         export "$name=$value"
@@ -160,6 +161,7 @@ unsetenv() {
 # run one command with .env loaded; op:// references resolved by 1Password
 envrun() {
     [[ -f .env ]] || { echo ".env not found" >&2; return 1; }
+    (( $+commands[op] )) || { echo "envrun needs the 1Password CLI: brew install 1password-cli" >&2; return 1; }
     op run --env-file=.env -- "$@"
 }
 
