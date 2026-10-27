@@ -61,7 +61,7 @@ update --dry-run          # Preview, change nothing
 
 update --doctor           # Health check (scripts/doctor.sh)
 update <tool>             # Upgrade one tool (brew, cask, uv, cargo, mise, herdr, tpm, yazi-flavors)
-update --all              # Upgrade brew (casks need --with-sudo), uv, cargo crates from the Brewfile, mise, tpm plugins, Yazi flavors
+update --all              # Upgrade brew formulae and casks (one sudo prompt), uv, cargo crates from the Brewfile, mise, tpm plugins, Yazi flavors
 update --outdated         # Show available updates (brew, cask, uv, mise)
 
 update --only <step>      # Run one step
@@ -127,7 +127,7 @@ dotfiles/
 💻 Installing tmux plugins          tmux      ← tpm (git)
 🎨 Installing Yazi themes           yazi      ← yazi-rs/flavors (git)
 🔧 Installing CLI utilities         utils     ← git lfs, gh-dash, Bicep, Herdr, Unsloth, bin/*.py
-🍎 Configuring macOS                macos     ← Touch ID sudo, screenshot folder
+🍎 Configuring macOS                macos     ← Touch ID sudo (when available), screenshot folder
 🧹 Cleaning up                      cleanup   ← brew cleanup/autoremove, undeclared list
 ```
 
@@ -148,7 +148,7 @@ The `brew` step keeps sudo alive only during `brew bundle`, then runs `sudo -k`.
 | `tmux` | `install_tmux_plugins` | tpm clone and `install_plugins` |
 | `yazi` | `install_yazi_themes` | Clone Yazi flavors to `~/.config/yazi/flavors` |
 | `utils` | `setup_utils` | `git lfs install`, gh extensions, `az bicep install`, Herdr, Unsloth Studio, `~/.rgrc`, link `bin/*.py` to `~/.local/bin/<name>` |
-| `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach), screenshot location |
+| `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach) when the Mac has a sensor, screenshot location |
 | `cleanup` | `cleanup` | `brew cleanup`, `brew autoremove`, warn about packages not in the Brewfile |
 
 ---

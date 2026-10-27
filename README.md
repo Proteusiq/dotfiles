@@ -62,7 +62,7 @@ These files are machine-local. They are not in the repository.
 | `update` | Run all install steps (quiet) |
 | `update --doctor` | Check links, PATH order, configs, Brewfile, git identity, runtimes |
 | `update --outdated` | Show packages with available updates |
-| `update --all` | Upgrade everything: brew (casks need `--with-sudo`), uv, cargo, mise, tmux plugins, Yazi flavors |
+| `update --all` | Upgrade everything: brew formulae and casks (one sudo prompt), uv, cargo, mise, tmux plugins, Yazi flavors |
 | `update <tool>` | Upgrade one tool. The package manager is detected (brew, cask, uv, cargo, mise, herdr, tpm, yazi-flavors) |
 | `update --info <tool>` | Show source, version, description and example of a tool |
 | `update --versions [group]` | Show installed versions. Groups: `brew`, `cask`, `uv`, `cargo`, `mise`, `git`, `other` |
@@ -87,7 +87,7 @@ Steps, in order: `dirs`, `xcode`, `brew`, `stow`, `runtimes`, `venv`, `tmux`, `y
 | `tmux` | Installs tpm and the tmux plugins |
 | `yazi` | Clones the Yazi flavors into `~/.config/yazi/flavors` |
 | `utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr, Unsloth Studio, links `bin/*.py` to `~/.local/bin` |
-| `macos` | Touch ID for sudo (also in tmux), screenshots to `~/Documents/Screenshots` |
+| `macos` | Touch ID for sudo when the Mac has a sensor (also in tmux), screenshots to `~/Documents/Screenshots` |
 | `cleanup` | `brew cleanup` and `brew autoremove`, then lists packages installed but not in the Brewfile (removes nothing) |
 
 ## What's inside

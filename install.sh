@@ -19,8 +19,6 @@ readonly GH_EXTENSIONS=(dlvhdr/gh-dash)
 DRY_RUN=false
 VERBOSITY=0 # 0=quiet, 1=normal, 2=debug
 SKIP_INTERACTIVE=true
-RUN_ALL=false
-WITH_SUDO=false # allow casks that need admin rights (asks once, via Touch ID)
 ONLY_FUNCTION=""
 SKIP_FUNCTIONS=()
 FAILED_STEPS=()
@@ -108,7 +106,6 @@ ${BOLD}Options:${NC}
     ${GREEN}--info${NC} <tool>         Show info about an installed tool
     ${GREEN}--outdated${NC}            Show packages with available updates
     ${GREEN}--all${NC}                 Update all packages (brew, uv, cargo, mise, git)
-    ${GREEN}--with-sudo${NC}           With --all, include casks that need admin (asks once)
     ${GREEN}--doctor${NC}              Check links, PATH order, configs and Brewfile
     ${GREEN}--interactive${NC}         Enable interactive prompts
 
@@ -133,7 +130,6 @@ ${BOLD}Examples:${NC}
     update harlequin              Update only harlequin (auto-detects uv)
     update --outdated             Check for available updates
     update --all                  Update all packages
-    update --all --with-sudo      Also upgrade casks that need admin rights
     update --doctor               Check that the setup is healthy
     update -v                     Full install with detailed output
     update --only brew            Install only Homebrew packages
@@ -249,12 +245,8 @@ parse_args() {
             exit 0
             ;;
         --all)
-            RUN_ALL=true
-            shift
-            ;;
-        --with-sudo)
-            WITH_SUDO=true
-            shift
+            update_all
+            exit 0
             ;;
         --doctor)
             "$DOTFILES_DIR/scripts/doctor.sh"
@@ -276,10 +268,6 @@ parse_args() {
         esac
     done
 
-    if [[ "$RUN_ALL" == true ]]; then
-        update_all
-        exit 0
-    fi
 }
 
 # =============================================================================
@@ -587,9 +575,19 @@ create_virtualenvs() {
 }
 
 # Touch ID for sudo, also inside tmux (pam_reattach). sudo_local survives macOS updates.
+# A Mac without a sensor (or a desktop without its Touch ID keyboard) still asks
+# for the password, but do not write the module where it cannot answer.
+has_touch_id() {
+    ioreg -c AppleBiometricSensor -r -d 1 2>/dev/null | grep -q "AppleBiometricSensor"
+}
+
 enable_touch_id_sudo() {
     local sudo_local="/etc/pam.d/sudo_local"
     local reattach="${HOMEBREW_PREFIX:-/opt/homebrew}/lib/pam/pam_reattach.so"
+    has_touch_id || {
+        log_info "No Touch ID sensor reported; sudo keeps asking for your password"
+        return 0
+    }
     grep -qs "pam_tid.so" "$sudo_local" && {
         log_info "✅ Touch ID for sudo already enabled"
         return 0

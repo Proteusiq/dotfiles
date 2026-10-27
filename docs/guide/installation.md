@@ -23,7 +23,7 @@ A full run executes these steps in order. Use the names with `--only` and `--ski
 | `tmux` | Clones tpm into `~/.tmux/plugins/tpm` and installs the plugins. |
 | `yazi` | Clones `yazi-rs/flavors` into `~/.config/yazi/flavors`. |
 | `utils` | Runs `git lfs install`. Installs what is missing: the `dlvhdr/gh-dash` gh extension, Bicep (`az bicep install`), Herdr, and Unsloth Studio (into `~/unsloth_studio`). Creates `~/.rgrc`. Links each `bin/*.py` script to `~/.local/bin/<name>`, so `bin/aliases.py` becomes the `aliases` command. |
-| `macos` | Enables Touch ID for `sudo` in `/etc/pam.d/sudo_local`, with `pam_reattach` so it also works inside tmux. Saves screenshots to `~/Documents/Screenshots`. |
+| `macos` | Enables Touch ID for `sudo` in `/etc/pam.d/sudo_local`, with `pam_reattach` so it also works inside tmux. Skipped when the Mac reports no Touch ID sensor, so a desktop keeps using the password. Saves screenshots to `~/Documents/Screenshots`. |
 | `cleanup` | Runs `brew cleanup` and `brew autoremove`. Warns about packages that are installed but not in the `Brewfile`. It never removes them. |
 
 ::: info Security
@@ -99,7 +99,7 @@ Problems make the doctor exit non-zero. Warnings do not.
 
 ```bash
 update --outdated     # Formulae, casks, uv tools and mise runtimes with updates
-update --all              # brew (casks need --with-sudo), uv, cargo, mise, tmux plugins, Yazi flavors
+update --all              # brew formulae and casks (one sudo prompt), uv, cargo, mise, tmux plugins, Yazi flavors
 update <tool>         # One tool; finds it in brew, cask, uv, cargo or mise
 update pi             # mise tools also match by command name
 update tpm            # tpm, yazi-flavors and herdr are also supported

@@ -100,9 +100,13 @@ update_all() {
     if has_cmd brew; then
         echo -e "${CYAN}Updating Homebrew...${NC}"
         brew update --quiet
-        echo -e "${CYAN}Upgrading formulae...${NC}"
+        # Ask for the password once, up front, and keep the timestamp alive for
+        # the whole run: some casks need it. It is dropped afterwards.
+        start_sudo_keepalive || echo -e "  ${YELLOW}No sudo: casks that need it will fail${NC}"
+        echo -e "${CYAN}Upgrading formulae and casks...${NC}"
         brew upgrade 2>&1 | grep -v "^$" || echo -e "  ${GREEN}All up to date${NC}"
-        upgrade_casks
+        brew upgrade --cask 2>&1 | grep -v "^$" || true
+        stop_sudo_keepalive
         echo ""
     fi
 

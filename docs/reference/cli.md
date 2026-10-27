@@ -34,7 +34,6 @@ update [OPTIONS] [TOOL]
 | `--info <tool>` | Show source, version, description, example and category of a tool |
 | `--outdated` | Show packages with available updates |
 | `--all` | Update all packages |
-| `--with-sudo` | With `--all`, also upgrade casks that need admin (asks once, then drops the timestamp) |
 | `--doctor` | Health check (see [below](#update-doctor)) |
 | `--interactive` | Enable interactive prompts (only the Xcode step prompts) |
 | `--skip-interactive` | Disable interactive prompts (the default) |
@@ -56,7 +55,7 @@ A full `update` runs these steps in order. Use the name with `--only` or `--skip
 | `tmux` | `install_tmux_plugins` | Clone or update tpm, install tmux plugins |
 | `yazi` | `install_yazi_themes` | Clone or update `yazi-rs/flavors` into `~/.config/yazi/flavors` |
 | `utils` | `setup_utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr and Unsloth Studio installers, create `~/.rgrc`, link `bin/*.py` into `~/.local/bin` |
-| `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach, so it works in tmux); screenshots to `~/Documents/Screenshots` |
+| `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach, so it works in tmux) when the Mac has a sensor; screenshots to `~/Documents/Screenshots` |
 | `cleanup` | `cleanup` | `brew cleanup` and `brew autoremove`; warn about installed packages missing from the Brewfile (lists only, never removes) |
 
 Remote installers (Herdr, Unsloth Studio) are downloaded to a temporary file and run without sudo; `--dry-run` skips them.
@@ -103,9 +102,9 @@ Without a group, all groups are shown. The output goes through `less -RFX`.
 
 `--outdated` checks Homebrew formulae, Homebrew casks, uv tools (against PyPI) and mise runtimes.
 
-`--all` runs, in order: `brew update` and `brew upgrade` for formulae; `brew upgrade --cask` for casks that do not need admin; `uv tool upgrade --all`; `cargo install --locked` for each `cargo` entry in the Brewfile; `mise upgrade`; tpm plugin update; `git pull` of the yazi flavors; `brew cleanup` and `brew autoremove`.
+`--all` runs, in order: `brew update`; `sudo -v` once, then `brew upgrade` and `brew upgrade --cask`; `uv tool upgrade --all`; `cargo install --locked` for each `cargo` entry in the Brewfile; `mise upgrade`; tpm plugin update; `git pull` of the yazi flavors; `brew cleanup` and `brew autoremove`.
 
-Casks that install a package or touch `/Library` need admin rights. `--all` skips them and names them, so it never blocks on a password prompt. Add `--with-sudo` to include them: sudo asks once, the timestamp is kept alive only while brew runs, and `sudo -k` drops it afterwards. The prompt is plain sudo — a fresh machine has no 1Password and no Touch ID yet, so it asks for your password. Run `update --only macos` to make later prompts a fingerprint.
+Some casks need admin rights, so `--all` asks for your password once at the start. The sudo timestamp is refreshed only while brew runs and dropped with `sudo -k` afterwards. Nothing is stored: a fresh machine has no 1Password and possibly no Touch ID, so the prompt is plain sudo. `update --only macos` turns later prompts into a fingerprint where the Mac has a sensor.
 
 ### `update --doctor`
 
