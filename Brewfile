@@ -177,6 +177,7 @@ cask "raycast"                           # Spotlight replacement
 # cleanshot: intentionally unmanaged — frozen at v4 (license doesn't cover v5); install v4 manually
 cask "hiddenbar"                         # Menu bar organizer
 cask "shortcat"                          # Keyboard-driven UI navigation
+cask "flux-app"                          # Screen colour temperature at night (f.lux)
 brew "mas"                               # Mac App Store CLI
 
 # WINDOW MANAGEMENT

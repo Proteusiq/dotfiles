@@ -543,11 +543,6 @@ AI_TOOLS = [
         "ollama run llama3 → chat locally, no API key",
     ),
     ("hf", "Hugging Face Hub CLI", "hf download org/model → fetch model weights"),
-    (
-        "unsloth",
-        "Fine-tune LLMs 2x faster with 80% less memory",
-        "unsloth studio → local fine-tuning UI on :8888",
-    ),
 ]
 
 GNU_TOOLS = [
@@ -634,6 +629,11 @@ APPS_TOOLS = [
         "shortcat",
         "Click any UI element with keyboard",
         "Cmd+Shift+Space → type to click buttons",
+    ),
+    (
+        "flux-app",
+        "Warm the screen colour at night (f.lux)",
+        "menu bar icon → set location and wake time",
     ),
     ("mas", "Mac App Store from the terminal", "mas outdated → App Store updates"),
     (

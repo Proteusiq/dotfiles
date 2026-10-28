@@ -1954,13 +1954,6 @@ hf download org/model         # Fetch model weights
 hf upload org/model ./folder  # Upload a folder
 ```
 
-### Unsloth Studio
-Local UI for fine-tuning LLMs. Installed by `update --only utils` from the official installer into `~/unsloth_studio`.
-
-```bash
-unsloth studio                # Local fine-tuning UI on :8888
-```
-
 ---
 
 ## Productivity Applications

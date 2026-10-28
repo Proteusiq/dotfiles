@@ -46,7 +46,7 @@ The installer runs these steps in order. A failed step does not stop the run.
 6. **venv** creates the Python environment that Neovim uses (`~/.virtualenvs/neovim`).
 7. **tmux** installs the tmux plugin manager (tpm) and the plugins.
 8. **yazi** installs the Yazi flavors (themes).
-9. **utils** installs extras: Git LFS, gh-dash, Bicep, Herdr, Unsloth Studio and the `aliases` and `tools` commands.
+9. **utils** installs extras: Git LFS, gh-dash, Bicep, Herdr and the `aliases` and `tools` commands.
 10. **macos** enables Touch ID for `sudo` when the Mac has a sensor, and saves screenshots to `~/Documents/Screenshots`.
 11. **cleanup** runs Homebrew cleanup and lists packages that are installed but not in the `Brewfile`.
 

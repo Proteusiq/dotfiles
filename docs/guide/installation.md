@@ -22,12 +22,12 @@ A full run executes these steps in order. Use the names with `--only` and `--ski
 | `venv` | Creates `~/.virtualenvs/neovim` with `pynvim`, the Python provider for Neovim. |
 | `tmux` | Clones tpm into `~/.tmux/plugins/tpm` and installs the plugins. |
 | `yazi` | Clones `yazi-rs/flavors` into `~/.config/yazi/flavors`. |
-| `utils` | Runs `git lfs install`. Installs what is missing: the `dlvhdr/gh-dash` gh extension, Bicep (`az bicep install`), Herdr, and Unsloth Studio (into `~/unsloth_studio`). Creates `~/.rgrc`. Links each `bin/*.py` script to `~/.local/bin/<name>`, so `bin/aliases.py` becomes the `aliases` command. |
+| `utils` | Runs `git lfs install`. Installs what is missing: the `dlvhdr/gh-dash` gh extension, Bicep (`az bicep install`), and Herdr. Creates `~/.rgrc`. Links each `bin/*.py` script to `~/.local/bin/<name>`, so `bin/aliases.py` becomes the `aliases` command. |
 | `macos` | Enables Touch ID for `sudo` in `/etc/pam.d/sudo_local`, with `pam_reattach` so it also works inside tmux. Skipped when the Mac reports no Touch ID sensor, so a desktop keeps using the password. Saves screenshots to `~/Documents/Screenshots`. |
 | `cleanup` | Runs `brew cleanup` and `brew autoremove`. Warns about packages that are installed but not in the `Brewfile`. It never removes them. |
 
 ::: info Security
-`sudo` stays active only while `brew bundle` runs. The installer then drops it with `sudo -k`. Remote installers (Herdr, Unsloth Studio) are downloaded to a temporary file and run without `sudo`.
+`sudo` stays active only while `brew bundle` runs. The installer then drops it with `sudo -k`. The Herdr remote installer is downloaded to a temporary file and run without `sudo`.
 :::
 
 ## Common Commands

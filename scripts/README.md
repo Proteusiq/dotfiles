@@ -157,7 +157,7 @@ update [flags]
 | `venv` | `create_virtualenvs` | `uv venv ~/.virtualenvs/neovim`, `uv pip install --upgrade pynvim` |
 | `tmux` | `install_tmux_plugins` | `git_install` tpm, then `install_plugins` |
 | `yazi` | `install_yazi_themes` | `git_install` yazi-rs/flavors into `~/.config/yazi/flavors` |
-| `utils` | `setup_utils` | `git lfs install`, `install_gh_extensions` (`dlvhdr/gh-dash`), `az bicep install`, Herdr and Unsloth Studio via `run_remote_installer`, `touch ~/.rgrc`, `link_bin_scripts` |
+| `utils` | `setup_utils` | `git lfs install`, `install_gh_extensions` (`dlvhdr/gh-dash`), `az bicep install`, Herdr via `run_remote_installer`, `touch ~/.rgrc`, `link_bin_scripts` |
 | `macos` | `configure_macos` | `enable_touch_id_sudo` (`/etc/pam.d/sudo_local`, with `pam_reattach.so` if present), screenshot location |
 | `cleanup` | `cleanup` | `brew cleanup --prune=all`, `brew autoremove`, warn about `brew bundle cleanup` output (removes nothing) |
 

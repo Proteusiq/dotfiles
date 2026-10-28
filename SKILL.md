@@ -39,7 +39,7 @@ Repository-specific knowledge for this dotfiles setup. Principles are in `MANIFE
 
 | Need | Where | Helper |
 |------|-------|--------|
-| Official remote installer (Herdr, Unsloth Studio) | `setup_utils()` | `run_remote_installer "Name" "https://url/install.sh" [workdir]` with a `has_cmd` or directory guard |
+| Official remote installer (Herdr) | `setup_utils()` | `run_remote_installer "Name" "https://url/install.sh" [workdir]` with a `has_cmd` or directory guard |
 | gh extension | `GH_EXTENSIONS` array | `install_gh_extensions` |
 | Git clone (tpm, Yazi flavors) | own step function | `git_install "tool" "url" "folder" "friendly name"` |
 
@@ -126,7 +126,7 @@ dotfiles/
 🐍 Creating Python virtual envs     venv      ← ~/.virtualenvs/neovim (pynvim)
 💻 Installing tmux plugins          tmux      ← tpm (git)
 🎨 Installing Yazi themes           yazi      ← yazi-rs/flavors (git)
-🔧 Installing CLI utilities         utils     ← git lfs, gh-dash, Bicep, Herdr, Unsloth, bin/*.py
+🔧 Installing CLI utilities         utils     ← git lfs, gh-dash, Bicep, Herdr, bin/*.py
 🍎 Configuring macOS                macos     ← Touch ID sudo (when available), screenshot folder
 🧹 Cleaning up                      cleanup   ← brew cleanup/autoremove, undeclared list
 ```
@@ -147,7 +147,7 @@ The `brew` step keeps sudo alive only during `brew bundle`, then runs `sudo -k`.
 | `venv` | `create_virtualenvs` | `~/.virtualenvs/neovim` with pynvim (`python3_host_prog`) |
 | `tmux` | `install_tmux_plugins` | tpm clone and `install_plugins` |
 | `yazi` | `install_yazi_themes` | Clone Yazi flavors to `~/.config/yazi/flavors` |
-| `utils` | `setup_utils` | `git lfs install`, gh extensions, `az bicep install`, Herdr, Unsloth Studio, `~/.rgrc`, link `bin/*.py` to `~/.local/bin/<name>` |
+| `utils` | `setup_utils` | `git lfs install`, gh extensions, `az bicep install`, Herdr, `~/.rgrc`, link `bin/*.py` to `~/.local/bin/<name>` |
 | `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach) when the Mac has a sensor, screenshot location |
 | `cleanup` | `cleanup` | `brew cleanup`, `brew autoremove`, warn about packages not in the Brewfile |
 

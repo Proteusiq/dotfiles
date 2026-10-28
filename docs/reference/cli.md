@@ -54,11 +54,11 @@ A full `update` runs these steps in order. Use the name with `--only` or `--skip
 | `venv` | `create_virtualenvs` | Create `~/.virtualenvs/neovim` with pynvim (Neovim's Python provider) |
 | `tmux` | `install_tmux_plugins` | Clone or update tpm, install tmux plugins |
 | `yazi` | `install_yazi_themes` | Clone or update `yazi-rs/flavors` into `~/.config/yazi/flavors` |
-| `utils` | `setup_utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr and Unsloth Studio installers, create `~/.rgrc`, link `bin/*.py` into `~/.local/bin` |
+| `utils` | `setup_utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr installer, create `~/.rgrc`, link `bin/*.py` into `~/.local/bin` |
 | `macos` | `configure_macos` | Touch ID for sudo via `/etc/pam.d/sudo_local` (with pam_reattach, so it works in tmux) when the Mac has a sensor; screenshots to `~/Documents/Screenshots` |
 | `cleanup` | `cleanup` | `brew cleanup` and `brew autoremove`; warn about installed packages missing from the Brewfile (lists only, never removes) |
 
-Remote installers (Herdr, Unsloth Studio) are downloaded to a temporary file and run without sudo; `--dry-run` skips them.
+The Herdr remote installer is downloaded to a temporary file and run without sudo; `--dry-run` skips it.
 
 A failed step does not stop the run. The installer records every failed step and command, continues, prints a summary at the end and exits non-zero.
 

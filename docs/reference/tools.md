@@ -183,7 +183,6 @@ Runtimes and toolchains. Rule from `mise/.config/mise/config.toml`: language run
 | [llama.cpp](https://github.com/ggerganov/llama.cpp) | brew | Run GGUF models locally | `llama-server -m model.gguf` |
 | [ollama-app](https://ollama.ai/) | cask | Run LLMs locally | `ollama run llama3` |
 | hf | brew | Hugging Face Hub CLI | `hf download org/model` |
-| [unsloth](https://unsloth.ai/) | installer | Fine-tune LLMs locally (Unsloth Studio, in `~/unsloth_studio`) | `unsloth studio` |
 
 ## GNU (`gnu`)
 
@@ -223,6 +222,7 @@ Productivity applications and browsers.
 | [cleanshot](https://cleanshot.com/) | manual | Screenshots. **Not in the Brewfile**: frozen at v4 (the license does not cover v5); install v4 manually | |
 | [hiddenbar](https://github.com/dwarvesf/hidden) | cask | Hide menu bar icons | |
 | [shortcat](https://shortcat.app/) | cask | Keyboard-driven UI navigation | |
+| [flux-app](https://justgetflux.com/) | cask | Warms the screen colour at night (f.lux) | menu bar icon |
 | [mas](https://github.com/mas-cli/mas) | brew | Mac App Store CLI | `mas outdated` |
 | [arc](https://arc.net/) | cask | Browser | |
 | [zen](https://zen-browser.app/) | cask | Firefox-based privacy browser | |
@@ -260,7 +260,7 @@ Installed by the Brewfile but not catalogued in `bin/tools.py` (`NOT_CATALOGUED`
 
 ## Removed
 
-No longer installed: antigen, zplug (→ antidote), n, yarn (→ mise, pnpm), thefuck (→ pay-respects, alias `f`), terraform (→ opentofu `tofu`), SnowSQL (→ snowflake-cli `snow`), direnv (→ mise), skhd, screen, ack, flux-app, font-hack, gh-tran. docker-slim is now `mintoolkit`.
+No longer installed: antigen, zplug (→ antidote), n, yarn (→ mise, pnpm), thefuck (→ pay-respects, alias `f`), terraform (→ opentofu `tofu`), SnowSQL (→ snowflake-cli `snow`), direnv (→ mise), skhd, screen, ack, font-hack, gh-tran. docker-slim is now `mintoolkit`.
 
 ## Exploring tools
 

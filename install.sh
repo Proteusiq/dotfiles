@@ -11,7 +11,6 @@ set -euo pipefail
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly LOG_FILE="${LOG_FILE:-${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/install.log}"
 readonly BACKUP_ROOT="$HOME/.dotfiles-backup"
-readonly UNSLOTH_DIR="$HOME/unsloth_studio"
 # Default Python for uv and for python/python3 on PATH. Same file uv reads globally.
 readonly PYTHON_VERSION_FILE="$DOTFILES_DIR/uv/.config/uv/.python-version"
 readonly GH_EXTENSIONS=(dlvhdr/gh-dash)
@@ -118,7 +117,7 @@ ${BOLD}Functions:${NC}
     ${BLUE}venv${NC}        Create the Python venv Neovim uses for plugins (pynvim)
     ${BLUE}tmux${NC}        Install tmux plugin manager (tpm) and plugins
     ${BLUE}yazi${NC}        Install Yazi file manager themes
-    ${BLUE}utils${NC}       Install extras: gh extensions, Bicep, Herdr, Unsloth Studio, bin scripts
+    ${BLUE}utils${NC}       Install extras: gh extensions, Bicep, Herdr, bin scripts
     ${BLUE}macos${NC}       Configure macOS: Touch ID for sudo, screenshot folder
     ${BLUE}cleanup${NC}     Run Homebrew cleanup and autoremove
 
@@ -531,13 +530,6 @@ setup_utils() {
         run_remote_installer "Herdr" "https://herdr.dev/install.sh" && log_info "✅ Herdr installed"
     fi
     [[ "$DRY_RUN" == false ]] && track_version "herdr" "$old_herdr"
-
-    if [[ -d "$UNSLOTH_DIR" ]]; then
-        log_info "✅ Unsloth Studio already installed"
-    else
-        run_remote_installer "Unsloth Studio" "https://unsloth.ai/install.sh" "$HOME" &&
-            log_info "✅ Unsloth Studio installed"
-    fi
 
     execute touch "$HOME/.rgrc"
     link_bin_scripts

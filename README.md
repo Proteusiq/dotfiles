@@ -86,7 +86,7 @@ Steps, in order: `dirs`, `xcode`, `brew`, `stow`, `runtimes`, `venv`, `tmux`, `y
 | `venv` | Creates `~/.virtualenvs/neovim` with `pynvim` |
 | `tmux` | Installs tpm and the tmux plugins |
 | `yazi` | Clones the Yazi flavors into `~/.config/yazi/flavors` |
-| `utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr, Unsloth Studio, links `bin/*.py` to `~/.local/bin` |
+| `utils` | `git lfs install`, gh extension `dlvhdr/gh-dash`, `az bicep install`, Herdr, links `bin/*.py` to `~/.local/bin` |
 | `macos` | Touch ID for sudo when the Mac has a sensor (also in tmux), screenshots to `~/Documents/Screenshots` |
 | `cleanup` | `brew cleanup` and `brew autoremove`, then lists packages installed but not in the Brewfile (removes nothing) |
 
@@ -103,7 +103,7 @@ Ghostty, tmux, Neovim, fzf, delta and Yazi use the Catppuccin theme.
 | Languages and runtimes | uv (Python 3.14), pixi, mise (Node LTS, Go, Bun, pnpm), rustup (Rust) |
 | Containers and cloud | OrbStack, colima, docker CLI + compose + buildx, lazydocker, OpenTofu (`tofu`), Azure CLI + Bicep, azd, Temporal CLI |
 | Data | DuckDB, harlequin, tabiew, dbt Cloud CLI, Snowflake CLI (`snow`), sqlfluff, jq, yq, mongosh |
-| AI | OpenCode, pi, Ollama, llama.cpp, hf, Unsloth Studio |
+| AI | OpenCode, pi, Ollama, llama.cpp, hf |
 | Quality | prek, gitleaks, shellcheck, shfmt, stylua, actionlint, ruff, ty, biome, bacon |
 
 The full list with descriptions is in the [Brewfile](./Brewfile), in `tools`, and in [Tools.md](./Tools.md).
