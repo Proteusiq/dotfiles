@@ -1635,14 +1635,29 @@ mise exec node@20 -- node -v  # Run one command with another version
 mise doctor                   # Check the setup (also run by update --doctor)
 ```
 
-Per-project environment variables, previously in `.envrc` (direnv), go in the project's `mise.toml`:
+`mise activate zsh` runs in `~/.zshrc`, so tools and variables switch when you `cd` into a project, as direnv did. Replace `.envrc` with a `mise.toml` in the project root:
 
 ```toml
+[tools]
+node = "24"
+python = "3.14"
+
 [env]
 DATABASE_URL = "postgres://localhost/dev"
+_.file = ".env"               # Also load a .env file
+_.path = ["./node_modules/.bin"]  # Add to PATH
 ```
 
-**Use cases:** Per-project runtime versions, one tool instead of n and direnv
+```bash
+mise trust                    # Approve a mise.toml you did not write (like direnv allow)
+mise set DEBUG=1              # Add a variable to mise.toml
+mise set                      # List variables and the file each comes from
+mise env                      # Print the environment mise would load
+```
+
+Put personal or secret values in `mise.local.toml` (add it to `.gitignore`). For secrets from 1Password, use `envrun <command>` instead (see [1Password](#1password)).
+
+**Use cases:** Per-project runtime versions and environment variables, one tool instead of n and direnv
 
 ### Python
 

@@ -165,7 +165,7 @@ Runtimes and toolchains. Rule from `mise/.config/mise/config.toml`: language run
 
 | Tool | Source | Description | Example |
 |------|--------|-------------|---------|
-| [mise](https://mise.jdx.dev/) | brew | Runtime manager for node, go, bun, pnpm; per-project versions | `mise use node@24` |
+| [mise](https://mise.jdx.dev/) | brew | Runtime manager for node, go, bun, pnpm; per-project versions and env vars (replaces direnv) | `mise use node@24` |
 | [uv](https://github.com/astral-sh/uv) | brew | Python packages, tools and versions | `uv add pandas` |
 | [pixi](https://prefix.dev/pixi) | brew | Conda-compatible environment manager | `pixi add numpy` |
 | [rustup](https://rustup.rs/) | brew | Rust toolchain manager (`rustup default stable`) | `rustup update` |
