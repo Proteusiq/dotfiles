@@ -75,12 +75,13 @@
 	coloring = highlightRecent
 [credential]
 	helper = osxkeychain
+# brew runs git with a trimmed PATH, so a plain "gh" is not found there. Use the full path.
 [credential "https://github.com"]
 	helper =
-	helper = !gh auth git-credential
+	helper = !"${HOMEBREW_PREFIX:-/opt/homebrew}/bin/gh" auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !gh auth git-credential
+	helper = !"${HOMEBREW_PREFIX:-/opt/homebrew}/bin/gh" auth git-credential
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
